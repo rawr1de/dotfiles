@@ -1,0 +1,24 @@
+# RDO KITTY SESSION #TST
+
+# Tab #1 (ranger)
+# tab_1 -- named Ranger, Ranger file manager openned
+#
+new_tab Ranger
+cd ~
+launch ranger &
+
+
+# Tab #2 (CMus)
+# tab_2 named Musk, CMus music player openned, CD'ed to music dir
+#
+new_tab Musk
+cd ~/Musk
+launch cmus &
+
+
+# Tab #3 (sxhkd)
+# tab_3 named kitty on ~ dir
+#
+new_tab kitty
+cd ~
+launch sxhkd -c /home/rdo/.config/sxhkd/sxhkdrc.kde &

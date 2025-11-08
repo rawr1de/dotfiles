@@ -1,0 +1,177 @@
+##--->  wm independent hotkeys  <---##
+
+# reload sxhkd config file
+super + F12
+	pkill -USR1 -x sxhkd; notify-send 'sxhkd' 'Reloaded config'
+
+# terminal emulator
+super + Return
+	kitty
+
+# show installed programs
+super + space
+	rofi -modi drun -show drun -show-icons
+
+# text editor (NeoVim) 
+super + n
+        $TERMINAL -e nvim
+
+# text editor (emacs)
+super + m
+        emacs -mm
+
+# web browser #1 (brave)
+super + w
+ 	brave
+
+# web browser #2 (librewolf)
+#super + e
+#        librewolf
+
+# file manager (pcmanfm)
+super + f
+	pcmanfm
+
+# pulsemixer audio control
+super + v
+        $TERMINAL -e pulsemixer
+
+# htop (controle de processos)
+super + h
+        $TERMINAL -e htop
+
+# typing program
+super + u
+	$TERMINAL -e gtypist
+
+# screenshot (flameshot)
+super + Print
+	flameshot gui
+
+# sxhkd helper
+super + slash
+        sxhkd_helper.sh
+
+# programs helper
+super + i
+        helper_rofi_menu.sh
+
+# rofi calculator
+super + o
+        rofi -show calc -modi calc -no-show-match -no-sort
+
+# man pages [.pdf]
+super + p
+        rofi_man.sh
+
+# lock screen with 'slock'
+super + l
+        slock
+
+# switch keyboard layout (US/BR) and notify
+alt + space
+        leg5_show_kb_layout.sh
+
+# kill a window with mouse pointer
+super + k
+        xkill
+
+# show clipmenu
+super + x
+    CM_LAUNCHER=rofi clipmenu \
+    CM_DIR=$HOME/tmp \
+        -location 1 \
+        -m -3 \
+        -no-show-icons \
+        -theme-str '* \{ font: 10px; \}' \
+        -theme-str 'listview \{ spacing: 0; \}' \
+        -theme-str 'window \{ width: 20em; \}'
+
+# Run/Exec (rofi)
+super + r
+        rofi -show run
+
+# Touchpad ON/OFF
+super + (fn F10)
+
+# Dunst: show history
+suuper + ,
+
+# Dunst: close notification
+super + .
+
+
+
+
+
+##--->  volume & display brightness control  <---#
+## volume control keys for Lenovo Legion 5 laptop
+## volume control keys for Dell Inspiron laptop
+
+XF86AudioLowerVolume
+	~/.scripts/PCs/Legion5/kb_controls/leg5_volume_down.sh
+#	~/.scripts/PCs/dell_rich/kb_controls/volume_down.sh
+#   pamixer -d 5 | pamixer --get-volume-human | xargs -I {} notify-send "Volume: {}"
+#   pamixer -d 5
+
+
+XF86AudioRaiseVolume
+	~/.scripts/PCs/Legion5/kb_controls/leg5_volume_up.sh
+#	~/.scripts/PCs/dell_rich/kb_controls/volume_up.sh
+#   pamixer -i 5 | pamixer --get-volume-human | xargs -I {} notify-send "Volume: {}"
+#   pamixer -i 5
+
+
+XF86AudioMute
+	~/.scripts/PCs/Legion5/kb_controls/leg5_volume_mute.sh
+#	~/.scripts/PCs/dell_rich/kb_controls/volume_mute.sh
+#   pamixer -t | pamixer --get-volume-human | xargs -I {} notify-send "Volume: {}"
+#   pamixer -t
+
+
+
+## brightness control
+
+XF86MonBrightnessDown
+	~/.scripts/PCs/Legion5/kb_controls/leg5_bright_down.sh
+#	~/.scripts/PCs/dell_rich/kb_controls/bright_down.sh	
+#   xbacklight -dec 10%
+#   xbacklight -dec 10% | xbacklight | xargs -I {} notify-send "Brightness down: {}%"
+
+
+XF86MonBrightnessUp
+	~/.scripts/PCs/Legion5/kb_controls/leg5_bright_up.sh
+#	~/.scripts/PCs/dell_rich/kb_controls/bright_up.sh
+#   xbacklight -inc 10%
+#   xbacklight -inc 10% | xbacklight | xargs -I {} notify-send "Brightness up: {}%"
+
+
+# Turn ON/OFF touch pad
+XF86TouchpadOff
+  ~/.scripts/PCs/Legion5/kb_controls/leg5_touchpad_on-off.sh
+
+# XF86Search
+#	~/.scripts/PCs/dell_rich/kb_controls/touchpad_on-off.sh
+
+
+# Other keys
+# XF86Calculator
+
+
+# CMUS music control
+#
+# Play/Pause
+XF86AudioPlay
+  ~/.scripts/PCs/Legion5/kb_controls/leg5_cmus-play-pause.sh
+
+# Stop
+XF86AudioStop
+  ~/.scripts/PCs/Legion5/kb_controls/leg5_cmus-stop.sh
+
+# Previous
+XF86AudioPrev
+  ~/.scripts/PCs/Legion5/kb_controls/leg5_cmus-prev.sh
+
+# Next
+XF86AudioNext
+  ~/.scripts/PCs/Legion5/kb_controls/leg5_cmus-next.sh

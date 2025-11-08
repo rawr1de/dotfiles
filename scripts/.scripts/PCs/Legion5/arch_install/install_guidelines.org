@@ -1,0 +1,303 @@
+Lenovo Legion 5 15ARH05H
+S/N: PF2E2N2B
+MTM: 82B1000AUS
+
+
+* Lenovo Legion 5 (Arch STANDALONE Install)
+
+** Swap file
+
+Recomendations:
+
+< 1gb pc ram  --  2gb ram (swap)
+1-2gb pc ram  --  same size (swap ram)
+8gb   pc ram  --  4gb ram (swap)
+> 8gb pc ram  --  2-4gb ram (swap)
+
+!! boot deve ter 260mb no minimo (sugerido pelo wiki)
+
+#+BEGIN_EXAMPLE
+  # fallocate -l 4GB /swapfile
+  # chmod 600 /swapfile
+  # mkswap /swapfile
+  # swapon /swapfile
+#+END_EXAMPLE
+
+
+** Base install with UEFI
+
+- Arch Linux install guidelines  (FOLLOW OFFICIAL ARCH INSTALL FILE)
+- change font size if necessary  (# setfont sun12x22)
+- set keyboard layout if necessary  (loadkeys br-abnt2)
+- verify the boot mode  (# ls /sys/firmware/efi/efivars)
+- connect to internet  (wifi-menu for wireless)
+- update system clock  (# timedatectl set-ntp true)
+- partition disks, format and activate swap (gdisk, mkfs, mount, swapon)
+
+
+** mount and create partitions
+
+ #+BEGIN_EXAMPLE
+ # mount /dev/sdX2 /mnt  (X2 = partição raiz "/")
+ # mkdir /mnt/boot
+ # mount /dev/sdX1 /mnt/boot
+ # mkdir /mnt/home
+ # mount /dev/sdX3 /mnt/home
+ #+END_EXAMPLE
+
+ - check if partitions were mounted correctly  (# mount [check last lines])
+
+
+** install essential packages (pacstrap):
+
+!! RUN:  legion_SA_base-1.sh
+
+
+** generate fstab with UUID and check it
+
+#+BEGIN_EXAMPLE
+# genfstab -U /mnt >> /mnt/etc/fstab  (and check  /mnt/etc/fstab  for errors)
+#+END_EXAMPLE
+
+- change root into new system  (arch-chroot /mnt)
+
+
+** UEFI Install
+
+- check boot files [EFI, Loader, vmlinuz-linux-lts, initramfs-linux-lts/fallback, intel-ucode]  (ls /boot)
+- create loader configuration file
+
+cd loader  ->  # nvim loader.conf  ->  default arch.conf
+				       timeout 3
+				       (add these 2 lines above)
+
+- create config file  (arhc.conf)
+
+#+BEGIN_EXAMPLE
+# nvim /boot/loader/entries/arch.conf  ->  title	Arch Linux
+                                                        linux	/vmlinuz-linux-lts
+                                                        initrd	/intel-ucode.img
+                                                        initrd	/initramfs-linux-lts.img
+                                                        modprobe.blacklist=pcspkr
+                                                        options	root=UUID=id_da_sua_partição_root(:r! blkid) rw
+#+END_EXAMPLE
+
+
+- passwd  (mudar passwd do root)
+- reboot into new system and remove usb-stick (# reboot now)
+
+
+** The first boot (Post Install)
+
+!! RUN:  legion_base-2.sh  (to set basic configs)
+
+- login into new arch system install as root user  (#)
+- set time zone  (# ln -sf /usr/share/zoneinfo/Region/City /etc/localtime)
+- generate /etc/adjtime  (# hwclock --systohc)
+- generate locale.conf  (edit:  /etc/locale.gen  ,  UNCOMMENT #en_US.UTF-8 , #pt_BR.UTF-8  ,  then run: # locale-gen)
+- create  /etc/locale.conf  and add  LANG=en_US.UTF-8  to it
+- create the hostname config file  (echo "nome_do_seu_hostname" >> /etc/hostname)
+- add the following entries to /etc/hosts  (the file you just created)
+
+   127.0.0.1	localhost
+   ::1		localhost
+   127.0.1.1	nome_do_seu_hostname.localdomain	nome_do_seu_hostname
+
+
+- connect to internet (wifi-menu for wireless)
+
+- make mirrorlist backup and sort servers
+
+#+BEGIN_EXAMPLE
+  # cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bk
+  # reflector --latest 100 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+#+END_EXAMPLE
+
+  (select the 100 most recently synchronized HTTP/HTTPS mirrors, sorting by download speed)
+
+
+- install extra packages
+
+RUN:  dell_post-01.sh
+
+- create user  (# useradd -m -G wheel user_name)
+- change passwords  [root/user]  (# passwd)
+- add user to sudoers  (uncomment # %wheel ALL=(ALL) NOPASSWD: ALL)
+- create AUR folder and install yay
+
+#+BEGIN_EXAMPLE
+   $ mkdir $HOME/AUR_builds
+   $ git clone https://aur.archlinux.org/yay.git
+#+END_EXAMPLE
+
+- config greeter/xinit
+- reboot system to access a graphical enviroment via greeter/xinit
+
+
+
+CRIAR DIRETORIOS SE NAO EXISTIREM!!
+
+xdg-user-dirs-update --set DOWNLOAD ~/DLs
+xdg-user-dirs-update --set DESKTOP ~/Desk
+xdg-user-dirs-update --set DOCUMENTS ~/Docs
+xdg-user-dirs-update --set MUSIC ~/Musk
+xdg-user-dirs-update --set PICTURES ~/Pix
+xdg-user-dirs-update --set PUBLICSHARE ~/Pub
+xdg-user-dirs-update --set TEMPLATES ~/Templates
+xdg-user-dirs-update --set VIDEOS ~/Vidz
+xdg-user-dirs-update --set TEMP ~/tmp
+
+
+
+** Battery conservation
+
+*** Lenovo laptops
+
+Battery Conservation Mode on IdeaPad laptops
+(limits battery charging to 55-60% of its capacity to improve battery life)
+
+#1  make sure the ideapad_laptop kernel module is loaded
+#+BEGIN_EXAMPLE
+    $ lsmod | grep ideapad_laptop
+#+END_EXAMPLE
+
+#2 If it is, run the following command as root to enable Battery Conservation Mode:
+#+BEGIN_EXAMPLE
+   # echo 1 >/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode
+#+END_EXAMPLE
+
+0 = disable feature
+1 = enable feature
+
+
+*** Lenovo+others laptops
+
+LPT (advanced power management for Dell/others)
+https://wiki.archlinux.org/index.php/TLP
+
+run these lines:
+
+enable/disable service:
+sudo systemctl enable tlp.service
+
+uncomment & change at /etc/tlp.conf
+#+BEGIN_EXAMPLE
+# Operation mode when no power supply can be detected: AC, BAT.
+#+END_EXAMPLE
+
+TLP_DEFAULT_MODE=BAT  (from AC to BAT)
+
+#+BEGIN_EXAMPLE
+# Operation mode select: 0=depend on power source, 1=always use TLP_DEFAULT_MODE
+#+END_EXAMPLE
+
+TLP_PERSISTENT_DEFAULT=1
+
+
+Set these accordingly:
+
+USB_AUTOSUSPEND=0
+USB_BLACKLIST_BTUSB=1
+USB_BLACKLIST_PHONE=1
+USB_BLACKLIST_WWAN=1
+
+
+
+
+
+* Lenovo Legion 5 -- DUAL boot w/ Windows in UEFI
+
+(1) Install windows first (leaving blank partition space for Linux)
+
+** Criar/Formatar/Montar partições
+
+(2) Criar/Formatar/Montar partições Linux (root/home) após instalado o Windows
+    !! wiki sugere partição boot com 260 mb mínimo
+
+#+BEGIN_EXAMPLE
+# cfdisk -> new -> root partition size (eg. 10G)  -> type -> root
+# mkfs.ext4 /dev/sdX2 /mnt  (X1 = partição raiz "/")
+
+# cfdisk -> new -> home partition size (eg. 50G)  -> type -> home
+# mkfs.ext4 /dev/sdX3 /mnt  (X2 = partição home)
+
+
+# mount /dev/sdX1 /mnt  (X1 = partição raiz do linux "/")
+			(8300 partition type number)
+
+# mkdir /mnt/home
+# mount /dev/sdX2 /mnt/home (X2 = partição home do linux)
+			    (EF00 partition type number)
+
+# mkdir /mnt/boot
+# mount /dev/sdX3 /mnt/boot (X3 = partição boot do windows)
+			    (geralmente tem 500-600mb)
+
+# mkdir /mnt/win10
+# mount /dev/sdX4 /mnt/win10 (X4 = partição raiz do windows)
+#+END_EXAMPLE
+
+- check if partitions were mounted correctly  (# mount [check last lines])
+- montar outras partições se necessário  (antes de gerar o fstab)
+- criar swap file se necessário
+- proceder com instalação
+
+
+** make Swap file
+
+Recomendations:
+
+< 1gb pc ram  --  2gb ram (swap)
+1-2gb pc ram  --  same size (swap ram)
+8gb   pc ram  --  4gb ram (swap)
+> 8gb pc ram  --  2-4gb ram (swap)
+
+#+BEGIN_EXAMPLE
+# fallocate -l 4GB /swapfile
+# chmod 600 /swapfile
+# mkswap /swapfile
+# swapon /swapfile
+#+END_EXAMPLE
+
+
+** Instalação (pacotes essenciais) [pacstrap]
+
+Rodar script de instalação dos pacotes base do sistema escolhido:
+
+*KDE*
+legion_DUAL_-_base_install_KDE.sh
+
+*XFCE+OPENBOX*
+legion_DUAL_-_base_install_xfce-obox.sh
+
+*!!!* Para o dual boot funcionar é necessário contem os pacotes: os-prober, efibootmgr, dostools e mtools
+
+
+*!!!* Fazer verificações pedidas ao término do script escolhido
+      e
+      Proceder com script  legion_post-1.sh
+
+
+*!!!* Fazer verificações pedidas ao término do script escolhido
+      e
+      Proceder com script  legion_post-2.sh
+
+
+** Em caso de problemas com o boot do Linux
+
+Install & configure grub:
+#+BEGIN_EXAMPLE
+# grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+#+END_EXAMPLE
+
+Windows/Linux systems must be recognised, if not check mounts/fstab
+also check linux boot files (vmlinuz, initram..) and
+update system with:  # pacman -Syu
+
+if it still fails, re-install kernel with:  # pacman -S linux-zen
+it creates the boot/mkinitcpio files
+
+then run:  # mkinitcpio -p kernel_name  (e.g. linux-zen)
+           (files reside in  /etc/mkinitcpio.d/)
+
+then update the system with:  # grub-mkconfig -o /boot/grub/grub.cfg

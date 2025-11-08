@@ -1,0 +1,92 @@
+filter 
+pl-export ~/tmp/rdo_list.m3u
+pl-export /tmp/rdo_list.m3u
+pl-create sigh
+win-activate 
+win-toggle
+mark saxon
+pl-create saxon
+pl-create 
+add 03 - Are We Travellers In Time.flac
+filter fff
+add
+clear 
+filter F
+update-cache 
+?
+set shuffle=albums
+mark 
+set pl_sort
+win-add-p 
+win-add-l
+help 
+pl-create checkin_#1
+cd
+h
+player-stop
+filter f
+fset 90s=date>=1990&date<2000
+unbind common b
+unbind b
+set shuffle=off
+set continue=true
+set continue_album=truei
+continue_album
+pl-create instru
+add -p instru 
+add /run/media/rdo/Elements/MP3's/Metal/Akercocke
+add /run/media/rdo/Elements/MP3's/Metal/Sodom
+add /run/media/rdo/Elements/MP3's/Metal/Evergrey/1999 - Solitude, Dominance, Tragedy
+shell !!!!!!!!
+add /run/media/rdo/Elements/MP3's/Metal/Scanner
+add /run/media/rdo/Elements/MP3's/Outros/Russell Allen - Atomic Soul (2005)
+add /run/media/rdo/Elements/MP3's/Outros/Michael Pinnella - Enter by the Twelfth Gate (2004)
+add /run/media/rdo/Elements/MP3's/Metal/Savatage
+add /run/media/rdo/Elements/MP3's/Outros/Robert Cray/Nothin' But Love (2012)
+add /run/media/rdo/Elements/MP3's/Metal/Blood Red Throne
+add /run/media/rdo/Elements/MP3's/Metal/Monolord - Rust (2017)/
+add /run/media/rdo/Elements/MP3's/Metal/Cacophony/Speed Metal Symphony (1987)
+add /run/media/rdo/Elements/MP3's/Metal/Cacophony/Cacophony - Speed Metal Symphony/
+add /run/media/rdo/Elements/MP3's/Metal/Caronte (IT)/
+add /run/media/rdo/Elements/MP3's/Metal/Cenotaph - Pseudo Verminal Cadaverium/
+add /run/media/rdo/Elements/MP3's/Metal/Morgana Lefay/Sanctified/
+add /run/media/rdo/Elements/MP3's/Metal/Morgana Lefay/2
+add /run/media/rdo/Elements/MP3's/Metal/Morgana Lefay/
+add /run/media/rdo/Elements/MP3's/Outros/Vitalij Kuprij
+add /run/media/rdo/Elements/MP3's/Outros/Star Wars/The Empire Strikes Back (Special Edition)
+add /run/media/rdo/Elements/MP3's/Outros/Vinnie Colaiuta - ST (1994)
+add /run/media/rdo/Elements/MP3's/Metal/Slaughter - The Wild Life (1992) (Remaster)
+add /run/media/rdo/Elements/MP3's/Outros/Frank Solari - Frank Solari
+add /run/media/rdo/Elements/MP3's/Outros/Brett Garsed - Big Sky
+add /run/media/rdo/Elements/MP3's/Metal/Mind's Eye - Into the Unknown (1998)/
+add /run/media/rdo/Elements/MP3's/Metal/Septic Flesh/A Fallen Temple
+add /run/media/rdo/Elements/MP3's/Metal/Coroner/Grin
+add /run/media/rdo/Elements/MP3's/Metal/
+cd /run/media/rdo/Elements/MP3's/Metal/
+dsp.ao.wav_dir
+pwd
+add /run/media/rdo/Elements/MP3's/Metal/Altered Beast - OST (Arcade)/
+add /run/media/rdo/Elements/MP3's/Metal/Rezn/
+add /run/media/
+add /run/media/rdo/Elements/MP3's/
+colorscheme RDO_manj_green
+RDO
+colorscheme gruvbox_RDO
+live-filter 
+colorscheme gruvbox
+colorscheme gruvbox-alt
+colorscheme solarized-dark
+colorscheme zenburn
+colorscheme gruvbox-warm
+colorscheme xterm-white
+colorscheme night
+colorscheme jellybeans
+colorscheme green-mono-88
+colorscheme gray-88
+colorscheme green
+colorscheme dracula
+colorscheme default
+colorscheme cyan
+add 
+colorscheme amazon
+colorscheme 

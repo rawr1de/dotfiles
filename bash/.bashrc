@@ -1,0 +1,1 @@
+Desk/Dropbox/configs/dotfiles/KDE_dots/home_dots/.bashrc

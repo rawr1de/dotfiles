@@ -1,0 +1,104 @@
+# Zathura configuration file
+# See man `man zathurarc'
+
+set sandbox none
+set guioptions ""
+
+# Open document in fit-width mode by default
+set adjust-open "best-fit"
+
+# One page per row by default
+set pages-per-row 1
+
+#stop at page boundries
+set scroll-page-aware "true"
+# set smooth-scroll "true"
+set scroll-full-overlap 0.01
+set scroll-step 100
+
+#zathurarc-dark
+
+set font "inconsolata 15"
+set default-bg "#5B575C" #00
+set default-fg "#F7F7F6" #01
+
+set statusbar-fg "#B0B0B0" #04
+set statusbar-bg "#202020" #01
+
+set inputbar-bg "#151515" #00 currently not used
+set inputbar-fg "#FFFFFF" #02
+
+set notification-error-bg "#AC4142" #08
+set notification-error-fg "#151515" #00
+
+set notification-warning-bg "#AC4142" #08
+set notification-warning-fg "#151515" #00
+
+set highlight-color "#F4BF75" #0A
+set highlight-active-color "#6A9FB5" #0D
+
+set completion-highlight-fg "#151515" #02
+set completion-highlight-bg "#90A959" #0C
+
+set completion-bg "#303030" #02
+set completion-fg "#E0E0E0" #0C
+
+set notification-bg "#90A959" #0B
+set notification-fg "#151515" #00
+
+# inicia com o "modo escuro" ligado
+set recolor "true"
+
+# cor do fundo (quando invertido)
+set recolor-lightcolor "#3D3D3D" #00
+# cor do texto (quando invertido)
+set recolor-darkcolor "#9C9C9C" #06
+set recolor-reverse-video "true"
+set recolor-keephue "true"
+
+#set render-loading "false"
+
+#nr. pixels rolagem de folha vertical
+set scroll-step 15 
+
+#nr. pixels rolagem de folha horizontal
+set scroll-hstep 15
+
+# copy to clipboard (ctrl+v to paste)
+set selection-clipboard clipboard
+
+set statusbar-h-padding 0
+
+set statusbar-v-padding 0
+
+set page-padding 2
+
+map p print
+map [fullscreen] p print
+
+map u recolor
+map [fullscreen] u recolor
+map [presentation] u recolor
+
+map j scroll left
+map [fullscreen] j scroll left
+map [presentation] j scroll left
+map [index] j navigate_index collapse
+
+map k scroll down
+map [fullscreen] k scroll down
+map [presentation] k scroll down
+map [index] k scroll down
+map [index] k navigate_index down
+
+map l scroll right
+map [fullscreen] l scroll right
+map [presentation] l scroll right 
+map [index] l scroll right 
+map [index] l navigate_index expand 
+
+map i scroll up
+map [fullscreen] i scroll up
+map [presentation] i scroll up
+map [index] i scroll up
+map [index] i navigate_index up

@@ -1,0 +1,125 @@
+##--->  wm independent hotkeys  <---##
+
+# reload sxhkd config file
+super + F12
+	pkill -USR1 -x sxhkd; notify-send 'sxhkd' 'Reloaded config'
+
+# terminal emulator
+super + Return
+	kitty
+
+# show installed programs
+super + space
+	rofi -modi drun -show drun -show-icons
+
+# text editor (NeoVim) 
+# super + n
+        # bspc rule -a 'kitty' -o state=fullscreen desktop=^2 && $TERMINAL -e nvim
+
+# text editor (emacs)
+super + m
+        emacs -mm
+
+# web browser #1 (brave)
+super + w
+ 	brave
+
+# web browser #2 (librewolf)
+super + e
+        librewolf
+
+# file manager (pcmanfm)
+super + f
+	pcmanfm
+
+# pulsemixer audio control
+# super + v
+        # bspc rule -a 'kitty' -o state=floating rectangle=600x300+750+10 sticky=on && $TERMINAL -e pulsemixer
+
+# htop (controle de processos)
+super + h
+        bspc rule -a 'kitty' -o state=floating rectangle=800x600+550+10 sticky=on && $TERMINAL -e htop
+
+# typing program
+super + u
+	bspc rule -a 'kitty' -o state=fullscreen && $TERMINAL -e gtypist
+
+# screenshot (flameshot)
+super + Print
+	flameshot gui
+
+# sxhkd helper
+super + slash
+        sxhkd_helper.sh
+
+# programs helper
+super + i
+        helper_rofi_menu.sh
+
+# rofi calculator
+super + o
+        rofi -show calc -modi calc -no-show-match -no-sort
+
+# man pages [.pdf]
+super + p
+        rofi_man.sh
+
+# lock screen with 'slock'
+super + l
+        slock
+
+# change keyboard layout
+# alt + space
+
+# kill a window with mouse pointer
+super + k
+      xkill
+
+# show clipmenu
+super + v
+    CM_LAUNCHER=rofi clipmenu \
+    CM_DIR=$HOME/tmp \
+        -location 1 \
+        -m -3 \
+        -no-show-icons \
+        -theme-str '* \{ font: 10px; \}' \
+        -theme-str 'listview \{ spacing: 0; \}' \
+        -theme-str 'window \{ width: 20em; \}'
+
+
+
+##--->  volume & display brightness control  <---#
+## volume control keys for Dell Inspiron laptop
+
+
+XF86AudioLowerVolume
+	~/.scripts/PCs/DELL_laptop/kb_controls/volume_down.sh
+#   pamixer -d 5 | pamixer --get-volume-human | xargs -I {} notify-send "Volume: {}"
+#   pamixer -d 5
+
+
+XF86AudioRaiseVolume
+	~/.scripts/PCs/DELL_laptop/kb_controls/volume_up.sh
+#   pamixer -i 5 | pamixer --get-volume-human | xargs -I {} notify-send "Volume: {}"
+#   pamixer -i 5
+
+
+XF86AudioMute
+	~/.scripts/PCs/DELL_laptop/kb_controls/volume_mute.sh
+#   pamixer -t | pamixer --get-volume-human | xargs -I {} notify-send "Volume: {}"
+#   pamixer -t
+
+
+
+## brightness control keys for lenovo netbook
+
+XF86MonBrightnessDown
+	~/.scripts/PCs/DELL_laptop/kb_controls/bright_down.sh	
+#   xbacklight -dec 10%
+#   xbacklight -dec 10% | xbacklight | xargs -I {} notify-send "Brightness down: {}%"
+
+
+XF86MonBrightnessUp
+	~/.scripts/PCs/DELL_laptop/kb_controls/bright_up.sh
+#   xbacklight -inc 10%
+#   xbacklight -inc 10% | xbacklight | xargs -I {} notify-send "Brightness up: {}%"

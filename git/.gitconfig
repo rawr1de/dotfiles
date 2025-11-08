@@ -1,0 +1,7 @@
+[user]
+   name = rawr1de
+   email = rdo6@msn.com
+[core]
+   editor = emacsclient
+[init]
+   defaultBranch = main

@@ -1,0 +1,15 @@
+[Added Associations]
+application/x-shellscript=kitty-2.desktop;
+inode/directory=org.kde.dolphin.desktop;
+video/x-matroska=vlc.desktop;
+x-scheme-handler/http=brave-browser.desktop;
+x-scheme-handler/https=brave-browser.desktop;
+
+[Default Applications]
+application/pdf=org.pwmt.zathura.desktop
+application/x-shellscript=kitty-2.desktop;
+inode/directory=org.kde.dolphin.desktop;
+text/html=brave-browser.desktop
+video/x-matroska=vlc.desktop;
+x-scheme-handler/http=brave-browser.desktop;
+x-scheme-handler/https=brave-browser.desktop;

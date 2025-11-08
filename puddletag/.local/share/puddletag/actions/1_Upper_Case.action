@@ -1,0 +1,17 @@
+{
+  "info": {
+    "name": "#1  Upper Case  (Artist, Album)"
+  },
+  "Func0": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "titleCase",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "Mixed Case",
+      "., !"
+    ]
+  }
+}

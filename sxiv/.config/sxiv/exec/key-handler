@@ -1,0 +1,47 @@
+#!/bin/sh
+
+## Trash marked images with:  Ctrl+x  then  Ctrl+d  ~/.Trash/
+## Copy  marked images with:  Ctrl+x  then  Ctrl+y  ~/IMAGES_COPIED
+## Move  marked images with:  Ctrl+x  then  Ctrl+m  ~/IMAGES_MOVED
+## Clean cache+trash   with:  Ctrl+x  then  Ctrl+f  ~/.cache/sxiv  &&   ~/.Trash/
+
+
+while read file
+do
+        case "$1" in
+# trash marked images (~/.Trash)
+        "C-d")
+                mv "$file" ~/.Trash/ ;;
+# copy marked images
+        "C-y")
+                mkdir -p  ~/IMAGES_COPIED &&  mv  "$file"  ~/IMAGES_COPIED ;;
+# move marked images
+        "C-m")
+                mkdir -p  ~/IMAGES_CUTTED &&  mv  "$file"  ~/IMAGES_MOVED ;;
+# clean cache and trash
+        "C-f")
+                cd ~/.cache/sxiv && \rm -fr *   &&   cd  ~/.Trash/  &&  \rm -fr *  ;;
+# Rotate image 90 degree
+	"C-r")
+                convert -rotate 90 "$file" "$file" ;;
+# Copy image name
+	"C-c")
+                echo -n "$file" | xclip -selection clipboard ;;
+# Set image as wallpaper 'centered'
+	"z")
+                feh --bg-fill "$file" ;;
+                #xwallpaper --zoom "$file" ;;
+	"x")
+                feh --bg-max "$file" ;;
+                #xwallpaper --focus "$file" ;;
+	"c")
+                feh --bg-center "$file" ;;
+	        #xwallpaper --center "$file" ;;
+	"v")
+                feh --bg-scale "$file" ;;
+                #xwallpaper --maximize "$file" ;;
+	#"b")
+                #feh --bg-center "$file" ;;
+                #xwallpaper --stretch "$file" ;;
+         esac
+done

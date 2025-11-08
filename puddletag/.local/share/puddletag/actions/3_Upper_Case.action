@@ -1,0 +1,16 @@
+{
+  "info": {
+    "name": "#3  Upper Case  (Titles)"
+  },
+  "Func0": {
+    "fields": [
+      "title"
+    ],
+    "func_name": "titleCase",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "Mixed Case",
+      "., !"
+    ]
+  }
+}

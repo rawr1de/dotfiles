@@ -1,0 +1,315 @@
+{
+  "info": {
+    "name": "#2  Mixed Case  (Artist, Album)"
+  },
+  "Func0": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replace",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "_",
+      " ",
+      false,
+      false
+    ]
+  },
+  "Func1": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replace",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "Vs",
+      "vs",
+      false,
+      true
+    ]
+  },
+  "Func2": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replace",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "'N'",
+      "'n'",
+      false,
+      true
+    ]
+  },
+  "Func3": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replace",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "Is",
+      "is",
+      false,
+      true
+    ]
+  },
+  "Func4": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replace",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "But",
+      "but",
+      false,
+      true
+    ]
+  },
+  "Func5": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replace",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "Are",
+      "are",
+      false,
+      true
+    ]
+  },
+  "Func6": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replace",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "At",
+      "at",
+      false,
+      true
+    ]
+  },
+  "Func7": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replace",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "For",
+      "for",
+      false,
+      true
+    ]
+  },
+  "Func8": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replace",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "Or",
+      "or",
+      false,
+      true
+    ]
+  },
+  "Func9": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replace",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "It",
+      "it",
+      false,
+      true
+    ]
+  },
+  "Func10": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replace",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      "   ",
+      " - ",
+      false,
+      false
+    ]
+  },
+  "Func11": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". To ",
+      "$lower($1)",
+      false
+    ]
+  },
+  "Func12": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". In ",
+      "$lower($1)",
+      false
+    ]
+  },
+  "Func13": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". A ",
+      "$lower($1)",
+      false
+    ]
+  },
+  "Func14": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". Of ",
+      "$lower($1)",
+      false
+    ]
+  },
+  "Func15": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". The ",
+      "$lower($1)",
+      false
+    ]
+  },
+  "Func16": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". On ",
+      "$lower($1)",
+      false
+    ]
+  },
+  "Func17": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". And ",
+      "$lower($1)",
+      false
+    ]
+  },
+  "Func18": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". An ",
+      "$lower($1)",
+      false
+    ]
+  },
+  "Func19": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". With ",
+      "$lower($1)",
+      false
+    ]
+  },
+  "Func20": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". So ",
+      "$lower($1)",
+      false
+    ]
+  },
+  "Func21": {
+    "fields": [
+      "artist",
+      "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". By ",
+      "$lower($1)",
+      false
+    ]
+  },
+  "Func22": {
+    "fields": [
+      "artist",
+     "album"
+    ],
+    "func_name": "replaceWithReg",
+    "module": "puddlestuff.functions",
+    "arguments": [
+      ". From ",
+      "$lower($1)",
+      false
+    ]
+  }
+}
