@@ -48,7 +48,9 @@ for package in $PACKAGES; do
     if [ -n "$PACKAGE_CONFLICTS" ]; then
         while IFS= read -r conflict; do
             if [ -n "$conflict" ]; then
-                CONFLICTS+=("$conflict")
+                # Store absolute path by prepending HOME
+                FULL_CONFLICT_PATH="$HOME/$conflict"
+                CONFLICTS+=("$FULL_CONFLICT_PATH")
             fi
         done <<< "$PACKAGE_CONFLICTS"
     fi
@@ -68,7 +70,9 @@ fi
 # Display conflicts
 echo -e "\n${RED}⚠ Found ${#CONFLICTS[@]} conflicting file(s):${NC}"
 for i in "${!CONFLICTS[@]}"; do
-    echo -e "${YELLOW}  $((i+1)). ${CONFLICTS[$i]}${NC}"
+    # Display relative path for readability
+    RELATIVE_PATH="${CONFLICTS[$i]#$HOME/}"
+    echo -e "${YELLOW}  $((i+1)). $RELATIVE_PATH${NC}"
 done
 
 echo -e "\n${BLUE}Options:${NC}"
@@ -86,13 +90,13 @@ case "${choice^^}" in
         echo -e "\n${YELLOW}Backing up files to $BACKUP_DIR${NC}"
         
         for conflict in "${CONFLICTS[@]}"; do
-            FULL_PATH="$HOME/$conflict"
-            if [ -e "$FULL_PATH" ]; then
-                # Create subdirectories in backup if needed
-                BACKUP_SUBDIR="$BACKUP_DIR/$(dirname "$conflict")"
+            if [ -e "$conflict" ]; then
+                # Extract relative path for backup structure
+                RELATIVE_PATH="${conflict#$HOME/}"
+                BACKUP_SUBDIR="$BACKUP_DIR/$(dirname "$RELATIVE_PATH")"
                 mkdir -p "$BACKUP_SUBDIR"
-                mv "$FULL_PATH" "$BACKUP_SUBDIR/"
-                echo -e "${GREEN}✓ Backed up: $conflict${NC}"
+                mv "$conflict" "$BACKUP_SUBDIR/"
+                echo -e "${GREEN}✓ Backed up: $RELATIVE_PATH${NC}"
             fi
         done
         
@@ -110,10 +114,10 @@ case "${choice^^}" in
         
         if [ "$confirm" = "DELETE" ]; then
             for conflict in "${CONFLICTS[@]}"; do
-                FULL_PATH="$HOME/$conflict"
-                if [ -e "$FULL_PATH" ]; then
-                    rm -rf "$FULL_PATH"
-                    echo -e "${RED}✗ Deleted: $conflict${NC}"
+                if [ -e "$conflict" ]; then
+                    RELATIVE_PATH="${conflict#$HOME/}"
+                    rm -rf "$conflict"
+                    echo -e "${RED}✗ Deleted: $RELATIVE_PATH${NC}"
                 fi
             done
             
@@ -133,13 +137,13 @@ case "${choice^^}" in
         mkdir -p "$BACKUP_DIR"
         
         for conflict in "${CONFLICTS[@]}"; do
-            FULL_PATH="$HOME/$conflict"
-            
-            if [ ! -e "$FULL_PATH" ]; then
+            if [ ! -e "$conflict" ]; then
                 continue
             fi
             
-            echo -e "\n${YELLOW}File: $conflict${NC}"
+            RELATIVE_PATH="${conflict#$HOME/}"
+            
+            echo -e "\n${YELLOW}File: $RELATIVE_PATH${NC}"
             echo "  [B] Backup this file"
             echo "  [D] Delete this file"
             echo "  [S] Skip this file"
@@ -149,13 +153,13 @@ case "${choice^^}" in
             
             case "${file_choice^^}" in
                 B)
-                    BACKUP_SUBDIR="$BACKUP_DIR/$(dirname "$conflict")"
+                    BACKUP_SUBDIR="$BACKUP_DIR/$(dirname "$RELATIVE_PATH")"
                     mkdir -p "$BACKUP_SUBDIR"
-                    mv "$FULL_PATH" "$BACKUP_SUBDIR/"
+                    mv "$conflict" "$BACKUP_SUBDIR/"
                     echo -e "${GREEN}✓ Backed up${NC}"
                     ;;
                 D)
-                    rm -rf "$FULL_PATH"
+                    rm -rf "$conflict"
                     echo -e "${RED}✗ Deleted${NC}"
                     ;;
                 S)
