@@ -30,7 +30,7 @@ git pull
 ### Common Scenarios
 ```bash
 # Made changes on multiple machines? Pull first, then push
-cd ~/dotfiles
+cd ~/.dotfiles
 git pull      # Get changes from other machines
 git add -A
 git commit -m "Update configs"
@@ -51,7 +51,7 @@ git show
 Stow mirrors your home directory structure. Each subdirectory is a "package" you can stow independently.
 
 ```
-~/dotfiles/
+~/.dotfiles/
 ├── bash/
 │   ├── .bashrc
 │   ├── .bash_profile
@@ -121,10 +121,10 @@ curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/dotfiles/main/deploy.
 ### Manual Deploy
 ```bash
 # 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/dotfiles
+git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/.dotfiles
 
 # 2. Navigate to dotfiles directory
-cd ~/dotfiles
+cd ~/.dotfiles
 
 # 3. Stow the packages you want
 stow bash
@@ -146,8 +146,8 @@ source ~/.bashrc
 ### Verify Installation
 ```bash
 # Check if symlinks are correct
-ls -la ~/.bashrc    # Should show -> ~/dotfiles/bash/.bashrc
-ls -la ~/.vimrc     # Should show -> ~/dotfiles/vim/.vimrc
+ls -la ~/.bashrc    # Should show -> ~/.dotfiles/bash/.bashrc
+ls -la ~/.vimrc     # Should show -> ~/.dotfiles/vim/.vimrc
 
 # Test your configs
 vim --version
@@ -167,13 +167,13 @@ stow bash
 ### Update All Machines
 ```bash
 # On machine 1: Make changes and push
-cd ~/dotfiles
+cd ~/.dotfiles
 git add -A
 git commit -m "Update configs"
 git push
 
 # On machine 2: Pull changes (symlinks update automatically)
-cd ~/dotfiles
+cd ~/.dotfiles
 git pull
 ```
 
