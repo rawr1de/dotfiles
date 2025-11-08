@@ -2,7 +2,7 @@
 
 set -e  # Exit on error
 
-DOTFILES_DIR="$HOME/dotfiles"
+DOTFILES_DIR="$HOME/.dotfiles"
 
 echo "🚀 Deploying dotfiles..."
 
