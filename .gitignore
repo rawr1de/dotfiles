@@ -1,12 +1,3 @@
 .DS_Store
 kitty/.config/kitty/kitty-themes/
 ranger/.config/ranger/plugins/ranger_devicons/
-
-# SSH - NEVER commit private keys!
-ssh/.ssh/id_*
-ssh/.ssh/*_rsa
-ssh/.ssh/*_ed25519
-ssh/.ssh/*_ecdsa
-ssh/.ssh/*_dsa
-!ssh/.ssh/*.pub
-!ssh/.ssh/config
