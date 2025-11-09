@@ -45,7 +45,7 @@ DialogWidth=2048
 PreloadWeight=42
 
 [Containments][135][General]
-positions={"1536x864":["2","14","desktop:/Space Hulk Tactics.desktop","0","13","desktop:/tel_typing.sh","0","1","desktop:/Trader Workstation.desktop","0","12","desktop:/specs.txt","1","0","desktop:/4_things_experts.png","0","10","desktop:/engineer_evaluation.org","0","9","desktop:/Projetos SketchUp","0","6","desktop:/tel_health.org","1","2","desktop:/metodo_feynman.png","0","7","desktop:/DUSK.desktop","0","11","desktop:/RDO_NATURALIZATION","0","4","desktop:/markus_lightweight_tripod_options.png","0","5","desktop:/riding_course","0","8","desktop:/refinance","0","2","desktop:/Dropbox","0","3","desktop:/tel_health.tex","1","1","desktop:/BETO_VISTO","0","0"],"2048x1152":["1","18","desktop:/specs.txt","0","13","desktop:/Space Hulk Tactics.desktop","0","14","desktop:/BETO_VISTO","0","0","desktop:/tel_health.org","0","15","desktop:/refinance","0","4","desktop:/4_things_experts.png","0","6","desktop:/Trader Workstation.desktop","0","12","desktop:/engineer_evaluation.org","0","7","desktop:/riding_course","0","5","desktop:/Dropbox","0","1","desktop:/metodo_feynman.png","0","9","desktop:/tel_typing.sh","0","11","desktop:/DUSK.desktop","0","10","desktop:/RDO_NATURALIZATION","0","3","desktop:/tel_health.tex","0","16","desktop:/markus_lightweight_tripod_options.png","0","8","desktop:/Projetos SketchUp","0","2"]}
+positions={"1536x864":["2","14","desktop:/Space Hulk Tactics.desktop","0","13","desktop:/tel_typing.sh","0","1","desktop:/Trader Workstation.desktop","0","12","desktop:/specs.txt","1","0","desktop:/4_things_experts.png","0","10","desktop:/engineer_evaluation.org","0","9","desktop:/Projetos SketchUp","0","6","desktop:/tel_health.org","1","2","desktop:/metodo_feynman.png","0","7","desktop:/DUSK.desktop","0","11","desktop:/RDO_NATURALIZATION","0","4","desktop:/markus_lightweight_tripod_options.png","0","5","desktop:/riding_course","0","8","desktop:/refinance","0","2","desktop:/Dropbox","0","3","desktop:/tel_health.tex","1","1","desktop:/BETO_VISTO","0","0"],"2048x1152":["1","18","desktop:/RDO_NATURALIZATION","0","3","desktop:/refinance","0","4","desktop:/specs.txt","0","13","desktop:/riding_course","0","5","desktop:/4_things_experts.png","0","6","desktop:/tel_typing.sh","0","11","desktop:/Projetos SketchUp","0","2","desktop:/DUSK.desktop","0","10","desktop:/Space Hulk Tactics.desktop","0","14","desktop:/engineer_evaluation.org","0","7","desktop:/tel_health.org","0","15","desktop:/markus_lightweight_tripod_options.png","0","8","desktop:/Trader Workstation.desktop","0","12","desktop:/metodo_feynman.png","0","9","desktop:/tel_health.tex","0","16","desktop:/Dropbox","0","1","desktop:/BETO_VISTO","0","0"]}
 sortMode=-1
 
 [Containments][135][Wallpaper][org.kde.image][General]
@@ -197,8 +197,8 @@ immutability=1
 lastScreen=1
 location=6
 plugin=org.kde.plasma.private.systemtray
-popupHeight=752
-popupWidth=752
+popupHeight=756
+popupWidth=756
 wallpaperplugin=org.kde.image
 
 [Containments][238][Applets][239]
@@ -350,8 +350,8 @@ plugin=org.kde.plasma.kickoff
 
 [Containments][255][Applets][256][Configuration]
 PreloadWeight=100
-popupHeight=841
-popupWidth=1207
+popupHeight=845
+popupWidth=1211
 
 [Containments][255][Applets][256][Configuration][ConfigDialog]
 DialogHeight=540
@@ -427,8 +427,8 @@ immutability=1
 lastScreen=0
 location=5
 plugin=org.kde.plasma.private.systemtray
-popupHeight=812
-popupWidth=812
+popupHeight=816
+popupWidth=816
 wallpaperplugin=org.kde.image
 
 [Containments][262][Applets][263]
@@ -588,5 +588,5 @@ icon=manjaro
 systemFavorites=suspend\\,hibernate\\,reboot\\,shutdown
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,85a9661a-865a-40e8-9102-a093b71bc487,14,file:///home/rdo/Pix/wallz/1200px-Thomas_Cole_-_The_Voyage_of_Life_Youth\\,_1842_(National_Gallery_of_Art).jpg,file:///home/rdo/Pix/wallz/The Taro Inari Shrine In The Rice Fields At Asakusa_Kobayashi.jpg,file:///home/rdo/Pix/wallz/jap_cool.jpg,file:///home/rdo/Pix/wallz/tux_father.jpg,file:///home/rdo/Pix/wallz/mt_fuji.jpg,file:///home/rdo/Pix/wallz/Pierre_Patel_-_Landscape_with_Ruins_-_WGA17086.jpg,file:///home/rdo/Pix/wallz/Lempertz-1108-1065-Old-Masters-and-19th-Century-Art-Pierre-Patel-Landscape-with-the-Flight-into-Egypt.jpg,file:///home/rdo/Pix/wallz/powerslave.jpg,file:///home/rdo/Pix/wallz/47435359_2145985965432622_6516204405874753536_n.jpg,file:///home/rdo/Pix/wallz/the wild hunt of odin.jpg,file:///home/rdo/Pix/wallz/tumblr_nk6t50xtbU1re33kmo1_1280.jpg,file:///home/rdo/Pix/wallz/rudy_chiadao.jpg,file:///home/rdo/Pix/wallz/Taira no Tadamori Captures the Priest of Midō.jpg,file:///home/rdo/Pix/wallz/saint.jpg
-screenMapping=desktop:/tel_health.org,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/1725316638_preview_darkdevotionmap-BOOKS2.png,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/RDO_NATURALIZATION,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/metodo_feynman.png,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/engineer_evaluation.org,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/tel_health.tex,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/4_things_experts.png,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/refinance,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/BETO_VISTO,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/Space Hulk Tactics.desktop,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/Projetos SketchUp,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/Trader Workstation.desktop,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/riding_course,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/markus_lightweight_tripod_options.png,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/Dropbox,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/specs.txt,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/tel_typing.sh,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/DUSK.desktop,0,85a9661a-865a-40e8-9102-a093b71bc487
+itemsOnDisabledScreens=0,85a9661a-865a-40e8-9102-a093b71bc487,14,file:///home/rdo/Pix/wallz/Lempertz-1108-1065-Old-Masters-and-19th-Century-Art-Pierre-Patel-Landscape-with-the-Flight-into-Egypt.jpg,file:///home/rdo/Pix/wallz/Pierre_Patel_-_Landscape_with_Ruins_-_WGA17086.jpg,file:///home/rdo/Pix/wallz/powerslave.jpg,file:///home/rdo/Pix/wallz/The Taro Inari Shrine In The Rice Fields At Asakusa_Kobayashi.jpg,file:///home/rdo/Pix/wallz/1200px-Thomas_Cole_-_The_Voyage_of_Life_Youth\\,_1842_(National_Gallery_of_Art).jpg,file:///home/rdo/Pix/wallz/tux_father.jpg,file:///home/rdo/Pix/wallz/mt_fuji.jpg,file:///home/rdo/Pix/wallz/jap_cool.jpg,file:///home/rdo/Pix/wallz/saint.jpg,file:///home/rdo/Pix/wallz/Taira no Tadamori Captures the Priest of Midō.jpg,file:///home/rdo/Pix/wallz/tumblr_nk6t50xtbU1re33kmo1_1280.jpg,file:///home/rdo/Pix/wallz/rudy_chiadao.jpg,file:///home/rdo/Pix/wallz/47435359_2145985965432622_6516204405874753536_n.jpg,file:///home/rdo/Pix/wallz/the wild hunt of odin.jpg
+screenMapping=desktop:/tel_health.tex,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/Space Hulk Tactics.desktop,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/riding_course,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/tel_health.org,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/metodo_feynman.png,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/4_things_experts.png,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/RDO_NATURALIZATION,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/tel_typing.sh,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/Dropbox,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/Trader Workstation.desktop,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/specs.txt,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/BETO_VISTO,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/markus_lightweight_tripod_options.png,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/1725316638_preview_darkdevotionmap-BOOKS2.png,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/refinance,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/Projetos SketchUp,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/DUSK.desktop,0,85a9661a-865a-40e8-9102-a093b71bc487,desktop:/engineer_evaluation.org,0,85a9661a-865a-40e8-9102-a093b71bc487
