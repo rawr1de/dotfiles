@@ -1,6 +1,13 @@
 .DS_Store
 kitty/.config/kitty/kitty-themes/
 ranger/.config/ranger/plugins/ranger_devicons/
+
 # Ignore cache and state files
 cmus/.config/cmus/cache
 kde/.config/plasma-org.kde.plasma.desktop-appletsrc
+
+# Ignore all cache files
+**/cache
+
+# Ignore all plasma applet state files
+**/*appletsrc
