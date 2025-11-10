@@ -13,7 +13,7 @@ fi
 # CLI prog's 3rd party
 alias ra='ranger'  		# file manager
 alias cm='cmus'			# CMus music player
-alias mc='musikcube'		# MusikCube music player
+alias mk='musikcube'		# MusikCube music player
 alias tl='tldr'			# tl;dr commands lookup (net)
 alias m='emacsclient -c -a emacs'
 alias ll='lsd -lAh --group-dirs first --hyperlink=auto'
