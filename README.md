@@ -102,14 +102,14 @@ stow -n -v bash
 
 ### Prerequisites
 ```bash
+# Arch based
+sudo pacman -Syu && sudo pacman -S git stow
+
 # Debian/Ubuntu
 sudo apt update && sudo apt install -y git stow
 
 # Fedora/RHEL
 sudo dnf install -y git stow
-
-# macOS
-brew install stow
 ```
 
 ### Quick Deploy
