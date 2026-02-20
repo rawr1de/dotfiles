@@ -1,0 +1,870 @@
+(savehist-mode 1)
+(setq history-length 10000)
+(setq history-delete-duplicates t)
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;(define-key global-map [escape] 'keyboard-escape-quit)
+(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+;(global-set-key (kbd "<escape>") 'keyboard-quit)
+
+;; disable tool bar
+  (tool-bar-mode -1)
+;; disable menu bar
+  (menu-bar-mode -1)
+;; disable scroll bar
+  (scroll-bar-mode -1)
+;; display line numbers in all buffers
+  (global-display-line-numbers-mode)
+;; show column numbers in minibuffer
+  (column-number-mode)
+;; disable startup message
+  (setq inhibit-startup-message t)
+;; show arrow indicating line breaks
+  (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+;; show if 'line wrap' is activated in the minibuffer (Wrap)
+  (global-visual-line-mode 1)
+;; display the configured system time in the minibuffer
+(setq display-time-24hr-format t)
+;; (setq display-time-format "%H:%M - %d %B %Y")
+
+;; display the configured system time in the minibuffer
+;; display time in 24h format
+;; do not display the system load
+  (display-time)
+  (setq display-time-24h-format t)
+  (setq display-time-load-average nil)
+
+;; enable smooth scrolling
+  (setq scroll-conservatively 100)
+
+(setq make-backup-files nil)
+(setq auto-save-default nil)
+(setq create-lockfiles nil)
+
+(setq ring-bell-function 'ignore)
+
+;; highlight lines when emacs is open in window mode (GUI) only
+  (when window-system (global-hl-line-mode t))
+
+;; show actual symbols for functions like lambda
+  (when window-system (global-prettify-symbols-mode t))
+
+(show-paren-mode 1)
+
+(defun my-mini-calc (expr &optional arg)
+  "Calculate expression.
+
+1. If Region Selected: Sums all numbers found in selection.
+2. If Single Cursor in Table: Pre-fills with cell value.
+3. Result is always copied to clipboard.
+4. C-u C-x c inserts result into buffer."
+  (interactive
+   (let ((initial-input nil))
+     (cond
+      ;; CASE 1: Standard Region Selection
+      ;; Scans the highlighted block for ANY numbers and sums them.
+      ((use-region-p)
+       (let ((text (buffer-substring-no-properties (region-beginning) (region-end)))
+             (numbers nil)
+             (start 0))
+         ;; Regex loop to find every number in the selection
+         (while (string-match "-?[0-9]+\\.?[0-9]*" text start)
+           (push (match-string 0 text) numbers)
+           (setq start (match-end 0)))
+         
+         ;; Join valid numbers with " + "
+         (if numbers
+             (setq initial-input (mapconcat #'identity (nreverse numbers) " + ")))))
+
+      ;; CASE 2: Single Cursor in Org Table
+      ((and (derived-mode-p 'org-mode) (org-at-table-p))
+       (setq initial-input (org-trim (org-table-get-field)))))
+
+     (list (read-from-minibuffer "Enter expression: " initial-input)
+           current-prefix-arg)))
+
+  ;; Calculation Logic
+  (let ((result (calc-eval expr)))
+    (kill-new result)
+    (if arg
+        (insert result)
+      (message "Result: [%s] = %s (copied)" expr result))))
+
+(global-set-key (kbd "C-x a") 'my-mini-calc)
+
+(defun my-org-column-sum (col-num &optional arg)
+  "Sum values in a specific column within highlighted rows.
+
+1. Asks for COLUMN NUMBER.
+2. Iterates through the highlighted region.
+3. Extracts the value from that specific column in every row.
+4. Pre-fills the calculator with the sum."
+  (interactive "nColumn Number to Sum: \nP")
+  
+  (let ((initial-input nil))
+    (if (not (use-region-p))
+        (message "Please highlight the table rows first.")
+      
+      (let ((region-start (region-beginning))
+            (region-end (region-end))
+            (values nil))
+        
+        (save-excursion
+          (save-restriction
+            ;; Narrow to the selected lines so we don't wander off
+            (narrow-to-region region-start region-end)
+            (goto-char (point-min))
+            
+            ;; Iterate line by line
+            (while (< (point) (point-max))
+              (when (and (org-at-table-p)          ;; Must be in a table
+                         (not (org-at-table-hline-p))) ;; Must NOT be a separator line (|--|)
+                
+                ;; Try to go to the specific column
+                (condition-case nil
+                    (progn
+                      (org-table-goto-column col-num)
+                      (let ((val (org-trim (org-table-get-field))))
+                        ;; Only keep it if it looks like a number
+                        (when (string-match-p "-?[0-9]+\\.?[0-9]*" val)
+                          (push val values))))
+                  ;; If column doesn't exist on this row, ignore error
+                  (error nil)))
+              
+              ;; Move to next line
+              (forward-line 1))))
+        
+        ;; Create the sum string (e.g., "12 + 45 + 5")
+        (setq initial-input (mapconcat #'identity (nreverse values) " + "))))
+
+    ;; Open the Calculator Prompt
+    (let* ((expr (read-from-minibuffer "Calculate: " initial-input))
+           (result (calc-eval expr)))
+      
+      (kill-new result)
+      
+      (if arg
+          (insert result)
+        (message "Result: [%s] = %s (copied)" expr result)))))
+
+;; Recommended Keybinding (e.g., C-c s)
+(global-set-key (kbd "C-x s") 'my-org-column-sum)
+
+;; Ler os caracteres de controle por meio octal/decimal..
+
+;; para octal
+;; (setq read-quoted-char-radix 8)
+
+;; para decimal
+(setq read-quoted-char-radix 10)
+
+;; para hexadecimal
+;; (setq read-quoted-char-radix 16)
+
+;; C+o busca com case insentive
+(setq case-fold-search t)
+
+;; overwrite selected text
+(delete-selection-mode t)
+
+(defvar my-term-shell "/bin/bash")
+(defadvice ansi-term (before force-bash)
+  (interactive (list my-term-shell)))
+(ad-activate 'ansi-term)
+
+;; seta dir. p/ arquivos .org
+(setq org-dir "~/Docs/Org/")
+(setq dropbox-orgriz "~/Desk/Dropbox/orgriz/")
+(setq dropbox-configs "~/Desk/Dropbox/configs/")
+
+;; 
+(setq org-hide-leading-stars t)
+
+;; 
+(setq org-startup-folded t)
+
+;; enable shift selection for basic regions while in org mode
+  (setq org-support-shift-select t)
+
+(use-package org-capture
+:config
+(global-set-key (kbd "C-c c") 'org-capture)
+(setq org-export-coding-system 'utf-8))
+
+(setq org-capture-templates
+ '(("r" "relatorio tcc" entry (file+headline "~/Desk/TCC_rdo/textos_tcc/relat_tcc.org" "March")
+   "* %<%d/%m/%Y>\nAtividade: %^{qual atividade?}" :empty-lines 1 :append t)))
+
+(setq org-src-window-setup 'current-window)
+
+;; this controls the color of bold, italic, underline, verbatim, strikethrough
+(setq org-emphasis-alist
+  '(("*" (bold :weight black)) ;; this make bold both: italic and bold, but not color change
+	("/" (italic :foreground "dark salmon" )) ;; italic text, the text will be "dark salmon"
+	("_" (:underline t :foreground "cyan" )) ;; underlined text, color is "cyan"
+	("=" (verbatim :foreground "tomato" )) ;; background of text is "snow1" and text is "deep slate blue"
+	("~" (:background "PaleGreen1" :foreground "dim gray" ))
+	("+" (:strike-through t :foreground "dark orange" ))))
+(setq org-hide-emphasis-markers t) ;; hides the emphasis markers
+
+;; Seta a prioridade mais baixa para #E (5 items)
+;; (setq org-lowest-priority ?E)
+
+'(save-place-mode t)
+
+;(defun increment-char-at-point ()
+;  "Increment number or character at point."
+;  (interactive)
+;  (condition-case nil
+;      (save-excursion
+;        (let ((chr  (1+ (char-after))))
+;          (unless (characterp chr) (error "Cannot increment char by one"))
+;          (delete-char 1)
+;          (insert chr)))
+;    (error (error "No character at point"))))
+
+(defun my-increment-number-decimal (&optional arg)
+  "Increment the number forward from point by 'arg'."
+  (interactive "p*")
+  (save-excursion
+    (save-match-data
+      (let (inc-by field-width answer)
+        (setq inc-by (if arg arg 1))
+        (skip-chars-backward "0123456789")
+        (when (re-search-forward "[0-9]+" nil t)
+          (setq field-width (- (match-end 0) (match-beginning 0)))
+          (setq answer (+ (string-to-number (match-string 0) 10) inc-by))
+          (when (< answer 0)
+            (setq answer (+ (expt 10 field-width) answer)))
+          (replace-match (format (concat "%0" (int-to-string field-width) "d")
+                                 answer)))))))
+
+;; hotkey my-increment-number-decimal
+(global-set-key (kbd "C-c +") 'my-increment-number-decimal)
+
+  ;; (defun increment-number-or-char-at-point ()
+  ;;   "Increment number or character at point."
+  ;;   (interactive)
+  ;;   (let ((nump  nil))
+  ;;     (save-excursion
+  ;;       (skip-chars-backward "0123456789")
+  ;;       (when (looking-at "[0123456789]+")
+  ;;         (replace-match (number-to-string (1+ (string-to-number (match-string 0)))))
+  ;;         (setq nump  t)))
+  ;;     (unless nump
+  ;;       (save-excursion
+  ;;         (condition-case nil
+  ;;             (let ((chr  (1+ (char-after))))
+  ;;               (unless (characterp chr) (error "Cannot increment char by one"))
+  ;;               (delete-char 1)
+  ;;               (insert chr))
+  ;;           (error (error "No character at point")))))))
+
+;; (require 'ido)
+;; (setq ido-enable-flex-matching t)
+;; (setq ido-everywhere t)
+;; (ido-mode t)
+
+;; limita o número de marcações salvas no ring
+   (setq mark-ring-max 6)
+   (setq global-mark-ring-max 6)
+
+(defun package-menu-find-marks ()
+  "Find packages marked for action in *Packages*."
+  (interactive)
+  (occur "^[A-Z]"))
+
+;; Only in Emacs 25.1+
+(defun package-menu-filter-by-status (status)
+  "Filter the *Packages* buffer by status."
+  (interactive
+   (list (completing-read
+	     "Status: " '("new" "installed" "dependency" "obsolete"))))
+  (package-menu-filter (concat "status:" status)))
+
+(define-key package-menu-mode-map "s" #'package-menu-filter-by-status)
+(define-key package-menu-mode-map "a" #'package-menu-find-marks)
+
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
+
+(global-subword-mode 1)
+
+(setq electric-pair-pairs '(
+                           (?\{ . ?\})
+                           (?\( . ?\))
+                           (?\[ . ?\])
+                           (?\" . ?\")
+                           ))
+;; ativa o modo de auto fechamento
+(electric-pair-mode t)
+
+(add-hook 'minibuffer-setup-hook 'my-minibuffer-setup)
+(defun my-minibuffer-setup ()
+	 (set (make-local-variable 'face-remapping-alist)
+	    '((default :height 1.0))))
+
+;; (require 'whitespace)
+;; (setq whitespace-style '(face empty tabs lines-tail trailing))
+;; (global-whitespace-mode t)
+
+(savehist-mode 1)
+
+;; The value is in 1/10pt, so 100 gives  10pt
+(set-face-attribute 'default nil :height 120)
+
+;; Abre o terminal (ansi-term) com ALT+Enter
+;; (global-set-key (kbd "<M-return>") 'ansi-term)
+
+(global-set-key (kbd "C-c e") 'eval-replace) ; C-c e
+(defun eval-replace ()
+  "Replace sexp before point by result of its evaluation."
+  (interactive)
+  (let ((result  (pp-to-string (eval (pp-last-sexp) lexical-binding))))
+    (delete-region (save-excursion (backward-sexp) (point)) (point))
+    (insert result)))
+
+;;  (set-register ?h (cons 'file "~/Docs/02.health/ultimate_health_journey.org"))
+
+(set-register ?a (cons 'file (concat dropbox-orgriz "/[PERSO]_agenda_2026.org")))
+    (set-register ?h (cons 'file (concat dropbox-orgriz "/health.org")))
+    (set-register ?s (cons 'file (concat dropbox-configs "/[BIZ]_sys_config.org")))
+    (set-register ?t (cons 'file                         "~/Docs/Org/trade_kbase.org"))
+    (set-register ?p (cons 'file                         "~/Docs/Org/perso_search.org"))  
+;;    (set-register ?s (cons 'file (concat org-dir "/AMAZON_compras.org")))
+
+;; ABRIR config file
+(defun config-visit ()
+  (interactive)
+  (find-file "~/.emacs.d/config.org"))
+(global-set-key (kbd "C-c 1") 'config-visit)
+
+;; RECARREGAR config file
+(defun config-reload ()
+  (interactive)
+  (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
+(global-set-key (kbd "C-c 2") 'config-reload)
+
+;; Main use is to have my key bindings have the highest priority
+   ;; https://github.com/kaushalmodi/.emacs.d/blob/master/elisp/modi-mode.el
+
+   (defvar RDO-mode-map (make-sparse-keymap)
+     "Keymap for `RDO-mode'.")
+
+   ;;;###autoload
+   (define-minor-mode RDO-mode
+     "A minor mode so that my key settings override annoying major modes."
+     ;; If init-value is not set to t, this mode does not get enabled in
+     ;; `fundamental-mode' buffers even after doing \"(global-my-mode 1)\".
+     ;; More info: http://emacs.stackexchange.com/q/16693/115
+     :init-value t
+     :lighter " RDO-mode"
+     :keymap RDO-mode-map)
+
+   ;; 
+   ;; INICIO Keys Pessoais
+   ;;
+
+     ;; REDUZ janela VERTICAL (p/ baixo)
+     ;; (se posicionado na janela inferior)
+     (define-key RDO-mode-map (kbd "C-S-k") #'shrink-window)
+
+     ;; AUMENTA janela VERTICAL (p/ cima)
+     ;; (se posicionado na janela inferior)
+     (define-key RDO-mode-map (kbd "C-S-i") #'enlarge-window)
+
+     ;; AUMENTA janela HORIZONTAL (p/ esquerda)
+     ;; (se posicionado na janela da esquerda)
+     (define-key RDO-mode-map (kbd "C-S-l") #'enlarge-window-horizontally)
+
+     ;; REDUZ janela HORIZONTAL (p/ direita)
+     ;; (se posicionado na janela da esquerda)
+     (define-key RDO-mode-map (kbd "C-S-j") #'shrink-window-horizontally)
+
+     ;; IGUALA as dimensões das janelas abertas
+     (define-key RDO-mode-map (kbd "C-+") #'balance-windows)
+
+     ;; Dinstinção entre TAB e C-i (tab)
+     ;; https://www.emacswiki.org/emacs/TabKey
+     ;;
+     ;; Parar TAB
+     ;(local-set-key [tab] 'tab-to-tab-stop)
+     ;; TAB como org-cycle
+     ;(define-key RDO-mode-map [tab] #'org-cycle)
+
+     ;; SCROLL window UP/DOWN like 'scroll lock'
+     ;;
+     ;; Parar C-i (tab)
+     ;(local-set-key (kbd "TAB") 'tab-to-tab-stop)
+     ;; C-i (tab)  como  SCROLL window UP
+     ;(define-key RDO-mode-map (kbd "TAB") (kbd "C-u 1 C-9"))
+
+
+     ;; Custom function to scroll down one line
+      (defun scroll-one-line-down ()
+       "Scroll down one line."
+       (interactive)
+       (scroll-down 1))
+     
+     ;; Custom function to scroll up one line
+      (defun scroll-one-line-up ()
+       "Scroll up one line."
+       (interactive)
+       (scroll-up 1))
+     
+     ;; Bind C-k to scroll down one line
+      (global-set-key (kbd "M-i") 'scroll-one-line-down)
+     
+     ;; Bind C-i to scroll up one line
+      (global-set-key (kbd "M-k") 'scroll-one-line-up)
+       
+     ;; fecha o buffer+janela movendo-se p/ próximo janela
+     ;(define-key RDO-mode-map (kbd "C-S-w") #'kill-buffer-and-window)
+
+      (global-set-key (kbd "C-c C-q") 'wdired-change-to-wdired-mode)
+
+     ;; Keep line position relative to the screen while scrolling
+      (setq scroll-preserve-screen-position t)
+
+     ;; Dired Edit Mode
+     (global-set-key (kbd "C-x C-q") 'wdired-change-to-wdired-mode)
+
+   
+   ;; 
+   ;; FIM Keys Pessoais
+   ;;
+
+
+   ;;;###autoload
+   (define-globalized-minor-mode global-RDO-mode RDO-mode RDO-mode)
+
+   ;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
+   ;; The keymaps in `emulation-mode-map-alists' take precedence over
+   ;; `minor-mode-map-alist'
+   (add-to-list 'emulation-mode-map-alists `((RDO-mode . ,RDO-mode-map)))
+
+   ;; Turn off the minor mode in the minibuffer
+   (defun turn-off-RDO-mode ()
+     "Turn off RDO-mode."
+     (RDO-mode -1))
+   (add-hook 'minibuffer-setup-hook #'turn-off-RDO-mode)
+
+   (provide 'RDO-mode)
+
+   ;; Minor mode tutorial: http://nullprogram.com/blog/2013/02/06/
+
+   ;; minhas macros para renomear mp3's rapidamente!
+   (global-set-key (kbd "C-c 3") 'prl_rename_mp3)
+
+   (defun hack-isearch-kill ()
+      "Push current matching string into kill ring."
+      (interactive)
+      (kill-new (buffer-substring (point) isearch-other-end))
+      (isearch-done))
+
+   ;; Copia Regexp I-search pro Kill Ring com Alt-w
+   (define-key isearch-mode-map (kbd "M-w") 'hack-isearch-kill)
+
+
+
+
+(defun toggle-asterisk-around-region (start end)
+"Toggle asterisks around the selected region.
+If region is surrounded by asterisks, remove them.
+Otherwise, add asterisks around the region."
+(interactive "r")
+(if (and (use-region-p)
+(string= (buffer-substring-no-properties start (1+ start)) "*")
+(string= (buffer-substring-no-properties (1- end) end) "*"))
+(progn
+;; Remove asterisks
+(delete-region start (1+ start))
+(delete-region (1- end) end))
+;; Add asterisks
+(goto-char end)
+(insert "*")
+(goto-char start)
+(insert "*")))     
+;; Bind the function to C-8
+(global-set-key (kbd "C-8") 'toggle-asterisk-around-region);
+
+;; control functions MUST be loaded before xah-fly-keys
+ (setq xah-fly-use-control-key t)
+ ;(setq xah-fly-use-meta-key t)
+
+;; load XFK
+ (use-package xah-fly-keys
+  :ensure t
+  :init (xah-fly-keys 1))
+
+;; Custom Meta Keys
+ (define-key xah-fly-key-map (kbd "M-c") 'capitalize-word)
+ (define-key xah-fly-key-map (kbd "M-u") 'upcase-word)
+ (define-key xah-fly-key-map (kbd "M-l") 'downcase-word)
+
+;; Rebind native Keys
+ (define-key global-map (kbd "C-x C-c") 'save-buffers-kill-terminal)
+
+;; bind XFK-Qwerty (SPC r = replace-string)
+ (define-key xah-fly-leader-key-map (kbd "r") 'replace-string)
+
+;; bind XFK-Qwerty (SPC R = query-replace)
+ (define-key xah-fly-leader-key-map (kbd "R") 'query-replace)
+
+;; bind XFK-Qwerty (SPC f = iBuffer)
+ (define-key xah-fly-leader-key-map (kbd "f") 'ibuffer)
+
+ (defun RDO-config-xah-fly-key ()
+  "Modify keys for xah fly key command mode keys
+  To be added to `xah-fly-command-mode-activate-hook'"
+   (interactive)
+ (define-key xah-fly-key-map (kbd "`") 'xah-pop-local-mark-ring)
+   ;; more here
+ )
+
+ (add-hook 'xah-fly-command-mode-activate-hook 'RDO-config-xah-fly-key)
+
+;; (use-package anki-editor
+;;   :after org
+;;   :bind (:map org-mode-map
+;; 	      ("<f12>" . anki-editor-cloze-region-auto-incr)
+;; 	      ("<f11>" . anki-editor-cloze-region-dont-incr)
+;; 	      ("<f10>" . anki-editor-reset-cloze-number)
+;; 	      ("<f9>"  . anki-editor-push-tree))
+;;   :hook (org-capture-after-finalize . anki-editor-reset-cloze-number) ; Reset cloze-number after each capture.
+;;   :config
+;;   (setq anki-editor-create-decks t ;; Allow anki-editor to create a new deck if it doesn't exist
+;; 	anki-editor-org-tags-as-anki-tags t)
+
+;;   (defun anki-editor-cloze-region-auto-incr (&optional arg)
+;;     "close region without hint and increase card number."
+;;     (interactive)
+;;     (anki-editor-cloze-region my-anki-editor-cloze-number "")
+;;     (setq my-anki-editor-cloze-number (1+ my-anki-editor-cloze-number))
+;;     (forward-sexp))
+;;   (defun anki-editor-cloze-region-dont-incr (&optional arg)
+;;     "Cloze region without hint using the previous card number."
+;;     (interactive)
+;;     (anki-editor-cloze-region (1- my-anki-editor-cloze-number) "")
+;;     (forward-sexp))
+;;   (defun anki-editor-reset-cloze-number (&optional arg)
+;;     "Reset cloze number to ARG or 1"
+;;     (interactive)
+;;     (setq my-anki-editor-cloze-number (or arg 1)))
+;;   (defun anki-editor-push-tree ()
+;;     "Push all notes under a tree."
+;;     (interactive)
+;;     (anki-editor-push-notes '(4))
+;;     (anki-editor-reset-cloze-number))
+;;   ;; Initialize
+;;   (anki-editor-reset-cloze-number)
+  ;; )
+
+(use-package which-key
+	       :ensure t
+	       :init
+	       (which-key-mode))
+
+(use-package beacon
+	       :ensure t
+	       :init
+	       (beacon-mode 1))
+
+;; buscando somente no diretorio do .emacs AINDA (ARRUMAR!!)
+(use-package fzf
+             :ensure t
+	       :init)
+
+;; requere o pacote "multiple-cursors ou mc"
+  ;; (require 'multiple-cursors)
+  (use-package multiple-cursors
+    :ensure t)
+  (setq mc/always-run-for-all t)
+  ;; seta a tecla p/ edição de multiplas linhas com região ativa, um cursor por linha
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+
+  ;; liga mc baseado em palavras (minibuffer) E NÃO em linhas multiplas
+  ;; primeiro marque a palavra, então add mais cursors
+
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+;  (global-set-key (kbd "C-c C-<") 'mc/edit-beginnings-of-lines)
+;  (global-set-key (kbd "C-c C-<") 'mc/edit-ends-of-lines)
+
+  ;; sair do multiple-cursors-mode pressione <return> ou C-g
+  ;; C-g  irá *disabilitar multiplas regiões* antes de disabilitar mc
+  ;; inserir newline em mc, use C-j
+
+;; (use-package projectile)
+;; (projectile-mode +1)
+;; (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+;; (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+(use-package dashboard
+:ensure t
+:init
+  (progn
+     (setq dashboard-banner-logo-title "")
+     (setq dashboard-startup-banner 'logo)
+     (setq dashboard-set-navigator nil)
+     (setq dashboard-center-content nil)
+     (setq dashboard-show-shortcuts nil)
+     (setq dashboard-items '((recents  . 5)
+			      (bookmarks . 15)))
+     (setq dashboard-set-heading-icons t)
+     (setq dashboard-set-file-icons t)
+     (setq dashboard-set-footer nil)
+     (setq dashboard-set-init-info nil))
+:config
+(dashboard-setup-startup-hook))
+
+;; (use-package auto-compile
+;; :ensure t
+;; :init)
+
+(use-package avy
+  :ensure t
+  :bind
+  ("M-s" . avy-goto-char-2))
+
+(use-package sudo-edit
+  :ensure t
+  :bind ("s-e" . sudo-edit))
+
+;; Reduz info mostrada na mode-line
+  (use-package diminish
+    :ensure t
+    :init
+    (diminish 'which-key-mode)
+    (diminish 'visual-line-mode)
+    (diminish 'beacon-mode)
+    (diminish 'page-break-lines-mode)
+    (diminish 'subword-mode))
+    ;; (diminish 'flycheck-mode)
+    ;; (diminish 'helm-mode))
+
+;; Reduz claridade do buffer não utilizado
+(use-package dimmer
+:ensure t
+:init
+(dimmer-configure-which-key)
+(dimmer-mode t)
+:custom
+(dimmer-fraction 0.5)
+)
+
+;; (use-package fancy-battery
+;;   :ensure t
+;;   :config
+;;     (setq fancy-battery-show-percentage t)
+;;     (setq battery-update-interval 15)
+;;     (if window-system
+;;       (fancy-battery-mode)
+;;       (display-battery-mode)))
+
+;; (use-package spaceline
+;;   :ensure t
+;;   :config
+;;   (require 'spaceline-config)
+;;     (setq spaceline-buffer-encoding-abbrev-p nil)
+;;     (setq spaceline-line-column-p nil)
+;;     (setq spaceline-line-p nil)
+;;     (setq powerline-default-separator (quote arrow))
+;;     (spaceline-spacemacs-theme))
+
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
+
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (nerd-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+
+  ;; Set the theme
+  (load-theme 'doom-sourcerer t)
+
+;;    (use-package pdf-tools
+;;     :ensure t)
+
+(setq org-file-apps
+  '((auto-mode . emacs)
+    ("\\.pdf::\$$[0-9]+\$$?\\'" . "zathura %s -P %1")
+    ("\\.pdf\\'" . "zathura %s")
+    (directory . emacs)))
+
+(use-package visual-regexp
+  :ensure t
+;; (define-key global-map (kbd "C-c r") 'vr/replace)
+;; (define-key global-map (kbd "C-c q") 'vr/query-replace)
+
+  ;; used with multiple-cursors
+;; (define-key global-map (kbd "C-c m") 'vr/mc-mark)
+ )
+
+;; (use-package visible-mark
+;; :ensure t
+;; :init
+;; (defface visible-mark-active ;; put this before (require 'visible-mark)
+  ;; '((((type tty) (class mono)))
+    ;; (t (:background "magenta"))) "")
+;; (global-visible-mark-mode 1) ;; or add (visible-mark-mode) to specific hooks
+;; (setq visible-mark-max 6)
+;; (setq visible-mark-faces `(visible-mark-face1 visible-mark-face2))
+;; :custom-face
+;; (visible-mark-face1 ((t (:background "hot pink"))))
+;; (visible-mark-face2 ((t (:background "medium orchid")))))
+
+;; start dired with file details off
+(defun xah-dired-mode-setup ()
+  "to be run as hook for `dired-mode'."
+  (dired-hide-details-mode 1))
+(add-hook 'dired-mode-hook 'xah-dired-mode-setup)
+
+;; enable copy/move between 2 dired buffers
+(setq dired-dwim-target t)
+
+(setq-default ibuffer-saved-filter-groups
+		 `(("Default"
+		    ;; I create a group call Dired, which contains all buffer in dired-mode
+		    ("Dired" (mode . dired-mode))
+		    ("Temporary" (name . "\*.*\*"))
+		    )))
+
+;; Shows Dired groups in iBuffer
+(add-hook 'ibuffer-mode-hook
+	     #'(lambda ()
+		 (ibuffer-switch-to-saved-filter-groups "Default")))
+
+(use-package async
+	:ensure t
+	:init (dired-async-mode 1))
+
+(define-key dired-mode-map "/" 'dired-goto-file)
+(define-key dired-mode-map "i" 'dired-previous-line)
+(define-key dired-mode-map "k" 'dired-next-line)
+(define-key dired-mode-map "j" 'dired-up-directory)
+(define-key dired-mode-map "l" 'dired-open-file)
+
+;; permite edição de permissão de arquivos em massa no dired
+(setq wdired-allow-to-change-permissions t)
+(setq dired-listing-switches "-lH")
+
+;; open file in another window
+;; (define-key dired-mode-map "" 'dired-display-file)
+
+;; (use-package dired
+;; :ensure nil
+;; :commands (dired)
+
+(use-package all-the-icons
+:ensure t
+;; install fonts with:  M-x  all-the-icons-install-fonts
+)
+
+(use-package all-the-icons-dired
+:ensure t
+:hook (dired-mode . all-the-icons-dired-mode))
+
+(use-package dired-hide-dotfiles
+  :ensure t
+  :config
+  (defun my-dired-mode-hook ()
+    "My `dired' mode hook."
+
+  ;; To hide dot-files by default
+  (dired-hide-dotfiles-mode))
+
+  ;; To toggle hiding
+  (define-key dired-mode-map "." #'dired-hide-dotfiles-mode)
+  (add-hook 'dired-mode-hook #'my-dired-mode-hook))
+
+(use-package dired-open
+:ensure t
+:config
+(setq dired-open-extensions '(("png" . "sxiv") ;; images
+				 ("jpg" . "sxiv")
+				 ("jpeg" . "sxiv")
+				 ("gif" . "sxiv")
+				 ("bmp" . "sxiv")
+				 ("mkv" . "mpv") ;; audio/video
+				 ("avi" . "mpv")
+				 ("mp4" . "mpv")
+				 ("mp3" . "mpv")
+				 ("pdf" . "zathura"))
+	                         )) ;; docs
+
+(use-package dired-narrow
+:ensure t
+:bind (:map dired-mode-map
+            ("\\" . dired-narrow)
+            ("|" . dired-narrow-fuzzy)))
+
+(use-package dired-rainbow
+:ensure t
+:config
+(defconst my-dired-media-files-extensions
+  '("mp3" "mp4" "MP3" "MP4" "avi" "mpg" "flv" "ogg")
+  "Media files.")
+)
+
+(use-package dired-subtree
+   :ensure t
+   :after dired
+   :config
+   ;; (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
+   (bind-key "<tab>" #'dired-subtree-cycle dired-mode-map)
+   (bind-key "<backtab>" #'dired-subtree-remove dired-mode-map)
+)
+
+(use-package dired-ranger
+  :ensure t
+  :bind (:map dired-mode-map
+		 ("C" . dired-ranger-copy)
+		 ("X" . dired-ranger-move)
+		 ("V" . dired-ranger-paste)))
+
+;; (use-package ranger
+   ;; :ensure t
+   ;; :after dired
+   ;; :config
+   ;; (bind-key "<j>" #'ranger-up-directory ranger-mode-map)
+   ;; (bind-key "<k>" #'ranger-next-subdir ranger-mode-map)
+   ;; (bind-key "<i>" #'ranger-prev-subdir ranger-mode-map))
+   ;; (bind-key "<l>" #' ranger-mode)
+
+;; Menu com opções de sortir pro dired
+(use-package dired-quick-sort
+:ensure t)
+(dired-quick-sort-setup)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((ditaa . t))) 
+
+;; # set ditaa path
+(setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar")
+
+(use-package org-bullets
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))

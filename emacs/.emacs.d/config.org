@@ -3,7 +3,14 @@
 [[/home/rdo/Docs/5.systems/1.linux_shit/1.text/emacs/dired-cheat_sheet.pdf][dired-cheat-sheet]]
 
 * Built-in cfg's
-  
+
+** save last command in history
+#+BEGIN_SRC emacs-lisp
+(savehist-mode 1)
+(setq history-length 10000)
+(setq history-delete-duplicates t)
+#+END_SRC
+
 ** yes-or-no  to  y-or-n
 #+BEGIN_SRC emacs-lisp
   (defalias 'yes-or-no-p 'y-or-n-p)
@@ -114,29 +121,110 @@
 #+RESULTS:
 : t
 
-** calculator (my-mini-calc)  [C-x c]
+** calculator (my-mini-calc)  [C-x a]
 #+BEGIN_SRC emacs-lisp
-  ;; enable a calculator in the minibuffer, activate with: C-x c
-  (defun my-mini-calc (expr &optional arg)
-    "Calculate expression
+(defun my-mini-calc (expr &optional arg)
+  "Calculate expression.
 
-  If ARG is given, then insert the result to current-buffer"
-    (interactive
-     (list (read-from-minibuffer "Enter expression: ")
-	   current-prefix-arg))
+1. If Region Selected: Sums all numbers found in selection.
+2. If Single Cursor in Table: Pre-fills with cell value.
+3. Result is always copied to clipboard.
+4. C-u C-x c inserts result into buffer."
+  (interactive
+   (let ((initial-input nil))
+     (cond
+      ;; CASE 1: Standard Region Selection
+      ;; Scans the highlighted block for ANY numbers and sums them.
+      ((use-region-p)
+       (let ((text (buffer-substring-no-properties (region-beginning) (region-end)))
+             (numbers nil)
+             (start 0))
+         ;; Regex loop to find every number in the selection
+         (while (string-match "-?[0-9]+\\.?[0-9]*" text start)
+           (push (match-string 0 text) numbers)
+           (setq start (match-end 0)))
+         
+         ;; Join valid numbers with " + "
+         (if numbers
+             (setq initial-input (mapconcat #'identity (nreverse numbers) " + ")))))
 
-    (let ((result (calc-eval expr)))
-      (if arg
-	  (insert result)
-	(message (format "Result: [%s] = %s" expr result)))))
+      ;; CASE 2: Single Cursor in Org Table
+      ((and (derived-mode-p 'org-mode) (org-at-table-p))
+       (setq initial-input (org-trim (org-table-get-field)))))
 
-  ;; keybind p/ mini calculadora
-    (global-set-key (kbd "C-x c") 'my-mini-calc)
+     (list (read-from-minibuffer "Enter expression: " initial-input)
+           current-prefix-arg)))
+
+  ;; Calculation Logic
+  (let ((result (calc-eval expr)))
+    (kill-new result)
+    (if arg
+        (insert result)
+      (message "Result: [%s] = %s (copied)" expr result))))
+
+(global-set-key (kbd "C-x a") 'my-mini-calc)
 #+END_SRC
+** calc org-mode table column selection (my-org-column)  [C-x s]
 
-#+RESULTS:
-: my-mini-calc
+#+BEGIN_SRC emacs-lisp
+(defun my-org-column-sum (col-num &optional arg)
+  "Sum values in a specific column within highlighted rows.
 
+1. Asks for COLUMN NUMBER.
+2. Iterates through the highlighted region.
+3. Extracts the value from that specific column in every row.
+4. Pre-fills the calculator with the sum."
+  (interactive "nColumn Number to Sum: \nP")
+  
+  (let ((initial-input nil))
+    (if (not (use-region-p))
+        (message "Please highlight the table rows first.")
+      
+      (let ((region-start (region-beginning))
+            (region-end (region-end))
+            (values nil))
+        
+        (save-excursion
+          (save-restriction
+            ;; Narrow to the selected lines so we don't wander off
+            (narrow-to-region region-start region-end)
+            (goto-char (point-min))
+            
+            ;; Iterate line by line
+            (while (< (point) (point-max))
+              (when (and (org-at-table-p)          ;; Must be in a table
+                         (not (org-at-table-hline-p))) ;; Must NOT be a separator line (|--|)
+                
+                ;; Try to go to the specific column
+                (condition-case nil
+                    (progn
+                      (org-table-goto-column col-num)
+                      (let ((val (org-trim (org-table-get-field))))
+                        ;; Only keep it if it looks like a number
+                        (when (string-match-p "-?[0-9]+\\.?[0-9]*" val)
+                          (push val values))))
+                  ;; If column doesn't exist on this row, ignore error
+                  (error nil)))
+              
+              ;; Move to next line
+              (forward-line 1))))
+        
+        ;; Create the sum string (e.g., "12 + 45 + 5")
+        (setq initial-input (mapconcat #'identity (nreverse values) " + "))))
+
+    ;; Open the Calculator Prompt
+    (let* ((expr (read-from-minibuffer "Calculate: " initial-input))
+           (result (calc-eval expr)))
+      
+      (kill-new result)
+      
+      (if arg
+          (insert result)
+        (message "Result: [%s] = %s (copied)" expr result)))))
+
+;; Recommended Keybinding (e.g., C-c s)
+(global-set-key (kbd "C-x s") 'my-org-column-sum)
+#+END_SRC
 ** control characters (^)
 #+BEGIN_SRC emacs-lisp
   ;; Ler os caracteres de controle por meio octal/decimal..
@@ -188,7 +276,8 @@
 #+BEGIN_SRC emacs-lisp
   ;; seta dir. p/ arquivos .org
   (setq org-dir "~/Docs/Org/")
-  (setq dropbox-orgriz "~/Desk/Dropbox/orgriz")
+  (setq dropbox-orgriz "~/Desk/Dropbox/orgriz/")
+  (setq dropbox-configs "~/Desk/Dropbox/configs/")
 #+END_SRC
 
 *** hide leading stars
@@ -410,9 +499,6 @@
 	    '((default :height 1.0))))
 #+end_src
 
-#+RESULTS:
-: my-minibuffer-setup
-
 ** 80 rule column delimiter _(DISABLED)_
 #+begin_src emacs-lisp
   ;; (require 'whitespace)
@@ -465,24 +551,20 @@
 ** register
 *** inflexible
 #+BEGIN_SRC emacs-lisp
-;  (set-register ?s (cons 'file "~/Desk/Dropbox/orgriz/[PERSO]_agenda_2024.org"))
+ ;;  (set-register ?h (cons 'file "~/Docs/02.health/ultimate_health_journey.org"))
 #+END_SRC
 
 *** flexible
 #+BEGIN_SRC emacs-lisp
-  (set-register ?a (cons 'file (concat dropbox-orgriz "/[PERSO]_agenda_2025.org")))
-;  (set-register ?s (cons 'file (concat org-dir "/AMAZON_compras.org")))
+      (set-register ?a (cons 'file (concat dropbox-orgriz "/[PERSO]_agenda_2026.org")))
+      (set-register ?h (cons 'file (concat dropbox-orgriz "/health.org")))
+      (set-register ?s (cons 'file (concat dropbox-configs "/[BIZ]_sys_config.org")))
+      (set-register ?t (cons 'file                         "~/Docs/Org/trade_kbase.org"))
+      (set-register ?p (cons 'file                         "~/Docs/Org/perso_search.org"))  
+  ;;    (set-register ?s (cons 'file (concat org-dir "/AMAZON_compras.org")))
 
 #+END_SRC
 
-** PDF w/ zathura
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'tex
-  (add-to-list 'TeX-view-program-selection
-               '(output-pdf "Zathura")))
-
-'(org-file-apps (quote ((auto-mode . emacs) ("\\.pdf\\'" . "zathura %s"))))
-#+END_SRC
 
 * Keybinds
 
@@ -983,15 +1065,18 @@ show battery level
 
 ** pdf-tools
 #+BEGIN_SRC emacs-lisp
-;  (use-package pdf-tools
-;    :ensure t
-;    :config (pdf-tools-install))
+  ;;    (use-package pdf-tools
+  ;;     :ensure t)
 #+END_SRC
 
-#+RESULTS:
-: t
-
-Git link
+#+BEGIN_SRC emacs-lisp
+(setq org-file-apps
+  '((auto-mode . emacs)
+    ("\\.pdf::\$$[0-9]+\$$?\\'" . "zathura %s -P %1")
+    ("\\.pdf\\'" . "zathura %s")
+    (directory . emacs)))
+#+END_SRC
+[[https://github.com/politza/pdf-toolshttps://github.com/vedang/pdf-tools][Git link]]
 
 ** visual-regexp
  #+BEGIN_SRC emacs-lisp
@@ -1109,9 +1194,6 @@ Git link
    :hook (dired-mode . all-the-icons-dired-mode))
  #+END_SRC
 
- #+RESULTS:
- | my-dired-mode-hook | all-the-icons-dired-mode | xah-dired-mode-setup | pdf-occur-dired-minor-mode | dired-extra-startup |
-
 [[https://github.com/wyuenho/all-the-icons-dired][Git Link]]
 
 *** dired-hide-dotfiles
@@ -1130,10 +1212,7 @@ Git link
      (add-hook 'dired-mode-hook #'my-dired-mode-hook))
  #+END_SRC
 
- #+RESULTS:
- : t
-
- [[https://github.com/mattiasb/dired-hide-dotfiles][Link]]
+[[https://github.com/mattiasb/dired-hide-dotfiles][Link]]
 
 *** dired-open
  #+BEGIN_SRC emacs-lisp
