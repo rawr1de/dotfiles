@@ -38,7 +38,7 @@ BLACK_TITLE="Tmatrix-Black-Window"
 echo "Launching Tmatrix terminals..."
 
 # Terminal 1: Yellow Tmatrix (Target DP-0)
-kitty --title "$YELLOW_TITLE" --config "$CONFIG_FILE" sh -c 'tmatrix -C yellow' &
+kitty --title "$YELLOW_TITLE" --config "$CONFIG_FILE" sh -c 'tmatrix -C black' &
 YELLOW_PID=$!
 
 # Terminal 2: Black Tmatrix (Target HDMI-0)
