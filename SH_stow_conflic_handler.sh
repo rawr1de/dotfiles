@@ -56,6 +56,43 @@ for package in $PACKAGES; do
     fi
 done
 
+# Check for known KDE/user config files in ~/.config that should be cleared
+echo -e "\n${YELLOW}Checking for existing KDE/user config files in ~/.config...${NC}"
+
+CONFIG_FILES=(
+    "dolphinrc"
+    "kcminputrc"
+    "kdeglobals"
+    "kglobalshortcutsrc"
+    "khotkeysrc"
+    "kscreenlockerrc"
+    "kwalletrc"
+    "kwinrc"
+    "kwinrulesrc"
+    "kxkbrc"
+    "mimeapps.list"
+    "user-dirs.dirs"
+    "user-dirs.locale"
+)
+
+for cfg_file in "${CONFIG_FILES[@]}"; do
+    FULL_CFG_PATH="$HOME/.config/$cfg_file"
+    if [ -e "$FULL_CFG_PATH" ]; then
+        # Only add if not already tracked as a stow conflict
+        ALREADY_TRACKED=0
+        for existing in "${CONFLICTS[@]}"; do
+            if [ "$existing" = "$FULL_CFG_PATH" ]; then
+                ALREADY_TRACKED=1
+                break
+            fi
+        done
+        if [ "$ALREADY_TRACKED" -eq 0 ]; then
+            CONFLICTS+=("$FULL_CFG_PATH")
+            echo -e "${YELLOW}  Found: .config/$cfg_file${NC}"
+        fi
+    fi
+done
+
 # If no conflicts, proceed with stowing
 if [ ${#CONFLICTS[@]} -eq 0 ]; then
     echo -e "\n${GREEN}✓ No conflicts found! Stowing packages...${NC}\n"
