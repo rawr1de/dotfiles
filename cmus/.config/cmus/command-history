@@ -1,6 +1,6 @@
+filter 
 update-cache 
 filter F
-filter 
 pl-export ~/tmp/rdo_list.m3u
 pl-export /tmp/rdo_list.m3u
 pl-create sigh

@@ -227,7 +227,7 @@ _k_friendly_name=Power Management
 powerProfile=Battery\tMeta+B,Battery\tMeta+B,Switch Power Profile
 
 [plasmashell]
-Slideshow Wallpaper Next Image=,,Next Wallpaper Image
+Slideshow Wallpaper Next Image=none,,Next Wallpaper Image
 _k_friendly_name=plasmashell
 activate application launcher=Meta,Meta\tAlt+F1,Activate Application Launcher
 activate task manager entry 1=none,Meta+1,Activate Task Manager Entry 1
@@ -250,7 +250,7 @@ activate widget 241=none,none,Activate Lock Keys Status Widget
 activate widget 256=none,none,Activate Application Launcher Widget
 activate widget 273=none,none,Activate Digital Clock Widget
 activate widget 29=none,none,Activate Application Launcher Widget
-activate widget 300=,none,Activate Application Launcher Widget
+activate widget 300=none,none,Activate Application Launcher Widget
 activate widget 5=Alt+F1,none,Activate Application Launcher Widget
 activate widget 50=none,none,Activate Panel Widget
 activate widget 51=none,none,Activate Application Launcher Widget

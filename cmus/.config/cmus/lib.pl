@@ -1,3 +1,43 @@
+/home/rdo/Musk/Metal/_DL/Acid King/1995 - Zoroaster/01 - Evil Satan.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1995 - Zoroaster/02 - If I Burn.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1995 - Zoroaster/03 - One Ninety-Six.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1995 - Zoroaster/04 - Vertigate #1.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1995 - Zoroaster/05 - Tank.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1995 - Zoroaster/06 - Dry Run.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1995 - Zoroaster/07 - Fruit Cup.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1995 - Zoroaster/08 - Queen of Sickness.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1995 - Zoroaster/09 - Reload.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1995 - Zoroaster/10 - Vertigate #2.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1999 - Busse Woods (Remastered 2004)/01 - Electric Machine.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1999 - Busse Woods (Remastered 2004)/02 - Silent Circle.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1999 - Busse Woods (Remastered 2004)/03 - Drive Fast, Take Chances.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1999 - Busse Woods (Remastered 2004)/04 - Lashes.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1999 - Busse Woods (Remastered 2004)/05 - Carve The 5.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1999 - Busse Woods (Remastered 2004)/06 - Busse Woods.flac
+/home/rdo/Musk/Metal/_DL/Acid King/1999 - Busse Woods (Remastered 2004)/07 - Motorhead (Bonus Track).flac
+/home/rdo/Musk/Metal/_DL/Acid King/1999 - Busse Woods (Remastered 2004)/08 - Not Fragile (Bonus Track).flac
+/home/rdo/Musk/Metal/_DL/Acid King/2005 - III/01 - 2 Wheel Nation.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2005 - III/02 - Heavy Load.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2005 - III/03 - Bad Vision.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2005 - III/04 - War Of The Mind.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2005 - III/05 - Into The Ground.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2005 - III/06 - On To Everafter.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2005 - III/07 - Sunshine And Sorrow.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2015 - Middle of Nowhere, Center of Everywhere/01 - Intro.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2015 - Middle of Nowhere, Center of Everywhere/02 - Silent Pictures.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2015 - Middle of Nowhere, Center of Everywhere/03 - Coming Down from Outer Space.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2015 - Middle of Nowhere, Center of Everywhere/04 - Laser Headlights.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2015 - Middle of Nowhere, Center of Everywhere/05 - Red River.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2015 - Middle of Nowhere, Center of Everywhere/06 - Infinite Skies.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2015 - Middle of Nowhere, Center of Everywhere/07 - Center of Everywhere.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2015 - Middle of Nowhere, Center of Everywhere/08 - Outro.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2023 - Beyond Vision/01. One Light Second Away.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2023 - Beyond Vision/02. Mind's Eye.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2023 - Beyond Vision/03. 90 Seconds.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2023 - Beyond Vision/04. Electro Magnetic.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2023 - Beyond Vision/05. Destination Psych.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2023 - Beyond Vision/06. Beyond Vision.flac
+/home/rdo/Musk/Metal/_DL/Acid King/2023 - Beyond Vision/07. Color Trails.flac
 /home/rdo/Musk/Metal/Burial Invocation/2018 - Abiogenesis/BI-A_-_01_-_Revival.mp3
 /home/rdo/Musk/Metal/Burial Invocation/2018 - Abiogenesis/BI-A_-_02_-_Abiogenesis.mp3
 /home/rdo/Musk/Metal/Burial Invocation/2018 - Abiogenesis/BI-A_-_03_-_Visions_of_the_Hereafter.mp3
@@ -287,13 +327,79 @@
 /home/rdo/Musk/Metal/Cathedral/2013 - The Last Spire/C-TLS_-_08_-_This_Body,_Thy_Tomb.mp3
 /home/rdo/Musk/Metal/Cathedral/2013 - The Last Spire/C-TLS_-_09_-_Tombs_Of_The_Blind_Dead_(Japanese_Bonus_Track).mp3
 /home/rdo/Musk/Metal/Cathedral/2025 - Society's Pact With Satan (EP)/C-SPWS_-_01_-_Society's_Pact_With_Satan.mp3
-/home/rdo/Musk/Metal/Church of Misery - Born Under a Mad Sign (2023)/CoM-BUaMS_-_05_-_Spoiler.mp3
-/home/rdo/Musk/Metal/Church of Misery - Born Under a Mad Sign (2023)/CoM-BUaMS_-_04_-_Murder_Castle_Blues.mp3
 /home/rdo/Musk/Metal/Church of Misery - Born Under a Mad Sign (2023)/CoM-BUaMS_-_01_-_Beltway_Sniper.mp3
-/home/rdo/Musk/Metal/Church of Misery - Born Under a Mad Sign (2023)/CoM-BUaMS_-_06_-_Come_And_Get_Me_Sucker.mp3
 /home/rdo/Musk/Metal/Church of Misery - Born Under a Mad Sign (2023)/CoM-BUaMS_-_02_-_Most_Evil.mp3
 /home/rdo/Musk/Metal/Church of Misery - Born Under a Mad Sign (2023)/CoM-BUaMS_-_03_-_Freeway_Madness_Boogie.mp3
+/home/rdo/Musk/Metal/Church of Misery - Born Under a Mad Sign (2023)/CoM-BUaMS_-_04_-_Murder_Castle_Blues.mp3
+/home/rdo/Musk/Metal/Church of Misery - Born Under a Mad Sign (2023)/CoM-BUaMS_-_05_-_Spoiler.mp3
+/home/rdo/Musk/Metal/Church of Misery - Born Under a Mad Sign (2023)/CoM-BUaMS_-_06_-_Come_And_Get_Me_Sucker.mp3
 /home/rdo/Musk/Metal/Church of Misery - Born Under a Mad Sign (2023)/CoM-BUaMS_-_07_-_Butcher_Baker.mp3
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2014 - Doliu/01 You Went So Silent.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2014 - Doliu/02 If These Walls Could Speak.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2014 - Doliu/03 Heaven Was Blind to My Grief.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2014 - Doliu/04 A Glimpse of Sorrow.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2014 - Doliu/05 The Deep Vast Emptiness.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2014 - Doliu/06 Even If I Fall.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2016 - Departe/01 How Can I Be There.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2016 - Departe/02 Migration (feat. Jon Aldara).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2016 - Departe/03 In the Ocean of My Tears (feat. Natalie Koskinen).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2016 - Departe/04 In All This Dark.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2016 - Departe/05 Driftwood (feat. Pim Blankenstein).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2016 - Departe/06 I Gave My Heart Away.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2017 - Destin  (Limited Edition) (EP)/01 The Wind Carried Your Soul (feat. Ana Carolina).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2017 - Destin  (Limited Edition) (EP)/02 Fields of Nothingness (feat. Mikko Kotamaki).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2017 - Destin  (Limited Edition) (EP)/03 Nothing but a Name (feat. Mihai Ilie).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2017 - Destin  (Limited Edition) (EP)/04 In This Empty Room (feat. Gogo Melone).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2017 - Destin  (Limited Edition) (EP)/05 You Went So Silent (Accoustic Version).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2017 - Destin  (Limited Edition) (EP)/06 Even If I Fall (Accoustic Version).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2017 - Destin  (Limited Edition) (EP)/07 Errata.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2018 - Dor/01 Forever And A Day.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2018 - Dor/02 The Last Day Of Sun.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2018 - Dor/03 When I'm Gone (feat Gogo Melone).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2018 - Dor/04 Dor.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2018 - Dor/05 The Forever Sleep (feat Pim Blankenstein).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2018 - Dor/06 Alone.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2019 - Dor II/01 Buried In Sand (with Kayla Dixon).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2019 - Dor II/02 Unravel (with Sylvaine).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2019 - Dor II/03 Hollow (with Caleb Bergen).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2019 - Dor II/04 Shadows (with Mihu Ilie).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2019 - Dor II/05 Closeness.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2019 - I Fear The Light (Single)/01 I Fear The Light (with Kostas Panagiotou).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Clouds Acoustic (Compilation)/01 You Went So Silent.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Clouds Acoustic (Compilation)/02 How Can I Be There.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Clouds Acoustic (Compilation)/03 Images And Memories.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Clouds Acoustic (Compilation)/04 Dor.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Clouds Acoustic (Compilation)/05 Nothing But A Name (with Mihai Ilie).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Clouds Acoustic (Compilation)/06 Fields Of Nothingness.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Clouds Acoustic (Compilation)/07 When I'm Gone (with Gogo Melone).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Clouds Acoustic (Compilation)/08 A Father's Death.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Clouds Acoustic (Compilation)/09 I Gave My Heart Away.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Durere/01 Cold Guiding Light.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Durere/02 Empty Hearts.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Durere/03 Images And Memories.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Durere/04 Above The Sea.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Durere/05 The Sailor Waves Goodbye.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Durere/06 A Father's Death.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - Durere/07 The End Of Hope.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2020 - The Path Of Sorrow (Single)/01 The Path Of Sorrow.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2021 - Despărțire (Bonus Track Edition)/01 Deepen This Wound.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2021 - Despărțire (Bonus Track Edition)/02 This Heart, A Coffin (Feat. Mick Moss).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2021 - Despărțire (Bonus Track Edition)/03 Your Name In My Flesh.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2021 - Despărțire (Bonus Track Edition)/04 In Both Our Worlds The Pain Is Real (Feat. Aaron Stainthorpe).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2021 - Despărțire (Bonus Track Edition)/05 The Door We Never Opened.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2021 - Despărțire (Bonus Track Edition)/06 A Place For All Your Tears.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2021 - Despărțire (Bonus Track Edition)/07 See The Sky With Blind Eyes.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2021 - Despărțire (Bonus Track Edition)/08 Untitled (Exclusive Bonus Track).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2022 - Sorrowbound (Single)/01 Sorrowbound.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2025 - Desprins/01 Disguise.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2025 - Desprins/02 Life Becomes Lifeless.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2025 - Desprins/03 Unanswered.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2025 - Desprins/04 Forge Another Nightmare.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2025 - Desprins/05 Chain Me.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2025 - Desprins/06 The Fall Of Hearts.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2025 - Desprins/07 Will It Ever End.flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2025 - Desprins/08 Sorrowbound (Bonus Track).flac
+/home/rdo/Musk/Metal/_DL/Clouds (International) - Discography/2025 - Desprins/09 Chasing Ghosts (Bonus Track).flac
 /home/rdo/Musk/Metal/Consumption/2025 - Catharsis/C-C_-_01_-_Exterminator.mp3
 /home/rdo/Musk/Metal/Consumption/2025 - Catharsis/C-C_-_02_-_Eaten_By_Dawn.mp3
 /home/rdo/Musk/Metal/Consumption/2025 - Catharsis/C-C_-_03_-_Butchery_Catharsis.mp3
@@ -315,6 +421,18 @@
 /home/rdo/Musk/Metal/Cruel Force/2023 - Dawn of the Axe/CF-DotA_-_07_-_Across_The_Styx.mp3
 /home/rdo/Musk/Metal/Cruel Force/2023 - Dawn of the Axe/CF-DotA_-_08_-_Power_Surge.mp3
 /home/rdo/Musk/Metal/Cruel Force/2023 - Dawn of the Axe/CF-DotA_-_09_-_Realm_Of_Sands.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_01_-_Incidental_I.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_02_-_Doberman.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_03_-_Magnolia.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_04_-_The_Garden_Route.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_05_-_Heathen.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_06_-_Amethyst.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_07_-_Incidental_II_(feat._Jae_Matthe.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_08_-_Revelator.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_09_-_Body_Behavior.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_10_-_Incidental_III_(feat._Paul_Bank.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_11_-_Winona.mp3
+/home/rdo/Musk/Metal/_DL/Deafheaven - Lonely People With Power (2025)/D-LPwP_-_12_-_The_Marvelous_Orange_Tree.mp3
 /home/rdo/Musk/Metal/Wayfarer - American Gothic (2023)/W-AG_-_01_-_The_Thousand_Tombs_of_Western_Promise.mp3
 /home/rdo/Musk/Metal/Wayfarer - American Gothic (2023)/W-AG_-_02_-_The_Cattle_Thief.mp3
 /home/rdo/Musk/Metal/Wayfarer - American Gothic (2023)/W-AG_-_03_-_Reaper_on_the_Oilfields.mp3
