@@ -38,6 +38,31 @@
 /home/rdo/Musk/Metal/_DL/Acid King/2023 - Beyond Vision/05. Destination Psych.flac
 /home/rdo/Musk/Metal/_DL/Acid King/2023 - Beyond Vision/06. Beyond Vision.flac
 /home/rdo/Musk/Metal/_DL/Acid King/2023 - Beyond Vision/07. Color Trails.flac
+/home/rdo/Musk/Metal/_DL/Belzebong - The End is High (2026)/01 - Bong & Chain.mp3
+/home/rdo/Musk/Metal/_DL/Belzebong - The End is High (2026)/02 - 420 Horsemen.mp3
+/home/rdo/Musk/Metal/_DL/Belzebong - The End is High (2026)/03 - Hempnotized.mp3
+/home/rdo/Musk/Metal/_DL/Belzebong - The End is High (2026)/04 - Reefer Mortis.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Weedsconsin/01 Sundae Driver.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Weedsconsin/02 Free the Weed.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Weedsconsin/03 Space Rock.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Weedsconsin/04 The Weedeater.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Weedsconsin/05 Earth Bong, Smoked, Mags Bags.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Weedsconsin/06 Gummies.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Weedsconsin/07 Mother Flower's Little Helper.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Weedsconsin/08 Weedsconsin.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Weedsconsin/09 Cosmic Distillate, Nectar Collector.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Weedsconsin/10 Cupcake.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2023 - Dab City/01. Dab City.flac
+/home/rdo/Musk/Metal/_DL/Bongzilla/2023 - Dab City/02. King of Weed.flac
+/home/rdo/Musk/Metal/_DL/Bongzilla/2023 - Dab City/03. Cannonbongs (the Ballad of Burnt Reynolds as Lamented by Gentleman Dixie Dave Collins).flac
+/home/rdo/Musk/Metal/_DL/Bongzilla/2023 - Dab City/04. C.A.R.T.S.flac
+/home/rdo/Musk/Metal/_DL/Bongzilla/2023 - Dab City/05. Hippie Stick.flac
+/home/rdo/Musk/Metal/_DL/Bongzilla/2023 - Dab City/06. Diamonds and Flower.flac
+/home/rdo/Musk/Metal/_DL/Bongzilla/2023 - Dab City/07. American Pot.flac
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Doom Sessions Vol. 4 (Split)/01. Mother Flower's Little Helper.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Doom Sessions Vol. 4 (Split)/02. Cosmic Distillate, Nectar Collector.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Doom Sessions Vol. 4 (Split)/03. Cupcake.mp3
+/home/rdo/Musk/Metal/_DL/Bongzilla/2021 - Doom Sessions Vol. 4 (Split)/04. Chronic Morning Obesity.mp3
 /home/rdo/Musk/Metal/Burial Invocation/2018 - Abiogenesis/BI-A_-_01_-_Revival.mp3
 /home/rdo/Musk/Metal/Burial Invocation/2018 - Abiogenesis/BI-A_-_02_-_Abiogenesis.mp3
 /home/rdo/Musk/Metal/Burial Invocation/2018 - Abiogenesis/BI-A_-_03_-_Visions_of_the_Hereafter.mp3
