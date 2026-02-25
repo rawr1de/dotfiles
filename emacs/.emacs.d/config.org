@@ -749,6 +749,13 @@
      :ensure t
      :init (xah-fly-keys 1))
 
+;; cursor shape in terminal
+(unless (display-graphic-p)
+  (add-hook 'xah-fly-insert-mode-activate-hook
+            (lambda () (send-string-to-terminal "\e[5 q")))
+  (add-hook 'xah-fly-command-mode-activate-hook
+            (lambda () (send-string-to-terminal "\e[2 q"))))
+
    ;; Custom Meta Keys
     (define-key xah-fly-key-map (kbd "M-c") 'capitalize-word)
     (define-key xah-fly-key-map (kbd "M-u") 'upcase-word)

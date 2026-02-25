@@ -2,4 +2,4 @@
 
 # Gimp
 
-zathura ~/Docs/5.systems/01.linux_shit/1.text/system/Cheat_Sheet_-_Gimp.pdf
+zathura ~/Docs/05.systems/01.linux_shit/1.text/system/Cheat_Sheet_-_Gimp.pdf

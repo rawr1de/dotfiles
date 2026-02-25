@@ -35,7 +35,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("0d2c5679b6d087686dcfd4d7e57ed8e8aedcccc7f1a478cd69704c02e4ee36fe"
+   '("4990532659bb6a285fee01ede3dfa1b1bdf302c5c3c8de9fad9b6bc63a9252f7"
+     "4d5d11bfef87416d85673947e3ca3d3d5d985ad57b02a7bb2e32beaf785a100e"
+     "b9761a2e568bee658e0ff723dd620d844172943eb5ec4053e2b199c59e0bcc22"
+     "452068f2985179294c73c5964c730a10e62164deed004a8ab68a5d778a2581da"
+     "d481904809c509641a1a1f1b1eb80b94c58c210145effc2631c1a7f2e4a2fdf4"
+     "f053f92735d6d238461da8512b9c071a5ce3b9d972501f7a5e6682a90bf29725"
+     "8d3ef5ff6273f2a552152c7febc40eabca26bae05bd12bc85062e2dc224cde9a"
+     "e8ceeba381ba723b59a9abc4961f41583112fc7dc0e886d9fc36fa1dc37b4079"
+     "0d2c5679b6d087686dcfd4d7e57ed8e8aedcccc7f1a478cd69704c02e4ee36fe"
      "0325a6b5eea7e5febae709dab35ec8648908af12cf2d2b569bedc8da0a3a81c1"
      "ff24d14f5f7d355f47d53fd016565ed128bf3af30eb7ce8cae307ee4fe7f3fd0"
      "df6dfd55673f40364b1970440f0b0cb8ba7149282cf415b81aaad2d98b0f0290"
@@ -59,14 +67,13 @@
      "0c83e0b50946e39e237769ad368a08f2cd1c854ccbcd1a01d39fdce4d6f86478"
      "7c28419e963b04bf7ad14f3d8f6655c078de75e4944843ef9522dbecfcd8717d"
      default))
- '(nil nil t)
  '(package-selected-packages
-   '(## all-the-icons all-the-icons-dired all-the-icons-nerd-fonts async
-	avy beacon dashboard diminish dimmer dired-hide-dotfiles
-	dired-narrow dired-open dired-quick-sort dired-rainbow
-	dired-ranger dired-subtree doom-modeline doom-themes fzf
-	multiple-cursors org-bullets pdf-tools sudo-edit try
-	use-package visual-regexp)))
+   '(all-the-icons-dired async avy beacon dashboard diminish dimmer
+			 dired-hide-dotfiles dired-narrow dired-open
+			 dired-quick-sort dired-rainbow dired-ranger
+			 dired-subtree doom-modeline doom-themes fzf
+			 multiple-cursors org-bullets sudo-edit
+			 visual-regexp)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
