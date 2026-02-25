@@ -10,6 +10,7 @@ cmus/.config/cmus/autosave
 cmus/.config/cmus/lib.pl
 cmus/.config/cmus/search-history
 kde/.config/plasma-org.kde.plasma.desktop-appletsrc
+kde/.config/kwinrc
 
 
 # Ignore all cache files
