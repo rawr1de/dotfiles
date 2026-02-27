@@ -1,0 +1,613 @@
+* EMACS Stuff
+
+[[/home/rdo/Docs/5.systems/1.linux_shit/1.text/emacs/org-cheat_sheet.pdf][org-cheat-sheet]]
+[[/home/rdo/Docs/5.systems/1.linux_shit/1.text/emacs/org-guide.pdf][org-guide]]
+[[/home/rdo/Docs/Org/org-mode_RDO.org][org-mode_RDO.org]]
+[[/home/rdo/Docs/5.systems/1.linux_shit/1.text/emacs/dired-cheat_sheet.pdf][dired-cheat_sheet]]
+
+
+* LOCAL LINKS
+
+[[/home/rdo/Docs/1.biz/\[BIZ\]_general.org][[BIZ]_general]]
+[[/home/rdo/Docs/1.biz/\[BIZ\]_vendas.org][[BIZ]_vendas]]
+[[/home/rdo/Desk/Dropbox/docs/1.biz/\[BIZ\]_social_media.org][[BIZ]_social_media]]
+[[/home/rdo/Desk/Dropbox/configs/\[BIZ\]_sys_config.org][[BIZ]_sys_config]]
+[[file:~/Desk/Dropbox/docs/1.biz/\[BIZ\]_fund-invest.org][[BIZ]_fund-invest]]  (em branco)
+[[/home/rdo/Docs/8.learning/Create_a_Profitable_Online_Store_(Steve_Chou)/\[LEARN\]_notas_CAPOS.org][[LEARN]_notas_CAPOS]]
+[[/home/rdo/Docs/8.learning/Comunidade_Sobral/\[LEARN\]_notas_cursos_sobral.org][[LEARN]_notas_cursos_sobral]]
+[[/home/rdo/Docs/8.learning/Black_Money_Faixa_Preta/\[LEARN\]_notas_faixa.org][[LEARN]_notas_faixa]]
+[[/home/rdo/Desk/Dropbox/orgriz/eats.org][eats]]
+[[https://www.notion.so/1fcd780b4ce24f168fd843c0d88de31c?v=77ff5b500a964b4b9ca4a4c41546703c][[NET]_books]]
+[[/home/rdo/Desk/Dropbox/orgriz/\[PERSO\]_agenda_2023.org][[PERSO]_agenda_2023]]
+[[/home/rdo/Desk/Dropbox/orgriz/\[PERSO\]_finances.org][[PERSO]_finances]]
+
+
+
+
+
+* WORK LAPTOP/PC
+
+** Linux
+
+*** new_deploy_ongoing
+
+1. dl main packages
+#+BEGIN_SRC
+cd ~ && sudo pacman -Syyy base-devel make && mkdir .aur_builds && cd .aur_builds && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
+#+END_SRC
+
+2. dl base packages
+#+BEGIN_SRC
+dynamic script prompts for what packages based off 'common folder'
+manual install xah-fly-keys after emacs install and add daemon to startup
+#+END_SRC
+
+3. apply dotfiles
+#+BEGIN_SRC
+
+#+END_SRC
+
+
+
+- improve deploy.sh script to reflect changes
+- deploy must install basics from machine specific (packages.txt) and install xah-fly for emacs [populate packages.txt with biz_config.org]
+- install yay
+- check diff/compare installed packages from packages.txt
+
+
+
+To avoid typing git passphrase on every session,
+add to ~/.bashrc or ~/.zshrc:
+
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_ed25519
+fi
+
+
+
+
+xah-fly manual install
+
+M-x package-delete RET xah-fly-keys RET
+
+cd ~/.emacs.d/
+mkdir -p lisp
+cd lisp
+git clone https://github.com/xahlee/xah-fly-keys.git 
+
+
+
+
+file added to GitIgnore list still being tracked must be removed from the Repository
+because it was tracked before...
+ git rm --cached cmus/.config/cmus/lib.pl
+
+If ignored file must be pushed again, do it manually
+ git add -f cmus/.config/cmus/lib.pl
+!! Once committed Git will track it again, until removed from index again
+
+to checking ignored lis:
+ git status --ignored
+
+
+
+
+
+**** tree
+
+.
+├── common
+│   ├── audacity
+│   ├── bash
+│   ├── cmus
+│   ├── conky
+│   ├── dunst
+│   ├── emacs
+│   ├── gimp
+│   ├── inputrc
+│   ├── kitty
+│   ├── neovim
+│   ├── packages.txt
+│   ├── puddletag
+│   ├── ranger
+│   ├── README.md
+│   ├── rofi
+│   ├── scripts
+│   ├── sxhkd
+│   ├── sxiv
+│   ├── sys_conf-pkgs.org
+│   ├── x11_dirs-mimes
+│   ├── xinitrc
+│   ├── Xmodmap
+│   ├── Xresources
+│   ├── zathura
+│   └── zsh
+├── deploy.sh
+├── git
+├── legion
+│   ├── packages.txt
+│   └── README.md
+├── README.md
+├── SH_stow_conflic_handler.sh
+├── templar
+│   ├── NOTES.md
+│   ├── packages.txt
+│   ├── README.md
+│   └── zsh
+└── wm
+    ├── bspwm
+    │   └── README.md
+    ├── kde
+    │   ├── kwin_shortcuts.txt
+    │   └── README.md
+    ├── openbox
+    │   └── README.md
+    └── xfce
+        └── README.md
+
+33 directories, 16 files
+
+
+*** 1. Check Kernel & Sort Mirrors
+
+    #+BEGIN_SRC
+    $ uname -srv
+    # pacman-mirrors -i --geoip
+    #+END_SRC
+    
+    *Last working kernel tested: 6.12*
+
+
+
+*** 2. Full System Update
+
+    #+BEGIN_SRC
+    # pacman -Syyyu
+    #+END_SRC
+
+
+
+*** 3. Install/Config Video Drivers & Battery Conservation
+
+*Legion 5 (ARH15)*
+
+Switchable Graphics (Radeon/Nvidia)
+Discrete Graphics (Nvidia)
+
+USB-C = DisplayPort 1.2 controlled by Nvidia
+
+If you run into trouble with CUDA not being available, run nvidia-modprobe first.
+
+
+**** nvidia drivers
+
+- Escolher drivers versão do kernel com utils (ie.: linux61-nvidia470xxx)
+#+BEGIN_SRC
+$ yay -Ss linux61 |grep linux61-nvidia
+#+END_SRC
+
+- Instalar prime (se necessário)
+- Proton (ligar no Steam: [Settings > Steam Play > Run other titles with: Proton..])
+- VULKAN Drivers já estão no nvidia-utils
+
+
+
+*Useful Dirs:*
+
+/usr/share/X11/xorg.conf.d
+/etc/X11/xorg.conf.d
+/etc/X11/modprobe.d
+
+
+
+*Errors:*
+
+Xorg não reconhce Device/Screen:
+- Remover todos os arquivos de configuracao nvidia
+- Se não entrar no xorg > Desisntalar drivers nvidia
+
+
+Nvidia não conecta em monitores externos:
+- Check dir  /usr/share/X11/xorg.conf.d  por 10-nvidia-drm-outputclass.conf
+- EXEC as sudo nvidia-settings and change external display configs & save to xorg.conf
+
+
+
+*Useful links:*
+
+[[https://www.youtube.com/watch?v=Pn2iUgW3l6w][NVIDIA Optimus: A ℂ𝕠𝕞𝕗𝕪 Guide]]
+[[https://bbs.archlinux.org/viewtopic.php?id=251846][nvidia not connecting external monitor]]
+
+
+
+**** battery conservation
+
+Battery Conservation Mode on IdeaPad laptops
+(limits charging to 55-60% of its capacity to improve battery life)
+
+#1  make sure the ideapad_laptop kernel module is loaded
+#+BEGIN_EXAMPLE
+    $ lsmod | grep ideapad_laptop
+#+END_EXAMPLE
+
+#2  If it is, run as root to enable Battery Conservation Mode:
+#+BEGIN_EXAMPLE
+   # echo 1 >/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode
+#+END_EXAMPLE
+
+0 = disable feature
+1 = enable feature
+
+
+
+*** 4. Install Apps
+
+0. [[https://aur.archlinux.org/packages/yay][yay]] (require: go, base-devel, make)
+#+BEGIN_SRC
+cd ~ && sudo pacman -S base-devel make && mkdir .aur_builds && cd .aur_builds && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
+#+END_SRC
+
+1. [[https://brave.com/][brave]] (brave-bin)
+2. [[https://www.dropbox.com/home][dropbox]]
+3. [[https://www.gnu.org/software/emacs/download.html#nonfree][emacs]]
+4. [[https://www.videolan.org/vlc/][vlc]] / [[https://mpv.io/][mpv]]
+5. [[https://store.steampowered.com/][steam]]
+6. [[https://archlinux.org/packages/extra/x86_64/git/][git]]
+7. [[https://archlinux.org/packages/community/x86_64/kitty/][kitty]]
+8. [[https://bitwarden.com/][bitwarden]]
+9. ranger
+11. dragon-drop
+12. xclip
+13. mcfly
+14. img2pdf
+15. mlocate
+16. gimp
+17. gimp-plugin-gmic
+18. cmus
+19. bat
+20. lsd
+21. stow
+22. pulsemixer
+23. sxhkd
+24. qbittorrent
+25. unclutter
+26. zathura zathura-pdf-poppler zathura-djvu zathura-cb zathura-ps
+27. icons-in-terminal
+28. atool
+29. puddletag
+30. flacon
+31. soundkonverter
+32. shntool
+33. feh
+34. sxiv
+35. tldr
+36. fatsort
+37. yt-dlp-git
+38. wavpack
+39. musepack-tools
+40. taglib
+41. mediainfo
+42. libmpcdec
+43. musepack-tools
+44. cuetools
+45. fzf
+46. unzip
+47. unrar
+48. perl-image-exiftool
+49. rofi
+50. [[https://handbrake.fr/][handbrake]]
+51. [[https://obsproject.com/][obs-studio]]
+52. pdftricks
+53. ext4magic
+54. tldr
+55. ytcc  (testar?)
+56. ytfzf (testar?)
+57. task-Spooler (testar?)
+58. xlayoutdisplay (testar?)
+59. tesseract
+60. mpv-mpris
+61. pdftk
+62. masterpdfeditor-free
+63. calibre
+64. falkon
+65. discord
+66. musickube
+67. zip
+68. duf
+69. [[https://github.com/benjajaja/mdfried][mdfried]]
+70. bfg
+
+*INSTALLER #1 (WORK: Browser/Text/Audio/Video)*
+#+BEGIN_SRC
+yay -Syyy brave-bin dropbox emacs mpv mpv-mpris vlc git kitty bitwarden ranger dragon-drop xclip mcfly cmus bat lsd stow pulsemixer sxhkd qbittorrent unclutter zathura zathura-pdf-poppler zathura-djvu zathura-cb zathura-ps icons-in-terminal atool feh sxiv tldr yt-dlp-git fzf unzip unrar perl-image-exiftool rofi pdftricks masterpdfeditor-free ext4magic tldr tesseract mpv-mpris pdftk pdfsandwich calibre falkon discord musickube zip duf mdfried bfg
+#+END_SRC 
+
+tesseract eng = 30
+
+*INSTALLER #2 (MEDIA/FUN: games/audio|video edit/backup)*
+#+BEGIN_SRC
+yay -Syyy steam gimp gimp-plugin-gmic inkscape puddletag flacon soundkonverter shntool fatsort wavpack musepack-tools taglib mediainfo libmpcdec musepack-tools cuetools timeshift obs-studio handbrake
+#+END_SRC
+
+**** 4a. Apps Configs
+
+*zsh as default shell*
+#+BEGIN_SRC
+# chsh -s /bin/zsh rdo
+#+END_SRC
+
+
+*Brave locked session*
+#+BEGIN_SRC
+$ find -iname SingletonLock
+$ rm ./.config/BraveSoftware/Brave-Browser/SingletonLock
+#+END_SRC
+
+
+**** 4b. Emacs Packages
+
+all-the-icons-dired
+all-the-icons-nerd-fonts
+async
+avy
+beacon
+dashboard
+diminish
+dimmer
+dired-hide-dotfiles
+dired-narrow
+dired-open
+dired-quick-sort
+dired-rainbow
+dired-ranger
+dired-subtree
+doom-modeline
+doom-themes
+fzf
+multiple-cursors
+org-bullets
+pdf-tools
+sudo-edit
+use-package
+visual-regexp
+xah-fly-keys 
+
+
+*** 5. Copy Apps Dotfiles
+
+*1. delete default configs* & *Create Local .Trash*
+   #+BEGIN_SRC
+   $ cd ~ && rm .bashrc .bash_profile .xinitrc .xmodmap users-dirs.locale && mkdir .Trash
+   #+END_SRC 
+
+
+*2. cd no dir dotfiles do DM ou WM em uso (bspwm_dots/KDE_dots/Openbox_dots)*
+   #+BEGIN_SRC
+   cd ~/Desk/Dropbox/configs/dotfiles/ 
+   #+END_SRC 
+   
+*3. copiar todos ou algumas configs somente*
+   #+BEGIN_SRC
+   $ stow -t ~ *  (all config files)
+kitty emacs..  (specific config files)
+   #+END_SRC
+
+*4. One-Click config copy*
+
+   INSTALLER #1 (WORK: Browser/Text/Audio/Video)
+   #+BEGIN_SRC
+   $ stow -t ~ emacs kitty ranger cmus sxhkd zathura sxiv OUTROS1 home_dots rofi scripts && cd OUTROS2 && cp * ~/.config/
+   #+END_SRC
+
+   INSTALLER #2 (MEDIA/FUN: games/audio|video edit/backup)
+   #+BEGIN_SRC
+   $ stow -t ~ gimp puddletag
+   #+END_SRC 
+
+
+*** 6. WM/DE/System custom configs
+
+**** KDE Configs
+
+***** Check Kernel / Video & Network Drivers
+System Settings > Kernel
+System Settings > Hardware Configuration
+
+
+***** LOAD Keybinds/Shortcuts ([[/home/rdo/Desk/Dropbox/configs/.dotfiles/RDO_KDE_hotkeys.Kksrc][RDO_KDE_hotkeys.kksrc]])
+1. add download apps to kde list
+   System Settings > Shortcuts > + Add Applications... > brave, emacs, kitty
+2. Import RDO keys scheme
+   Shortcuts > KWin > Import Scheme > Custom Scheme (Select) > Import (Confirm)
+
+
+***** Keyboard Speed/Layout
+System Settings > keyboard > Hardware:  Delay = 180ms  ,  Rate = 80 repeats/s
+System Settings > keyboard > Layout > Configure Layout > Add:  br Portuguese (Brazil)
+*UNTICK* > OSD on layout change *& Apply*
+Taskbar > Configure Keyboard Layout... > Display style (flag only)
+
+
+***** System Theme
+System Settings > Appearance > Breath Dark
+
+
+***** Focus New Windows
+System Settings > Window Behavior > Focus > Focus stealing prevention > None
+
+
+***** Screen locking
+System Settings > Screen Locking > Lock screen automatically (untick)
+
+
+***** Screen Edges
+System Settings > Screen Edges:
+- TOP/LEFT edge == Present Windows Current Desktop
+- TOP/RIGHT edge = Present Windows Current Desktop
+- MID/DOWN edge == Present Windows ALL Desktops
+
+
+***** Energy Saving
+System Settings > Energy Saving > On AC Power
+*UNTICK:* Screen Energy Saving
+*SELECT:* Button events handling > When laptop lid closed > Turn off screen
+*TICK:::* Even when an external..
+
+System Settings > Advanced Power Settings > At critical level > Shut down
+
+
+***** DISABLE NOTIFICATIONS & SYSTEM SOUNDS (CLI)
+/disable all/
+kwriteconfig5 --file kdeglobals --group Sounds --key Enable false
+
+/restart plasma (optional)/
+plasmashell --replace &
+
+/enable all/
+kwriteconfig5 --file kdeglobals --group Sounds --key Enable true
+
+
+***** KDE Wallet
+if wallet keeps on popping up everytime you connect to wifi *DISABLE IT*
+/KWalletManager > Settings > Configure Wallet > Enable KDE Wallet Subsystem/
+
+
+*---> AINDA TESTANDO <---
+*Disable Autologin/Greeter*
+Login screen (SDDM) > Behavior... > Automatically.. (untick)
+$ sudo systemctl disable sddm  (força login manual na tty)
+
+/Se remover greeter (sddm) também remove o tema verde do manjaro/
+*---> AINDA TESTANDO <---*
+
+
+
+**** Emacs Fixes
+
+*missing icons*
+(re)install all-the-icons package
+#+BEGIN_SRC
+M-x all-the-icons-install-fonts
+#+END_SRC 
+
+*missing last theme*
+(re)install doom-themes
+#+BEGIN_SRC
+M-x list-packages (doom-themes)
+#+END_SRC 
+
+
+**** Brave Extensions & Themes
+
+!! COPIAR pasta Brave dos dotfiles salvos automaticos!
+
+- [[https://chrome.google.com/webstore/detail/onetab/chphlpgkkbolifaimnlloiipkdnihall/related][OneTab]]
+- [[https://chrome.google.com/webstore/detail/d%C3%B3lar-hoje/eemaaomlfllldamnpoajaedaemnblgal][Dólar Hoje]]
+- [[https://chrome.google.com/webstore/detail/honey-automatic-coupons-r/bmnlcjabgnpnenekpadlanbbkooimhnj][PayPal Honey]]
+- [[https://chrome.google.com/webstore/detail/jungle-scout/bckjlihkmgolmgkchbpiponapgjenaoa][Jungle Scout]]
+- [[https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb][Google Translate]]
+- [[https://chrome.google.com/webstore/detail/scientific-calculator/fnplhdldnhaodknidfddmkfdhlhjihpd][Scientific Calculator]]
+- [[https://chrome.google.com/webstore/detail/dark-mode-for-chrome/pjbgfifennfhnbkhoidkdchbflppjncb/related][Dark Mode for Chrome]] (a mudar)
+- [[https://chrome.google.com/webstore/detail/take-webpage-screenshots/mcbpblocgmgfnpjjppndjkmgjaogfceg][Fireshot]]
+- [[https://chrome.google.com/webstore/detail/search-on-metal-archives/jlnnocojlolicjdcfclnkbngfidnobil][Metal-Archives]]
+
+- [[https://chrome.google.com/webstore/detail/eno%C2%AE-from-capital-one%C2%AE/clmkdohmabikagpnhjmgacbclihgmdje][ENO Capital One]]
+- [[https://chrome.google.com/webstore/detail/honey-automatic-coupons-r/bmnlcjabgnpnenekpadlanbbkooimhnj][PayPal Honey]]
+- [[https://chrome.google.com/webstore/detail/search-by-image/cnojnbdhbhnkbcieeekonklommdnndci][Search by Image]]
+- [[https://chrome.google.com/webstore/detail/fake-news-debunker-by-inv/mhccpoafgdgbhnjfhkcmgknndkeenfhe][InVID & WeVerify]]
+
+- [[https://chrome.google.com/webstore/detail/material-dark-mkbhd/iiplegjeipnjdpgkeccfccnahofbckad][Material Dark - MKBHD]]
+  
+
+**** Openbox Configs
+
+#1 nvim => :PluginInstall
+
+#3 uncomment 'redshift.conf' lat/long location 
+
+#4 set 'sxhkdrc.WM' according to WM in use (edit WM config/autostart file)
+
+#5 Install Brave extensions: Dolar Hoje, OneTab, Dark Web
+
+#6 Un/Comment path variables (.scripts) in  .bashrc  according to pc scripts
+
+#7 edit battery savings options at /etc/tlp.conf  (check install guidelines)
+
+#8 install progs from the apps_list.org  (implement under each pc scripts) 
+
+#9 Install cmus-notify
+   0. cd .aur_builds
+   1. git clone https://github.com/dcx86r/cmus-notify
+   2. cpan -i HTML::Entities
+   3. sudo sh installer.sh install
+
+
+
+**** System Configs
+
+*Keyboard Speed X11/TTY*
+$ xset r rate 180 80      (press waiting (ms), repetition rate (ms))
+$ kbdrate r rate 180 80   (press waiting (ms), repetition rate (ms))
+
+***** terminal dir names
+
+$ xdg-user-dir DOWNLOAD -> DLs
+if not..
+1. move user-dirs.dirs to ~/.config
+2. rename folder on ~
+
+
+** Windows
+
+*** Apps
+
+- [[https://brave.com/][brave]]
+- [[https://www.gnu.org/software/emacs/download.html#nonfree][emacs]]  ([[https://github.com/termitereform/JunkPile/blob/master/emacs-on-windows.md][conf. emacs windows]])
+- [[https://www.dropbox.com/home][dropbox]]
+- [[https://www.7-zip.org/][7-zip]]
+- [[https://www.autodesk.com/products/fusion-360/appstream?mktvar002=1033964&utm_medium=product&utm_source=ipm&utm_campaign=americas-dm-collection-fusion-360-download&utm_id=1033964][Fusion 360]]
+- Ultimaker Cura
+- [[https://store.steampowered.com/][steam]]
+- [[https://www.videolan.org/vlc/][vlc]] / [[https://mpv.io/][mpv]]
+- [[https://www.irfanview.com/][IRFANVIEW]]
+- [[https://kate-editor.org/get-it/][kate]]
+- [[https://www.nvidia.com/Download/index.aspx?lang=en-us][nvidia drivers]]
+- [[https://bitwarden.com/][bitwarden]]
+
+
+*** Configs
+
+*Emacs*  ([[https://github.com/termitereform/JunkPile/blob/master/emacs-on-windows.md][conf. emacs windows]])
+- Criar pasta home (RDO) no desktop
+- Setar variaveis do ambiente no sistema (System > Advanced > Envir.. > System type vars) pra HOME (Desktop\RDO) e emacs
+- Copiar .emacs.d/ pra pasta pasta RDO [HOME]
+- Executar emacs e testar se configs foram carregadas
+
+--> ICONES no emacs a arrumar
+--> Documentar como instalar perfis no cura?
+
+
+*Brave Extensions & Themes*
+
+- [[https://chrome.google.com/webstore/detail/onetab/chphlpgkkbolifaimnlloiipkdnihall/related][OneTab]]
+- [[https://chrome.google.com/webstore/detail/d%C3%B3lar-hoje/eemaaomlfllldamnpoajaedaemnblgal][Dólar Hoje]]
+- [[https://chrome.google.com/webstore/detail/honey-automatic-coupons-r/bmnlcjabgnpnenekpadlanbbkooimhnj][PayPal Honey]]
+- [[https://chrome.google.com/webstore/detail/jungle-scout/bckjlihkmgolmgkchbpiponapgjenaoa][Jungle Scout]]
+- [[https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb][Google Translate]]
+- [[https://chrome.google.com/webstore/detail/scientific-calculator/fnplhdldnhaodknidfddmkfdhlhjihpd][Scientific Calculator]]
+- [[https://chrome.google.com/webstore/detail/dark-mode-for-chrome/pjbgfifennfhnbkhoidkdchbflppjncb/related][Dark Mode for Chrome]] (a mudar)
+- [[https://chrome.google.com/webstore/detail/take-webpage-screenshots/mcbpblocgmgfnpjjppndjkmgjaogfceg][Fireshot]]
+- [[https://chrome.google.com/webstore/detail/search-on-metal-archives/jlnnocojlolicjdcfclnkbngfidnobil][Metal-Archives]]
+
+
+- [[https://chrome.google.com/webstore/detail/eno%C2%AE-from-capital-one%C2%AE/clmkdohmabikagpnhjmgacbclihgmdje][ENO Capital One]]
+- [[https://chrome.google.com/webstore/detail/honey-automatic-coupons-r/bmnlcjabgnpnenekpadlanbbkooimhnj][PayPal Honey]]
+- [[https://chrome.google.com/webstore/detail/search-by-image/cnojnbdhbhnkbcieeekonklommdnndci][Search by Image]]
+- [[https://chrome.google.com/webstore/detail/fake-news-debunker-by-inv/mhccpoafgdgbhnjfhkcmgknndkeenfhe][InVID & WeVerify]]
+
+
+- [[https://chrome.google.com/webstore/detail/material-dark-mkbhd/iiplegjeipnjdpgkeccfccnahofbckad][Material Dark - MKBHD]]
+
+
+
