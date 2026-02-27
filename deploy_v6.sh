@@ -29,31 +29,15 @@ stow_package() {
     stow -R --dir="$DOTFILES_DIR/$category" --target="$HOME" "$package"
 }
 
-install_packages_from_file() {
-    local packages_file="$1"
-    local label="$2"
+INSTALL_SCRIPT="$DOTFILES_DIR/common/scripts/SH_install_packages.sh"
 
-    if [ ! -f "$packages_file" ]; then
-        echo -e "${YELLOW}  No packages.txt found at $packages_file, skipping...${NC}"
-        return
-    fi
-
-    mapfile -t PKGS < <(grep -v '^\s*#' "$packages_file" | grep -v '^\s*$')
-
-    if [ ${#PKGS[@]} -eq 0 ]; then
-        echo -e "${YELLOW}  $label packages.txt is empty, skipping...${NC}"
-        return
-    fi
-
-    echo -e "${CYAN}  [$label] Packages to install:${NC}"
-    for pkg in "${PKGS[@]}"; do
-        echo -e "    ${CYAN}·${NC} $pkg"
-    done
-    echo ""
-
-    echo -e "${YELLOW}  Installing $label packages with yay...${NC}"
-    yay -S --needed --noconfirm "${PKGS[@]}"
-}
+echo -e "${BLUE}${BOLD}=== deploy_v4.sh ===${NC}"
+echo -e "${CYAN}Interactive dotfiles deployment script for Arch Linux.${NC}"
+echo -e "${CYAN}Steps through machine selection, WM selection, common package stowing,${NC}"
+echo -e "${CYAN}package installation and WM-specific post-install tasks.${NC}\n"
+echo -e "  ${YELLOW}Prerequisites :${NC} ~/.dotfiles repo cloned, GNU Stow installed"
+echo -e "  ${YELLOW}Run first     :${NC} bash SH_stow_conflict_handler.sh  (resolves stow conflicts)"
+echo -e "  ${YELLOW}Usage         :${NC} bash deploy_v4.sh  (no arguments — fully interactive)\n"
 
 # ---------------------------------------------------------------------------
 # Preflight checks
@@ -249,15 +233,16 @@ read -p "Proceed? [y/N]: " confirm
 # Execute
 # ---------------------------------------------------------------------------
 
-# 1. Install common packages
-print_header "Installing common packages"
-install_packages_from_file "$DOTFILES_DIR/common/packages.txt" "common"
+# 1. Install common + machine packages
+print_header "Installing packages"
 
-# 2. Install machine-specific packages
-print_header "Installing $MACHINE packages"
-install_packages_from_file "$DOTFILES_DIR/$MACHINE/packages.txt" "$MACHINE"
+if [ -f "$INSTALL_SCRIPT" ]; then
+    bash "$INSTALL_SCRIPT" common "$MACHINE"
+else
+    echo -e "${RED}✗ SH_install_packages.sh not found at $INSTALL_SCRIPT — skipping package installs.${NC}"
+fi
 
-# 3. Stow selected common packages
+# 2. Stow selected common packages
 if [ ${#SELECTED_COMMON[@]} -gt 0 ]; then
     print_header "Stowing common packages"
     for pkg in "${SELECTED_COMMON[@]}"; do
@@ -265,15 +250,44 @@ if [ ${#SELECTED_COMMON[@]} -gt 0 ]; then
     done
 fi
 
-# 4. Stow chosen WM
+# 3. Stow chosen WM
 if [ -n "$CHOSEN_WM" ]; then
     print_header "Stowing WM configs"
     stow_package "wm" "$CHOSEN_WM"
 fi
 
-# 5. KDE post-install notice
+# 4. KDE post-install notice
 if [ "$CHOSEN_WM" = "kde" ]; then
     echo -e "\n${YELLOW}⚠  KDE configs deployed. Log out and back in for changes to take effect.${NC}"
+fi
+
+# 5. XFCE post-install
+if [ "$CHOSEN_WM" = "xfce" ]; then
+    print_header "XFCE post-install"
+
+    # Copy xfce4-desktop.xml (disables desktop icons)
+    XFCE_XML="$DOTFILES_DIR/wm/xfce/xfce4-desktop.xml"
+    XFCE_XML_TARGET="$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml"
+
+    if [ -f "$XFCE_XML" ]; then
+        mkdir -p "$(dirname "$XFCE_XML_TARGET")"
+        cp "$XFCE_XML" "$XFCE_XML_TARGET"
+        echo -e "${GREEN}✓ xfce4-desktop.xml deployed (desktop icons disabled).${NC}"
+    else
+        echo -e "${YELLOW}⚠  wm/xfce/xfce4-desktop.xml not found, skipping.${NC}"
+    fi
+
+    # Rename XDG home directories
+    RENAME_SCRIPT="$DOTFILES_DIR/common/scripts/SH_rename_xdg_dirs.sh"
+
+    if [ -f "$RENAME_SCRIPT" ]; then
+        echo -e "${CYAN}  Running XDG directory renamer...${NC}"
+        bash "$RENAME_SCRIPT"
+    else
+        echo -e "${YELLOW}⚠  common/scripts/SH_rename_xdg_dirs.sh not found, skipping.${NC}"
+    fi
+
+    echo -e "\n${YELLOW}⚠  XFCE configs deployed. Log out and back in for changes to take effect.${NC}"
 fi
 
 echo -e "\n${GREEN}${BOLD}✅ Dotfiles deployed successfully!${NC}\n"
