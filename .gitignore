@@ -1,7 +1,7 @@
 .DS_Store
 kitty/.config/kitty/kitty-themes/
-ranger/.config/ranger/plugins/ranger_devicons/
-
+ranger/.config/ranger/plugins/
+ranger/.config/ranger/colorschemes
 
 # Ignore cache and state files
 common/cmus/.config/cmus/cache
