@@ -56,3 +56,6 @@ HISTSIZE=2000
 HISTFILESIZE=2000
 
 eval "$(mcfly init zsh)"
+
+# ssh key source
+[ -f ~/.zshrc_local ] && source ~/.zshrc_local
