@@ -55,6 +55,7 @@ HISTSIZE=2000
 # history file size
 HISTFILESIZE=2000
 
+# run McFly on ZSH
 eval "$(mcfly init zsh)"
 
 # ssh key source
