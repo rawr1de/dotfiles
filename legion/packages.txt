@@ -1,0 +1,3 @@
+# amdgpu or nvidia drivers depending on Legion's GPU
+amd-ucode
+steam

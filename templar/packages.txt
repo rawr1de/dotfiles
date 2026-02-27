@@ -1,0 +1,6 @@
+intel-ucode
+intel-media-driver
+libva-intel-driver
+lib32-libva-intel-driver
+vulkan-intel
+lib32-vulkan-intel

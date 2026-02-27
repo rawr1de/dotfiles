@@ -1,0 +1,22 @@
+# BASE SYSTEM
+base
+base-devel
+linux612
+
+# UTILITIES
+#bash
+#conky
+#audacity
+cmus
+dunst
+emacs
+gimp
+inputrc
+kitty
+puddletag
+ranger
+rofi
+sxhkd
+sxiv
+zathura
+zsh
