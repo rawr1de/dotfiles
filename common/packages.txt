@@ -1,17 +1,11 @@
-# BASE SYSTEM
-base
-base-devel
-linux612
-
-# UTILITIES
 #bash
 #conky
 #audacity
+#dunst
+#gimp
+#zsh
 cmus
-dunst
 emacs
-gimp
-inputrc
 kitty
 puddletag
 ranger
@@ -19,4 +13,4 @@ rofi
 sxhkd
 sxiv
 zathura
-zsh
+gtypist
