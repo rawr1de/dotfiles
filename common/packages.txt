@@ -1,9 +1,4 @@
-#bash
-#conky
-#audacity
-#dunst
-#gimp
-#zsh
+# base all
 cmus
 emacs
 kitty
@@ -13,4 +8,69 @@ rofi
 sxhkd
 sxiv
 zathura
-gtypist
+zsh
+bitwarden
+dragon-drop
+xclip
+mcfly
+img2pdf
+mlocate
+cmus
+bat
+lsd
+pulsemixer
+qbittorrent
+unclutter
+zathura
+zathura-pdf-poppler
+zathura-djvu
+zathura-cb
+icons-in-terminal
+atool
+feh
+sxiv
+tldr
+fatsort
+yt-dlp-git
+fzf
+unzip
+unrar
+perl-image-exiftool
+pdftk
+zip
+duf
+mdfried
+bfg
+tree
+brave-bin
+#
+#
+# puddletag
+# flacon
+# shntool
+# wavpack
+# musepack-tools
+# taglib
+# mediainfo
+# libmpcdec
+# musepack-tools
+# cuetools
+# handbrake
+# obs-studio
+# mpv-mpris
+# calibre
+# discord
+# musickube
+# inkscape
+# gimp
+# gimp-plugin-gmic
+# steam
+# falkon
+#
+#
+# ext4magic
+# ytcc  
+# ytfzf
+# task-Spooler
+# xlayoutdisplay
+# tesseract

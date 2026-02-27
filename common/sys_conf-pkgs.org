@@ -48,14 +48,6 @@ manual install xah-fly-keys after emacs install and add daemon to startup
 #+END_SRC
 
 
-
-- improve deploy.sh script to reflect changes
-- deploy must install basics from machine specific (packages.txt) and install xah-fly for emacs [populate packages.txt with biz_config.org]
-- install yay
-- check diff/compare installed packages from packages.txt
-
-
-
 To avoid typing git passphrase on every session,
 add to ~/.bashrc or ~/.zshrc:
 
@@ -74,79 +66,8 @@ M-x package-delete RET xah-fly-keys RET
 cd ~/.emacs.d/
 mkdir -p lisp
 cd lisp
-git clone https://github.com/xahlee/xah-fly-keys.git 
+git clone https://github.com/xahlee/xah-fly-keys.git
 
-
-
-
-file added to GitIgnore list still being tracked must be removed from the Repository
-because it was tracked before...
- git rm --cached cmus/.config/cmus/lib.pl
-
-If ignored file must be pushed again, do it manually
- git add -f cmus/.config/cmus/lib.pl
-!! Once committed Git will track it again, until removed from index again
-
-to checking ignored lis:
- git status --ignored
-
-
-
-
-
-**** tree
-
-.
-├── common
-│   ├── audacity
-│   ├── bash
-│   ├── cmus
-│   ├── conky
-│   ├── dunst
-│   ├── emacs
-│   ├── gimp
-│   ├── inputrc
-│   ├── kitty
-│   ├── neovim
-│   ├── packages.txt
-│   ├── puddletag
-│   ├── ranger
-│   ├── README.md
-│   ├── rofi
-│   ├── scripts
-│   ├── sxhkd
-│   ├── sxiv
-│   ├── sys_conf-pkgs.org
-│   ├── x11_dirs-mimes
-│   ├── xinitrc
-│   ├── Xmodmap
-│   ├── Xresources
-│   ├── zathura
-│   └── zsh
-├── deploy.sh
-├── git
-├── legion
-│   ├── packages.txt
-│   └── README.md
-├── README.md
-├── SH_stow_conflic_handler.sh
-├── templar
-│   ├── NOTES.md
-│   ├── packages.txt
-│   ├── README.md
-│   └── zsh
-└── wm
-    ├── bspwm
-    │   └── README.md
-    ├── kde
-    │   ├── kwin_shortcuts.txt
-    │   └── README.md
-    ├── openbox
-    │   └── README.md
-    └── xfce
-        └── README.md
-
-33 directories, 16 files
 
 
 *** 1. Check Kernel & Sort Mirrors
@@ -242,95 +163,6 @@ Battery Conservation Mode on IdeaPad laptops
 
 
 *** 4. Install Apps
-
-0. [[https://aur.archlinux.org/packages/yay][yay]] (require: go, base-devel, make)
-#+BEGIN_SRC
-cd ~ && sudo pacman -S base-devel make && mkdir .aur_builds && cd .aur_builds && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
-#+END_SRC
-
-1. [[https://brave.com/][brave]] (brave-bin)
-2. [[https://www.dropbox.com/home][dropbox]]
-3. [[https://www.gnu.org/software/emacs/download.html#nonfree][emacs]]
-4. [[https://www.videolan.org/vlc/][vlc]] / [[https://mpv.io/][mpv]]
-5. [[https://store.steampowered.com/][steam]]
-6. [[https://archlinux.org/packages/extra/x86_64/git/][git]]
-7. [[https://archlinux.org/packages/community/x86_64/kitty/][kitty]]
-8. [[https://bitwarden.com/][bitwarden]]
-9. ranger
-11. dragon-drop
-12. xclip
-13. mcfly
-14. img2pdf
-15. mlocate
-16. gimp
-17. gimp-plugin-gmic
-18. cmus
-19. bat
-20. lsd
-21. stow
-22. pulsemixer
-23. sxhkd
-24. qbittorrent
-25. unclutter
-26. zathura zathura-pdf-poppler zathura-djvu zathura-cb zathura-ps
-27. icons-in-terminal
-28. atool
-29. puddletag
-30. flacon
-31. soundkonverter
-32. shntool
-33. feh
-34. sxiv
-35. tldr
-36. fatsort
-37. yt-dlp-git
-38. wavpack
-39. musepack-tools
-40. taglib
-41. mediainfo
-42. libmpcdec
-43. musepack-tools
-44. cuetools
-45. fzf
-46. unzip
-47. unrar
-48. perl-image-exiftool
-49. rofi
-50. [[https://handbrake.fr/][handbrake]]
-51. [[https://obsproject.com/][obs-studio]]
-52. pdftricks
-53. ext4magic
-54. tldr
-55. ytcc  (testar?)
-56. ytfzf (testar?)
-57. task-Spooler (testar?)
-58. xlayoutdisplay (testar?)
-59. tesseract
-60. mpv-mpris
-61. pdftk
-62. masterpdfeditor-free
-63. calibre
-64. falkon
-65. discord
-66. musickube
-67. zip
-68. duf
-69. [[https://github.com/benjajaja/mdfried][mdfried]]
-70. bfg
-
-*INSTALLER #1 (WORK: Browser/Text/Audio/Video)*
-#+BEGIN_SRC
-yay -Syyy brave-bin dropbox emacs mpv mpv-mpris vlc git kitty bitwarden ranger dragon-drop xclip mcfly cmus bat lsd stow pulsemixer sxhkd qbittorrent unclutter zathura zathura-pdf-poppler zathura-djvu zathura-cb zathura-ps icons-in-terminal atool feh sxiv tldr yt-dlp-git fzf unzip unrar perl-image-exiftool rofi pdftricks masterpdfeditor-free ext4magic tldr tesseract mpv-mpris pdftk pdfsandwich calibre falkon discord musickube zip duf mdfried bfg
-#+END_SRC 
-
-tesseract eng = 30
-
-*INSTALLER #2 (MEDIA/FUN: games/audio|video edit/backup)*
-#+BEGIN_SRC
-yay -Syyy steam gimp gimp-plugin-gmic inkscape puddletag flacon soundkonverter shntool fatsort wavpack musepack-tools taglib mediainfo libmpcdec musepack-tools cuetools timeshift obs-studio handbrake
-#+END_SRC
-
-**** 4a. Apps Configs
 
 *zsh as default shell*
 #+BEGIN_SRC
