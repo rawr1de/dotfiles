@@ -27,8 +27,6 @@ declare -A XDG_DEFAULTS=(
     ["XDG_PICTURES_DIR"]="Pictures"
     ["XDG_VIDEOS_DIR"]="Videos"
     ["XDG_MUSIC_DIR"]="Music"
-    ["XDG_PUBLICSHARE_DIR"]="Public"
-    ["XDG_TEMPLATES_DIR"]="Templates"
     ["XDG_TEMP_DIR"]="tmp"
 )
 
