@@ -4,13 +4,22 @@ ranger/.config/ranger/plugins/ranger_devicons/
 
 
 # Ignore cache and state files
-cmus/.config/cmus/cache
-cmus/.config/cmus/playlists/
-cmus/.config/cmus/autosave
-cmus/.config/cmus/lib.pl
-cmus/.config/cmus/search-history
-kde/.config/plasma-org.kde.plasma.desktop-appletsrc
-kde/.config/kwinrc
+common/cmus/.config/cmus/cache
+common/cmus/.config/cmus/playlists/
+common/cmus/.config/cmus/autosave
+common/cmus/.config/cmus/lib.pl
+common/cmus/.config/cmus/search-history
+common/emacs/.emacs.d/auto-save-list/
+common/emacs/.emacs.d/config.el
+common/emacs/.emacs.d/eln-cache/
+common/emacs/.emacs.d/elpa/
+common/emacs/.emacs.d/history
+common/emacs/.emacs.d/lisp/
+common/emacs/.emacs.d/places
+common/emacs/.emacs.d/recentf
+common/emacs/.emacs.d/temp/
+wm/kde/.config/plasma-org.kde.plasma.desktop-appletsrc
+wm/kde/.config/kwinrc
 
 
 # Ignore all cache files
