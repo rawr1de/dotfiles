@@ -5,6 +5,11 @@ common/ranger/.config/ranger/colorschemes
 
 
 # Ignore cache and state files
+cmus/.config/cmus/cache
+cmus/.config/cmus/autosave
+cmus/.config/cmus/lib.pl
+cmus/.config/cmus/playlists
+cmus/.config/cmus/search-history
 common/cmus/.config/cmus/cache
 common/cmus/.config/cmus/playlists/
 common/cmus/.config/cmus/autosave
