@@ -4,16 +4,6 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; RDO-mode is disabled in the minibuffer (via turn-off-RDO-mode hook),
-;; so <home> (Capslock) loses its command-mode binding there.
-;; This restores both ESC and <home> as quit keys in the minibuffer.
-(defun rdo-minibuffer-keys ()
-  "Bind ESC and <home>/Capslock to quit the minibuffer."
-  (local-set-key (kbd "<escape>") 'keyboard-escape-quit)
-  (local-set-key (kbd "<home>")   'keyboard-escape-quit))
-
-(add-hook 'minibuffer-setup-hook 'rdo-minibuffer-keys)
-
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
@@ -337,17 +327,19 @@
 ;; Must be set before loading xah-fly-keys
 (setq xah-fly-use-control-key t)
 
-;; cursor shape in terminal
-(unless (display-graphic-p)
-  (add-hook 'xah-fly-insert-mode-activate-hook
-            (lambda () (send-string-to-terminal "\e[5 q")))
-  (add-hook 'xah-fly-command-mode-activate-hook
-            (lambda () (send-string-to-terminal "\e[2 q"))))
-
 ;; Cursor colors — nil means let the theme control it
 ;; XFK defaults are "red" for command and "gray" for insert
 (setq xah-fly-command-mode-cursor-color nil)
 (setq xah-fly-insert-mode-cursor-color  nil)
+
+;; cursor shape change terminal
+(add-hook 'after-make-frame-functions
+  (lambda (frame)
+    (unless (display-graphic-p frame)
+      (add-hook 'xah-fly-insert-mode-activate-hook
+                (lambda () (send-string-to-terminal "\e[5 q")))
+      (add-hook 'xah-fly-command-mode-activate-hook
+                (lambda () (send-string-to-terminal "\e[2 q"))))))
 
 (add-to-list 'load-path "~/.emacs.d/lisp/xah-fly-keys")
 (require 'xah-fly-keys)
