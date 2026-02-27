@@ -1,0 +1,191 @@
+Lenovo Legion 5 15ARH05H
+S/N: PF2E2N2B
+MTM: 82B1000AUS
+
+* Legion 5 (Arch standalone install)
+
+** Swap file
+ 
+Recomendations:
+
+< 1gb pc ram  --  2gb ram (swap)
+1-2gb pc ram  --  same size (swap ram)
+8gb   pc ram  --  4gb ram (swap)
+> 8gb pc ram  --  2-4gb ram (swap)
+
+!! boot deve ter 260mb no minimo (sugerido pelo wiki)
+
+*** swap file creation
+
+# fallocate -l 4GB /swapfile
+# chmod 600 /swapfile
+# mkswap /swapfile
+# swapon /swapfile
+
+
+** Arch Linux Install Guidelines
+
+*** Base install with UEFI
+
+- Arch Linux install guidelines  (FOLLOW OFFICIAL ARCH INSTALL FILE)
+- change font size if necessary  (# setfont sun12x22)
+- set keyboard layout if necessary  (loadkeys br-abnt2)
+- verify the boot mode  (# ls /sys/firmware/efi/efivars)
+- connect to internet  (wifi-menu for wireless)
+- update system clock  (# timedatectl set-ntp true)
+- partition disks, format and activate swap (gdisk, mkfs, mount, swapon)
+
+
+*** mount and create partitions
+
+# mount /dev/sdX2 /mnt  (X2 = partição raiz "/")
+# mkdir /mnt/boot
+# mount /dev/sdX1 /mnt/boot
+# mkdir /mnt/home
+# mount /dev/sdX3 /mnt/home
+
+- check if partitions were mounted correctly  (# mount [check last lines])
+
+
+*** install essential packages (pacstrap):
+
+# pacstrap /mnt base base-devel...
+
+!! RUN:  dell_base-01.sh
+
+
+*** generate fstab with UUID and check it
+
+# genfstab -U /mnt >> /mnt/etc/fstab  (and check  /mnt/etc/fstab  for errors)
+
+- change root into new system  (arch-chroot /mnt)
+
+  
+*** UEFI Install
+
+- check boot files [EFI, Loader, vmlinuz-linux-lts, initramfs-linux-lts/fallback, intel-ucode]  (ls /boot)
+- create loader configuration file
+
+cd loader  ->  # nvim loader.conf  ->  default arch.conf  
+   				       timeout 3
+				       (add these 2 lines above)
+
+- create config file  (arhc.conf)
+
+# nvim /boot/loader/entries/arch.conf  ->  title	Arch Linux
+					   linux	/vmlinuz-linux-lts
+					   initrd	/intel-ucode.img
+					   initrd	/initramfs-linux-lts.img
+					   modprobe.blacklist=pcspkr
+					   options	root=UUID=id_da_sua_partição_root(:r! blkid) rw
+
+- passwd  (mudar passwd do root)
+- reboot into new system and remove usb-stick (# reboot now)
+
+
+*** The first boot (Post Install)
+
+- login into new arch system install as root user  (#)
+- set time zone  (# ln -sf /usr/share/zoneinfo/Region/City /etc/localtime)
+- generate /etc/adjtime  (# hwclock --systohc)
+- generate locale.conf  (edit:  /etc/locale.gen  ,  UNCOMMENT #en_US.UTF-8 , #pt_BR.UTF-8  ,  then run: # locale-gen)
+- create  /etc/locale.conf  and add  LANG=en_US.UTF-8  to it
+- create the hostname config file  (echo "nome_do_seu_hostname" >> /etc/hostname)
+- add the following entries to /etc/hosts  (the file you just created)
+
+   127.0.0.1	localhost
+   ::1		localhost
+   127.0.1.1	nome_do_seu_hostname.localdomain	nome_do_seu_hostname
+
+
+- connect to internet (wifi-menu for wireless)
+
+- make mirrorlist backup and sort servers
+
+  # cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bk
+  # reflector --latest 100 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+  (select the 100 most recently synchronized HTTP/HTTPS mirrors, sorting by download speed)
+
+
+- install extra packages
+
+RUN:  dell_post-01.sh
+
+- create user  (# useradd -m -G wheel user_name)
+- change passwords  [root/user]  (# passwd)
+- add user to sudoers  (uncomment # %wheel ALL=(ALL) NOPASSWD: ALL)
+- create AUR folder and install yay
+
+   $ mkdir $HOME/AUR_builds
+   $ git clone https://aur.archlinux.org/yay.git
+
+- config greeter/xinit
+- reboot system to access a graphical enviroment via greeter/xinit
+
+
+
+CRIAR DIRETORIOS SE NAO EXISTIREM!!
+
+xdg-user-dirs-update --set DOWNLOAD ~/DLs
+xdg-user-dirs-update --set DESKTOP ~/Desk
+xdg-user-dirs-update --set DOCUMENTS ~/Docs
+xdg-user-dirs-update --set MUSIC ~/Musk
+xdg-user-dirs-update --set PICTURES ~/Pix
+xdg-user-dirs-update --set PUBLICSHARE ~/Pub
+xdg-user-dirs-update --set TEMPLATES ~/Templates
+xdg-user-dirs-update --set VIDEOS ~/Vidz
+xdg-user-dirs-update --set TEMP ~/tmp
+
+
+
+*** Battery conservation
+
+LPT (advanced power management for Dell/others)
+https://wiki.archlinux.org/index.php/TLP
+
+run these lines:
+
+enable/disable service:
+sudo systemctl enable tlp.service
+
+uncomment & change at /etc/tlp.conf
+# Operation mode when no power supply can be detected: AC, BAT.
+TLP_DEFAULT_MODE=BAT  (from AC to BAT)
+
+# Operation mode select: 0=depend on power source, 1=always use TLP_DEFAULT_MODE
+TLP_PERSISTENT_DEFAULT=1
+
+
+Set these accordingly:
+
+USB_AUTOSUSPEND=0
+USB_BLACKLIST_BTUSB=1
+USB_BLACKLIST_PHONE=1 
+USB_BLACKLIST_WWAN=1 
+
+
+* Legion 5 (DUAL boot w/ Windows in UEFI)
+
+- Install windows first (leaving blank partition space for Linux)
+
+- Make/format partitions for Linux (root, home)
+
+- mount linux (/mnt = root) (/mnt/home = user) partitions
+
+- mount windows partitions into linux (/mnt/boot = windows efi part.)
+
+- mount windows partitions into linux (/mnt/win10 = windows date part.) 
+
+- make swap file
+
+- pacstrap into /mnt  !add apps>  grub os-prober efibootmgr dostools mtools
+
+- (antes de archroot /mnt) generate the fstab (# genfstab -U /mnt >> /mnt/etc/fstab  (and check  /mnt/etc/fstab  for errors)
+
+- install grub and configure
+  (apos archroot /mnt) (1) # grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+  (ambos os sistemas serao reconhecidos neste comando, caso algum n seja,
+   verifique se todos foram corretamente montados e existem no fstab, se
+   faltar os arquivos de boot do linux [vmlinuz, initram..] atualize o sistema
+   pois estes sao criados juntamente com o kernel)
+                      (2) # grub-mkconfig -o /boot/grub/grub.cfg

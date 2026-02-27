@@ -1,0 +1,17 @@
+#  m = minutes;  0-59 (minutes) , * = every minute , 0,3,10,35 (minuto específico) , */15 (cada 15min)
+#
+#  h = hour; 0-23 (24h format)
+#  
+#  dom = day of the month
+#
+#  mon = month; 1=JAN 2=FEB.. or use 3 letters text eg: JAN/FEB/MAR.. , JAN,FEB,MAR (meses a executar)
+#
+#  dow = day of the week, 0-6 , 0=sunday , 6=saturday or 3 letters text (SUN,MON,TUE,WED..)
+#
+#  command = command/script to run
+#
+## crontab.guru  -->  web tester for crontab
+
+
+###	m	h	dom	mon	dow	command
+	*	*	*	*	*	backups.sh

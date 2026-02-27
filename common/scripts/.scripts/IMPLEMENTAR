@@ -1,0 +1,7 @@
+fim do script post-intall  add:
+
+- salvar lista programas instalados em log file
+- salvar lista de programas do script em outro log file
+- comparar esses 2 arquivos pra ver oq n foi instalado
+[FUTURO]
+automatizar esse processo?
