@@ -53,7 +53,7 @@
 (set-default-coding-systems 'utf-8)
 
 ;; value is in 1/10pt — 120 = 12pt
-(set-face-attribute 'default nil :height 140)
+(set-face-attribute 'default nil :height 120)
 
 (add-hook 'minibuffer-setup-hook 'my-minibuffer-setup)
 (defun my-minibuffer-setup ()
@@ -333,13 +333,13 @@
 (setq xah-fly-insert-mode-cursor-color  nil)
 
 ;; cursor shape change terminal
-(add-hook 'after-make-frame-functions
-  (lambda (frame)
-    (unless (display-graphic-p frame)
-      (add-hook 'xah-fly-insert-mode-activate-hook
-                (lambda () (send-string-to-terminal "\e[5 q")))
-      (add-hook 'xah-fly-command-mode-activate-hook
-                (lambda () (send-string-to-terminal "\e[2 q"))))))
+;(add-hook 'after-make-frame-functions
+;  (lambda (frame)
+;    (unless (display-graphic-p frame)
+;      (add-hook 'xah-fly-insert-mode-activate-hook
+;                (lambda () (send-string-to-terminal "\e[5 q")))
+;      (add-hook 'xah-fly-command-mode-activate-hook
+;                (lambda () (send-string-to-terminal "\e[2 q"))))))
 
 (add-to-list 'load-path "~/.emacs.d/lisp/xah-fly-keys")
 (require 'xah-fly-keys)
@@ -468,7 +468,7 @@
   (setq doom-themes-treemacs-theme "doom-atom")
   (doom-themes-treemacs-config)
   (doom-themes-org-config)
-  (load-theme 'doom-miramare t)
+  (load-theme 'doom-tomorrow-night t)
   ;; Set org header sizes after theme loads
   (set-face-attribute 'org-level-1 nil :height 1.3)
   (set-face-attribute 'org-level-2 nil :height 1.2)
