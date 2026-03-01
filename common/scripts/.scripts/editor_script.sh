@@ -2,7 +2,7 @@
 
 # Script Editor (search files in .scripts/ .config/ Docs/linux_shit/
 
-du -a ~/.scripts/ ~/.config/  ~/Docs/linux_shit/ | awk '{print $2}' | fzf -i | xargs -i bash -c "emacsclient -c -a {} & disown -h"
+du -a ~/.scripts/ | awk '{print $2}' | fzf -i | xargs -I{} emacsclient -c {}
 
 # complementar scrip com condicional SE;
 # se for .pdf ou qualquer outro arq. executável pelo zathura abrir nele

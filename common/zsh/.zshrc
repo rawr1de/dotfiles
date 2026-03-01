@@ -39,9 +39,12 @@ alias x='exit'
 
 
 # CLI rofi scripts 
-alias fse='script_editor.sh'   ## fzf search dir .scipts
-alias fce='config_editor.sh'   ## fzf search dir .config
-alias ffe='file_editor.sh'     ## fzf search current dir
+alias fce='editor_config.sh'   ## fzf search .config dir
+alias ffe='editor_file.sh'     ## fzf search current dir
+alias fse='editor_script.sh'   ## fzf search .scipts dir
+
+
+
 alias mm='rofi_man.sh '       ## list & output man pages with rofi & zathura
 
 # Paths
