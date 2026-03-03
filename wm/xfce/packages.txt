@@ -1,2 +1,3 @@
 # base all
 rofi-greenclip
+picom

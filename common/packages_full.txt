@@ -8,7 +8,6 @@ ranger
 rofi
 sxhkd
 sxiv
-zathura
 zsh
 bitwarden
 dragon-drop
@@ -16,7 +15,6 @@ xclip
 mcfly
 img2pdf
 mlocate
-cmus
 bat
 lsd
 pulsemixer
@@ -26,10 +24,8 @@ zathura
 zathura-pdf-poppler
 zathura-djvu
 zathura-cb
-icons-in-terminal
 atool
 feh
-sxiv
 tldr
 fatsort
 yt-dlp-git
