@@ -42,6 +42,7 @@ duf
 mdfried
 bfg
 tree
+xdotool
 brave-bin
 #
 #
