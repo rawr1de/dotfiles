@@ -71,3 +71,6 @@ eval "$(mcfly init zsh)"
 
 # ssh key source
 [ -f ~/.zshrc_local ] && source ~/.zshrc_local
+
+eval "$(ssh-agent -s)" 
+ssh-add ~/.ssh/id_ed25519
