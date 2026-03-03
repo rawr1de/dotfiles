@@ -1,4 +1,5 @@
 # base all
+xorg-xset
 cmus
 emacs
 kitty

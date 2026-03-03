@@ -14,9 +14,8 @@ Name_3=Desk 3
 Number=3
 Rows=3
 
-[Effect-windowview]
-BorderActivate=1,7
-BorderActivateAll=3,5
+[Effect-overview]
+BorderActivate=9
 
 [Effect-zoom]
 InitialZoom=1.2
@@ -26,6 +25,9 @@ Active=true
 
 [Plugins]
 zoomEnabled=false
+
+[Script-desktopchangeosd]
+TextOnly=true
 
 [TabBox]
 DelayTime=0
@@ -79,4 +81,6 @@ tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"wi
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
 
 [Windows]
+ElectricBorderMaximize=false
+ElectricBorderTiling=false
 FocusStealingPreventionLevel=0

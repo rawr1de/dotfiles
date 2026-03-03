@@ -10,6 +10,11 @@ if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
 fi
 
 
+# ENV variables
+export EDITOR="emacsclient -c"
+export VISUAL="emacsclient -c"
+
+
 # CLI prog's 3rd party
 alias ra='ranger'  		# file manager
 alias cm='cmus'			# CMus music player
@@ -33,9 +38,15 @@ alias frm='\rm -rfv'   ## frm = force rm
 alias x='exit'
 
 
-# CLI rofi scripts 
-alias se='script_editor.sh'   ## fzf search dir's .scipts & .config
-alias fe='file_editor.sh'     ## fzf search current dir
+# CLI search scripts
+alias fz='SH_fzf_search_editor.sh'   ## fzf dynamic search
+
+# alias fce='editor_config.sh'   ## fzf search .config dir
+# alias ffe='editor_file.sh'     ## fzf search current dir
+# alias fse='editor_script.sh'   ## fzf search .scipts dir
+
+
+
 alias mm='rofi_man.sh '       ## list & output man pages with rofi & zathura
 
 # Paths

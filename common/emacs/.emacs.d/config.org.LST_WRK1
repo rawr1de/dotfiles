@@ -115,8 +115,6 @@
 (defun my-minibuffer-setup ()
   (set (make-local-variable 'face-remapping-alist)
        '((default :height 1.0))))
-
-(define-key minibuffer-local-map (kbd "<home>") 'abort-recursive-edit)
 #+END_SRC
 
 ** control characters (decimal)
@@ -289,7 +287,7 @@
 (global-set-key (kbd "C-x s") 'my-org-column-sum)
 #+END_SRC
 
-** increment number at point  [C-c +]
+** increment number at point
 #+BEGIN_SRC emacs-lisp
 (defun increment-number-decimal (&optional arg)
   "Increment all numbers in region or number at point by ARG.

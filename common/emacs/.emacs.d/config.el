@@ -53,12 +53,14 @@
 (set-default-coding-systems 'utf-8)
 
 ;; value is in 1/10pt — 120 = 12pt
-(set-face-attribute 'default nil :height 140)
+(set-face-attribute 'default nil :height 120)
 
 (add-hook 'minibuffer-setup-hook 'my-minibuffer-setup)
 (defun my-minibuffer-setup ()
   (set (make-local-variable 'face-remapping-alist)
        '((default :height 1.0))))
+
+(define-key minibuffer-local-map (kbd "<home>") 'abort-recursive-edit)
 
 (setq read-quoted-char-radix 10)
 
@@ -187,23 +189,44 @@
 
 (global-set-key (kbd "C-x s") 'my-org-column-sum)
 
-(defun my-increment-number-decimal (&optional arg)
-  "Increment the number forward from point by ARG."
+(defun increment-number-decimal (&optional arg)
+  "Increment all numbers in region or number at point by ARG.
+Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
   (interactive "p*")
-  (save-excursion
-    (save-match-data
-      (let (inc-by field-width answer)
-        (setq inc-by (if arg arg 1))
-        (skip-chars-backward "0123456789")
-        (when (re-search-forward "[0-9]+" nil t)
-          (setq field-width (- (match-end 0) (match-beginning 0)))
-          (setq answer (+ (string-to-number (match-string 0) 10) inc-by))
-          (when (< answer 0)
-            (setq answer (+ (expt 10 field-width) answer)))
-          (replace-match (format (concat "%0" (int-to-string field-width) "d")
-                                 answer)))))))
-
-(global-set-key (kbd "C-c +") 'my-increment-number-decimal)
+  (let ((inc-by (if arg arg 1)))
+    (if (use-region-p)
+        ;; Region: increment every number found, preserving padding
+        (let ((text (buffer-substring (region-beginning) (region-end)))
+              (offset 0)
+              (start (region-beginning)))
+          (deactivate-mark)
+          (with-temp-buffer
+            (insert text)
+            (goto-char (point-min))
+            (while (re-search-forward "[0-9]+" nil t)
+              (let* ((field-width (- (match-end 0) (match-beginning 0)))
+                     (answer (+ (string-to-number (match-string 0) 10) inc-by))
+                     (answer (if (< answer 0)
+                                 (+ (expt 10 field-width) answer)
+                               answer))
+                     (replacement (format (concat "%0" (int-to-string field-width) "d") answer)))
+                (replace-match replacement)))
+            (let ((new-text (buffer-string)))
+              (delete-region start (+ start (length text)))
+              (goto-char start)
+              (insert new-text))))
+      ;; No region: increment number at point
+      (save-excursion
+        (save-match-data
+          (skip-chars-backward "0123456789")
+          (when (re-search-forward "[0-9]+" nil t)
+            (let* ((field-width (- (match-end 0) (match-beginning 0)))
+                   (answer (+ (string-to-number (match-string 0) 10) inc-by))
+                   (answer (if (< answer 0)
+                               (+ (expt 10 field-width) answer)
+                             answer)))
+              (replace-match (format (concat "%0" (int-to-string field-width) "d")
+                                     answer)))))))))
 
 (defun eval-replace ()
   "Replace sexp before point by result of its evaluation."
@@ -333,13 +356,13 @@
 (setq xah-fly-insert-mode-cursor-color  nil)
 
 ;; cursor shape change terminal
-(add-hook 'after-make-frame-functions
-  (lambda (frame)
-    (unless (display-graphic-p frame)
-      (add-hook 'xah-fly-insert-mode-activate-hook
-                (lambda () (send-string-to-terminal "\e[5 q")))
-      (add-hook 'xah-fly-command-mode-activate-hook
-                (lambda () (send-string-to-terminal "\e[2 q"))))))
+;(add-hook 'after-make-frame-functions
+;  (lambda (frame)
+;    (unless (display-graphic-p frame)
+;      (add-hook 'xah-fly-insert-mode-activate-hook
+;                (lambda () (send-string-to-terminal "\e[5 q")))
+;      (add-hook 'xah-fly-command-mode-activate-hook
+;                (lambda () (send-string-to-terminal "\e[2 q"))))))
 
 (add-to-list 'load-path "~/.emacs.d/lisp/xah-fly-keys")
 (require 'xah-fly-keys)
@@ -468,7 +491,7 @@
   (setq doom-themes-treemacs-theme "doom-atom")
   (doom-themes-treemacs-config)
   (doom-themes-org-config)
-  (load-theme 'doom-miramare t)
+  (load-theme 'doom-tomorrow-night t)
   ;; Set org header sizes after theme loads
   (set-face-attribute 'org-level-1 nil :height 1.3)
   (set-face-attribute 'org-level-2 nil :height 1.2)

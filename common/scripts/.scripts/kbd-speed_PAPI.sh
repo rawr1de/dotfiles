@@ -11,7 +11,7 @@
 
 # ── Defaults (edit these to your taste) ────────────────────────────
 DELAY=${1:-250}   # ms before repeat starts  (lower = faster response)
-RATE=${2:-70}     # repeats per second        (higher = faster repeat)
+RATE=${2:-100}     # repeats per second        (higher = faster repeat)
 # ───────────────────────────────────────────────────────────────────
 
 echo "Setting keyboard: delay=${DELAY}ms  rate=${RATE}/sec"
