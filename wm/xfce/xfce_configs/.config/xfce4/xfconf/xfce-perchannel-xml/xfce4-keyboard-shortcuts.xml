@@ -53,6 +53,7 @@
       <property name="&lt;Super&gt;m" type="string" value="emacsclient -c -a &quot;&quot;"/>
       <property name="&lt;Super&gt;c" type="string" value="rofi -modi &quot;clipboard:greenclip print&quot; -show clipboard"/>
       <property name="&lt;Shift&gt;&lt;Super&gt;l" type="string" value="xflock4"/>
+      <property name="&lt;Super&gt;h" type="string" value="kitty -e htop"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">

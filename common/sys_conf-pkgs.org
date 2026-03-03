@@ -164,6 +164,11 @@ Battery Conservation Mode on IdeaPad laptops
 
 *** 4. Install Apps
 
+yay no password
+#+BEGIN_SRC
+echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/wheel-nopasswd
+#+END_SRC
+
 *zsh as default shell*
 #+BEGIN_SRC
 # chsh -s /bin/zsh rdo
