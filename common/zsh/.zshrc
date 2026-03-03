@@ -38,10 +38,12 @@ alias frm='\rm -rfv'   ## frm = force rm
 alias x='exit'
 
 
-# CLI rofi scripts 
-alias fce='editor_config.sh'   ## fzf search .config dir
-alias ffe='editor_file.sh'     ## fzf search current dir
-alias fse='editor_script.sh'   ## fzf search .scipts dir
+# CLI search scripts
+alias fz='SH_fzf_search_editor.sh'   ## fzf dynamic search
+
+# alias fce='editor_config.sh'   ## fzf search .config dir
+# alias ffe='editor_file.sh'     ## fzf search current dir
+# alias fse='editor_script.sh'   ## fzf search .scipts dir
 
 
 
