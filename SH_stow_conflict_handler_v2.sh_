@@ -73,6 +73,81 @@ stow_all_packages() {
 }
 
 # ---------------------------------------------------------------------------
+# FUNCTION: purge_only
+# Lists and deletes every file that stow would try to populate — nothing more.
+# ---------------------------------------------------------------------------
+purge_only() {
+    echo -e "${BLUE}=== Purge Mode ===${NC}"
+    echo -e "${YELLOW}Scanning for files that stow would populate...${NC}\n"
+
+    declare -a TARGETS
+
+    for pair in "${PACKAGE_PAIRS[@]}"; do
+        category="${pair%%/*}"
+        package="${pair##*/}"
+
+        STOW_OUTPUT=$(stow -n -v --dir="$DOTFILES_DIR/$category" --target="$HOME" "$package" 2>&1)
+
+        # Collect files stow would LINK (i.e. they are the targets stow manages)
+        while IFS= read -r line; do
+            # stow -v prints lines like: LINK: .config/kitty/kitty.conf => ...
+            if [[ "$line" =~ ^LINK:\ (.+)\ =\> ]]; then
+                target_rel="${BASH_REMATCH[1]}"
+                target_abs="$HOME/$target_rel"
+                # Only add if the file actually exists (conflict)
+                if [ -e "$target_abs" ] || [ -L "$target_abs" ]; then
+                    TARGETS+=("$target_abs")
+                fi
+            fi
+            # Also catch stow conflict lines for non-link files
+            if echo "$line" | grep -q "existing target"; then
+                conflict=$(echo "$line" | sed 's/.*existing target is neither a link nor a directory: //' \
+                                        | sed 's/.*existing target is not owned by stow: //')
+                [ -n "$conflict" ] && TARGETS+=("$HOME/$conflict")
+            fi
+        done <<< "$STOW_OUTPUT"
+    done
+
+    # Deduplicate
+    declare -a UNIQUE_TARGETS
+    declare -A SEEN
+    for t in "${TARGETS[@]}"; do
+        if [ -z "${SEEN[$t]+x}" ]; then
+            SEEN[$t]=1
+            UNIQUE_TARGETS+=("$t")
+        fi
+    done
+
+    if [ ${#UNIQUE_TARGETS[@]} -eq 0 ]; then
+        echo -e "${GREEN}✓ Nothing to purge — no conflicting files found.${NC}"
+        return 0
+    fi
+
+    echo -e "${RED}The following ${#UNIQUE_TARGETS[@]} file(s) will be permanently deleted:${NC}\n"
+    for i in "${!UNIQUE_TARGETS[@]}"; do
+        echo -e "${YELLOW}  $((i+1)). ${UNIQUE_TARGETS[$i]#$HOME/}${NC}"
+    done
+
+    echo ""
+    read -p "Confirm permanent deletion — type 'DELETE' to proceed: " confirm
+
+    if [ "$confirm" != "DELETE" ]; then
+        echo -e "${YELLOW}Aborted. No files were deleted.${NC}"
+        return 1
+    fi
+
+    echo ""
+    for target in "${UNIQUE_TARGETS[@]}"; do
+        if [ -e "$target" ] || [ -L "$target" ]; then
+            rm -rf "$target"
+            echo -e "${RED}✗ Deleted: ${target#$HOME/}${NC}"
+        fi
+    done
+
+    echo -e "\n${GREEN}✓ Purge complete.${NC}"
+}
+
+# ---------------------------------------------------------------------------
 # Main conflict detection
 # ---------------------------------------------------------------------------
 echo -e "${BLUE}=== Stow Conflict Checker ===${NC}"
@@ -262,22 +337,7 @@ case "${choice^^}" in
         ;;
 
     P)
-        echo -e "\n${RED}⚠ WARNING: This will permanently delete ${#CONFLICTS[@]} conflicting file(s)!${NC}"
-        read -p "Are you absolutely sure? Type 'DELETE' to confirm: " confirm
-
-        if [ "$confirm" = "DELETE" ]; then
-            for conflict in "${CONFLICTS[@]}"; do
-                if [ -e "$conflict" ]; then
-                    RELATIVE_PATH="${conflict#$HOME/}"
-                    rm -rf "$conflict"
-                    echo -e "${RED}✗ Deleted: $RELATIVE_PATH${NC}"
-                fi
-            done
-            echo -e "\n${GREEN}✓ Conflicting files removed. Nothing was stowed.${NC}"
-        else
-            echo -e "${YELLOW}Aborted. No changes made.${NC}"
-            exit 1
-        fi
+        purge_only
         ;;
 
     Q)

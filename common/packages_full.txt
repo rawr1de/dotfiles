@@ -1,69 +1,89 @@
-# base all
+# FULL INSTALL
+#
+# X11/TERMINAL STUFF
 xorg-xset
-cmus
-emacs
-kitty
-puddletag
-ranger
-rofi
-sxhkd
-sxiv
-zsh
-bitwarden
-dragon-drop
 xclip
+xdotool
+kitty
+ranger
+dragon-drop
+fzf
 mcfly
-img2pdf
 mlocate
 bat
 lsd
-pulsemixer
-qbittorrent
+mdfried
+tree
+tldr
+duf
+gtypist
+# OTHER
+emacs
+rofi
+sxhkd
 unclutter
+#
+# COMPRESSION
+#
+unzip
+unrar
+zip
+atool
+#
+# WEB
+#
+qbittorrent
+bitwarden
+bfg
+brave-bin
+falkon
+discord
+yt-dlp-git
+#
+# SOUND
+#
+mpv-mpris
+musickube
+cmus
+puddletag
+pulsemixer
+fatsort
+flacon
+shntool
+wavpack
+musepack-tools
+taglib
+mediainfo
+libmpcdec
+musepack-tools
+cuetools
+#
+# IMAGE
+#
+feh
+sxiv
+gimp
+gimp-plugin-gmic
+inkscape
+calibre
+perl-image-exiftool
+#
+# VIDEO
+#
+handbrake
+obs-studio
+#
+# PDF TOOLS
+#
+img2pdf
 zathura
 zathura-pdf-poppler
 zathura-djvu
 zathura-cb
-atool
-feh
-tldr
-fatsort
-yt-dlp-git
-fzf
-unzip
-unrar
-perl-image-exiftool
 pdftk
-zip
-duf
-mdfried
-bfg
-tree
-xdotool
-brave-bin
 #
-#
-# puddletag
-# flacon
-# shntool
-# wavpack
-# musepack-tools
-# taglib
-# mediainfo
-# libmpcdec
-# musepack-tools
-# cuetools
-# handbrake
-# obs-studio
-# mpv-mpris
-# calibre
-# discord
-# musickube
-# inkscape
-# gimp
-# gimp-plugin-gmic
-# steam
-# falkon
+# GAMING
+steam
 #
 #
 # ext4magic

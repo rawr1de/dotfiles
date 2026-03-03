@@ -1,36 +1,59 @@
-# base all
+# BASE INSTALL
+#
+# X11/TERMINAL STUFF
 xorg-xset
-sxiv
-bitwarden
-dragon-drop
 xclip
+xdotool
+kitty
+ranger
+dragon-drop
+fzf
 mcfly
-img2pdf
 mlocate
 bat
 lsd
-pulsemixer
-qbittorrent
+mdfried
+tldr
+duf
+gtypist
+# OTHER
+emacs
+rofi
+sxhkd
 unclutter
+#
+# COMPRESSION
+#
+unzip
+unrar
+zip
+atool
+#
+# WEB
+#
+bitwarden
+bfg
+brave-bin
+#
+# SOUND
+#
+cmus
+pulsemixer
+fatsort
+#
+# IMAGE
+#
+feh
+sxiv
+#
+# VIDEO
+#
+#
+# PDF TOOLS
+#
+img2pdf
 zathura
 zathura-pdf-poppler
 zathura-djvu
 zathura-cb
-atool
-feh
-sxiv
-tldr
-fatsort
-yt-dlp-git
-fzf
-unzip
-unrar
-perl-image-exiftool
 pdftk
-zip
-duf
-mdfried
-bfg
-tree
-xdotool
-brave-bin
