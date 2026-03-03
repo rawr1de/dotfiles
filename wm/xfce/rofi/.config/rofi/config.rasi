@@ -1,0 +1,12 @@
+configuration {
+    /* Map Ctrl+j and Ctrl+k to navigation */
+    kb-row-up: "Up,Control+k";
+    kb-row-down: "Down,Control+j";
+
+    /* Remove Ctrl+j/k from any other default bindings to prevent conflicts */
+    kb-accept-entry: "Return,KP_Enter";
+    kb-remove-to-eol: ""; 
+}
+
+/* Optional: Use a theme that looks good with XFCE */
+@theme "sidebar"
