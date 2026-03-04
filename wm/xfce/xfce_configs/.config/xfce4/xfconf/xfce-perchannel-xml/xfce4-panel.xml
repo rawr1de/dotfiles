@@ -81,13 +81,13 @@
         <value type="string" value="xfce4-mail-reader.desktop"/>
       </property>
       <property name="recent" type="array">
+        <value type="string" value="xfce-wm-settings.desktop"/>
         <value type="string" value="xfce-keyboard-settings.desktop"/>
         <value type="string" value="org.flameshot.Flameshot.desktop"/>
         <value type="string" value="xfce4-power-manager-settings.desktop"/>
         <value type="string" value="org.kde.kdeconnect.app.desktop"/>
         <value type="string" value="xfce-mouse-settings.desktop"/>
         <value type="string" value="xfce-ui-settings.desktop"/>
-        <value type="string" value="xfce-wm-settings.desktop"/>
         <value type="string" value="xfce-wmtweaks-settings.desktop"/>
         <value type="string" value="emacsclient.desktop"/>
         <value type="string" value="kitty.desktop"/>
