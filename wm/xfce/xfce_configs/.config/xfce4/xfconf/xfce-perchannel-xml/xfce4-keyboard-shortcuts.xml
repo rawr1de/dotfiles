@@ -41,9 +41,6 @@
       <property name="override" type="bool" value="true"/>
       <property name="&lt;Primary&gt;&lt;Alt&gt;x" type="string" value="xkill"/>
       <property name="&lt;Primary&gt;&lt;Alt&gt;m" type="string" value="xfce4-taskmanager"/>
-      <property name="Print" type="string" value="xfce4-screenshooter -fd 1"/>
-      <property name="&lt;Shift&gt;Print" type="string" value="xfce4-screenshooter -wd 1"/>
-      <property name="&lt;Primary&gt;&lt;Shift&gt;Print" type="string" value="xfce4-screenshooter -r"/>
       <property name="&lt;Super&gt;KP_Subtract" type="string" value="galculator"/>
       <property name="&lt;Super&gt;w" type="string" value="exo-open --launch WebBrowser"/>
       <property name="&lt;Super&gt;f" type="string" value="exo-open --launch FileManager"/>
@@ -54,6 +51,8 @@
       <property name="&lt;Super&gt;c" type="string" value="rofi -modi &quot;clipboard:greenclip print&quot; -show clipboard"/>
       <property name="&lt;Shift&gt;&lt;Super&gt;l" type="string" value="xflock4"/>
       <property name="&lt;Super&gt;h" type="string" value="kitty -e htop"/>
+      <property name="MonBrightnessUp" type="string" value="/home/rdo/.dotfiles/templar/bright_UP_F7.sh"/>
+      <property name="Print" type="string" value="flameshot gui"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">

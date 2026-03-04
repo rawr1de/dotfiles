@@ -1,6 +1,7 @@
 # BASE INSTALL
 #
 # X11/TERMINAL STUFF
+xorg-xev
 xorg-xset
 xclip
 xdotool
