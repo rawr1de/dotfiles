@@ -115,6 +115,8 @@
 (defun my-minibuffer-setup ()
   (set (make-local-variable 'face-remapping-alist)
        '((default :height 1.0))))
+
+(define-key minibuffer-local-map (kbd "<home>") 'abort-recursive-edit)
 #+END_SRC
 
 ** control characters (decimal)
@@ -287,7 +289,7 @@
 (global-set-key (kbd "C-x s") 'my-org-column-sum)
 #+END_SRC
 
-** increment number at point
+** increment number at point  [C-c +]
 #+BEGIN_SRC emacs-lisp
 (defun increment-number-decimal (&optional arg)
   "Increment all numbers in region or number at point by ARG.
@@ -428,6 +430,18 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
 
 ;; --- Capslock (remapped to <home> via xmodmap) → xah-fly command mode ---
 (define-key RDO-mode-map (kbd "<home>") 'xah-fly-command-mode-activate)
+
+;; --- C-w: kill buffer, but prompt if unsaved ---
+(defun rdo/close-buffer-or-prompt ()
+  "Kill current buffer. If modified, prompt once. If yes, discard and kill."
+  (interactive)
+  (if (and (buffer-modified-p) (buffer-file-name))
+      (when (yes-or-no-p (format "Buffer '%s' is unsaved. Kill anyway? " (buffer-name)))
+        (set-buffer-modified-p nil)   ; disarm Emacs's own prompt
+        (kill-buffer (current-buffer)))
+    (kill-buffer (current-buffer))))
+
+(define-key RDO-mode-map (kbd "C-w") #'rdo/close-buffer-or-prompt)
 
 (provide 'RDO-mode)
 #+END_SRC

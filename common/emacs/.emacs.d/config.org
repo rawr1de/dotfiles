@@ -431,6 +431,18 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
 ;; --- Capslock (remapped to <home> via xmodmap) → xah-fly command mode ---
 (define-key RDO-mode-map (kbd "<home>") 'xah-fly-command-mode-activate)
 
+;; --- C-w: kill buffer, but prompt if unsaved ---
+(defun rdo/close-buffer-or-prompt ()
+  "Kill current buffer. If modified, prompt once. If yes, discard and kill."
+  (interactive)
+  (if (and (buffer-modified-p) (buffer-file-name))
+      (when (yes-or-no-p (format "Buffer '%s' is unsaved. Kill anyway? " (buffer-name)))
+        (set-buffer-modified-p nil)   ; disarm Emacs's own prompt
+        (kill-buffer (current-buffer)))
+    (kill-buffer (current-buffer))))
+
+(define-key RDO-mode-map (kbd "C-w") #'rdo/close-buffer-or-prompt)
+
 (provide 'RDO-mode)
 #+END_SRC
 
