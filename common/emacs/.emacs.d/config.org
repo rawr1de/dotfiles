@@ -6,7 +6,9 @@
 
 ** history
 #+BEGIN_SRC emacs-lisp
+(setq savehist-file "~/.emacs.d/history")
 (savehist-mode 1)
+(add-to-list 'savehist-additional-variables 'query-replace-history)
 (setq history-length 10000)
 (setq history-delete-duplicates t)
 #+END_SRC
@@ -431,15 +433,18 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
 ;; --- Capslock (remapped to <home> via xmodmap) → xah-fly command mode ---
 (define-key RDO-mode-map (kbd "<home>") 'xah-fly-command-mode-activate)
 
-;; --- C-w: kill buffer, but prompt if unsaved ---
+;; --- C-w: kill buffer, prompt if unsaved, close split if open ---
 (defun rdo/close-buffer-or-prompt ()
-  "Kill current buffer. If modified, prompt once. If yes, discard and kill."
+  "Kill current buffer. If modified, prompt once. If yes, discard and kill.
+   If in a split, close the window after killing."
   (interactive)
   (if (and (buffer-modified-p) (buffer-file-name))
       (when (yes-or-no-p (format "Buffer '%s' is unsaved. Kill anyway? " (buffer-name)))
-        (set-buffer-modified-p nil)   ; disarm Emacs's own prompt
-        (kill-buffer (current-buffer)))
-    (kill-buffer (current-buffer))))
+        (set-buffer-modified-p nil)
+        (kill-buffer (current-buffer))
+        (when (> (count-windows) 1) (delete-window)))
+    (kill-buffer (current-buffer))
+    (when (> (count-windows) 1) (delete-window))))
 
 (define-key RDO-mode-map (kbd "C-w") #'rdo/close-buffer-or-prompt)
 
