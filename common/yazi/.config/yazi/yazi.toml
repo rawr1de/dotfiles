@@ -24,6 +24,7 @@ edit_sh = [
 edit = [
   { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (gui)",      orphan = true },
   { run = 'emacsclient -nw "$@"',      desc = "Emacs (terminal)", block = true  },
+  { run = 'nano "$@"',                 desc = "Nano",             block = true  },
 ]
 open_md = [
   { run = 'kitty --class md_floating -e mdfried "$@" &', desc = "mdfried", orphan = true },

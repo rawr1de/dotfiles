@@ -17,6 +17,7 @@ mdfried
 tldr
 duf
 gtypist
+tmatrix
 # OTHER
 emacs
 rofi

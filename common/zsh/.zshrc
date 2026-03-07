@@ -17,7 +17,7 @@ export VISUAL="emacsclient -c"
 
 # CLI prog's 3rd party
 alias ra='ranger'  		# file manager
-alias ya='yazi'  		# file manager
+alias zi='yazi'  		# file manager
 alias cm='cmus'			# CMus music player
 alias mk='musikcube'		# MusikCube music player
 alias tl='tldr'			# tl;dr commands lookup (net)
