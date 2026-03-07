@@ -27,7 +27,7 @@ Recomendations:
 ** Base install with UEFI
 
 - Arch Linux install guidelines  (FOLLOW OFFICIAL ARCH INSTALL FILE)
-- change font size if necessary  (# setfont sun12x22)
+- change font size if necessary  (# setfont sun12x22) (/usr/share/kbd/consolefonts)
 - set keyboard layout if necessary  (loadkeys br-abnt2)
 - verify the boot mode  (# ls /sys/firmware/efi/efivars)
 - connect to internet  (wifi-menu for wireless)
