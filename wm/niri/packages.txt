@@ -1,0 +1,7 @@
+# base all
+#rofi-greenclip
+#picom
+#flameshot
+keyd
+wl-clipboard
+cliphist
