@@ -53,6 +53,7 @@
       <property name="&lt;Super&gt;h" type="string" value="kitty -e htop"/>
       <property name="MonBrightnessUp" type="string" value="/home/rdo/.dotfiles/templar/bright_UP_F7.sh"/>
       <property name="Print" type="string" value="flameshot gui"/>
+      <property name="&lt;Super&gt;v" type="string" value="kitty -e pulsemixer"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">
