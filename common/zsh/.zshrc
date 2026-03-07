@@ -17,6 +17,7 @@ export VISUAL="emacsclient -c"
 
 # CLI prog's 3rd party
 alias ra='ranger'  		# file manager
+alias ya='yazi'  		# file manager
 alias cm='cmus'			# CMus music player
 alias mk='musikcube'		# MusikCube music player
 alias tl='tldr'			# tl;dr commands lookup (net)
@@ -36,7 +37,7 @@ alias cpr='rsync -ah --progress'
 alias rm='rm -iv'
 alias frm='\rm -rfv'   ## frm = force rm
 alias x='exit'
-
+alias clip='xclip -selection clipboard'
 
 # CLI search scripts
 alias fz='SH_fzf_search_editor.sh'   ## fzf dynamic search

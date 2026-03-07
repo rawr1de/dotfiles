@@ -1,0 +1,164 @@
+[[pick.prepend_keymap]]
+on = "i"
+run = "arrow prev"
+desc = "Move up"
+
+[[select.prepend_keymap]]
+on = "i"
+run = "arrow -1"
+desc = "Move up"
+
+[[mgr.prepend_keymap]]
+on = "i"
+run = "arrow prev"
+desc = "Move up"
+
+[[pick.prepend_keymap]]
+on = "k"
+run = "arrow next"
+desc = "Move down"
+
+[[select.prepend_keymap]]
+on = "k"
+run = "arrow 1"
+desc = "Move down"
+
+[[mgr.prepend_keymap]]
+on = "k"
+run = "arrow next"
+desc = "Move down"
+
+[[mgr.prepend_keymap]]
+on = "j"
+run = "leave"
+desc = "Go to parent"
+
+[[mgr.prepend_keymap]]
+on = "l"
+run = "enter"
+desc = "Enter / open"
+
+[[mgr.prepend_keymap]]
+on = ["g", "h"]
+run = "cd ~"
+desc = "Go home"
+
+[[mgr.prepend_keymap]]
+on = ["g", "l"]
+run = "cd ~/Desk"
+desc = "Go Desktop"
+
+[[mgr.prepend_keymap]]
+on = ["g", "p"]
+run = "cd ~/Pix"
+desc = "Go Pictures"
+
+[[mgr.prepend_keymap]]
+on = ["g", "m"]
+run = "cd ~/Musk"
+desc = "Go Musk"
+
+[[mgr.prepend_keymap]]
+on = ["g", "d"]
+run = "cd ~/Docs"
+desc = "Go Documents"
+
+[[mgr.prepend_keymap]]
+on = ["g", "w"]
+run = "cd ~/DLs"
+desc = "Go Downloads"
+
+[[mgr.prepend_keymap]]
+on = ["g", "v"]
+run = "cd ~/Vidz"
+desc = "Go Videos"
+
+[[mgr.prepend_keymap]]
+on = ["g", "t"]
+run = "cd ~/tmp"
+desc = "Go tmp"
+
+[[mgr.prepend_keymap]]
+on = ["g", "s"]
+run = "cd ~/.scripts"
+desc = "Go scripts"
+
+[[mgr.prepend_keymap]]
+on = ["g", "c"]
+run = "cd ~/.config"
+desc = "Go config"
+
+[[mgr.prepend_keymap]]
+on = ["g", "f"]
+run = "cd ~/.dotfiles"
+desc = "Go dotfiles"
+
+[[mgr.prepend_keymap]]
+on = ["g", "T"]
+run = "cd ~/.Trash"
+desc = "Go Trash"
+
+[[mgr.prepend_keymap]]
+on = ["g", "i"]
+run = "cd /run/media/$USER"
+desc = "Go media"
+
+[[mgr.prepend_keymap]]
+on = ["g", "/"]
+run = "cd /"
+desc = "Go root"
+
+[[mgr.prepend_keymap]]
+on = ["z", "h"]
+run = "hidden toggle"
+desc = "Toggle hidden files"
+
+[[mgr.prepend_keymap]]
+on = ["b", "p"]
+run = "shell 'RANGER_send2phone $@' --confirm=always"
+desc = "Send to phone"
+
+[[mgr.prepend_keymap]]
+on = ["b", "z"]
+run = "shell 'zip -r a.zip $@' --confirm=always"
+desc = "Zip selection"
+
+[[mgr.prepend_keymap]]
+on = ["b", "d"]
+run = "shell 'dragon-drop -a -x $@'"
+desc = "Dragon drop"
+
+[[mgr.prepend_keymap]]
+on = "A"
+run = "rename --cursor=end"
+desc = "Rename, cursor at end"
+
+[[mgr.prepend_keymap]]
+on = "I"
+run = "rename --cursor=start"
+desc = "Rename, cursor at start"
+
+[[mgr.prepend_keymap]]
+on = "a"
+run = "rename --cursor=before_ext"
+desc = "Rename, cursor before extension"
+
+[[mgr.prepend_keymap]]
+on = "r"
+run = "plugin rename-stem"
+desc = "Rename keeping extension, clear stem"
+
+[[mgr.prepend_keymap]]
+on = "/"
+run = "plugin find-save"
+desc = "Find (persistent)"
+
+[[mgr.prepend_keymap]]
+on = "n"
+run = "plugin find-next"
+desc = "Next search match"
+
+[[mgr.prepend_keymap]]
+on = "N"
+run = "plugin find-next -- reverse"
+desc = "Previous search match"

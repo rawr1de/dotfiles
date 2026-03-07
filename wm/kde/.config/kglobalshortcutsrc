@@ -291,7 +291,7 @@ _launch=Meta+Shift+L
 _launch=Meta+F
 
 [services][org.kde.krunner.desktop]
-_launch=Search\tCtrl+Alt+N
+_launch=Meta+N\tSearch
 
 [services][org.kde.plasma.emojier.desktop]
 _launch=none
@@ -301,4 +301,4 @@ ToggleTouchpad=Touchpad Toggle
 
 [yakuake]
 _k_friendly_name=Yakuake
-toggle-window-state=F12,F12,Open/Retract Yakuake
+toggle-window-state=none,F12,Open/Retract Yakuake
