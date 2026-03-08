@@ -69,3 +69,6 @@ eval "$(mcfly init zsh)"
 if [ "$XDG_CURRENT_DESKTOP" = "niri" ]; then
     [ -f ~/.zshrc_niri ] && source ~/.zshrc_niri
 fi
+
+# Created by `pipx` on 2026-03-08 17:54:45
+export PATH="$PATH:/home/rdo/.local/bin"

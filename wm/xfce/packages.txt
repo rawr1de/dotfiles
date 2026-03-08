@@ -2,3 +2,4 @@
 rofi-greenclip
 picom
 flameshot
+xorg-xrandr
