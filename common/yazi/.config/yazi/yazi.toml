@@ -15,6 +15,10 @@ sixel_fraction = 15
 ueberzug_scale = 1
 
 [opener]
+editor = [
+  { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (GUI)", orphan = true },
+]
+
 edit_sh = [
   { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (GUI)",      orphan = true },
   { run = 'emacsclient -nw "$@"',      desc = "Emacs (Terminal)", block = true  },
