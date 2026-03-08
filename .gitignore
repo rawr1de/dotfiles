@@ -33,3 +33,4 @@ wm/kde/.config/kwinrc
 
 # Ignore all plasma applet state files
 **/*appletsrc
+.aider*

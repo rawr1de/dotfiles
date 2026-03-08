@@ -7,8 +7,8 @@ video/mp4=mpv.desktop;
 video/x-matroska=vlc.desktop;
 x-scheme-handler/bitwarden=bitwarden.desktop;Bitwarden.desktop;
 x-scheme-handler/geo=google-maps-geo-handler.desktop;
-x-scheme-handler/http=brave-browser.desktop;org.kde.falkon.desktop;
-x-scheme-handler/https=brave-browser.desktop;org.kde.falkon.desktop;
+x-scheme-handler/http=xfce4-web-browser.desktop;
+x-scheme-handler/https=xfce4-web-browser.desktop;
 x-scheme-handler/mailto=emacsclient-mail.desktop;
 x-scheme-handler/tel=org.kde.kdeconnect.handler.desktop;
 
@@ -23,11 +23,12 @@ video/mp4=mpv.desktop;
 video/x-matroska=vlc.desktop;
 x-scheme-handler/bitwarden=bitwarden.desktop
 x-scheme-handler/geo=google-maps-geo-handler.desktop;
-x-scheme-handler/http=brave-browser.desktop;
-x-scheme-handler/https=brave-browser.desktop;
+x-scheme-handler/http=xfce4-web-browser.desktop
+x-scheme-handler/https=xfce4-web-browser.desktop
 x-scheme-handler/magnet=org.qbittorrent.qBittorrent.desktop
 x-scheme-handler/mailto=emacsclient-mail.desktop;
 x-scheme-handler/tel=org.kde.kdeconnect.handler.desktop;
 
 [Removed Associations]
 application/x-bittorrent=org.kde.kdeconnect_open.desktop;
+
