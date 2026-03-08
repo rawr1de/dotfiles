@@ -1,0 +1,25 @@
+// --- Legion 5 Dual Monitor Layout ---
+// Matches your xrandr: --output HDMI-0 --left-of DP-0
+output "HDMI-A-1" {
+    mode "2560x1440@144.00"
+    variable-refresh-rate
+}
+
+output "DP-1" {
+    mode "2560x1440@144.00"
+    is-primary
+    variable-refresh-rate
+}
+
+// --- Legion 5 Window Rules ---
+window-rule {
+    match app-id="emacs"
+    prefer-no-csd
+    geometry-corner-radius 0
+    
+    // NVIDIA Fix: Prevents flickering/tearing at 144Hz
+    clip-to-geometry true
+    
+    // Layout: Keeps Emacs columns readable on 1440p
+    min-column-width { proportion 0.33; }
+}
