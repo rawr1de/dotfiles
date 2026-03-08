@@ -37,13 +37,15 @@ alias cpr='rsync -ah --progress'
 alias rm='rm -iv'
 alias frm='\rm -rfv'   ## frm = force rm
 alias x='exit'
-alias cl='xclip -selection clipboard'
+alias cl='wl-copy'
+
 
 # CLI search scripts
 alias fz='SH_fzf_search_editor.sh'   ## fzf dynamic search
 
 # rofi
 alias mm='rofi_man.sh '       ## list & output man pages with rofi & zathura
+
 
 # Paths
 PATH=$PATH:~/.config
@@ -65,7 +67,5 @@ HISTFILESIZE=2000
 # run McFly on ZSH
 eval "$(mcfly init zsh)"
 
-# append Niri .zshrc_niri configs (wayland)
-if [ "$XDG_CURRENT_DESKTOP" = "niri" ]; then
-    [ -f ~/.zshrc_niri ] && source ~/.zshrc_niri
-fi
+# run Zoxide on ZSH
+eval "$(zoxide init zsh)"

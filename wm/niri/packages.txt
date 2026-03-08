@@ -5,3 +5,5 @@
 keyd
 wl-clipboard
 cliphist
+swaylock-effects
+zoxide

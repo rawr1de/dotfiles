@@ -108,10 +108,10 @@ on = ["g", "/"]
 run = "cd /"
 desc = "Go root"
 
-[[mgr.prepend_keymap]]
-on = ["z", "h"]
-run = "hidden toggle"
-desc = "Toggle hidden files"
+#[[mgr.prepend_keymap]]
+#on = ["z", "h"]
+#run = "hidden toggle"
+#desc = "Toggle hidden files"
 
 [[mgr.prepend_keymap]]
 on = ["b", "p"]
@@ -144,21 +144,31 @@ run = "rename --cursor=before_ext"
 desc = "Rename, cursor before extension"
 
 [[mgr.prepend_keymap]]
-on = "r"
-run = "plugin rename-stem"
-desc = "Rename keeping extension, clear stem"
+on = "h"
+run = "shell 'bat \"$1\"' --block --confirm"
+desc = "Peek file in pager"
 
 [[mgr.prepend_keymap]]
-on = "/"
-run = "plugin find-save"
-desc = "Find (persistent)"
+on = "<S-Enter>"
+run = "shell 'prog=$(compgen -c | sort -u | fuzzel --dmenu); [ -n \"$prog\" ] && $prog \"$1\"' --block"
+desc = "Open with fuzzel picker"
 
-[[mgr.prepend_keymap]]
-on = "n"
-run = "plugin find-next"
-desc = "Next search match"
-
-[[mgr.prepend_keymap]]
-on = "N"
-run = "plugin find-next -- reverse"
-desc = "Previous search match"
+#[[mgr.prepend_keymap]]
+#on = "r"
+#run = "plugin rename-stem"
+#desc = "Rename keeping extension, clear stem"
+#
+#[[mgr.prepend_keymap]]
+#on = "/"
+#run = "plugin find-save"
+#desc = "Find (persistent)"
+#
+#[[mgr.prepend_keymap]]
+#on = "n"
+#run = "plugin find-next"
+#desc = "Next search match"
+#
+#[[mgr.prepend_keymap]]
+#on = "N"
+#run = "plugin find-next -- reverse"
+#desc = "Previous search match"
