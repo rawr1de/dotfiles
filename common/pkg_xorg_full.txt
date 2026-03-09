@@ -1,0 +1,96 @@
+# FULL INSTALL
+#
+# X11/TERMINAL STUFF
+xorg-xev
+xorg-xset
+xclip
+xdotool
+kitty
+ranger
+dragon-drop
+fzf
+mcfly
+mlocate
+bat
+lsd
+mdfried
+tree
+tldr
+duf
+gtypist
+tmatrix
+# OTHER
+emacs
+rofi
+sxhkd
+unclutter
+#
+# COMPRESSION
+#
+unzip
+unrar
+zip
+atool
+#
+# WEB
+#
+qbittorrent
+bitwarden
+bfg
+brave-bin
+falkon
+discord
+yt-dlp-git
+#
+# SOUND
+#
+mpv-mpris
+musickube
+cmus
+puddletag
+pulsemixer
+fatsort
+flacon
+shntool
+wavpack
+musepack-tools
+taglib
+mediainfo
+libmpcdec
+musepack-tools
+cuetools
+#
+# IMAGE
+#
+feh
+sxiv
+gimp
+gimp-plugin-gmic
+inkscape
+calibre
+perl-image-exiftool
+#
+# VIDEO
+#
+handbrake
+obs-studio
+#
+# PDF TOOLS
+#
+img2pdf
+zathura
+zathura-pdf-poppler
+zathura-djvu
+zathura-cb
+pdftk
+#
+# GAMING
+steam
+#
+#
+# ext4magic
+# ytcc  
+# ytfzf
+# task-Spooler
+# xlayoutdisplay
+# tesseract

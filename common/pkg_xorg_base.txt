@@ -1,0 +1,61 @@
+# BASE INSTALL
+#
+# X11/TERMINAL STUFF
+xorg-xev
+xorg-xset
+xclip
+xdotool
+kitty
+ranger
+dragon-drop
+fzf
+mcfly
+mlocate
+bat
+lsd
+mdfried
+tldr
+duf
+gtypist
+tmatrix
+# OTHER
+emacs
+rofi
+sxhkd
+unclutter
+#
+# COMPRESSION
+#
+unzip
+unrar
+zip
+atool
+#
+# WEB
+#
+bitwarden
+bfg
+brave-bin
+#
+# SOUND
+#
+cmus
+pulsemixer
+fatsort
+#
+# IMAGE
+#
+feh
+sxiv
+#
+# VIDEO
+#
+#
+# PDF TOOLS
+#
+img2pdf
+zathura
+zathura-pdf-poppler
+zathura-djvu
+zathura-cb
+pdftk
