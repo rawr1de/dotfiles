@@ -57,8 +57,9 @@ alias ll='lsd -lAh --group-dirs first --hyperlink=auto'
 alias ls='ls -h --color=auto --group-directories-first --hyperlink=auto'
 alias le='bat'                                  # cat with syntax highlighting
 alias df='duf -hide special'                    # disk usage
-alias gitu='git add . && git commit && git push' # git add . commit push
-alias gits='git status'
+alias ggu='git add . && git commit && git push' # git add . commit push
+alias ggs='git status'
+alias ggp='git pull'
 
 # ─── ALIASES: SHELL COMMANDS ─────────
 alias pu='pushd'
@@ -78,10 +79,8 @@ elif [[ -n "$DISPLAY" ]]; then
     alias cl='xclip -selection clipboard'       # clipboard (X11)
 fi
 
-<<<<<<< HEAD
 # Created by `pipx` on 2026-03-08 17:54:45
 export PATH="$PATH:/home/rdo/.local/bin"
-=======
 
 # ─── ALIASES: SCRIPTS ────────────────
 alias fz='SH_fzf_search_editor.sh'             # fzf dynamic search
@@ -90,5 +89,4 @@ alias fz='SH_fzf_search_editor.sh'             # fzf dynamic search
 
 # ─── EVAL ────────────────────────────
 eval "$(mcfly init zsh)"   # MCFLY
-eval "$(mcfly init zsh)"   # ZOXIDE
->>>>>>> 043e287 (hella of a changes:)
+eval "$(mcfly init zsh)"   # ZOXIDE 
