@@ -1,3 +1,7 @@
+#
+# KEY NAVIGATION
+#
+
 [[pick.prepend_keymap]]
 on = "i"
 run = "arrow prev"
@@ -29,99 +33,97 @@ run = "arrow next"
 desc = "Move down"
 
 [[mgr.prepend_keymap]]
-on = "j"
-run = "leave"
-desc = "Go to parent"
-
-[[mgr.prepend_keymap]]
 on = "l"
 run = "enter"
 desc = "Enter / open"
 
+#
+# FOLDER NAVIGATION
+#
+
 [[mgr.prepend_keymap]]
 on = ["g", "h"]
 run = "cd ~"
-desc = "Go home"
+desc = "Home"
 
 [[mgr.prepend_keymap]]
 on = ["g", "l"]
 run = "cd ~/Desk"
-desc = "Go Desktop"
-
-[[mgr.prepend_keymap]]
-on = ["g", "p"]
-run = "cd ~/Pix"
-desc = "Go Pictures"
-
-[[mgr.prepend_keymap]]
-on = ["g", "m"]
-run = "cd ~/Musk"
-desc = "Go Musk"
-
-[[mgr.prepend_keymap]]
-on = ["g", "d"]
-run = "cd ~/Docs"
-desc = "Go Documents"
+desc = "Desk"
 
 [[mgr.prepend_keymap]]
 on = ["g", "w"]
 run = "cd ~/DLs"
-desc = "Go Downloads"
+desc = "DLs"
+
+[[mgr.prepend_keymap]]
+on = ["g", "d"]
+run = "cd ~/Docs"
+desc = "Docs"
+
+[[mgr.prepend_keymap]]
+on = ["g", "m"]
+run = "cd ~/Musk"
+desc = "Musk"
+
+[[mgr.prepend_keymap]]
+on = ["g", "p"]
+run = "cd ~/Pix"
+desc = "Pix"
 
 [[mgr.prepend_keymap]]
 on = ["g", "v"]
 run = "cd ~/Vidz"
-desc = "Go Videos"
+desc = "Vidz"
 
 [[mgr.prepend_keymap]]
 on = ["g", "t"]
 run = "cd ~/tmp"
-desc = "Go tmp"
-
-[[mgr.prepend_keymap]]
-on = ["g", "s"]
-run = "cd ~/.scripts"
-desc = "Go scripts"
-
-[[mgr.prepend_keymap]]
-on = ["g", "c"]
-run = "cd ~/.config"
-desc = "Go config"
-
-[[mgr.prepend_keymap]]
-on = ["g", "f"]
-run = "cd ~/.dotfiles"
-desc = "Go dotfiles"
+desc = "tmp"
 
 [[mgr.prepend_keymap]]
 on = ["g", "T"]
 run = "cd ~/.Trash"
-desc = "Go Trash"
+desc = "Trash"
+
+[[mgr.prepend_keymap]]
+on = ["g", "f"]
+run = "cd ~/.dotfiles"
+desc = ".dotfiles"
+
+[[mgr.prepend_keymap]]
+on = ["g", "c"]
+run = "cd ~/.config"
+desc = ".config"
+
+[[mgr.prepend_keymap]]
+on = ["g", "s"]
+run = "cd ~/.scripts"
+desc = ".scripts"
+
+[[mgr.prepend_keymap]]
+on = ["g", "r"]
+run = "cd ~/Docs/11.git_docs"
+desc = "git_docs"
 
 [[mgr.prepend_keymap]]
 on = ["g", "i"]
 run = "cd /run/media/$USER"
-desc = "Go media"
+desc = "MEDIA"
 
 [[mgr.prepend_keymap]]
 on = ["g", "/"]
 run = "cd /"
-desc = "Go root"
+desc = "ROOT"
 
 [[mgr.prepend_keymap]]
-on = ["b", "p"]
-run = "shell 'RANGER_send2phone $@' --confirm=always"
-desc = "Send to phone"
+on = "j"
+run = "leave"
+desc = "go to TOP"
 
-[[mgr.prepend_keymap]]
-on = ["b", "z"]
-run = "shell 'zip -r a.zip $@' --confirm=always"
-desc = "Zip selection"
-
-[[mgr.prepend_keymap]]
-on = ["b", "d"]
-run = "shell 'dragon-drop -a -x $@'"
-desc = "Dragon drop"
+#
+# RENAMING
+#
 
 [[mgr.prepend_keymap]]
 on = "A"
@@ -143,10 +145,24 @@ on = "h"
 run = "shell 'bat \"$1\"' --block --confirm"
 desc = "Peek file in pager"
 
+#
+# CUSTOM ACTIONS
+#
+
 [[mgr.prepend_keymap]]
-on = "<S-Enter>"
-run = "shell 'prog=$(compgen -c | sort -u | fuzzel --dmenu); [ -n \"$prog\" ] && $prog \"$1\"' --block"
-desc = "Open with fuzzel picker"
+on = ["b", "p"]
+run = "shell 'RANGER_send2phone $@' --confirm=always"
+desc = "Send to phone"
+
+[[mgr.prepend_keymap]]
+on = ["b", "z"]
+run = "shell 'zip -r a.zip $@' --confirm=always"
+desc = "Zip selection"
+
+[[mgr.prepend_keymap]]
+on = ["b", "d"]
+run = "shell 'dragon-drop -a -x $@'"
+desc = "Dragon drop"
 
 #[[mgr.prepend_keymap]]
 #on = "r"

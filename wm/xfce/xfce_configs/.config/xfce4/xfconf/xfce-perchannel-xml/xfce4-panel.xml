@@ -17,6 +17,7 @@
     <property name="plugin-6" type="string" value="systray">
       <property name="square-icons" type="bool" value="true"/>
       <property name="known-legacy-items" type="array">
+        <value type="string" value="networkmanager applet"/>
         <value type="string" value="wi-fi network connection “m&amp;m house” active: m&amp;m house (61%)"/>
         <value type="string" value="xfce4-power-manager"/>
         <value type="string" value="pamac-tray"/>
