@@ -1,9 +1,82 @@
-# base all
-#rofi-greenclip
-#picom
-#flameshot
-keyd
+# BASE INSTALL
+#
+#
+# WAYLAND STUFF
+#
+#
+wev
+emacs-wayland
 wl-clipboard
+keyd
 cliphist
 swaylock-effects
+#
+# 
+# TERMINAL STUFF
+#
+#
+thunar
+zsh
+kitty
+ranger
+dragon-drop
+fzf
+mcfly
+mlocate
+bat
+lsd
+mdfried
+tldr
+duf
+gtypist
+fastfetch
+tmatrix
 zoxide
+yazi
+#
+#
+# OTHER
+#
+#
+sxhkd
+unclutter
+#
+#
+# COMPRESSION
+#
+unzip
+unrar
+zip
+atool
+#
+# WEB
+#
+bitwarden
+bfg
+brave-bin
+#
+# SOUND
+#
+cmus
+pulsemixer
+fatsort
+#
+# IMAGE
+#
+#
+feh
+sxiv
+flameshot
+#
+#
+# VIDEO
+#
+#
+# PDF TOOLS
+#
+img2pdf
+zathura
+zathura-pdf-poppler
+zathura-djvu
+zathura-cb
+pdftk

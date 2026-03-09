@@ -529,7 +529,7 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
 ;      (add-hook 'xah-fly-command-mode-activate-hook
 ;                (lambda () (send-string-to-terminal "\e[2 q"))))))
 
-(add-to-list 'load-path "~/.emacs.d/lisp/xah-fly-keys")
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 (require 'xah-fly-keys)
 (xah-fly-keys-set-layout "qwerty")
 (xah-fly-keys 1)
