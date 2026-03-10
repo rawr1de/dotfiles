@@ -1,10 +1,13 @@
 # FULL INSTALL
 #
-# X11/TERMINAL STUFF
-xorg-xev
-xorg-xset
-xclip
-xdotool
+# WAYD/TERMINAL STUFF
+wl-clipboard
+# ydotool  # not as good as xdotool (and requires daemon)
+# dotool   # not as good as xdotool (and requires daemon)
+# wtype  # simulate typing/keyboard input
+insert _niri_ tools like xwayland-satellite
+wev
+ripdrag
 kitty
 ranger
 dragon-drop
@@ -19,11 +22,10 @@ tldr
 duf
 gtypist
 tmatrix
+fastfetch
 # OTHER
 emacs
 rofi
-sxhkd
-unclutter
 #
 # COMPRESSION
 #
@@ -62,8 +64,7 @@ cuetools
 #
 # IMAGE
 #
-feh
-sxiv
+swiv
 gimp
 gimp-plugin-gmic
 inkscape

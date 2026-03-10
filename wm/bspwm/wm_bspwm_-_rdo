@@ -1,0 +1,85 @@
+## bspwm keybinds & Layout diagram
+
+
+## Window switch
+#
+  W+h = focus on Left window
+  W+j = focus on Bottom window
+  W+k = focus on Top window
+  W+l = focus on Right window
+
+  S+W+h = switch window position to Left
+  S+W+j = switch window position to Bottom
+  S+W+k = switch window position to Top
+  S+W+l = switch window position to Right
+
+  S+g = switch active window with the biggest available
+
+
+## Window resize
+#
+  W+t = set tile state to window
+  W+s = set floating state to window
+  W+n = maximize/unmaximize (at tile state) stays under the panel/taskbar
+  W+m = fullscreen state (maximize over all)
+  	(must set another window state to unmaximize)
+	(W+c , W+S+c  breaks fullscreen)
+
+  W+A+h = expand left  border (externally)
+  W+A+j = expand lower border (externally)
+  W+A+k = expand upper border (externally)
+  W+A+l = expand right border (externally)
+
+  C+W+A+h = contract left  border (internally)
+  C+W+A+j = contract lower border (internally)
+  C+W+A+k = contract upper border (internally)
+  C+W+A+l = contract right border (internally)
+ 
+!  W+Up    = shrink window vertically up
+!  W+Down  = shrink window vertically down
+!  W+Left  = shrink window horizontally left
+!  W+Right = shrink window horizontally right
+
+
+## Desktop switching
+#
+ W+1 = GoToDesktop 1
+ W+2 = GoToDesktop 2
+ W-3 = GoToDesktop 3
+ 
+ W+S+1 = SendToDesktop 1
+ W+S+2 = SendToDesktop 2 
+ W+S+3 = SendToDesktop 3
+ 
+
+## Programs Shortcuts
+#
+  W+Enter = Open Terminal (kitty)
+  W+e     = Text Editor (Neo Vim)
+  W+w     = Web Browser (Brave)
+  W+q     = Web Browser (Min)
+  W+f	  = File Manager (Thunar)
+  W+v     = Pulse Audio Control (pavucontrol-qt)
+ 
+  w+PrintScreen   = Screenshot full screen (using scrot at ~/Pictures)
+  W+A+PrintScreen = Screenshot using flamshot (multiple options app)
+
+
+## Bspc (WM) Shortcuts
+#
+  W+Space = Rofi programs menu (Drun)
+  W+x     = Rofi-power (Reboot/Shutdown/Suspend/Hibernate)
+  A-Space = Switch keyboard layout (us,br)  [might use gxkb]
+
+!  A+Escape = Lower 
+!  C+W+m    = Move window (n funciona na tela maximizada)
+!  A+F4     = Close
+  
+  W+Esc   = Reload sxhkd config file
+  C+W+A+r = Reconfigure openbox  (reload configs)
+  W+A+r	  = restart bspwm
+  W+A+q	  = quit bspwm
+!  W+w	  = close and kill a node
+
+
+!! KP_1 (2,3..) = KeyPad teclado numerico

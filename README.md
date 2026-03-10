@@ -186,3 +186,23 @@ git pull
 | Deploy to new machine | Clone repo, `stow` packages |
 | Sync between machines | `git pull` on other machines |
 | Remove a config | `stow -D package`, delete from repo, commit, push |
+
+
+
+FIRST PUSH AFTER ADDING A DIR TO GIT
+git init -b main
+git add .
+git commit -m "initial commit"
+git remote add origin https://github.com/rawr1de/git_docs.git
+git push -u origin main
+
+CHANGE THE REMOTE URL FROM HTTPS to SSH
+git remote set-url origin git@github.com:rawr1de/git_docs.git
+git remote -v
+
+
+Stop tracking changes
+git update-index --assume-unchanged <file>
+
+Start tracking changes again
+git update-index --no-assume-unchanged <file>

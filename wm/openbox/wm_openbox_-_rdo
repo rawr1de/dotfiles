@@ -1,0 +1,80 @@
+## Openbox keybinds & Layout diagram
+
+-----------------   -----------------
+|      |	|   |        |      |
+| C+W+ |	|   |        | C+W+ |
+| Left |	|   |        | Right|
+|      |	|   |        |      |
+-----------------   -----------------
+
+
+-----------------   -----------------
+|    C+W+Up     |   |               |
+|---------------|   |		    |
+|               |   |---------------|
+|      		|   |   C+W+Down    |
+-----------------   -----------------
+
+
+## Window switching / navigation
+#
+ A+Tab = Next window
+ W+7   = Pin window  (always on top)
+ W+8   = Minimize window (iconify)
+ W+9   = Center window at w=70% h=80%
+ W+0   = Maximize window
+ 
+ C+W+Up    = move window up at 50% of screen 
+ C+W+Down  = move window down at 50% of screen
+ C+W+Left  = move window left at 50% of screen
+ C+W+Right = move window right at 50% of screen
+ 
+ W+Up    = shrink window vertically up
+ W+Down  = shrink window vertically down
+ W+Left  = shrink window horizontally left
+ W+Right = shrink window horizontally right
+
+
+## Desktop switching
+#
+ W+1 = GoToDesktop 1
+ W+2 = GoToDesktop 2
+ W-3 = GoToDesktop 3
+ 
+ S+W+1 = SendToDesktop 1
+ S+W+2 = SendToDesktop 2 
+ S+W+3 = SendToDesktop 3
+
+ W-d = ToggleShowDesktop  #mostra desk, abaixa/sobe todas janelas
+
+
+## General Shortcuts (defined by SXHKD)
+#
+ W+Enter = Terminal (kitty)
+ W+m     = Text Editor (Emacs GUI)
+ W+n     = Text Editor (Neo Vim)
+ W+w     = Web Browser (Brave)
+ W+f	 = File Manager (pcmanfm)
+ W+v     = PulseAudio Mixer (pulsemixer)
+ 
+ w+PrintScreen   = Take Screenshot (flameshot)
+
+ W+Space = WM menu (root-menu)
+ W+Space = WM menu (root-menu)
+ C+Space = Window menu (client-menu)
+ W+r     = Run  (Drun)
+ A-Space = Switch keyboard layout (us,br) [uses gxkb]
+
+ A+Escape  = Lower  #MovePraTraz janelas ativas, focando na proxima (ciclicamente) 
+ C+W+r	   = Resize window (n funciona na tela maximizada)
+ C+W+m 	   = Move window (n funciona na tela maximizada)
+ A+F4      = Close
+  
+ W+C+Left  = Move window to left (50% size) 
+ W+C+Right = Move window to right (50% size) 
+ W+C+Up    = Move window Up (50% size) 
+ W+C+Down  = Move window Down (50% size)
+
+ C+W+A+r = Reconfigure openbox  (reload configs)
+
+ 	 S+W+q = Oblogout  (log off openbox)

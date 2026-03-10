@@ -9,6 +9,7 @@ kitty
 ranger
 dragon-drop
 fzf
+ripgrep
 mcfly
 mlocate
 bat
@@ -35,7 +36,7 @@ atool
 #
 bitwarden
 bfg
-brave-bin
+#brave-bin
 #
 # SOUND
 #

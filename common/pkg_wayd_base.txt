@@ -1,10 +1,13 @@
 # BASE INSTALL
 #
-# X11/TERMINAL STUFF
-xorg-xev
-xorg-xset
-xclip
-xdotool
+# WAYD/TERMINAL STUFF
+wl-clipboard
+# ydotool  # not as good as xdotool (and requires daemon)
+# dotool   # not as good as xdotool (and requires daemon)
+# wtype  # simulate typing/keyboard input
+#insert _niri_ tools like xwayland-satellite
+wev
+ripdrag
 kitty
 ranger
 dragon-drop
@@ -14,15 +17,14 @@ mlocate
 bat
 lsd
 mdfried
+tree
 tldr
 duf
-gtypist
 tmatrix
+fastfetch
 # OTHER
 emacs
 rofi
-sxhkd
-unclutter
 #
 # COMPRESSION
 #
@@ -33,23 +35,45 @@ atool
 #
 # WEB
 #
+qbittorrent
 bitwarden
 bfg
 brave-bin
+falkon
+discord
+yt-dlp-git
 #
 # SOUND
 #
+mpv-mpris
+musickube
 cmus
+puddletag
 pulsemixer
 fatsort
+flacon
+shntool
+wavpack
+musepack-tools
+taglib
+mediainfo
+libmpcdec
+musepack-tools
+cuetools
 #
 # IMAGE
 #
-feh
-sxiv
+swiv
+gimp
+gimp-plugin-gmic
+inkscape
+calibre
+perl-image-exiftool
 #
 # VIDEO
 #
+handbrake
+obs-studio
 #
 # PDF TOOLS
 #
@@ -59,3 +83,14 @@ zathura-pdf-poppler
 zathura-djvu
 zathura-cb
 pdftk
+#
+# GAMING
+steam
+#
+#
+# ext4magic
+# ytcc  
+# ytfzf
+# task-Spooler
+# xlayoutdisplay
+# tesseract
