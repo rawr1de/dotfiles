@@ -222,18 +222,18 @@ for profile in "$@"; do
         echo -e "  ${YELLOW}Installing [$pkgfile] packages...${NC}\n"
 
         for pkg in "${PKGS[@]}"; do
-            echo -ne "  ${CYAN}· $pkg${NC} ... "
+            echo -e "  ${CYAN}· $pkg${NC}"
             if [ "$DISTRO" = "void" ]; then
                 if ! xbps-query -Rs "$pkg" 2>/dev/null | grep -qw "$pkg"; then
-                    echo -e "${RED}not found in repos${NC}"
+                    echo -e "  ${RED}✗ $pkg not found in repos${NC}"
                     FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
                     ((ERRORS++))
                     continue
                 fi
-                if sudo xbps-install -y "$pkg" &>/dev/null; then
-                    echo -e "${GREEN}✓${NC}"
+                if sudo xbps-install -y "$pkg"; then
+                    echo -e "  ${GREEN}✓ $pkg done${NC}"
                 else
-                    echo -e "${RED}✗ install failed${NC}"
+                    echo -e "  ${RED}✗ $pkg install failed${NC}"
                     FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
                     ((ERRORS++))
                 fi
