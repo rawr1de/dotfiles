@@ -18,7 +18,6 @@ wev
 dmidecode
 xmirror
 xtools
-
 # BASE INSTALL
 #
 #
