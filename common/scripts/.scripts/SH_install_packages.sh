@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SH_install_packages.sh (Void Linux)
+# SH_install_packages.sh (Arch / Void Linux)
 # Installs packages and clones repos from files in the dotfiles repo.
 #
 # Supported files per profile:
@@ -21,15 +21,7 @@
 
 DOTFILES_DIR="$HOME/.dotfiles"
 
-PACKAGE_FILES=(
-    "packages.txt"
-    "packages_base.txt"
-    "packages_opt.txt"
-    "pkg_wayd_base.txt"
-    "pkg_wayd_full.txt"
-    "pkg_xorg_base.txt"
-    "pkg_xorg_full.txt"
-)
+# Package files split by scope — see distro detection block below
 REPO_FILE="repos.txt"
 
 RED='\033[0;31m'
@@ -61,17 +53,32 @@ if [ ! -d "$DOTFILES_DIR" ]; then
     exit 1
 fi
 
-if ! command -v xbps-install &>/dev/null; then
-    echo -e "${RED}Error: xbps-install not found. Are you on Void Linux?${NC}"
+# ---------------------------------------------------------------------------
+# Distro detection
+# ---------------------------------------------------------------------------
+if command -v xbps-install &>/dev/null; then
+    DISTRO="void"
+    PKG_SUBDIR=".VOID_pkgs"
+elif command -v pacman &>/dev/null; then
+    DISTRO="arch"
+    PKG_SUBDIR=".ARCH_pkgs"
+else
+    echo -e "${RED}Error: No supported package manager found (xbps-install or pacman).${NC}"
     exit 1
 fi
+
+echo -e "${CYAN}Detected : ${BOLD}$DISTRO${NC} — pkg subdir: ${BOLD}$PKG_SUBDIR${NC}\n"
 
 # ---------------------------------------------------------------------------
 # fzf check
 # ---------------------------------------------------------------------------
 if ! command -v fzf &>/dev/null; then
     echo -e "${YELLOW}fzf not found. Installing...${NC}"
-    sudo xbps-install -y fzf
+    if [ "$DISTRO" = "void" ]; then
+        sudo xbps-install -y fzf
+    else
+        sudo pacman -S --noconfirm fzf
+    fi
     command -v fzf &>/dev/null || { echo -e "${RED}fzf install failed. Exiting.${NC}"; exit 1; }
     echo -e "${GREEN}✓ fzf installed.${NC}\n"
 fi
@@ -99,14 +106,40 @@ for profile in "$@"; do
     echo -e "${BLUE}${BOLD}=== Profile: $profile ===${NC}\n"
 
     # Collect available files
+    # Root-level files (common to all distros)
+    ROOT_PKG_FILES=("packages.txt" "packages_base.txt" "packages_opt.txt")
+    # Distro-specific files live inside PKG_SUBDIR
+    SUBDIR_PKG_FILES=("pkg_wayd_base.txt" "pkg_wayd_full.txt" "pkg_xorg_base.txt" "pkg_xorg_full.txt")
+
     AVAILABLE_FILES=()
-    for pkgfile in "${PACKAGE_FILES[@]}"; do
+
+    for pkgfile in "${ROOT_PKG_FILES[@]}"; do
         PACKAGES_FILE="$PROFILE_DIR/$pkgfile"
         [ ! -f "$PACKAGES_FILE" ] && continue
         mapfile -t _TMP < <(grep -v '^\s*#' "$PACKAGES_FILE" | grep -v '^\s*$')
         [ ${#_TMP[@]} -eq 0 ] && { echo -e "  ${YELLOW}⚠  $pkgfile is empty — skipping.${NC}"; continue; }
         AVAILABLE_FILES+=("$pkgfile")
     done
+
+    SUBDIR_PATH="$PROFILE_DIR/$PKG_SUBDIR"
+    if [ -d "$SUBDIR_PATH" ]; then
+        for pkgfile in "${SUBDIR_PKG_FILES[@]}"; do
+            PACKAGES_FILE="$SUBDIR_PATH/$pkgfile"
+            [ ! -f "$PACKAGES_FILE" ] && continue
+            mapfile -t _TMP < <(grep -v '^\s*#' "$PACKAGES_FILE" | grep -v '^\s*$')
+            [ ${#_TMP[@]} -eq 0 ] && { echo -e "  ${YELLOW}⚠  $PKG_SUBDIR/$pkgfile is empty — skipping.${NC}"; continue; }
+            AVAILABLE_FILES+=("$PKG_SUBDIR/$pkgfile")
+        done
+    else
+        # Fallback: check root-level for the subdir files too (old structure)
+        for pkgfile in "${SUBDIR_PKG_FILES[@]}"; do
+            PACKAGES_FILE="$PROFILE_DIR/$pkgfile"
+            [ ! -f "$PACKAGES_FILE" ] && continue
+            mapfile -t _TMP < <(grep -v '^\s*#' "$PACKAGES_FILE" | grep -v '^\s*$')
+            [ ${#_TMP[@]} -eq 0 ] && continue
+            AVAILABLE_FILES+=("$pkgfile")
+        done
+    fi
 
     REPOS_FILE="$PROFILE_DIR/$REPO_FILE"
     if [ -f "$REPOS_FILE" ]; then
@@ -170,7 +203,7 @@ for profile in "$@"; do
         fi
 
         # ---- Packages ----
-        PACKAGES_FILE="$PROFILE_DIR/$pkgfile"
+        PACKAGES_FILE="$PROFILE_DIR/$pkgfile"  # works for both root and subdir paths since subdir files are stored as "$PKG_SUBDIR/filename"
         mapfile -t PKGS < <(grep -v '^\s*#' "$PACKAGES_FILE" | grep -v '^\s*$')
 
         echo -e "\n  ${CYAN}${BOLD}[$pkgfile]${NC} Packages to install:\n"
@@ -180,25 +213,44 @@ for profile in "$@"; do
         echo ""
 
         echo -e "  ${YELLOW}Syncing repos...${NC}"
-        sudo xbps-install -S &>/dev/null
+        if [ "$DISTRO" = "void" ]; then
+            sudo xbps-install -S &>/dev/null
+        else
+            sudo pacman -Sy &>/dev/null
+        fi
 
         echo -e "  ${YELLOW}Installing [$pkgfile] packages...${NC}\n"
 
         for pkg in "${PKGS[@]}"; do
             echo -ne "  ${CYAN}· $pkg${NC} ... "
-            # Check if package exists in repos
-            if ! xbps-query -Rs "$pkg" 2>/dev/null | grep -q "^[-*] ${pkg}-"; then
-                echo -e "${RED}not found in repos${NC}"
-                FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
-                ((ERRORS++))
-                continue
-            fi
-            if sudo xbps-install -y "$pkg" &>/dev/null; then
-                echo -e "${GREEN}✓${NC}"
+            if [ "$DISTRO" = "void" ]; then
+                if ! xbps-query -Rs "$pkg" 2>/dev/null | grep -q "^[-*] ${pkg}-"; then
+                    echo -e "${RED}not found in repos${NC}"
+                    FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
+                    ((ERRORS++))
+                    continue
+                fi
+                if sudo xbps-install -y "$pkg" &>/dev/null; then
+                    echo -e "${GREEN}✓${NC}"
+                else
+                    echo -e "${RED}✗ install failed${NC}"
+                    FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
+                    ((ERRORS++))
+                fi
             else
-                echo -e "${RED}✗ install failed${NC}"
-                FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
-                ((ERRORS++))
+                if ! pacman -Si "$pkg" &>/dev/null; then
+                    echo -e "${RED}not found in repos${NC}"
+                    FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
+                    ((ERRORS++))
+                    continue
+                fi
+                if sudo pacman -S --needed --noconfirm "$pkg" &>/dev/null; then
+                    echo -e "${GREEN}✓${NC}"
+                else
+                    echo -e "${RED}✗ install failed${NC}"
+                    FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
+                    ((ERRORS++))
+                fi
             fi
         done
         echo ""
