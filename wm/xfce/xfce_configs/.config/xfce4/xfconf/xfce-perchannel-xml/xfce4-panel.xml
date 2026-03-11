@@ -61,6 +61,7 @@
         <value type="int" value="9"/>
         <value type="int" value="10"/>
       </property>
+      <property name="autohide-behavior" type="uint" value="1"/>
     </property>
   </property>
 </channel>
