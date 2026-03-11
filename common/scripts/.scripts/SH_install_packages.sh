@@ -224,7 +224,7 @@ for profile in "$@"; do
         for pkg in "${PKGS[@]}"; do
             echo -ne "  ${CYAN}· $pkg${NC} ... "
             if [ "$DISTRO" = "void" ]; then
-                if ! xbps-query -Rs "$pkg" 2>/dev/null | grep -q "^[-*] ${pkg}-"; then
+                if ! xbps-query -Rs "$pkg" 2>/dev/null | grep -qw "$pkg"; then
                     echo -e "${RED}not found in repos${NC}"
                     FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
                     ((ERRORS++))
