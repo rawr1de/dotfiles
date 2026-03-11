@@ -3,11 +3,10 @@ pipewire
 wireplumber
 elogind
 polkit
-mesa-dri
 xdg-desktop-portal-gnome
 xdg-desktop-portal
 xwayland-satellite
-xwayland
+xorg-server-xwayland
 libpulseaudio
 wl-clipboard
 keyd
@@ -22,3 +21,6 @@ ranger
 mlocate
 bat
 lsd
+fuzzel
+htop
+stow
