@@ -34,3 +34,4 @@ thunar-volman
 udisks2
 gvfs
 starship
+emacs-pgtk
