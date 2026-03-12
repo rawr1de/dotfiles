@@ -31,4 +31,6 @@ dbus-elogind
 Thunar
 thunar-archive-plugin
 thunar-volman
+udisks2
+gvfs
 starship

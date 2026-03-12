@@ -1265,6 +1265,6 @@ include ./theme.conf
 
 
 # BEGIN_KITTY_THEME
-# Ayaka
+# bl1nk
 include current-theme.conf
 # END_KITTY_THEME

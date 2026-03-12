@@ -30,8 +30,11 @@ edit = [
   { run = 'emacsclient -nw "$@"',      desc = "Emacs (terminal)", block = true  },
   { run = 'nano "$@"',                 desc = "Nano",             block = true  },
 ]
+#open_md = [
+#  { run = 'kitty --class md_floating -e mdfried "$@" &', desc = "mdfried", orphan = true },
+#]
 open_md = [
-  { run = 'kitty --class md_floating -e mdfried "$@" &', desc = "mdfried", orphan = true },
+  { run = 'kitty --class md_floating -e glow "$@" &', desc = "glow", orphan = true },
 ]
 open_pdf = [
   { run = 'zathura "$@"', desc = "Zathura", orphan = true },

@@ -280,7 +280,7 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     // RDO binds
-    Mod+Return hotkey-overlay-title="Terminal: Kitty" { spawn "kitty"; }
+    Mod+Return hotkey-overlay-title="Terminal: Kitty" { spawn "/usr/bin/kitty"; }
     Mod+M hotkey-overlay-title="Editor: Emacs" { spawn "emacsclient" "-c" "-a" "emacs"; }
     Mod+W hotkey-overlay-title="Web Browser: Brave" { spawn "brave" "--restore-last-session"; }
     Mod+D hotkey-overlay-title="Run an Application: Fuzzel" { spawn "fuzzel"; }
@@ -548,12 +548,13 @@ binds {
     // spawn-at-startup "swaybg" "-i" "path_to_wallpaper"
     spawn-at-startup "noctalia-shell"
     spawn-at-startup "xwayland-satellite"
-    spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
+    spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
     spawn-at-startup "emacs" "--daemon"
     spawn-at-startup "bash" "-c" "wl-paste --type text --watch cliphist store"
     spawn-at-startup "bash" "-c" "wl-paste --type image --watch cliphist store"
     spawn-at-startup "pipewire"
     spawn-at-startup "wireplumber"
+    spawn-at-startup "/usr/bin/kitty"
 
     // Legion 5, dual monitor setup file
     include "legion_niri.kdl"
