@@ -386,6 +386,11 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
 (xah-fly-keys-set-layout "qwerty")
 (xah-fly-keys 1)
 
+;; activate command mode automatically on new frames
+(add-hook 'server-after-make-frame-hook
+          (lambda ()
+            (xah-fly-command-mode-activate)))
+
 ;; Number row — command mode bindings (qwerty layout)
 ;; XFK does not auto-bind these; must be explicit
 (define-key xah-fly-key-map (kbd "1") 'xah-extend-selection)
