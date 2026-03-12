@@ -282,7 +282,7 @@ binds {
     // RDO binds
     Mod+Return hotkey-overlay-title="Terminal: Kitty" { spawn "/usr/bin/kitty"; }
     Mod+M hotkey-overlay-title="Editor: Emacs" { spawn "emacsclient" "-c" "-a" "emacs"; }
-    Mod+W hotkey-overlay-title="Web Browser: Brave" { spawn "brave" "--restore-last-session"; }
+    Mod+W hotkey-overlay-title="Web Browser: Firefox" { spawn "firefox"; }
     Mod+D hotkey-overlay-title="Run an Application: Fuzzel" { spawn "fuzzel"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: Swaylock" { spawn "swaylock" "--screenshots" "--effect-blur" "7x5"; }
     Mod+C { spawn "bash" "-c" "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }

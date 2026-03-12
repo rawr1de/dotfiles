@@ -68,13 +68,7 @@
      "0c83e0b50946e39e237769ad368a08f2cd1c854ccbcd1a01d39fdce4d6f86478"
      "7c28419e963b04bf7ad14f3d8f6655c078de75e4944843ef9522dbecfcd8717d"
      default))
- '(package-selected-packages
-   '(all-the-icons-dired async avy beacon dashboard diminish dimmer
-			 dired-hide-dotfiles dired-narrow dired-open
-			 dired-quick-sort dired-rainbow dired-ranger
-			 dired-subtree doom-modeline doom-themes fzf
-			 multiple-cursors nerd-icons org-bullets
-			 shrink-path sudo-edit visual-regexp)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

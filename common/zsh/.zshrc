@@ -104,6 +104,7 @@ alias fz='SH_fzf_search_editor.sh'             # fzf dynamic search
 
 
 # ─── EVAL ────────────────────────────
-eval "$(mcfly init zsh)"     # MCFLY
-eval "$(zoxide init zsh)"    # ZOXIDE 
-eval "$(starship init zsh)"  # STARSHIP (POWERLINE ALIKE)
+#eval "$(mcfly init zsh)"           # McFly
+eval "$(atuin init zsh)"            # ATUIN (McFly alike)
+eval "$(starship init zsh)"         # STARSHIP (POWERLINE alike)
+eval "$(zoxide init zsh --cmd cd)"  # ZOXIDE

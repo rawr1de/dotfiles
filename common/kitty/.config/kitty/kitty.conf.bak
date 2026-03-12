@@ -24,7 +24,7 @@
 #:     bold_italic_font Operator Mono Medium Italic
 
 # font_family   Fira Code Regular Nerd Font Complete Mono
-font_family   DejaVu Sans
+font_family   JetBrainsMono Nerd Font Mono
 
 font_size 16.0
 
@@ -1265,6 +1265,6 @@ include ./theme.conf
 
 
 # BEGIN_KITTY_THEME
-# bl1nk
+# Base2Tone Forest Dark
 include current-theme.conf
 # END_KITTY_THEME

@@ -9,6 +9,7 @@ sudo ln -s /etc/sv/chronyd /var/service/
 sudo ln -s /etc/sv/NetworkManager /var/service/
 sudo ln -s /etc/sv/keyd /var/service/
 sudo ln -s /etc/sv/udisks2 /var/service/
+sudo ln -s /etc/sv/sshd /var/service/
 
 
 # Finalize User Environment
