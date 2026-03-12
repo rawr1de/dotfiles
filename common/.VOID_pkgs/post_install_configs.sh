@@ -40,3 +40,8 @@ polkit.addRule(function(action, subject) {
     }
 });
 EOF
+
+
+install base pkgs
+run commands (run kitten themes)
+starship fonts?

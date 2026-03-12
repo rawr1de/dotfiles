@@ -3,6 +3,7 @@ pipewire
 wireplumber
 elogind
 polkit
+polkit-gnome
 xdg-desktop-portal-gnome
 xdg-desktop-portal
 xwayland-satellite
@@ -24,3 +25,10 @@ lsd
 fuzzel
 htop
 stow
+xdg-user-dirs
+brightnessctl
+dbus-elogind
+Thunar
+thunar-archive-plugin
+thunar-volman
+starship

@@ -82,16 +82,31 @@ while IFS= read -r symlink; do
     [ -z "$matched_base" ] && continue
 
     rel="${target#$DOTFILES_DIR/}"
+    # Resolve up to 3 levels deep: category/subpath/pkg or category/pkg
     category="${rel%%/*}"
     rest="${rel#*/}"
     pkg_name="${rest%%/*}"
+    rest2="${rest#*/}"
+    pkg_name2="${rest2%%/*}"
+
+    # Check if this belongs to a subpath (e.g. wm/niri/fuzzel)
+    # by seeing if dotfiles/category/pkg_name is a dir containing the pkg
+    if [ -d "$DOTFILES_DIR/$category/$pkg_name" ] && [ -n "$pkg_name2" ] &&        [ -d "$DOTFILES_DIR/$category/$pkg_name/$pkg_name2" ]; then
+        label="$category/$pkg_name/$pkg_name2"
+        stow_dir="$DOTFILES_DIR/$category/$pkg_name"
+        stow_pkg="$pkg_name2"
+    else
+        label="$category/$pkg_name"
+        stow_dir="$DOTFILES_DIR/$category"
+        stow_pkg="$pkg_name"
+    fi
+
     [ -z "$category" ] || [ -z "$pkg_name" ] && continue
 
-    label="$category/$pkg_name"
     if [ -z "${PKG_SEEN[$label]}" ]; then
         PKG_SEEN[$label]=1
         PKG_LABELS+=("$label")
-        PKG_META[$label]="$DOTFILES_DIR/$category|$pkg_name"
+        PKG_META[$label]="$stow_dir|$stow_pkg"
     fi
 done < <(find "$HOME" -maxdepth 6 -type l 2>/dev/null)
 

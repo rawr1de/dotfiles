@@ -115,6 +115,8 @@ for arg in "${SEARCH_PATHS[@]}"; do
     stow_dir="$DOTFILES_DIR/$category"
 
     if [ "$subpath" = "$arg" ]; then
+        # category-level: scan direct subdirs as packages
+        # stow_dir = dotfiles/category, pkg = subdir name
         while IFS= read -r -d '' pkg_dir; do
             pkg_name=$(basename "$pkg_dir")
             skip=0
@@ -125,9 +127,18 @@ for arg in "${SEARCH_PATHS[@]}"; do
             PKG_META[$label]="$stow_dir|$pkg_name"
         done < <(find "$TARGET" -maxdepth 1 -mindepth 1 -type d -print0)
     else
-        label="$category/$subpath"
-        PKG_LABELS+=("$label")
-        PKG_META[$label]="$stow_dir|$subpath"
+        # subpath-level (e.g. wm/niri): treat the subpath as the stow dir,
+        # scan its subdirs as individual packages
+        local_stow_dir="$DOTFILES_DIR/$arg"
+        while IFS= read -r -d '' pkg_dir; do
+            pkg_name=$(basename "$pkg_dir")
+            skip=0
+            for s in "${SKIP_NAMES[@]}"; do [ "$pkg_name" = "$s" ] && { skip=1; break; }; done
+            [ "$skip" = "1" ] && continue
+            label="$arg/$pkg_name"
+            PKG_LABELS+=("$label")
+            PKG_META[$label]="$local_stow_dir|$pkg_name"
+        done < <(find "$TARGET" -maxdepth 1 -mindepth 1 -type d -print0)
     fi
 done
 
