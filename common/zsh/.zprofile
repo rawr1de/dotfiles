@@ -1,8 +1,13 @@
-# add to ssh agent the pgp keys based on the machine's hostname
+# Start SSH agent
+eval "$(ssh-agent -s)" > /dev/null 2>&1
+
+# Start SSH agent and add machine-specific SSH key
 case "$(hostname)" in
     legion)  ssh-add ~/.ssh/id_legion  ;;
     templar) ssh-add ~/.ssh/id_templar ;;
 esac
+
+
 
 # ─── VISUAL  ─────────────────────
 
