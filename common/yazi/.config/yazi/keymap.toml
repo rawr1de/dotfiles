@@ -83,7 +83,7 @@ desc = "tmp"
 
 [[mgr.prepend_keymap]]
 on = ["g", "T"]
-run = "cd ~/.Trash"
+run = "cd ~/.local/share/Trash/files"
 desc = "Trash"
 
 [[mgr.prepend_keymap]]
