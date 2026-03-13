@@ -8,39 +8,34 @@ case "$(hostname)" in
 esac
 
 
-
-# ─── VISUAL  ─────────────────────
-
+# ─── VISUAL ─────────────────────
 # bigger font in TTY
 setfont /usr/share/kbd/consolefonts/latarcyrheb-sun32
 
 
-
 # ─── ENVIRONMENT ─────────────────────
-
 # System-wide PATH — ensures all installed binaries are accessible
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/rena/.local/bin
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/.config
+export PATH=$PATH:$HOME/.scripts
+export PATH=$PATH:$HOME/.scripts/groff_helpers/helpers
+export PATH=$PATH:$HOME/.scripts/PCs/Legion5/kb_controls/
+export PATH=$PATH:$HOME/.themes
+export PATH=$PATH:$HOME/.icons
 
-
-# Auto-launch niri on TTY1 with a proper Wayland session
-if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
-    export XDG_RUNTIME_DIR="/run/user/$(id -u)"           # user runtime dir for sockets/pipes
-    export XDG_SESSION_TYPE=wayland                       # tell apps we're on Wayland
-    export XDG_SESSION_DESKTOP=niri                       # identify the compositor
-    export MOZ_ENABLE_WAYLAND=1                           # Firefox native Wayland
-    export QT_QPA_PLATFORM=wayland                        # Qt apps use Wayland backend
-    export ELECTRON_OZONE_PLATFORM_HINT=wayland           # Electron apps use Wayland backend
-    exec dbus-run-session niri                            # start dbus session then niri
-fi
-
-# default text editor
-export EDITOR="emacsclient -nw"
+export EDITOR="emacsclient -c"
 export VISUAL="emacsclient -c"
 
-# custom paths
-PATH=$PATH:~/.config
-PATH=$PATH:~/.scripts
-PATH=$PATH:~/.scripts/groff_helpers/helpers
-PATH=$PATH:~/.scripts/PCs/Legion5/kb_controls/
-PATH=$PATH:~/.themes
-PATH=$PATH:~/.icons
+
+# ─── WAYLAND AUTOSTART ─────────────────────
+# Must be last — exec replaces the shell, nothing below this runs
+if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+    export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+    export XDG_SESSION_TYPE=wayland
+    export XDG_SESSION_DESKTOP=niri
+    export MOZ_ENABLE_WAYLAND=1
+    export QT_QPA_PLATFORM=wayland
+    export ELECTRON_OZONE_PLATFORM_HINT=wayland
+    exec dbus-run-session niri
+fi
