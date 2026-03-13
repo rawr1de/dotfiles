@@ -42,9 +42,7 @@ compinit
 
 
 # ─── ENVIRONMENT ─────────────────────
-#export EDITOR="emacsclient -c"
-#export VISUAL="emacsclient -c"
-
+PATH=$PATH:~/.local/bin
 PATH=$PATH:~/.config
 PATH=$PATH:~/.scripts
 PATH=$PATH:~/.scripts/groff_helpers/helpers
@@ -52,6 +50,8 @@ PATH=$PATH:~/.scripts/PCs/Legion5/kb_controls/
 PATH=$PATH:~/.themes
 PATH=$PATH:~/.icons
 
+EDITOR="emacsclient -c"
+VISUAL="emacsclient -c"
 
 
 # ─── ALIASES: PROGRAMS ───────────────
@@ -91,10 +91,6 @@ if [[ -n "$WAYLAND_DISPLAY" ]]; then
 elif [[ -n "$DISPLAY" ]]; then
     alias cl='xclip -selection clipboard'       # clipboard (X11)
 fi
-
-# Created by `pipx` on 2026-03-08 17:54:45
-#export PATH="$PATH:/home/rdo/.local/bin"
-
 
 
 # ─── ALIASES: SCRIPTS ────────────────
