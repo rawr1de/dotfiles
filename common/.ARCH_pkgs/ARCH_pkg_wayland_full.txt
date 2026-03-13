@@ -1,0 +1,56 @@
+# ARCH/MANJARO — Wayland Full
+# Everything in base plus: heavy audio/video, gaming, torrents, production tools
+# Install base first, then: pacman -S $(grep -v '^#\|AUR' pkg_wayland_full.txt | tr '\n' ' ')
+# AUR packages marked — install separately with yay
+
+# --- Heavy audio tools ---
+audacity
+lame
+shntool          # AUR
+cuetools
+flacon           # AUR
+wavpack
+musepack-tools
+taglib
+puddletag        # AUR
+freac-bin        # AUR
+fatsort
+
+# --- Image & graphics ---
+gimp
+gimp-plugin-gmic
+gpick
+ocrmypdf         # AUR
+
+# --- Video production ---
+obs-studio
+kdenlive
+mkvtoolnix-gui
+handbrake
+guvcview
+
+# --- Gaming ---
+steam
+wine-staging
+winetricks
+gamemode
+mangohud
+
+# --- Torrents ---
+qbittorrent
+
+# --- Dev & scripting ---
+ctags
+task-spooler
+exiv2
+perl-image-exiftool
+
+# --- Documents ---
+libreoffice-fresh
+texlive-latexextra
+neomutt
+irssi
+
+# --- File sharing ---
+vsftpd
+filezilla

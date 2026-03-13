@@ -7,9 +7,9 @@
 #   packages.txt      — core packages
 #   packages_base.txt — base packages
 #   packages_opt.txt  — optional packages
-#   pkg_wayland_base.txt — wayland base
-#   pkg_wayland_full.txt — wayland full
-#   pkg_xorg_base.txt  — xorg base
+#   pkg_wayd_base.txt — wayland base
+#   pkg_wayd_full.txt — wayland full
+#   pkg_xorg_base.txt — xorg base
 #   pkg_xorg_full.txt — xorg full
 #   repos.txt         — git repos to clone (format: url ~/destination)
 #
@@ -84,34 +84,6 @@ if ! command -v fzf &>/dev/null; then
 fi
 
 # ---------------------------------------------------------------------------
-# yay check (Arch only)
-# ---------------------------------------------------------------------------
-# NOTE: yay is normally bootstrapped by SH_keyrings_yay_handler.sh before
-# this script runs. If running standalone, yay must already be installed
-# for AUR packages to work. Run SH_keyrings_yay_handler.sh first if unsure.
-# ---------------------------------------------------------------------------
-if [ "$DISTRO" = "arch" ] && ! command -v yay &>/dev/null; then
-    echo -e "${YELLOW}⚠  yay not found.${NC}"
-    echo -e "${YELLOW}   AUR packages will fail. To fix, run SH_keyrings_yay_handler.sh first,${NC}"
-    echo -e "${YELLOW}   or install yay manually, then re-run this script.${NC}"
-    echo ""
-    read -rp "   Attempt to install yay now? [y/N] " _yay_prompt
-    if [[ "$_yay_prompt" =~ ^[Yy]$ ]]; then
-        _yay_dir="$(mktemp -d)"
-        sudo pacman -S --needed base-devel git --noconfirm
-        git clone https://aur.archlinux.org/yay.git "$_yay_dir" && \
-            cd "$_yay_dir" && makepkg -si --noconfirm && cd - && rm -rf "$_yay_dir"
-        if command -v yay &>/dev/null; then
-            echo -e "${GREEN}✓ yay installed.${NC}\n"
-        else
-            echo -e "${RED}✗ yay install failed. AUR packages will be skipped.${NC}\n"
-        fi
-    else
-        echo -e "${YELLOW}   Skipping yay install. AUR packages will be skipped.${NC}\n"
-    fi
-fi
-
-# ---------------------------------------------------------------------------
 # Tracking
 # ---------------------------------------------------------------------------
 ERRORS=0
@@ -137,7 +109,7 @@ for profile in "$@"; do
     # Root-level files (common to all distros)
     ROOT_PKG_FILES=("packages.txt" "packages_base.txt" "packages_opt.txt")
     # Distro-specific files live inside PKG_SUBDIR
-    SUBDIR_PKG_FILES=("pkg_wayland_base.txt" "pkg_wayland_full.txt" "pkg_xorg_base.txt" "pkg_xorg_full.txt")
+    SUBDIR_PKG_FILES=("pkg_wayd_base.txt" "pkg_wayd_full.txt" "pkg_xorg_base.txt" "pkg_xorg_full.txt")
 
     AVAILABLE_FILES=()
 
@@ -266,28 +238,17 @@ for profile in "$@"; do
                     ((ERRORS++))
                 fi
             else
-                if pacman -Si "$pkg" &>/dev/null; then
-                    # Official repos
-                    if sudo pacman -S --needed --noconfirm "$pkg"; then
-                        echo -e "  ${GREEN}✓ $pkg done${NC}"
-                    else
-                        echo -e "  ${RED}✗ $pkg install failed${NC}"
-                        FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
-                        ((ERRORS++))
-                    fi
-                elif command -v yay &>/dev/null; then
-                    # AUR fallback
-                    echo -e "  ${YELLOW}· $pkg not in official repos — trying AUR...${NC}"
-                    if yay -S --needed --noconfirm "$pkg"; then
-                        echo -e "  ${GREEN}✓ $pkg done (AUR)${NC}"
-                    else
-                        echo -e "  ${RED}✗ $pkg AUR install failed${NC}"
-                        FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile) [AUR]")
-                        ((ERRORS++))
-                    fi
+                if ! pacman -Si "$pkg" &>/dev/null; then
+                    echo -e "${RED}not found in repos${NC}"
+                    FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
+                    ((ERRORS++))
+                    continue
+                fi
+                if sudo pacman -S --needed --noconfirm "$pkg" &>/dev/null; then
+                    echo -e "${GREEN}✓${NC}"
                 else
-                    echo -e "  ${RED}✗ $pkg not found in repos and yay unavailable${NC}"
-                    FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile) [AUR - yay missing]")
+                    echo -e "${RED}✗ install failed${NC}"
+                    FAILED_PKGS+=("$pkg  (profile: $profile / $pkgfile)")
                     ((ERRORS++))
                 fi
             fi

@@ -1,0 +1,139 @@
+# ARCH/MANJARO — Wayland Base
+# Minimal comfortable system: media, editing, file management, terminal tools
+# Install: pacman -S $(grep -v '^#' pkg_wayland_base.txt | tr '\n' ' ')
+# AUR packages marked — install separately with yay
+
+# --- Core editors & terminal ---
+emacs-wayland
+neovim
+nano
+kitty
+zsh
+
+# --- Shell tools ---
+atuin
+starship
+zoxide
+fzf
+bat
+lsd
+ripgrep
+fastfetch
+glow
+tldr
+man-db
+wget
+rsync
+bc
+socat
+stow
+git
+
+# --- Archive tools ---
+atool
+unzip
+unrar
+p7zip
+
+# --- Filesystem ---
+ntfs-3g
+dosfstools
+exfat-utils
+mtools
+plocate
+
+# --- System & power ---
+htop
+acpi
+tlp
+brightnessctl
+cronie
+chrony
+dbus
+polkit
+
+# --- Wayland compositor stack ---
+niri
+keyd
+fuzzel
+dunst
+cliphist
+wl-clipboard
+xwayland-satellite
+swaylock
+swayidle
+swww
+grim
+slurp
+gammastep
+kanshi
+libnotify
+xdg-utils
+xdg-user-dirs
+
+# --- Audio ---
+pipewire
+wireplumber
+alsa-utils
+pulsemixer
+pamixer
+
+# --- Networking ---
+networkmanager
+network-manager-applet
+wpa_supplicant
+dhcpcd
+bluez
+bluez-utils
+iwd
+
+# --- File management ---
+yazi
+ranger
+thunar
+gvfs
+gvfs-mtp
+android-udev
+udiskie
+dragon-drop    # AUR
+zathura
+zathura-pdf-poppler
+zathura-djvu
+
+# --- Media viewers ---
+mpv
+cmus
+imv
+nsxiv
+
+# --- Screenshot & image ---
+imagemagick
+img2pdf
+pdftk
+
+# --- Web & transfer ---
+firefox
+brave-bin      # AUR
+yt-dlp
+transmission-cli
+kdeconnect
+wormhole-rs
+quickserve
+
+# --- Documents & office ---
+newsboat
+calcurse
+sc-im          # AUR
+lnav
+
+# --- Fonts ---
+ttf-jetbrains-mono-nerd
+otf-font-awesome
+noto-fonts-emoji
+ttf-nerd-fonts-symbols
+
+# --- Misc ---
+gtypist
+mediainfo
+ffmpeg
+highlight

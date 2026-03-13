@@ -1,0 +1,54 @@
+# VOID — Wayland Full
+# Everything in base plus: heavy audio/video, gaming, torrents, production tools
+# Install base first, then: xbps-install -S $(grep -v '^#' pkg_wayland_full.txt | tr '\n' ' ')
+
+# --- Heavy audio tools ---
+audacity
+lame
+shntool
+cuetools
+flacon
+wavpack
+musepack-tools
+taglib
+puddletag
+freac
+fatsort
+
+# --- Image & graphics ---
+gimp
+gimp-plugin-gmic
+gpick
+ocrmypdf
+
+# --- Video production ---
+obs-studio
+kdenlive
+mkvtoolnix-gui
+handbrake
+guvcview
+
+# --- Gaming ---
+steam
+wine
+winetricks
+
+# --- Torrents ---
+qbittorrent
+
+# --- Dev & scripting ---
+ctags
+task-spooler
+exiv2
+perl-Image-ExifTool
+
+# --- Documents ---
+libreoffice
+texlive-latexextra
+neomutt
+irssi
+sc-im
+
+# --- File sharing ---
+vsftpd
+filezilla

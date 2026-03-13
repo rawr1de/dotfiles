@@ -1,4 +1,4 @@
-[manager]
+[mgr]
 ratio          = [1, 3, 4]
 sort_by        = "natural"
 sort_sensitive = false
@@ -7,14 +7,18 @@ sort_dir_first = true
 show_hidden    = false
 show_symlink   = true
 scrolloff      = 8
+linemode       = "size"
 
 [preview]
 image_filter = "triangle"
 image_quality = 75
 sixel_fraction = 15
-ueberzug_scale = 1
 
 [opener]
+bulk-rename = [
+  { run = 'emacsclient -c "$@"', block = true },
+]
+
 editor = [
   { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (GUI)", orphan = true },
 ]
@@ -23,16 +27,12 @@ edit_sh = [
   { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (GUI)",      orphan = true },
   { run = 'emacsclient -nw "$@"',      desc = "Emacs (Terminal)", block = true  },
   { run = 'nano "$@"',                 desc = "Nano",             block = true  },
-  { run = 'kate "$@"',                 desc = "Kate",             orphan = true },
 ]
 edit = [
   { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (gui)",      orphan = true },
   { run = 'emacsclient -nw "$@"',      desc = "Emacs (terminal)", block = true  },
   { run = 'nano "$@"',                 desc = "Nano",             block = true  },
 ]
-#open_md = [
-#  { run = 'kitty --class md_floating -e mdfried "$@" &', desc = "mdfried", orphan = true },
-#]
 open_md = [
   { run = 'kitty --class md_floating -e glow -p "$@"', desc = "glow", orphan = true },
 ]
@@ -46,7 +46,7 @@ open_audio = [
   { run = 'mpv "$@"', desc = "mpv", orphan = true },
 ]
 open_image = [
-  { run = 'sxiv -af "$@"', desc = "sxiv", orphan = true },
+  { run = 'nsxiv -af "$@"', desc = "nsxiv", orphan = true },
 ]
 extract = [
   { run = 'atool --extract --each -- "$@"', desc = "Extract (atool)" },
@@ -57,6 +57,7 @@ list_archive = [
 
 [open]
 prepend_rules = [
+  { url  = "bulk-rename.txt",              use = "bulk-rename"},
   { url  = "*.sh",                         use = "edit_sh" },
   { url  = "*.md",                         use = ["open_md", "edit"] },
   { url  = "*.py",                         use = "edit" },
