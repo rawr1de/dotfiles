@@ -4,24 +4,17 @@
 # Installs packages and clones repos from files in the dotfiles repo.
 #
 # Supported files per profile:
-#   packages.txt      — core packages
-#   packages_base.txt — base packages
-#   packages_opt.txt  — optional packages
-#   pkg_wayland_base.txt — wayland base
-#   pkg_wayland_full.txt — wayland full
-#   pkg_xorg_base.txt  — xorg base
-#   pkg_xorg_full.txt — xorg full
-#   repos.txt         — git repos to clone (format: url ~/destination)
+#   Root profile folder: repos.txt
+#   OS Subfolders (.VOID_pkgs / .ARCH_pkgs): Any .txt file (pkg_machine.txt, etc.)
 #
 # Usage:
 #   bash SH_install_packages.sh common
 #   bash SH_install_packages.sh legion
-#   bash SH_install_packages.sh common legion
-#   bash SH_install_packages.sh wm/niri
+#   bash SH_install_packages.sh common templar
 
 DOTFILES_DIR="$HOME/.dotfiles"
 
-# Package files split by scope — see distro detection block below
+# The designated repo file
 REPO_FILE="repos.txt"
 
 RED='\033[0;31m'
@@ -35,13 +28,8 @@ NC='\033[0m'
 # ---------------------------------------------------------------------------
 # Preflight
 # ---------------------------------------------------------------------------
-echo -e "${BLUE}${BOLD}=== SH_install_packages.sh (Void Linux) ===${NC}"
+echo -e "${BLUE}${BOLD}=== SH_install_packages.sh ===${NC}"
 echo -e "${CYAN}Installs packages and clones repos from your dotfiles repo.${NC}\n"
-echo -e "  ${YELLOW}Usage   :${NC} $0 <profile> [profile2 ...]"
-echo -e "  ${YELLOW}Examples:${NC} $0 common"
-echo -e "           $0 legion"
-echo -e "           $0 common legion"
-echo -e "           $0 wm/niri\n"
 
 if [ $# -eq 0 ]; then
     echo -e "${RED}Error: No profile specified.${NC}"
@@ -86,10 +74,6 @@ fi
 # ---------------------------------------------------------------------------
 # yay check (Arch only)
 # ---------------------------------------------------------------------------
-# NOTE: yay is normally bootstrapped by SH_keyrings_yay_handler.sh before
-# this script runs. If running standalone, yay must already be installed
-# for AUR packages to work. Run SH_keyrings_yay_handler.sh first if unsure.
-# ---------------------------------------------------------------------------
 if [ "$DISTRO" = "arch" ] && ! command -v yay &>/dev/null; then
     echo -e "${YELLOW}⚠  yay not found.${NC}"
     echo -e "${YELLOW}   AUR packages will fail. To fix, run SH_keyrings_yay_handler.sh first,${NC}"
@@ -115,7 +99,7 @@ fi
 # Tracking
 # ---------------------------------------------------------------------------
 ERRORS=0
-declare -a FAILED_PKGS   # packages xbps could not find/install
+declare -a FAILED_PKGS   # packages that could not be installed
 declare -a FAILED_REPOS  # repos that failed to clone
 
 # ---------------------------------------------------------------------------
@@ -133,56 +117,41 @@ for profile in "$@"; do
 
     echo -e "${BLUE}${BOLD}=== Profile: $profile ===${NC}\n"
 
-    # Collect available files
-    # Root-level files (common to all distros)
-    ROOT_PKG_FILES=("packages.txt" "packages_base.txt" "packages_opt.txt")
-    # Distro-specific files live inside PKG_SUBDIR
-    SUBDIR_PKG_FILES=("pkg_wayland_base.txt" "pkg_wayland_full.txt" "pkg_xorg_base.txt" "pkg_xorg_full.txt")
-
     AVAILABLE_FILES=()
 
-    for pkgfile in "${ROOT_PKG_FILES[@]}"; do
-        PACKAGES_FILE="$PROFILE_DIR/$pkgfile"
-        [ ! -f "$PACKAGES_FILE" ] && continue
-        mapfile -t _TMP < <(grep -v '^\s*#' "$PACKAGES_FILE" | grep -v '^\s*$')
-        [ ${#_TMP[@]} -eq 0 ] && { echo -e "  ${YELLOW}⚠  $pkgfile is empty — skipping.${NC}"; continue; }
-        AVAILABLE_FILES+=("$pkgfile")
-    done
+    # 1. Grab any .txt file in the root of the profile (like repos.txt)
+    while IFS= read -r root_file; do
+        [ -n "$root_file" ] && AVAILABLE_FILES+=("$(basename "$root_file")")
+    done < <(find "$PROFILE_DIR" -maxdepth 1 -type f -name "*.txt" 2>/dev/null)
 
-    SUBDIR_PATH="$PROFILE_DIR/$PKG_SUBDIR"
-    if [ -d "$SUBDIR_PATH" ]; then
-        for pkgfile in "${SUBDIR_PKG_FILES[@]}"; do
-            PACKAGES_FILE="$SUBDIR_PATH/$pkgfile"
-            [ ! -f "$PACKAGES_FILE" ] && continue
-            mapfile -t _TMP < <(grep -v '^\s*#' "$PACKAGES_FILE" | grep -v '^\s*$')
-            [ ${#_TMP[@]} -eq 0 ] && { echo -e "  ${YELLOW}⚠  $PKG_SUBDIR/$pkgfile is empty — skipping.${NC}"; continue; }
-            AVAILABLE_FILES+=("$PKG_SUBDIR/$pkgfile")
-        done
-    else
-        # Fallback: check root-level for the subdir files too (old structure)
-        for pkgfile in "${SUBDIR_PKG_FILES[@]}"; do
-            PACKAGES_FILE="$PROFILE_DIR/$pkgfile"
-            [ ! -f "$PACKAGES_FILE" ] && continue
-            mapfile -t _TMP < <(grep -v '^\s*#' "$PACKAGES_FILE" | grep -v '^\s*$')
-            [ ${#_TMP[@]} -eq 0 ] && continue
-            AVAILABLE_FILES+=("$pkgfile")
-        done
-    fi
-
-    REPOS_FILE="$PROFILE_DIR/$REPO_FILE"
-    if [ -f "$REPOS_FILE" ]; then
-        mapfile -t _TMP < <(grep -v '^\s*#' "$REPOS_FILE" | grep -v '^\s*$')
-        [ ${#_TMP[@]} -gt 0 ] && AVAILABLE_FILES+=("$REPO_FILE")
+    # 2. Grab any .txt file inside the correct distro subdirectory
+    if [ -d "$PROFILE_DIR/$PKG_SUBDIR" ]; then
+        while IFS= read -r sub_file; do
+            [ -n "$sub_file" ] && AVAILABLE_FILES+=("$PKG_SUBDIR/$(basename "$sub_file")")
+        done < <(find "$PROFILE_DIR/$PKG_SUBDIR" -maxdepth 1 -type f -name "*.txt" 2>/dev/null)
     fi
 
     if [ ${#AVAILABLE_FILES[@]} -eq 0 ]; then
-        echo -e "${YELLOW}  ⚠  No files found for profile '$profile' — skipping.${NC}\n"
+        echo -e "${YELLOW}  ⚠  No .txt files found for profile '$profile' — skipping.${NC}\n"
+        continue
+    fi
+
+    # Filter out empty files before passing to fzf
+    VALID_FILES=()
+    for file in "${AVAILABLE_FILES[@]}"; do
+        if grep -q '[^[:space:]#]' "$PROFILE_DIR/$file" 2>/dev/null; then
+            VALID_FILES+=("$file")
+        fi
+    done
+
+    if [ ${#VALID_FILES[@]} -eq 0 ]; then
+        echo -e "${YELLOW}  ⚠  All files in '$profile' are empty — skipping.${NC}\n"
         continue
     fi
 
     # fzf file picker
     echo -e "  ${CYAN}Select files to process for ${BOLD}$profile${NC}${CYAN}:${NC}\n"
-    SELECTED_FILES=$(printf '%s\n' "${AVAILABLE_FILES[@]}" | \
+    SELECTED_FILES=$(printf '%s\n' "${VALID_FILES[@]}" | \
         fzf --multi \
             --bind 'space:toggle,tab:toggle' \
             --prompt "[$profile] > " \
@@ -198,9 +167,9 @@ for profile in "$@"; do
     while IFS= read -r pkgfile; do
 
         # ---- Repos ----
-        if [ "$pkgfile" = "$REPO_FILE" ]; then
-            echo -e "\n  ${CYAN}${BOLD}[$REPO_FILE]${NC} Repos to clone:\n"
-            mapfile -t REPOS < <(grep -v '^\s*#' "$REPOS_FILE" | grep -v '^\s*$')
+        if [ "$(basename "$pkgfile")" = "$REPO_FILE" ]; then
+            echo -e "\n  ${CYAN}${BOLD}[$pkgfile]${NC} Repos to clone:\n"
+            mapfile -t REPOS < <(grep -v '^\s*#' "$PROFILE_DIR/$pkgfile" | grep -v '^\s*$')
             for entry in "${REPOS[@]}"; do
                 url=$(awk '{print $1}' <<< "$entry")
                 dest=$(awk '{print $2}' <<< "$entry" | sed "s|~|$HOME|g")
@@ -231,7 +200,7 @@ for profile in "$@"; do
         fi
 
         # ---- Packages ----
-        PACKAGES_FILE="$PROFILE_DIR/$pkgfile"  # works for both root and subdir paths since subdir files are stored as "$PKG_SUBDIR/filename"
+        PACKAGES_FILE="$PROFILE_DIR/$pkgfile"
         mapfile -t PKGS < <(grep -v '^\s*#' "$PACKAGES_FILE" | grep -v '^\s*$')
 
         echo -e "\n  ${CYAN}${BOLD}[$pkgfile]${NC} Packages to install:\n"
@@ -267,7 +236,6 @@ for profile in "$@"; do
                 fi
             else
                 if pacman -Si "$pkg" &>/dev/null; then
-                    # Official repos
                     if sudo pacman -S --needed --noconfirm "$pkg"; then
                         echo -e "  ${GREEN}✓ $pkg done${NC}"
                     else
@@ -276,7 +244,6 @@ for profile in "$@"; do
                         ((ERRORS++))
                     fi
                 elif command -v yay &>/dev/null; then
-                    # AUR fallback
                     echo -e "  ${YELLOW}· $pkg not in official repos — trying AUR...${NC}"
                     if yay -S --needed --noconfirm "$pkg"; then
                         echo -e "  ${GREEN}✓ $pkg done (AUR)${NC}"
