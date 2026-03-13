@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SH_02_setup_services.sh
+# SH_setup_services.sh
 # Enables and disables runit services for a fresh Void install.
 # Void Linux only.
 
@@ -11,7 +11,7 @@ BLUE='\033[0;34m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-echo -e "${BLUE}${BOLD}=== SH_02_setup_services.sh ===${NC}\n"
+echo -e "${BLUE}${BOLD}=== SH_setup_services.sh ===${NC}\n"
 
 if ! command -v xbps-install &>/dev/null; then
     echo -e "${RED}This script is Void Linux only.${NC}"
@@ -73,7 +73,7 @@ for svc in "${ENABLE[@]}"; do
         echo -e "${YELLOW}⊘ Already enabled: $svc${NC}"
         continue
     fi
-    if ln -s "/etc/sv/$svc" /var/service/; then
+    if sudo ln -s "/etc/sv/$svc" /var/service/; then
         echo -e "${GREEN}✓ Enabled: $svc${NC}"
     else
         echo -e "${RED}✗ Failed to enable: $svc${NC}"
@@ -91,7 +91,7 @@ for svc in "${DISABLE[@]}"; do
         echo -e "${YELLOW}⊘ Not enabled, skipping: $svc${NC}"
         continue
     fi
-    if rm "/var/service/$svc"; then
+    if sudo rm "/var/service/$svc"; then
         echo -e "${RED}✓ Disabled: $svc${NC}"
     else
         echo -e "${RED}✗ Failed to disable: $svc${NC}"
