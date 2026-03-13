@@ -107,8 +107,8 @@ declare -a COMPLETED
 # Step 00 — WiFi
 # ---------------------------------------------------------------------------
 step_header "00" "Connect WiFi"
-if ask_step "SH_connect_wifi.sh"; then
-    if run_script "SH_connect_wifi.sh"; then
+if ask_step "SH_00_connect_wifi.sh"; then
+    if run_script "SH_00_connect_wifi.sh"; then
         COMPLETED+=("00 — connect_wifi")
     else
         log "${RED}✗ Step 00 failed.${NC}"
@@ -128,36 +128,8 @@ log "${CYAN}Profiles available in $DOTFILES_DIR:${NC}"
 ls "$DOTFILES_DIR" 2>/dev/null | grep -v '^\.' | sed 's/^/  /'
 echo ""
 read -rp "Profile(s) to install (space-separated, e.g. 'common templar'): " profiles
-
-# Resolve profiles to their Void package lists AND repos.txt
-declare -a pkg_lists
-declare -a pkg_basenames
-for prof in $profiles; do
-    
-    # 1. Always grab repos.txt if it exists in the profile
-    if [ -f "$DOTFILES_DIR/$prof/repos.txt" ]; then
-        pkg_lists+=("$DOTFILES_DIR/$prof/repos.txt")
-        pkg_basenames+=("repos.txt")
-    fi
-
-    # 2. Grab any .txt lists inside .VOID_pkgs/
-    if [ -d "$DOTFILES_DIR/$prof/.VOID_pkgs" ]; then
-        while IFS= read -r file; do
-            if [[ -n "$file" ]]; then
-                pkg_lists+=("$file")
-                pkg_basenames+=("$(basename "$file")")
-            fi
-        done < <(find "$DOTFILES_DIR/$prof/.VOID_pkgs" -type f -name "*.txt" 2>/dev/null)
-    fi
-
-done
-
-if [ ${#pkg_lists[@]} -eq 0 ]; then
-    log "${YELLOW}No package lists found for profiles: $profiles${NC}"
-fi
-
-if ask_step "SH_install_packages.sh ${pkg_basenames[*]}"; then
-    if run_script "SH_install_packages.sh" "${pkg_lists[@]}"; then
+if ask_step "SH_install_packages.sh $profiles"; then
+    if run_script "SH_install_packages.sh" $profiles; then
         COMPLETED+=("01 — install_packages")
     else
         log "${RED}✗ Step 01 failed.${NC}"
@@ -173,8 +145,8 @@ fi
 # Step 02 — Setup services
 # ---------------------------------------------------------------------------
 step_header "02" "Setup Services"
-if ask_step "SH_setup_services.sh"; then
-    if run_script "SH_setup_services.sh"; then
+if ask_step "SH_02_setup_services.sh"; then
+    if run_script "SH_02_setup_services.sh"; then
         COMPLETED+=("02 — setup_services")
     else
         log "${RED}✗ Step 02 failed.${NC}"
@@ -211,8 +183,8 @@ fi
 # Step 04 — Setup NetworkManager
 # ---------------------------------------------------------------------------
 step_header "04" "Migrate to NetworkManager"
-if ask_step "SH_setup_nm.sh"; then
-    if run_script "SH_setup_nm.sh"; then
+if ask_step "SH_04_setup_nm.sh"; then
+    if run_script "SH_04_setup_nm.sh"; then
         COMPLETED+=("04 — setup_nm")
     else
         log "${RED}✗ Step 04 failed.${NC}"
@@ -246,8 +218,8 @@ fi
 # Step 06 — Polkit rules
 # ---------------------------------------------------------------------------
 step_header "06" "Polkit Power Rules"
-if ask_step "SH_setup_polkit.sh"; then
-    if run_script "SH_setup_polkit.sh"; then
+if ask_step "SH_06_setup_polkit.sh"; then
+    if run_script "SH_06_setup_polkit.sh"; then
         COMPLETED+=("06 — setup_polkit")
     else
         log "${RED}✗ Step 06 failed.${NC}"
