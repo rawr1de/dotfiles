@@ -31,7 +31,6 @@ ENABLE=(
     polkitd
     sshd
     udevd
-    udisks2
 )
 
 DISABLE=(

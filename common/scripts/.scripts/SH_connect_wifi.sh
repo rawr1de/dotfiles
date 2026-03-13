@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SH_00_connect_wifi.sh
+# SH_connect_wifi.sh
 # Connects to a WPA2 network via wpa_supplicant on a fresh Void install.
 # Interactive — prompts for SSID and password at runtime.
 # Void Linux only.
@@ -12,7 +12,7 @@ BLUE='\033[0;34m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-echo -e "${BLUE}${BOLD}=== SH_00_connect_wifi.sh ===${NC}\n"
+echo -e "${BLUE}${BOLD}=== SH_connect_wifi.sh ===${NC}\n"
 
 # ---------------------------------------------------------------------------
 # Preflight
@@ -52,14 +52,14 @@ wpa_passphrase "$SSID" "$PSK" > "$WPA_CONF"
 PSK=""
 
 echo -e "\n${YELLOW}Bringing up $IFACE...${NC}"
-ip link set "$IFACE" up
+sudo ip link set "$IFACE" up
 
 echo -e "${YELLOW}Starting wpa_supplicant...${NC}"
 # Kill any existing instance first
-pkill wpa_supplicant 2>/dev/null
+sudo pkill wpa_supplicant 2>/dev/null
 sleep 1
 
-wpa_supplicant -B -i "$IFACE" -c "$WPA_CONF"
+sudo wpa_supplicant -B -i "$IFACE" -c "$WPA_CONF"
 if [ $? -ne 0 ]; then
     echo -e "${RED}wpa_supplicant failed to start.${NC}"
     rm -f "$WPA_CONF"
@@ -67,7 +67,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo -e "${YELLOW}Requesting DHCP lease...${NC}"
-dhcpcd "$IFACE"
+sudo dhcpcd "$IFACE"
 
 # ---------------------------------------------------------------------------
 # Verify
@@ -82,4 +82,4 @@ else
 fi
 
 rm -f "$WPA_CONF"
-echo -e "${YELLOW}Note: this connection is temporary. Run SH_04_setup_nm.sh after package install.${NC}\n"
+echo -e "${YELLOW}Note: this connection is temporary. Run SH_setup_nm.sh after package install.${NC}\n"

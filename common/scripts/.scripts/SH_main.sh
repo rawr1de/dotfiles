@@ -26,34 +26,6 @@ BLUE='\033[0;34m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-# #!/bin/bash
-
-# SH_main.sh
-# Bootstrap orchestrator for a fresh Void Linux install.
-# Calls sub-scripts in order, allowing each step to be skipped.
-#
-# Usage: bash SH_main.sh
-#
-# Step order:
-#   00 — connect_wifi        (wpa_supplicant temporary connection)
-#   01 — install_packages    (xbps install from dotfiles package lists)
-#   02 — setup_services      (enable/disable runit services)
-#   03 — deploy_dotfiles     (stow from dotfiles repo)
-#   04 — setup_nm            (swap wpa_supplicant → NetworkManager)
-#   05 — tty1_autologin      (configure agetty-tty1)
-#   06 — setup_polkit        (power management rules)
-#   07 — rename_xdg_dirs     (rename home dirs per user-dirs.dirs)
-#   08 — ssh_perms           (fix ~/.ssh permissions)
-#   09 — fonts_install       (JetBrainsMono Nerd Font)
-
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
-BLUE='\033[0;34m'
-BOLD='\033[1m'
-NC='\033[0m'
-
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
@@ -156,9 +128,7 @@ log "${CYAN}Profiles available in $DOTFILES_DIR:${NC}"
 ls "$DOTFILES_DIR" 2>/dev/null | grep -v '^\.' | sed 's/^/  /'
 echo ""
 read -rp "Profile(s) to install (space-separated, e.g. 'common templar'): " profiles
-
 if ask_step "SH_install_packages.sh $profiles"; then
-    # Expanding $profiles unquoted so it passes as multiple arguments
     if run_script "SH_install_packages.sh" $profiles; then
         COMPLETED+=("01 — install_packages")
     else

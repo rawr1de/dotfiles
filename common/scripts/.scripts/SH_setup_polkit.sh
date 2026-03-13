@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SH_06_setup_polkit.sh
+# SH_setup_polkit.sh
 # Deploys polkit power management rules for wheel group.
 # Allows reboot/poweroff without password for wheel users.
 
@@ -14,7 +14,7 @@ NC='\033[0m'
 RULES_DIR="/etc/polkit-1/rules.d"
 RULES_FILE="$RULES_DIR/10-power-management.rules"
 
-echo -e "${BLUE}${BOLD}=== SH_06_setup_polkit.sh ===${NC}\n"
+echo -e "${BLUE}${BOLD}=== SH_setup_polkit.sh ===${NC}\n"
 echo -e "Deploys power management polkit rules for the wheel group."
 echo -e "Enables reboot/poweroff without password prompt.\n"
 echo -e "  ${YELLOW}Target:${NC} $RULES_FILE\n"

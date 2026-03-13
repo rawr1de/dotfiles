@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SH_04_setup_nm.sh
+# SH_setup_nm.sh
 # Migrates from wpa_supplicant + dhcpcd to NetworkManager.
 # Void Linux only.
 
@@ -11,7 +11,7 @@ BLUE='\033[0;34m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-echo -e "${BLUE}${BOLD}=== SH_04_setup_nm.sh ===${NC}\n"
+echo -e "${BLUE}${BOLD}=== SH_setup_nm.sh ===${NC}\n"
 echo -e "Swaps wpa_supplicant + dhcpcd for NetworkManager.\n"
 
 if ! command -v xbps-install &>/dev/null; then
