@@ -1,5 +1,7 @@
 # Git Rebase Cheatsheet
 
+alias gt="git log --graph --oneline --all --decorate"
+
 ## rebase
 
 Replay your commits on top of another branch/commit,
