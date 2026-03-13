@@ -12,6 +12,19 @@ The "One-Command" Push to Main
 If you want to stay on legion_local but send your finished work directly to the main branch on GitHub (without switching branches), use this command:
 git push origin legion_local:main
 
+
+set git default editor
+git config --get core.editor "emacsclient -c --alternate-editor=''"
+or
+git config --get core.editor "nano"
+
+show all configs
+git config --list
+filter editor chosen
+git config --list | grep editor
+
+git tree alias
+
 # Git Rebase Cheatsheet
 
 alias gt="git log --graph --oneline --all --decorate"
