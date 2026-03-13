@@ -24,6 +24,8 @@ filter editor chosen
 git config --list | grep editor
 
 git tree alias
+alias.tree=log --graph --oneline --all --decorate
+
 
 # Git Rebase Cheatsheet
 
