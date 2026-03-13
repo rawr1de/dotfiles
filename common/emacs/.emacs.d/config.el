@@ -54,9 +54,6 @@
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
 
-;; value is in 1/10pt — 120 = 12pt
-(set-face-attribute 'default nil :height 120)
-
 (add-hook 'minibuffer-setup-hook 'my-minibuffer-setup)
 (defun my-minibuffer-setup ()
   (set (make-local-variable 'face-remapping-alist)
@@ -254,12 +251,6 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
 (define-key package-menu-mode-map "s" #'package-menu-filter-by-status)
 (define-key package-menu-mode-map "a" #'package-menu-find-marks)
 
-(setq org-file-apps
-  '((auto-mode . emacs)
-    ("\\.pdf::\\([0-9]+\\)?\\'" . "zathura %s -P %1")
-    ("\\.pdf\\'" . "zathura %s")
-    (directory . emacs)))
-
 ;; (require 'whitespace)
 ;; (setq whitespace-style '(face empty tabs lines-tail trailing))
 ;; (global-whitespace-mode t)
@@ -363,6 +354,33 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
 (global-set-key (kbd "C-x C-q") 'wdired-change-to-wdired-mode)
 
 (global-set-key (kbd "C-c 3") 'prl_rename_mp3)
+
+(defun set-font-size-by-context ()
+  "Set Emacs font height based on hostname and current screen resolution."
+  (let* ((hostname (system-name))
+         (monitor-attrs (car (display-monitor-attributes-list)))
+         (geometry (assoc 'geometry monitor-attrs))
+         (width (nth 3 geometry))) ;; Index 3 of geometry is the pixel width
+    
+    (cond
+     ;; CASE 1: Legion is docked (Width is 2560 or higher)
+     ((and (string= hostname "legion") (>= width 2560))
+      (set-face-attribute 'default nil :height 145))
+
+     ;; CASE 2: Legion is undocked (Laptop mode)
+     ((string= hostname "legion")
+      (set-face-attribute 'default nil :height 115))
+
+     ;; CASE 3: Templar (Always laptop mode)
+     ((string= hostname "templar")
+      (set-face-attribute 'default nil :height 125))
+
+     ;; FALLBACK: For any other machine
+     (t
+      (set-face-attribute 'default nil :height 130)))))
+
+;; Execute on startup
+(set-font-size-by-context)
 
 ;; Must be set before loading xah-fly-keys
 (setq xah-fly-use-control-key t)
