@@ -1,11 +1,13 @@
 # ARCH/MANJARO — Wayland Base
 # Minimal comfortable system: media, editing, file management, terminal tools
-# Install: pacman -S $(grep -v '^#' pkg_wayland_base.txt | tr '\n' ' ')
-# AUR packages marked — install separately with yay
+# Install: pacman -S $(grep -v '^#' ARCH_pkg_wayland_base.txt | tr '\n' ' ')
+# AUR packages handled automatically by SH_install_packages.sh via yay fallback
+#
+# NOTE: multilib repo must be enabled in /etc/pacman.conf before installing
+# Uncomment the [multilib] section and run: sudo pacman -Sy
 
 # --- Core editors & terminal ---
 emacs-wayland
-neovim
 nano
 kitty
 zsh
@@ -20,7 +22,7 @@ lsd
 ripgrep
 fastfetch
 glow
-tldr
+tealdeer
 man-db
 wget
 rsync
@@ -28,11 +30,14 @@ bc
 socat
 stow
 git
+duf
+wev
 
 # --- Archive tools ---
 atool
 unzip
 unrar
+zip
 p7zip
 
 # --- Filesystem ---
@@ -50,7 +55,7 @@ brightnessctl
 cronie
 chrony
 dbus
-polkit
+dmidecode
 
 # --- Wayland compositor stack ---
 niri
@@ -70,6 +75,8 @@ kanshi
 libnotify
 xdg-utils
 xdg-user-dirs
+xdg-desktop-portal
+xdg-desktop-portal-gnome
 
 # --- Audio ---
 pipewire
@@ -95,10 +102,11 @@ gvfs
 gvfs-mtp
 android-udev
 udiskie
-dragon-drop    # AUR
+dragon-drop
 zathura
 zathura-pdf-poppler
 zathura-djvu
+zathura-cb
 
 # --- Media viewers ---
 mpv
@@ -113,7 +121,7 @@ pdftk
 
 # --- Web & transfer ---
 firefox
-brave-bin      # AUR
+brave-bin
 yt-dlp
 transmission-cli
 kdeconnect
@@ -122,8 +130,6 @@ quickserve
 
 # --- Documents & office ---
 newsboat
-calcurse
-sc-im          # AUR
 lnav
 
 # --- Fonts ---
