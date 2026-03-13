@@ -4,7 +4,7 @@
   <property name="default-view" type="string" value="void"/>
   <property name="last-compact-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_SMALLEST"/>
   <property name="last-details-view-column-order" type="string" value="THUNAR_COLUMN_NAME,THUNAR_COLUMN_SIZE,THUNAR_COLUMN_TYPE,THUNAR_COLUMN_DATE_MODIFIED"/>
-  <property name="last-details-view-column-widths" type="string" value="50,50,145,152,50,50,50,50,1031,50,50,81,50,429"/>
+  <property name="last-details-view-column-widths" type="string" value="50,50,147,152,50,50,50,50,902,50,50,89,50,548"/>
   <property name="last-details-view-fixed-columns" type="bool" value="false"/>
   <property name="last-details-view-visible-columns" type="string" value="THUNAR_COLUMN_DATE_MODIFIED,THUNAR_COLUMN_NAME,THUNAR_COLUMN_SIZE,THUNAR_COLUMN_TYPE"/>
   <property name="last-details-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_38_PERCENT"/>
@@ -41,4 +41,5 @@
   <property name="last-toolbar-items" type="string" value="menu:0,back:1,forward:1,open-parent:1,open-home:1,new-tab:0,new-window:0,toggle-split-view:0,undo:0,redo:0,zoom-out:0,zoom-in:0,zoom-reset:0,view-as-icons:0,view-as-detailed-list:0,view-as-compact-list:0,view-switcher:0,location-bar:1,reload:0,search:1,uca-action-1367866030392833-1:0,uca-action-1367866030392883-2:0,uca-action-1367866030392913-3:0"/>
   <property name="last-image-preview-visible" type="bool" value="false"/>
   <property name="misc-symbolic-icons-in-sidepane" type="bool" value="true"/>
+  <property name="misc-confirm-close-multiple-tabs" type="bool" value="false"/>
 </channel>

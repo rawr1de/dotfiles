@@ -104,7 +104,8 @@ iwd
 # --- File management ---
 yazi
 ranger
-thunar
+Thunar
+thunar-volman
 gvfs
 gvfs-mtp
 android-udev
