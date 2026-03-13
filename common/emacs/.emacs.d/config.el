@@ -355,32 +355,41 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
 
 (global-set-key (kbd "C-c 3") 'prl_rename_mp3)
 
-(defun set-font-size-by-context ()
-  "Set Emacs font height based on hostname and current screen resolution."
+(defun my/set-font-size-by-context ()
+  "Set Emacs font height based on hostname and resolution, resetting current buffer zoom."
+  (interactive)
+  
+  ;; 1. Reset 'text-scale' (C-x C-+) only for the CURRENT buffer
+  (text-scale-set 0)
+
+  ;; 2. Detect Environment
   (let* ((hostname (system-name))
          (monitor-attrs (car (display-monitor-attributes-list)))
          (geometry (assoc 'geometry monitor-attrs))
-         (width (nth 3 geometry))) ;; Index 3 of geometry is the pixel width
-    
+         (width (if geometry (nth 3 geometry) 0)))
+
+    ;; 3. Apply Base Font Size
     (cond
-     ;; CASE 1: Legion is docked (Width is 2560 or higher)
+     ;; CASE 1: Legion + External Monitor
      ((and (string= hostname "legion") (>= width 2560))
       (set-face-attribute 'default nil :height 145))
 
-     ;; CASE 2: Legion is undocked (Laptop mode)
+     ;; CASE 2: Legion (Laptop screen)
      ((string= hostname "legion")
       (set-face-attribute 'default nil :height 115))
 
-     ;; CASE 3: Templar (Always laptop mode)
+     ;; CASE 3: Templar (Always Laptop)
      ((string= hostname "templar")
       (set-face-attribute 'default nil :height 125))
 
-     ;; FALLBACK: For any other machine
+     ;; FALLBACK
      (t
-      (set-face-attribute 'default nil :height 130)))))
+      (set-face-attribute 'default nil :height 130))))
+  
+  (message "Font reset for %s (Width: %s)" (system-name) (or (nth 3 (assoc 'geometry (car (display-monitor-attributes-list)))) "unknown")))
 
-;; Execute on startup
-(set-font-size-by-context)
+;; 4. THE EXECUTION: This ensures it runs when the file is loaded
+(my/set-font-size-by-context)
 
 ;; Must be set before loading xah-fly-keys
 (setq xah-fly-use-control-key t)
