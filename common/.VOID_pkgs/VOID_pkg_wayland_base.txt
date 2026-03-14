@@ -131,8 +131,8 @@ firefox
 yt-dlp
 stig  #transmission-cli
 kdeconnect
-magic-wormhole-rs
-miniserve  #quickserve
+magic-wormhole  #magic-wormhole-rs
+#miniserve  #quickserve
 
 # --- Documents & office ---
 newsboat
