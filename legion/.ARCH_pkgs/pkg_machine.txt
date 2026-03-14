@@ -1,0 +1,16 @@
+# ============================================================
+# legion/.ARCH_pkgs/pkg_machine.txt
+# Machine-specific pkg for Legion (nvidia/amd GPU) on Arch
+# ============================================================
+ 
+# --- amd microcode & media ---
+
+
+
+ 
+# --- Mesa / Vulkan (amd) ---
+
+
+
+
+# --- VA-API utils ---

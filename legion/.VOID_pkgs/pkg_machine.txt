@@ -1,0 +1,18 @@
+# ============================================================
+# templar/.VOID_pkgs/pkg_machine.txt
+# Machine-specific pkg for Legion (nvidia/amd GPU) on Void
+# ============================================================
+ 
+# --- amd microcode & media ---
+
+
+
+ 
+# --- Mesa / Vulkan (amd) ---
+
+
+
+
+ 
+# --- VA-API utils ---
+
