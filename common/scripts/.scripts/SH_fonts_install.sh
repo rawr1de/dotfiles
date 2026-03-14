@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # SH_fonts_install.sh
-# Installs required fonts via the system package manager.
+# Installs fonts via package manager and manually downloads JetBrainsMono Nerd Font.
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -13,53 +13,46 @@ NC='\033[0m'
 
 echo -e "${BLUE}${BOLD}=== SH_fonts_install.sh ===${NC}\n"
 
-# ---------------------------------------------------------------------------
-# Font Packages
-# ---------------------------------------------------------------------------
-FONTS=(
-    "font-jetbrains-mono-nerd-fonts"
+FONT_DIR="$HOME/.local/share/fonts"
+JB_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
+JB_ZIP="/tmp/JetBrainsMono.zip"
+
+# Fonts to install via package manager
+# Note: 'nerd-fonts' on Void is a massive package. If you only want JetBrains, 
+# you might want to remove 'nerd-fonts' from this list, but I left it per your request.
+REPO_FONTS=(
     "font-awesome6"
     "noto-fonts-emoji"
     "nerd-fonts"
 )
 
-if ! command -v xbps-install &>/dev/null && ! command -v pacman &>/dev/null; then
+# ---------------------------------------------------------------------------
+# Package Manager Setup
+# ---------------------------------------------------------------------------
+if command -v xbps-install &>/dev/null; then
+    PM_INSTALL="sudo xbps-install -y"
+elif command -v pacman &>/dev/null; then
+    PM_INSTALL="sudo pacman -S --needed --noconfirm"
+else
     echo -e "${RED}No supported package manager found (xbps/pacman).${NC}"
     exit 1
 fi
 
-# Ensure fontconfig is installed so we can run fc-cache later
-if ! command -v fc-cache &>/dev/null; then
-    echo -e "${YELLOW}Installing fontconfig...${NC}"
-    if command -v xbps-install &>/dev/null; then
-        sudo xbps-install -y fontconfig >/dev/null
-    else
-        sudo pacman -S --needed --noconfirm fontconfig >/dev/null
-    fi
-fi
-
-echo -e "${YELLOW}Installing fonts...${NC}\n"
+# ---------------------------------------------------------------------------
+# Install Dependencies & Repo Fonts
+# ---------------------------------------------------------------------------
+echo -e "${YELLOW}Installing dependencies and repo fonts...${NC}"
 
 ERRORS=0
 
-# ---------------------------------------------------------------------------
-# Installation Loop
-# ---------------------------------------------------------------------------
-for font in "${FONTS[@]}"; do
-    echo -e "  ${CYAN}· ${font}${NC}"
-    
-    if command -v xbps-install &>/dev/null; then
-        if sudo xbps-install -y "$font"; then
-            echo -e "    ${GREEN}✓ Installed${NC}"
-        else
-            echo -e "    ${RED}✗ Failed${NC}"
-            ((ERRORS++))
-        fi
-        
-    elif command -v pacman &>/dev/null; then
-        if sudo pacman -S --needed --noconfirm "$font" 2>/dev/null; then
-            echo -e "    ${GREEN}✓ Installed${NC}"
-        elif command -v yay &>/dev/null && yay -S --needed --noconfirm "$font" 2>/dev/null; then
+# Ensure we have curl, unzip, and fontconfig for the manual download
+for pkg in curl unzip fontconfig "${REPO_FONTS[@]}"; do
+    echo -e "  ${CYAN}· ${pkg}${NC}"
+    if $PM_INSTALL "$pkg" >/dev/null 2>&1; then
+        echo -e "    ${GREEN}✓ Installed${NC}"
+    else
+        # Try AUR fallback if on Arch and pacman failed
+        if command -v yay &>/dev/null && yay -S --needed --noconfirm "$pkg" >/dev/null 2>&1; then
             echo -e "    ${GREEN}✓ Installed (AUR)${NC}"
         else
             echo -e "    ${RED}✗ Failed${NC}"
@@ -69,14 +62,43 @@ for font in "${FONTS[@]}"; do
 done
 
 # ---------------------------------------------------------------------------
+# Manual JetBrains Mono Nerd Font Download
+# ---------------------------------------------------------------------------
+echo -e "\n${YELLOW}Downloading JetBrains Mono Nerd Font...${NC}"
+mkdir -p "$FONT_DIR"
+
+if curl -L --progress-bar "$JB_URL" -o "$JB_ZIP"; then
+    echo -e "${YELLOW}Extracting to $FONT_DIR...${NC}"
+    if unzip -oq "$JB_ZIP" -d "$FONT_DIR"; then
+        echo -e "  ${GREEN}✓ JetBrains Mono installed.${NC}"
+        rm -f "$JB_ZIP"
+    else
+        echo -e "  ${RED}✗ Failed to extract $JB_ZIP${NC}"
+        ((ERRORS++))
+    fi
+else
+    echo -e "  ${RED}✗ Failed to download JetBrains Mono.${NC}"
+    ((ERRORS++))
+fi
+
+# ---------------------------------------------------------------------------
 # Update Font Cache
 # ---------------------------------------------------------------------------
 echo -e "\n${YELLOW}Updating font cache...${NC}"
-fc-cache -fv > /dev/null
+if command -v fc-cache &>/dev/null; then
+    fc-cache -fv > /dev/null
+    echo -e "  ${GREEN}✓ Cache updated.${NC}"
+else
+    echo -e "  ${RED}✗ fc-cache not found. Font cache not updated.${NC}"
+    ((ERRORS++))
+fi
 
+# ---------------------------------------------------------------------------
+# Summary
+# ---------------------------------------------------------------------------
 if [ "$ERRORS" -eq 0 ]; then
     echo -e "\n${GREEN}${BOLD}✓ All fonts installed successfully.${NC}"
-    echo -e "${GREEN}  Set in kitty: font_family JetBrainsMono Nerd Font${NC}\n"
+    echo -e "${CYAN}  Set in kitty: font_family JetBrainsMono Nerd Font${NC}\n"
 else
     echo -e "\n${YELLOW}${BOLD}⚠ Finished with $ERRORS error(s).${NC}\n"
 fi
