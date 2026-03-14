@@ -98,7 +98,6 @@ network-manager-applet
 wpa_supplicant
 dhcpcd
 bluez
-bluez-utils
 iwd
 
 # --- File management ---
@@ -108,7 +107,7 @@ Thunar
 thunar-volman
 gvfs
 gvfs-mtp
-android-udev
+android-udev-rules
 udiskie
 dragon
 zathura
@@ -123,16 +122,16 @@ imv
 nsxiv
 
 # --- Screenshot & image ---
-imagemagick
+ImageMagick
 img2pdf
 pdftk
 
 # --- Web & transfer ---
 firefox
 yt-dlp
-transmission-cli
+stig  #transmission-cli
 kdeconnect
-wormhole-rs
+magic-wormhole-rs
 quickserve
 
 # --- Documents & office ---
