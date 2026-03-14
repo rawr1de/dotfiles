@@ -11,12 +11,13 @@
 #   01 — install_packages    (xbps install from dotfiles package lists)
 #   02 — setup_services      (enable/disable runit services)
 #   03 — deploy_dotfiles     (stow from dotfiles repo)
-#   04 — setup_nm            (swap wpa_supplicant → NetworkManager)
-#   05 — tty1_autologin      (configure agetty-tty1)
-#   06 — setup_polkit        (power management rules)
-#   07 — rename_xdg_dirs     (rename home dirs per user-dirs.dirs)
-#   08 — ssh_perms           (fix ~/.ssh permissions)
-#   09 — fonts_install       (JetBrainsMono Nerd Font)
+#   04 — setup_keyd          (copy keyd config and reload)
+#   05 — setup_nm            (swap wpa_supplicant → NetworkManager)
+#   06 — tty1_autologin      (configure agetty-tty1)
+#   07 — setup_polkit        (power management rules)
+#   08 — rename_xdg_dirs     (rename home dirs per user-dirs.dirs)
+#   09 — ssh_perms           (fix ~/.ssh permissions)
+#   10 — fonts_install       (JetBrainsMono Nerd Font)
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -121,7 +122,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Step 01 — Install packages
+# Step 01 — Install Packages
 # ---------------------------------------------------------------------------
 step_header "01" "Install Packages"
 log "${CYAN}Profiles available in $DOTFILES_DIR:${NC}"
@@ -142,7 +143,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Step 02 — Setup services
+# Step 02 — Setup Services
 # ---------------------------------------------------------------------------
 step_header "02" "Setup Services"
 if ask_step "SH_setup_services.sh"; then
@@ -159,7 +160,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Step 03 — Deploy dotfiles
+# Step 03 — Deploy Dotfiles
 # ---------------------------------------------------------------------------
 step_header "03" "Deploy Dotfiles"
 log "${CYAN}Stow packages available:${NC}"
@@ -180,106 +181,123 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Step 04 — Setup NetworkManager
+# Step 04 — Setup Keyd
 # ---------------------------------------------------------------------------
-step_header "04" "Migrate to NetworkManager"
-if ask_step "SH_setup_nm.sh"; then
-    if run_script "SH_setup_nm.sh"; then
-        COMPLETED+=("04 — setup_nm")
+step_header "04" "Setup Keyd Configuration"
+if ask_step "SH_setup_keyd.sh"; then
+    if run_script "SH_setup_keyd.sh"; then
+        COMPLETED+=("04 — setup_keyd")
     else
         log "${RED}✗ Step 04 failed.${NC}"
-        FAILED+=("04 — setup_nm")
+        FAILED+=("04 — setup_keyd")
         read -rp "Continue anyway? [y/N]: " cont
         [[ "${cont,,}" != "y" ]] && exit 1
     fi
 else
-    SKIPPED+=("04 — setup_nm")
+    SKIPPED+=("04 — setup_keyd")
 fi
 
 # ---------------------------------------------------------------------------
-# Step 05 — TTY1 autologin
+# Step 05 — Setup NetworkManager
 # ---------------------------------------------------------------------------
-step_header "05" "TTY1 Autologin"
+step_header "05" "Migrate to NetworkManager"
+if ask_step "SH_setup_nm.sh"; then
+    if run_script "SH_setup_nm.sh"; then
+        COMPLETED+=("05 — setup_nm")
+    else
+        log "${RED}✗ Step 05 failed.${NC}"
+        FAILED+=("05 — setup_nm")
+        read -rp "Continue anyway? [y/N]: " cont
+        [[ "${cont,,}" != "y" ]] && exit 1
+    fi
+else
+    SKIPPED+=("05 — setup_nm")
+fi
+
+# ---------------------------------------------------------------------------
+# Step 06 — TTY1 Autologin
+# ---------------------------------------------------------------------------
+step_header "06" "TTY1 Autologin"
 log "${CYAN}Current user: $(whoami)${NC}"
 if ask_step "SH_tty1_autologin.sh"; then
     if run_script "SH_tty1_autologin.sh" "$(whoami)"; then
-        COMPLETED+=("05 — tty1_autologin")
-    else
-        log "${RED}✗ Step 05 failed.${NC}"
-        FAILED+=("05 — tty1_autologin")
-        read -rp "Continue anyway? [y/N]: " cont
-        [[ "${cont,,}" != "y" ]] && exit 1
-    fi
-else
-    SKIPPED+=("05 — tty1_autologin")
-fi
-
-# ---------------------------------------------------------------------------
-# Step 06 — Polkit rules
-# ---------------------------------------------------------------------------
-step_header "06" "Polkit Power Rules"
-if ask_step "SH_setup_polkit.sh"; then
-    if run_script "SH_setup_polkit.sh"; then
-        COMPLETED+=("06 — setup_polkit")
+        COMPLETED+=("06 — tty1_autologin")
     else
         log "${RED}✗ Step 06 failed.${NC}"
-        FAILED+=("06 — setup_polkit")
+        FAILED+=("06 — tty1_autologin")
         read -rp "Continue anyway? [y/N]: " cont
         [[ "${cont,,}" != "y" ]] && exit 1
     fi
 else
-    SKIPPED+=("06 — setup_polkit")
+    SKIPPED+=("06 — tty1_autologin")
 fi
 
 # ---------------------------------------------------------------------------
-# Step 07 — Rename XDG dirs
+# Step 07 — Polkit Rules
 # ---------------------------------------------------------------------------
-step_header "07" "Rename XDG Directories"
-if ask_step "SH_rename_xdg_dirs.sh"; then
-    if run_script "SH_rename_xdg_dirs.sh"; then
-        COMPLETED+=("07 — rename_xdg_dirs")
+step_header "07" "Polkit Power Rules"
+if ask_step "SH_setup_polkit.sh"; then
+    if run_script "SH_setup_polkit.sh"; then
+        COMPLETED+=("07 — setup_polkit")
     else
         log "${RED}✗ Step 07 failed.${NC}"
-        FAILED+=("07 — rename_xdg_dirs")
+        FAILED+=("07 — setup_polkit")
         read -rp "Continue anyway? [y/N]: " cont
         [[ "${cont,,}" != "y" ]] && exit 1
     fi
 else
-    SKIPPED+=("07 — rename_xdg_dirs")
+    SKIPPED+=("07 — setup_polkit")
 fi
 
 # ---------------------------------------------------------------------------
-# Step 08 — SSH permissions
+# Step 08 — Rename XDG Dirs
 # ---------------------------------------------------------------------------
-step_header "08" "SSH Permissions"
-if ask_step "SH_ssh_perms.sh"; then
-    if run_script "SH_ssh_perms.sh"; then
-        COMPLETED+=("08 — ssh_perms")
+step_header "08" "Rename XDG Directories"
+if ask_step "SH_rename_xdg_dirs.sh"; then
+    if run_script "SH_rename_xdg_dirs.sh"; then
+        COMPLETED+=("08 — rename_xdg_dirs")
     else
         log "${RED}✗ Step 08 failed.${NC}"
-        FAILED+=("08 — ssh_perms")
+        FAILED+=("08 — rename_xdg_dirs")
         read -rp "Continue anyway? [y/N]: " cont
         [[ "${cont,,}" != "y" ]] && exit 1
     fi
 else
-    SKIPPED+=("08 — ssh_perms")
+    SKIPPED+=("08 — rename_xdg_dirs")
 fi
 
 # ---------------------------------------------------------------------------
-# Step 09 — JetBrainsMono font
+# Step 09 — SSH Permissions
 # ---------------------------------------------------------------------------
-step_header "09" "Install Fonts"
-if ask_step "SH_fonts_install.sh"; then
-    if run_script "SH_fonts_install.sh"; then
-        COMPLETED+=("09 — fonts_install")
+step_header "09" "SSH Permissions"
+if ask_step "SH_ssh_perms.sh"; then
+    if run_script "SH_ssh_perms.sh"; then
+        COMPLETED+=("09 — ssh_perms")
     else
         log "${RED}✗ Step 09 failed.${NC}"
-        FAILED+=("09 — fonts_install")
+        FAILED+=("09 — ssh_perms")
         read -rp "Continue anyway? [y/N]: " cont
         [[ "${cont,,}" != "y" ]] && exit 1
     fi
 else
-    SKIPPED+=("09 — install_jetbrains")
+    SKIPPED+=("09 — ssh_perms")
+fi
+
+# ---------------------------------------------------------------------------
+# Step 10 — JetBrainsMono Font
+# ---------------------------------------------------------------------------
+step_header "10" "Install Fonts"
+if ask_step "SH_fonts_install.sh"; then
+    if run_script "SH_fonts_install.sh"; then
+        COMPLETED+=("10 — fonts_install")
+    else
+        log "${RED}✗ Step 10 failed.${NC}"
+        FAILED+=("10 — fonts_install")
+        read -rp "Continue anyway? [y/N]: " cont
+        [[ "${cont,,}" != "y" ]] && exit 1
+    fi
+else
+    SKIPPED+=("10 — install_jetbrains")
 fi
 
 # ---------------------------------------------------------------------------
