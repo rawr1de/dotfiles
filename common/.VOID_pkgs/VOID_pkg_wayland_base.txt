@@ -132,14 +132,14 @@ yt-dlp
 stig  #transmission-cli
 kdeconnect
 magic-wormhole-rs
-quickserve
+miniserve  #quickserve
 
 # --- Documents & office ---
 newsboat
 lnav
 
 # --- Fonts ---
-font-jetbrains-mono-nerd-fonts
+#font-jetbrains-mono-nerd-fonts
 font-awesome6
 noto-fonts-emoji
 nerd-fonts
