@@ -10,6 +10,8 @@ polkit-gnome
 niri
 xorg-server-xwayland 
 xdg-desktop-portal-gnome
+xwayland-satellite
+NetworkManager
 kitty
 nano
 
@@ -21,15 +23,15 @@ void-repo-multilib-nonfree
 
 
 # --- amd microcode & media ---
-amd-ucode
 linux-firmware-amd
 linux-firmware-nvidia
 linux-firmware-network
 
 
+
 # --- nvidia tools ---
-nvidia
 nvidia-libs-32bit
+nvidia-vaapi-driver
 
 
 # --- Mesa / Vulkan (amd) ---
@@ -37,11 +39,10 @@ mesa-dri
 mesa-dri-32bit
 mesa-vulkan-radeon
 mesa-vulkan-radeon-32bit
-vulkan-loader vulkan-loader-32bit
+vulkan-loader
+vulkan-loader-32bit
 
 
 # --- VA-API utils ---
 libva-utils     	# Provides vainfo. Crucial for debugging to see if your hardware acceleration is actually active.
 mesa-vaapi	        # Native hardware video acceleration for your AMD iGPU.
-mesa-vdpau	        # Legacy acceleration for AMD (optional but good for compatibility).
-libva-nvidia-driver	# The "bridge" that allows NVIDIA's NVDEC to work with VA-API applications (like Firefox) on Wayland.

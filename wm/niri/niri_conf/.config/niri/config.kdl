@@ -554,7 +554,7 @@ binds {
     spawn-at-startup "bash" "-c" "wl-paste --type image --watch cliphist store"
     spawn-at-startup "pipewire"
     spawn-at-startup "wireplumber"
-    spawn-at-startup "/usr/bin/kitty"
-
+    spawn-at-startup "kitty"
+    spawn-at-startup "mako"
     // Legion 5, dual monitor setup file
-    // include "legion_niri.kdl"
+    include "legion_niri.kdl"
