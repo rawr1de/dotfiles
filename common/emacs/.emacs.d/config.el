@@ -355,6 +355,10 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
 
 (global-set-key (kbd "C-c 3") 'prl_rename_mp3)
 
+(set-face-attribute 'default nil
+                   :family "JetBrainsMono Nerd Font Mono")
+
+
 (defun my/set-font-size-by-context ()
   "Set Emacs font height based on hostname and resolution, resetting current buffer zoom."
   (interactive)
@@ -380,7 +384,7 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
 
      ;; CASE 3: Templar (Always Laptop)
      ((string= hostname "templar")
-      (set-face-attribute 'default nil :height 125))
+      (set-face-attribute 'default nil :height 140))
 
      ;; FALLBACK
      (t

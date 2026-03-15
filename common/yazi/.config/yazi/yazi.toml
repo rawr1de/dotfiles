@@ -34,7 +34,7 @@ edit = [
   { run = 'nano "$@"',                 desc = "Nano",             block = true  },
 ]
 open_md = [
-  { run = 'kitty --class md_floating -e glow -p "$@"', desc = "glow", orphan = true },
+  { run = 'kitty --class md_floating -e glow -t "$@"', desc = "glow", orphan = true },
 ]
 open_pdf = [
   { run = 'zathura "$@"', desc = "Zathura", orphan = true },

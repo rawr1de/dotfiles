@@ -557,4 +557,4 @@ binds {
     spawn-at-startup "/usr/bin/kitty"
 
     // Legion 5, dual monitor setup file
-    include "legion_niri.kdl"
+    // include "legion_niri.kdl"

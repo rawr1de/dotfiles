@@ -11,6 +11,10 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
     esac
 fi
 
+# Source Legion-specific tweaks for hardware
+if [[ "$(hostname)" == "legion" ]]; then
+    [[ -f ~/.zsh_legion ]] && source ~/.zsh_legion
+fi
 
 
 # ─── HISTORY ─────────────────────

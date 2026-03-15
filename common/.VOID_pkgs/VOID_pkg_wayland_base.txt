@@ -5,6 +5,7 @@
 # --- Void repos (enable first, then sync) ---
 void-repo-nonfree
 void-repo-multilib
+void-repo-multilib-nonfree
 
 # --- Core editors & terminal ---
 emacs-pgtk
