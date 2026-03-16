@@ -1,14 +1,13 @@
-# VOID — Wayland Base
+# ARCH/MANJARO — Wayland Base
 # Minimal comfortable system: media, editing, file management, terminal tools
-# Install: xbps-install -S $(grep -v '^#' VOID_pkg_wayland_base.txt | tr '\n' ' ')
-
-# --- Void repos (enable first, then sync) ---
-void-repo-nonfree
-void-repo-multilib
-void-repo-multilib-nonfree
+# Install: pacman -S $(grep -v '^#' ARCH_pkg_wayland_base.txt | tr '\n' ' ')
+# AUR packages handled automatically by SH_install_packages.sh via yay fallback
+#
+# NOTE: multilib repo must be enabled in /etc/pacman.conf before installing
+# Uncomment the [multilib] section and run: sudo pacman -Sy
 
 # --- Core editors & terminal ---
-emacs-pgtk
+emacs-wayland
 nano
 kitty
 zsh
@@ -34,6 +33,7 @@ git
 duf
 wev
 parallel
+wdisplays
 
 # --- Archive tools ---
 atool
@@ -57,11 +57,7 @@ brightnessctl
 cronie
 chrony
 dbus
-elogind
-polkit
 dmidecode
-xmirror
-xtools
 
 # --- Wayland compositor stack ---
 niri
@@ -87,31 +83,28 @@ xdg-desktop-portal-gnome
 # --- Audio ---
 pipewire
 wireplumber
-wireplumber-elogind
 alsa-utils
-alsa-pipewire
-libpulseaudio
 pulsemixer
 pamixer
 
 # --- Networking ---
-NetworkManager
+networkmanager
 network-manager-applet
 wpa_supplicant
 dhcpcd
 bluez
+bluez-utils
 iwd
 
 # --- File management ---
 yazi
 ranger
-Thunar
-thunar-volman
+thunar
 gvfs
 gvfs-mtp
-android-udev-rules
+android-udev
 udiskie
-dragon
+dragon-drop
 zathura
 zathura-pdf-poppler
 zathura-djvu
@@ -124,27 +117,28 @@ imv
 nsxiv
 
 # --- Screenshot & image ---
-ImageMagick
+imagemagick
 img2pdf
 pdftk
 
 # --- Web & transfer ---
 firefox
+brave-bin
 yt-dlp
-stig  #transmission-cli
+transmission-cli
 kdeconnect
-magic-wormhole  #magic-wormhole-rs
-#miniserve  #quickserve
+wormhole-rs
+quickserve
 
 # --- Documents & office ---
 newsboat
 lnav
 
 # --- Fonts ---
-#font-jetbrains-mono-nerd-fonts
-font-awesome6
+ttf-jetbrains-mono-nerd
+otf-font-awesome
 noto-fonts-emoji
-nerd-fonts
+ttf-nerd-fonts-symbols
 
 # --- Misc ---
 gtypist

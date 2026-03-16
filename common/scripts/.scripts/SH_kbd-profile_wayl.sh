@@ -2,9 +2,14 @@
 
 CONFIG="$HOME/.config/niri/config.kdl"
 
+faster() {
+    sed -i 's/repeat-delay .*/repeat-delay 200/' "$CONFIG"
+    sed -i 's/repeat-rate .*/repeat-rate 110/' "$CONFIG"
+}
+
 fast() {
-    sed -i 's/repeat-delay .*/repeat-delay 230/' "$CONFIG"
-    sed -i 's/repeat-rate .*/repeat-rate 100/' "$CONFIG"
+    sed -i 's/repeat-delay .*/repeat-delay 200/' "$CONFIG"
+    sed -i 's/repeat-rate .*/repeat-rate 80/' "$CONFIG"
 }
 
 slow() {
@@ -13,9 +18,10 @@ slow() {
 }
 
 case "$1" in
+    faster) faster ;;
     fast) fast ;;
     slow) slow ;;
-    *) echo "Usage: kb-profile [fast|slow]" ;;
+    *) echo "Usage: kb-profile [slow|fast|faster]" ;;
 esac
 
-niri msg action reload-config
+niri msg action load-config-file

@@ -1,0 +1,5 @@
+binds {
+    // XF86MonBrightnessUp and Down are the standard keys
+    Mod+F6 { spawn "brightnessctl" "set" "+10%"; }
+    Mod+F5 { spawn "brightnessctl" "set" "10%-"; }
+}

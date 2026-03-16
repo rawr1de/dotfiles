@@ -1,0 +1,5 @@
+ll
+exit
+sudo emacsclient -c /etc/default/grub
+exot
+exit

@@ -1,11 +1,22 @@
 # Start SSH agent
 eval "$(ssh-agent -s)" > /dev/null 2>&1
 
+# Get hostname from file since the 'hostname' binary may be missing
+CURRENT_HOSTNAME=$(< /etc/hostname)
+
 # Start SSH agent and add machine-specific SSH key
-case "$(hostname)" in
-    legion)  ssh-add ~/.ssh/id_legion  ;;
-    templar) ssh-add ~/.ssh/id_templar ;;
-esac
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)" > /dev/null 2>&1
+    case "$CURRENT_HOSTNAME" in
+        legion)  ssh-add ~/.ssh/id_legion  2>/dev/null ;;
+        templar) ssh-add ~/.ssh/id_templar 2>/dev/null ;;
+    esac
+fi
+
+# Source Legion-specific tweaks for hardware
+if [[ "$CURRENT_HOSTNAME" == "legion" ]]; then
+    [[ -f ~/.zsh_legion ]] && source ~/.zsh_legion
+fi
 
 
 # ─── VISUAL ─────────────────────

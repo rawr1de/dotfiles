@@ -1,20 +1,37 @@
 # set zsh as default shell
 # chsh -s /usr/bin/zsh
 
+# Get hostname from file since the 'hostname' binary may be missing
+CURRENT_HOSTNAME=$(< /etc/hostname)
 
 # Start SSH agent and add machine-specific SSH key
 if [ -z "$SSH_AUTH_SOCK" ]; then
     eval "$(ssh-agent -s)" > /dev/null 2>&1
-    case "$(hostname)" in
+    case "$CURRENT_HOSTNAME" in
         legion)  ssh-add ~/.ssh/id_legion  2>/dev/null ;;
         templar) ssh-add ~/.ssh/id_templar 2>/dev/null ;;
     esac
 fi
 
-# Source Legion-specific tweaks for hardware
-if [[ "$(hostname)" == "legion" ]]; then
-    [[ -f ~/.zsh_legion ]] && source ~/.zsh_legion
+
+# ─── OS & HOSTNAME DETECTION ─────────
+CURRENT_HOSTNAME=$(< /etc/hostname)
+
+# Safely source OS ID (arch, void, etc.)
+if [[ -f /etc/os-release ]]; then
+    source /etc/os-release
+    CURRENT_OS="$ID"
 fi
+
+# ─── HARDWARE & OS SPECIFIC TWEAKS ───
+if [[ "$CURRENT_HOSTNAME" == "legion" ]]; then
+    if [[ "$CURRENT_OS" == "void" && -f ~/.zsh_legion_VOID ]]; then
+        source ~/.zsh_legion_VOID
+    elif [[ "$CURRENT_OS" == "arch" && -f ~/.zsh_legion_ARCH ]]; then
+        source ~/.zsh_legion_ARCH
+    fi
+fi
+
 
 
 # ─── HISTORY ─────────────────────
@@ -84,8 +101,7 @@ alias cpr='rsync -ah --progress'
 alias rm='rm -iv'
 alias frm='\rm -rfv'                 # frm = force rm
 alias x='exit'
-alias reboot='loginctl reboot'
-alias shutdown='loginctl poweroff'
+
 
 
 

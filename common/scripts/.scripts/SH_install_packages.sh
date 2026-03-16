@@ -5,7 +5,7 @@
 #
 # Supported files per profile:
 #   Root profile folder: repos.txt
-#   OS Subfolders (.VOID_pkgs / .ARCH_pkgs): Any .txt file (pkg_machine.txt, etc.)
+#   OS Subfolders (_VOID_pkgs / _ARCH_pkgs): Any .txt file (pkg_machine.txt, etc.)
 #
 # Usage:
 #   bash SH_install_packages.sh common
@@ -46,10 +46,10 @@ fi
 # ---------------------------------------------------------------------------
 if command -v xbps-install &>/dev/null; then
     DISTRO="void"
-    PKG_SUBDIR=".VOID_pkgs"
+    PKG_SUBDIR="_VOID_pkgs"
 elif command -v pacman &>/dev/null; then
     DISTRO="arch"
-    PKG_SUBDIR=".ARCH_pkgs"
+    PKG_SUBDIR="_ARCH_pkgs"
 else
     echo -e "${RED}Error: No supported package manager found (xbps-install or pacman).${NC}"
     exit 1
