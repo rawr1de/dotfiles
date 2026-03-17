@@ -34,6 +34,8 @@ duf
 wev
 parallel
 wdisplays
+wlsunset
+ddcutil
 
 # --- Archive tools ---
 atool
@@ -68,7 +70,6 @@ cliphist
 wl-clipboard
 xwayland-satellite
 swaylock
-swayidle
 swww
 grim
 slurp
@@ -94,6 +95,7 @@ wpa_supplicant
 dhcpcd
 bluez
 bluez-utils
+bluetui
 iwd
 
 # --- File management ---

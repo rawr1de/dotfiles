@@ -93,6 +93,14 @@ alias ggp='git pull'
 
 
 # ─── ALIASES: SHELL COMMANDS ─────────
+yyr() {
+  echo "About to remove: $*"
+  yay -Rns "$@"
+}
+
+alias yyr=yyr
+
+
 alias pu='pushd'
 alias po='popd'
 alias mv='mv -iv'
@@ -100,6 +108,7 @@ alias cp='cp -iv'
 alias cpr='rsync -ah --progress'
 alias rm='rm -iv'
 alias frm='\rm -rfv'                 # frm = force rm
+alias yys='yay -S'
 alias x='exit'
 
 

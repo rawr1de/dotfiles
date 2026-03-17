@@ -78,7 +78,6 @@ cliphist
 wl-clipboard
 xwayland-satellite
 swaylock
-swayidle
 swww
 grim
 slurp
