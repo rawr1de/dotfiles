@@ -62,6 +62,7 @@ PATH=$PATH:~/.icons
 EDITOR="emacsclient -c"
 VISUAL="emacsclient -c"
 
+export MOZ_ENABLE_WAYLAND=1 firefox
 
 # ─── ALIASES: PROGRAMS ───────────────
 alias ra='ranger'                               # file manager
@@ -81,14 +82,6 @@ alias ggp='git pull'
 
 
 # ─── ALIASES: SHELL COMMANDS ─────────
-yyr() {
-  echo "About to remove: $*"
-  yay -Rns "$@"
-}
-
-alias yyr=yyr
-
-
 alias pu='pushd'
 alias po='popd'
 alias mv='mv -iv'
@@ -97,6 +90,7 @@ alias cpr='rsync -ah --progress'
 alias rm='rm -iv'
 alias frm='\rm -rfv'                 # frm = force rm
 alias yys='yay -S'
+alias yyr='yay -Rns'
 alias x='exit'
 
 
@@ -117,7 +111,8 @@ alias fz='SH_fzf_search_editor.sh'             # fzf dynamic search
 
 
 # ─── EVAL ────────────────────────────
-#eval "$(mcfly init zsh)"           # McFly
+# FOCE ATUIN to READ HIST FILE
+# HISTFILE=~/.histfile atuin import zsh
 eval "$(atuin init zsh)"            # ATUIN (McFly alike)
 eval "$(starship init zsh)"         # STARSHIP (POWERLINE alike)
 eval "$(zoxide init zsh --cmd cd)"  # ZOXIDE

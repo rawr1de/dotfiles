@@ -26,7 +26,6 @@ tealdeer
 man-db
 wget
 rsync
-bc
 socat
 stow
 git
@@ -36,6 +35,7 @@ parallel
 wdisplays
 wlsunset
 ddcutil
+pacseek
 
 # --- Archive tools ---
 atool
@@ -56,10 +56,10 @@ htop
 acpi
 tlp
 brightnessctl
-cronie
-chrony
 dbus
 dmidecode
+power-profiles-daemon
+
 
 # --- Wayland compositor stack ---
 niri
@@ -106,7 +106,7 @@ gvfs
 gvfs-mtp
 android-udev
 udiskie
-dragon-drop
+ripdrag
 zathura
 zathura-pdf-poppler
 zathura-djvu
@@ -125,7 +125,6 @@ pdftk
 
 # --- Web & transfer ---
 firefox
-brave-bin
 yt-dlp
 transmission-cli
 kdeconnect

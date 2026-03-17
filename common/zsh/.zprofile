@@ -35,15 +35,16 @@ export PATH=$PATH:$HOME/.icons
 export EDITOR="emacsclient -c"
 export VISUAL="emacsclient -c"
 
+export MOZ_ENABLE_WAYLAND=1 firefox
 
 # ─── WAYLAND AUTOSTART ─────────────────────
 # Must be last — exec replaces the shell, nothing below this runs
-if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
-    export XDG_RUNTIME_DIR="/run/user/$(id -u)"
-    export XDG_SESSION_TYPE=wayland
-    export XDG_SESSION_DESKTOP=niri
-    export MOZ_ENABLE_WAYLAND=1
-    export QT_QPA_PLATFORM=wayland
-    export ELECTRON_OZONE_PLATFORM_HINT=wayland
-    exec dbus-run-session niri
+ if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+     export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+     export XDG_SESSION_TYPE=wayland
+     export XDG_SESSION_DESKTOP=niri
+     export MOZ_ENABLE_WAYLAND=1
+     export QT_QPA_PLATFORM=wayland
+     export ELECTRON_OZONE_PLATFORM_HINT=wayland
+     exec dbus-run-session niri
 fi

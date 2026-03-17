@@ -3,3 +3,6 @@ exit
 sudo emacsclient -c /etc/default/grub
 exot
 exit
+yys
+yay -S p7zip
+exit

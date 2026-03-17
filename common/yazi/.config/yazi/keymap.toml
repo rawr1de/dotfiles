@@ -161,8 +161,8 @@ desc = "Zip selection"
 
 [[mgr.prepend_keymap]]
 on = ["b", "d"]
-run = "shell 'dragon-drop -a -x $@'"
-desc = "Dragon drop"
+run = "shell 'ripdrag -a -x $@'"
+desc = "Drag 'n Drop (wl native)"
 
 #[[mgr.prepend_keymap]]
 #on = "r"
