@@ -6,13 +6,14 @@ output "HDMI-A-1" {
 }
 
 output "DP-1" {
-    mode "2560x1440@144.00"
+   mode "2560x1440@60.00"
+// mode "1920x1080@144.000"
     position x=2560 y=0
     variable-refresh-rate
 }
 
 output "eDP-2" {
-    mode "2560x1440@144.00"
+    mode "1920x1080@144.002"
     position x=1500 y=1440
     variable-refresh-rate
     // scale 1.25
