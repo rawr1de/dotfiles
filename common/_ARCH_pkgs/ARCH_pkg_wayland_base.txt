@@ -53,6 +53,7 @@ plocate
 
 # --- System & power ---
 htop
+btop
 acpi
 tlp
 brightnessctl
@@ -80,18 +81,23 @@ xdg-utils
 xdg-user-dirs
 xdg-desktop-portal
 xdg-desktop-portal-gnome
+ripdrag
+xorg-server
+xorg-xeyes
+xorg-xinit
+xorg-xwayland
+
 
 # --- Audio ---
 pipewire
 wireplumber
 alsa-utils
 pulsemixer
-pamixer
 
 # --- Networking ---
 networkmanager
 network-manager-applet
-wpa_supplicant
+wireless-tools
 dhcpcd
 bluez
 bluez-utils
@@ -99,14 +105,13 @@ bluetui
 iwd
 
 # --- File management ---
+pcmanfm
 yazi
 ranger
-thunar
 gvfs
 gvfs-mtp
 android-udev
 udiskie
-ripdrag
 zathura
 zathura-pdf-poppler
 zathura-djvu
@@ -114,6 +119,7 @@ zathura-cb
 
 # --- Media viewers ---
 mpv
+mpv-mpris
 cmus
 imv
 nsxiv
@@ -130,16 +136,17 @@ transmission-cli
 kdeconnect
 wormhole-rs
 quickserve
+syncthing
 
 # --- Documents & office ---
 newsboat
 lnav
 
 # --- Fonts ---
-ttf-jetbrains-mono-nerd
-otf-font-awesome
-noto-fonts-emoji
-ttf-nerd-fonts-symbols
+#ttf-jetbrains-mono-nerd
+#otf-font-awesome
+#noto-fonts-emoji
+#ttf-nerd-fonts-symbols
 
 # --- Misc ---
 gtypist

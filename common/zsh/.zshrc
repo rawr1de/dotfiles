@@ -78,7 +78,7 @@ alias df='duf -hide special'                    # disk usage
 alias ggu='git add . && git commit && git push' # git add . commit push
 alias ggs='git status'
 alias ggp='git pull'
-
+alias ggp='git pull'
 
 
 # ─── ALIASES: SHELL COMMANDS ─────────
@@ -91,9 +91,8 @@ alias rm='rm -iv'
 alias frm='\rm -rfv'                 # frm = force rm
 alias yys='yay -S'
 alias yyr='yay -Rns'
+alias pc='pacseek'
 alias x='exit'
-
-
 
 
 # ─── ALIASES: DISPLAY-DEPENDENT ──────
@@ -107,7 +106,6 @@ fi
 # ─── ALIASES: SCRIPTS ────────────────
 alias fz='SH_fzf_search_editor.sh'             # fzf dynamic search
 #alias mm='rofi_man.sh'                         # list & output man pages with rofi & zathura
-
 
 
 # ─── EVAL ────────────────────────────
