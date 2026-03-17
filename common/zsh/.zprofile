@@ -1,6 +1,3 @@
-# Start SSH agent
-eval "$(ssh-agent -s)" > /dev/null 2>&1
-
 # Get hostname from file since the 'hostname' binary may be missing
 CURRENT_HOSTNAME=$(< /etc/hostname)
 
