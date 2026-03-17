@@ -72,8 +72,7 @@ wl-clipboard
 xwayland-satellite
 swaylock
 swww
-grim
-slurp
+
 gammastep
 kanshi
 libnotify
@@ -116,6 +115,7 @@ zathura
 zathura-pdf-poppler
 zathura-djvu
 zathura-cb
+pacman-contrib
 
 # --- Media viewers ---
 mpv
@@ -123,6 +123,8 @@ mpv-mpris
 cmus
 imv
 nsxiv
+grim
+slurp
 
 # --- Screenshot & image ---
 imagemagick
@@ -145,6 +147,7 @@ lnav
 # --- Fonts ---
 #ttf-jetbrains-mono-nerd
 #otf-font-awesome
+#otf-commit-mono-nerd
 #noto-fonts-emoji
 #ttf-nerd-fonts-symbols
 
