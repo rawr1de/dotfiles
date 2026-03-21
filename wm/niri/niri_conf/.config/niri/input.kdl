@@ -13,7 +13,7 @@ input {
     }
 
     touchpad {
-        // off
+        // off # trackpad-toggle off
         tap
         // dwt
         // dwtp

@@ -92,6 +92,7 @@ pipewire
 wireplumber
 alsa-utils
 pulsemixer
+libinput-tools
 
 # --- Networking ---
 networkmanager

@@ -36,6 +36,11 @@ export EDITOR="emacsclient -c"
 export VISUAL="emacsclient -c"
 
 export MOZ_ENABLE_WAYLAND=1 firefox
+export XDG_CURRENT_DESKTOP=niri
+export XDG_SESSION_TYPE=wayland
+# This is crucial for niri to handle portals correctly
+export XDG_MENU_PREFIX=gnome-
+
 
 # ─── WAYLAND AUTOSTART ─────────────────────
 # Must be last — exec replaces the shell, nothing below this runs

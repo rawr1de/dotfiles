@@ -98,7 +98,7 @@ alsa-utils
 alsa-pipewire
 libpulseaudio
 pulsemixer
-pamixer
+libinput-tools
 
 
 # --- Networking ---

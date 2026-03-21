@@ -1,0 +1,10 @@
+cd ~/Musk/Metal
+
+bind -f common i win-up
+bind -f common k win-down
+bind -f common l win-next
+bind -f common i win-up
+bind -f common j win-toggle
+bind -f browser u win-update
+bind -f common o win-sel-cur
+bind -f common space player-pause

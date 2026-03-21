@@ -15,6 +15,9 @@ puddletag
 freac
 fatsort
 
+# --- Libs ---
+qt5-wayland
+
 # --- Image & graphics ---
 gimp
 gimp-plugin-gmic
