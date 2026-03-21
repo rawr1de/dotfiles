@@ -127,6 +127,10 @@
 (use-package beacon :ensure t :defer 1 :init (beacon-mode 1))
 
 
+;; GIT managnt
+(use-package magit
+  :ensure t)
+
 
 ;;; --- BUILT-IN CONFIGS & SYSTEM ---
 (use-package savehist
