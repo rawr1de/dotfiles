@@ -34,3 +34,6 @@ wm/kde/.config/kwinrc
 # Ignore all plasma applet state files
 **/*appletsrc
 .aider*
+/common/emacs/.emacs.d/.cache/
+/common/emacs/.emacs.d/eshell/
+/common/emacs/.emacs.d/projects
