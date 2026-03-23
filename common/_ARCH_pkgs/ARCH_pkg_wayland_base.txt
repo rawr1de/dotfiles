@@ -121,11 +121,15 @@ pacman-contrib
 # --- Media viewers ---
 mpv
 mpv-mpris
-cmus
+emms
+mpd
+mpc
 imv
 nsxiv
 grim
 slurp
+mp3info
+vorbis-tools
 
 # --- Screenshot & image ---
 imagemagick
@@ -142,8 +146,8 @@ quickserve
 syncthing
 
 # --- Documents & office ---
-newsboat
-lnav
+# newsboat
+# lnav
 
 # --- Fonts ---
 #ttf-jetbrains-mono-nerd
@@ -157,3 +161,5 @@ gtypist
 mediainfo
 ffmpeg
 highlight
+libvips
+ffmpegthumbnailer

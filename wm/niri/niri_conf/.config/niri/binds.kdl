@@ -1,7 +1,7 @@
-binds {
+binds  {
 
     // ─────────────────────────────────────────────
-    // HARDWARE KEYS — brightness
+    // KEYS — brightness
     // ─────────────────────────────────────────────
     Mod+F6                    hotkey-overlay-title="Brightness +10%"         { spawn "brightnessctl" "set" "+10%"; }
     Mod+F5                    hotkey-overlay-title="Brightness -10%"         { spawn "brightnessctl" "set" "10%-"; }
@@ -28,7 +28,8 @@ binds {
     Mod+D                     hotkey-overlay-title="Fuzzel Launcher"         { spawn "fuzzel"; }
     Mod+M                     hotkey-overlay-title="Emacs"                   { spawn "emacsclient" "-c" "-a" "emacs"; }
     Mod+W                     hotkey-overlay-title="Firefox"                 { spawn "firefox"; }
-    Mod+H                     hotkey-overlay-title="Pulsemixer"              { spawn "kitty" "-e" "pulsemixer"; }
+    Mod+H                     hotkey-overlay-title="htop"                    { spawn "kitty" "-e" "htop"; }
+    Mod+V                     hotkey-overlay-title="Pulsemixer"              { spawn "kitty" "-e" "pulsemixer"; }
     Mod+C                     hotkey-overlay-title="Clipboard (Fuzzel)"      { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
 
 
@@ -38,8 +39,8 @@ binds {
     Super+Alt+0               hotkey-overlay-title="Lock Screen (swaylock)"  { spawn "swaylock"; }
     Mod+Shift+E               hotkey-overlay-title="Exit (Niri)"             { quit; }
     Mod+Alt+F4                hotkey-overlay-title="Exit (Noctalia)"         { spawn-sh "qs -c noctalia-shell ipc call sessionMenu toggle"; }
-    Ctrl+Shift+Mod+Alt+P                                                      { power-off-monitors; }
-    Mod+Escape                allow-inhibiting=false                          { toggle-keyboard-shortcuts-inhibit; }
+    Ctrl+Shift+Mod+Alt+P      hotkey-overlay-title="Power Off Monitors"      { power-off-monitors; }
+    Mod+Escape                allow-inhibiting=false                         { toggle-keyboard-shortcuts-inhibit; }
     Mod+Shift+F12             hotkey-overlay-title="Reload Niri Config"      { spawn "bash" "-c" "niri msg action load-config-file && notify-send 'Niri' 'Config reloaded'"; }
     Mod+Shift+F5              hotkey-overlay-title="Toggle Trackpad ON/OFF"  { spawn-sh "SH_trackpad_toggle.sh"; }
     Mod+Shift+Slash                                                           { show-hotkey-overlay; }
@@ -59,7 +60,7 @@ binds {
     // WINDOW — close / float / tabbed
     // ─────────────────────────────────────────────
     Mod+Q                     repeat=false { close-window; }
-    Mod+V                                  { toggle-window-floating; }
+    //Mod+V                                  { toggle-window-floating; }
     Mod+Shift+V                            { switch-focus-between-floating-and-tiling; }
     Mod+N                                  { toggle-column-tabbed-display; }
     Mod+O                     repeat=false { toggle-overview; }

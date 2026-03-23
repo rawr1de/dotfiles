@@ -37,7 +37,6 @@ wev
 parallel
 wdisplays
 
-
 # --- Archive tools ---
 atool
 unzip
@@ -128,9 +127,16 @@ zathura-cb
 
 # --- Media viewers ---
 mpv
-cmus
+mpv-mpris
+emms
+mpd
+mpc
 imv
 nsxiv
+grim
+slurp
+mp3info
+vorbis-tools
 
 
 # --- Screenshot & image ---
@@ -149,8 +155,8 @@ magic-wormhole  #magic-wormhole-rs
 
 
 # --- Documents & office ---
-newsboat
-lnav
+#newsboat
+#lnav
 
 
 # --- Fonts ---
@@ -165,3 +171,5 @@ gtypist
 mediainfo
 ffmpeg
 highlight
+libvips
+ffmpegthumbnailer

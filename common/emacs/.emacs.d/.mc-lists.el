@@ -4,10 +4,15 @@
 (setq mc/cmds-to-run-for-all
       '(
 	magit-stage
+	org-ctrl-c-ctrl-c
+	org-kill-line
 	org-metadown
+	org-self-insert-command
 	wdired--self-insert
 	xah-beginning-of-line-or-block
 	xah-comment-dwim
+	xah-copy-line-or-region
+	xah-cut-line-or-region
 	xah-end-of-line-or-block
 	xah-fly-command-mode-activate
 	xah-fly-insert-mode-activate

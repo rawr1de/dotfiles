@@ -92,6 +92,11 @@ run = "cd ~/.dotfiles"
 desc = ".dotfiles"
 
 [[mgr.prepend_keymap]]
+on = ["g", "e"]
+run = "cd ~/.emacs.d"
+desc = "emacs.d"
+
+[[mgr.prepend_keymap]]
 on = ["g", "c"]
 run = "cd ~/.config"
 desc = ".config"

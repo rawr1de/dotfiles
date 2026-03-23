@@ -1,1 +1,4 @@
-nil
+((dirvish-file-info-menu nil)
+ (dirvish-quick-access nil)
+ (dirvish-quicksort nil)
+ (dirvish-yank-menu nil))

@@ -37,3 +37,9 @@ wm/kde/.config/kwinrc
 /common/emacs/.emacs.d/.cache/
 /common/emacs/.emacs.d/eshell/
 /common/emacs/.emacs.d/projects
+/common/emacs/.emacs.d/tramp
+/common/emacs/.emacs.d/image-dired/
+/common/emacs/.emacs.d/dirvish/
+/common/emacs/.emacs.d/custom.el
+/common/emacs/.emacs.d/backups/
+/common/emacs/.emacs.d/emms/

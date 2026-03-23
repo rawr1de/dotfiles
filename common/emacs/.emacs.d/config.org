@@ -1,21 +1,20 @@
-[[/home/rdo/Docs/5.systems/1.linux_shit/1.text/emacs/org-cheat_sheet.pdf][org-cheat-sheet]]
-[[/home/rdo/Docs/5.systems/1.linux_shit/1.text/emacs/org-guide.pdf][org-guide]]
-[[/home/rdo/Docs/5.systems/1.linux_shit/1.text/emacs/dired-cheat_sheet.pdf][dired-cheat-sheet]]
-
 * Built-in cfg's
 
 ** history
 #+BEGIN_SRC emacs-lisp
-(setq savehist-file "~/.emacs.d/history")
-(savehist-mode 1)
-(add-to-list 'savehist-additional-variables 'query-replace-history)
-(setq history-length 10000)
-(setq history-delete-duplicates t)
+(use-package savehist
+  :init
+  (setq savehist-file "~/.emacs.d/history"
+        history-length 1000
+        history-delete-duplicates t)
+  (savehist-mode 1)
+  :config
+  (add-to-list 'savehist-additional-variables 'query-replace-history))
 #+END_SRC
 
 ** yes-or-no → y-or-n
 #+BEGIN_SRC emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p)
+(setq use-short-answers t)
 #+END_SRC
 
 ** GUI elements
@@ -43,11 +42,23 @@
 (setq scroll-preserve-screen-position t)
 #+END_SRC
 
-** disable backups / auto-save / lock files
+** backups / auto-save / lock files
 #+BEGIN_SRC emacs-lisp
-(setq make-backup-files nil)
-(setq auto-save-default nil)
-(setq create-lockfiles nil)
+;; DISABLE backups / auto-save / lock files
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+  (setq create-lockfiles nil)
+
+;; ENABLE -BUT- save files on a given dir
+;; Create quarantine folders for backups and auto-saves
+(make-directory "~/.emacs.d/backups/" t)
+(make-directory "~/.emacs.d/auto-saves/" t)
+
+;; Route all backup (~) and auto-save (#) files to the quarantine
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups/")))
+(setq auto-save-file-name-transforms
+      '((".*" "~/.emacs.d/auto-saves/" t)))
+
 #+END_SRC
 
 ** disable bell
@@ -55,9 +66,25 @@
 (setq ring-bell-function 'ignore)
 #+END_SRC
 
-** highlight current line (GUI only)
+** highlight current line
 #+BEGIN_SRC emacs-lisp
-(when window-system (global-hl-line-mode t))
+  ;; for window mode (GUI) ONLY
+  (when window-system (global-hl-line-mode t))
+
+  ;; terminal/GUI
+  (global-hl-line-mode t)
+#+END_SRC
+
+** display line numbers
+#+BEGIN_SRC emacs-lisp
+  ;; line numbers everywhere
+  (global-display-line-numbers-mode 1)
+
+
+  ;; line numbers ONLY in code and text (recommended)
+  ;; prevents apps from look ugly (vterm, dirvish, magit..)
+  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+  (add-hook 'text-mode-hook #'display-line-numbers-mode)
 #+END_SRC
 
 ** prettify symbols (GUI only)
@@ -343,11 +370,21 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
 (define-key package-menu-mode-map "a" #'package-menu-find-marks)
 #+END_SRC
 
-** 80-col delimiter [DISABLED]
+** whitespace (show trailling spaces)
 #+BEGIN_SRC emacs-lisp
-  ;; (require 'whitespace)
-  ;; (setq whitespace-style '(face empty tabs lines-tail trailing))
-  ;; (global-whitespace-mode t)
+  ;; show ONLY in buffers where you actually type things
+  (add-hook 'prog-mode-hook #'whitespace-mode)
+  (add-hook 'text-mode-hook #'whitespace-mode)
+#+END_SRC
+
+** 80 characters column delimiter
+#+BEGIN_SRC emacs-lisp
+
+  ;; 80 characters column delimiter in coding/text mode
+  (setq-default fill-column 80)
+  (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+  (add-hook 'text-mode-hook #'display-fill-column-indicator-mode)
+
 #+END_SRC
 
 ** font type & size by context
@@ -408,141 +445,6 @@ Preserves zero-padding (e.g. 00 -> 01, 000 -> 001)."
   (interactive)
   (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
 (global-set-key (kbd "C-c 2") 'config-reload)
-#+END_SRC
-
-
-* gemini_RDO-MODE suggestion
-#+BEGIN_SRC emacs-lisp
-;; =============================================================================
-;; 1. GLOBAL ESCAPE & MINIBUFFER LOGIC
-;; =============================================================================
-
-;; Make ESC-quit snappier
-(setq last-event-frame nil)
-
-;; Use the built-in "Power Quit" globally (Handles mark, popups, and minibuffer)
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-;; Universal Hook: Always land in INSERT mode when closing ANY minibuffer
-(add-hook 'minibuffer-exit-hook 'xah-fly-insert-mode-activate) 
-
-;; Force XFK to respect the ESC key globally
-(with-eval-after-load 'xah-fly-keys
-  (define-key xah-fly-key-map (kbd "<escape>") 'keyboard-escape-quit) 
-  (define-key xah-fly-command-map (kbd "<escape>") 'keyboard-escape-quit) 
-  (define-key xah-fly-insert-map (kbd "<escape>") 'keyboard-escape-quit)) 
-
-;; =============================================================================
-;; 2. GLOBAL OVERRIDES (REPLACING RDO-MODE)
-;; =============================================================================
-
-;; CAPS LOCK (Home) -> Xah Command Mode (Works in minibuffer too)
-(global-set-key (kbd "<home>") 'xah-fly-command-mode-activate) 
-
-;; Smart Buffer/Window Close (C-w)
-(defun rdo/close-buffer-or-prompt ()
-  "Kill current buffer. If modified, prompt once. If yes, discard and kill."
-  (interactive)
-  (if (and (buffer-modified-p) (buffer-file-name))
-      (when (yes-or-no-p (format "Buffer '%s' is unsaved. Kill anyway? " (buffer-name)))
-        (set-buffer-modified-p nil)
-        (kill-buffer (current-buffer))
-        (when (> (count-windows) 1) (delete-window)))
-    (kill-buffer (current-buffer))
-    (when (> (count-windows) 1) (delete-window))))
-
-(global-set-key (kbd "C-w") #'rdo/close-buffer-or-prompt)
-
-;; Window Resizing
-(global-set-key (kbd "C-S-k") #'shrink-window) 
-(global-set-key (kbd "C-S-i") #'enlarge-window) 
-(global-set-key (kbd "C-S-l") #'enlarge-window-horizontally) 
-(global-set-key (kbd "C-S-j") #'shrink-window-horizontally) 
-(global-set-key (kbd "C-+")   #'balance-windows)
-
-;; =============================================================================
-;; 3. PRIORITY FIXES (FOR MODES THAT STEAL C-w)
-;; =============================================================================
-
-(defun rdo-apply-priority-keys ()
-  "Force key preferences in high-priority major modes."
-  (local-set-key (kbd "C-w") #'rdo/close-buffer-or-prompt))
-
-;; Ensure Dired and Org don't overwrite C-w with their own versions
-(add-hook 'dired-mode-hook #'rdo-apply-priority-keys) 
-(add-hook 'org-mode-hook #'rdo-apply-priority-keys)
-#+END_SRC
-
-** disable ESC modal (XFK) & ESC=keyboard-quit
-#+BEGIN_SRC emacs-lisp
-;;make ESC-quit snappier (activate if ESC start to behave strangely)
-;;(setq last-event-frame nil)
-;; 1. Use the built-in "Power Quit" globally
-;; This handles: Quitting the mark, closing the minibuffer, and closing pop-up windows.
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-;; 2. The "Insert Mode" Hook
-;; This ensures that whenever you exit the minibuffer (whether by ESC or Enter),
-;; you land back in your file ready to type.
-(add-hook 'minibuffer-exit-hook 'xah-fly-insert-mode-activate)
-
-;; 3. FORCE xah-fly-keys to respect the Escape key
-;; Without this, XFK's internal maps will block the ESC signal.
-(with-eval-after-load 'xah-fly-keys
-  (define-key xah-fly-key-map (kbd "<escape>") 'keyboard-escape-quit)
-  (define-key xah-fly-command-map (kbd "<escape>") 'keyboard-escape-quit)
-  (define-key xah-fly-insert-map (kbd "<escape>") 'keyboard-escape-quit))
-#+END_SRC
-
-** scrolling  [M-i / M-k]
-#+BEGIN_SRC emacs-lisp
-(defun scroll-one-line-down ()
-  "Scroll down one line."
-  (interactive)
-  (scroll-down 1))
-
-(defun scroll-one-line-up ()
-  "Scroll up one line."
-  (interactive)
-  (scroll-up 1))
-
-(global-set-key (kbd "M-i") 'scroll-one-line-down)
-(global-set-key (kbd "M-k") 'scroll-one-line-up)
-#+END_SRC
-
-** isearch → copy match to kill-ring  [M-w]
-#+BEGIN_SRC emacs-lisp
-(defun hack-isearch-kill ()
-  "Push current isearch match into kill ring."
-  (interactive)
-  (kill-new (buffer-substring (point) isearch-other-end))
-  (isearch-done))
-
-(define-key isearch-mode-map (kbd "M-w") 'hack-isearch-kill)
-#+END_SRC
-
-** toggle asterisks around region  [C-8]
-#+BEGIN_SRC emacs-lisp
-(defun toggle-asterisk-around-region (start end)
-  "Toggle *asterisks* around the selected region."
-  (interactive "r")
-  (if (and (use-region-p)
-           (string= (buffer-substring-no-properties start (1+ start)) "*")
-           (string= (buffer-substring-no-properties (1- end) end) "*"))
-      (progn
-        (delete-region start (1+ start))
-        (delete-region (1- end) end))
-    (goto-char end)
-    (insert "*")
-    (goto-char start)
-    (insert "*")))
-
-(global-set-key (kbd "C-8") 'toggle-asterisk-around-region)
-#+END_SRC
-
-** wdired  [C-x C-q]
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x C-q") 'wdired-change-to-wdired-mode)
 #+END_SRC
 
 
@@ -803,28 +705,150 @@ https://github.com/Alexander-Miller/treemacs
 https://github.com/doomemacs/themes/tree/screenshots
 
 ** DIRED
-*** config
-,#+BEGIN_SRC emacs-lisp
-;; hide file details on open
-(defun xah-dired-mode-setup ()
-  "Hide details in dired on open."
-  (dired-hide-details-mode 1))
-(add-hook 'dired-mode-hook 'xah-dired-mode-setup)
+*** config (DIRED w/ HYDRA)
+#+BEGIN_SRC emacs-lisp
+  ;;;; --- MAIN CONFIGS
+  ;; 1. The Hydra for Jumps (The "g" menu)
+  (use-package hydra :ensure t)
 
-;; copy/move between two open dired buffers
-(setq dired-dwim-target t)
-(setq wdired-allow-to-change-permissions t)
-(setq dired-listing-switches "-lH")
+  (defhydra hydra-dired-jump (:color blue :hint nil)
+    ;; This string is the ONLY thing that will show up.
+    "
+    ^Jumps^               ^Jumps^                 ^Jumps^
+    -------------------------------------------------------
+    _h_: Home            _m_: Musk           _f_: .dotfiles
+    _l_: Desk            _p_: Pix            _c_: .config
+    _w_: DLs             _v_: Vidz           _s_: .scripts
+    _d_: Docs            _t_: tmp            _i_:  Media
+    _r_: git-docs        _T_: Trash          _q_:  Quit/Cancel
+    "
+    ;; _p_: Projects
+    ("h" (dired "~/"))
+    ("l" (dired "~/Desk/"))
+    ("w" (dired "~/DLs/"))
+    ("d" (dired "~/Docs/"))
+    ("r" (dired "~/Docs/11.git_docs/"))
+    ("m" (dired "~/Musk/"))
+    ("p" (dired "~/Pix/"))
+    ("v" (dired "~/Vidz/"))
+    ("t" (dired "~/tmp/"))
+    ("T" (dired "~/.local/share/Trash/files/"))
+    ("f" (dired "~/.dotfiles/"))
+    ("c" (dired "~/.config/"))
+    ("s" (dired "~/.scripts/"))
+    ("i" (dired "/run/media/"))
+    ("q" nil)  ; One single exit point
+    ("g" nil)) ; Optional: 'g' again to close it if you hit it by accident
+  ;; ("p" (if (fboundp 'project-find-dir) (call-interactively 'project-find-dir) (dired "~/Projects/")))
 
-;; ibuffer groups
-(setq-default ibuffer-saved-filter-groups
-  `(("Default"
-     ("Dired"     (mode . dired-mode))
-     ("Temporary" (name . "\*.*\*")))))
 
-(add-hook 'ibuffer-mode-hook
-          #'(lambda ()
-              (ibuffer-switch-to-saved-filter-groups "Default")))
+  ;; 2. The Dired Configuration
+  (use-package dired
+    :ensure nil
+    :bind (:map dired-mode-map
+                ;; Ranger/Yazi style navigation
+                ("i" . dired-previous-line)
+                ("k" . dired-next-line)
+                ("j" . dired-up-directory)
+                ("l" . dired-find-file)
+                ("/" . dired-goto-file)
+                ;; The "g" Jump Menu
+                ("g" . hydra-dired-jump/body)
+                ;; Rebind original 'g' (refresh) to 'r'
+                ("r" . revert-buffer))
+    :config
+    ;; NO CLUTTER: Don't create a new buffer for every folder
+    (setq dired-kill-when-opening-new-dired-buffers t)
+
+    ;; SORTING: Dots first, then Directories, then Files
+    (setq ls-lisp-use-insert-directory-program nil)
+    (require 'ls-lisp)
+    (setq ls-lisp-dirs-first t)
+    (setq ls-lisp-ignore-case t)
+    ;; Note: --group-directories-first is handled by ls-lisp-dirs-first t
+    (setq dired-listing-switches "-AGFhlv --time-style=long-iso")
+
+    ;; HIDE DETAILS: Start Dired with just filenames (press '(' to toggle)
+    (add-hook 'dired-mode-hook 'dired-hide-details-mode))
+
+  ;; 3. Open Files Externally
+  (use-package dired-open
+    :ensure t
+    :config
+    (setq dired-open-extensions '(("png"  . "nsxiv")
+                                  ("jpg"  . "nsxiv")
+                                  ("jpeg" . "nsxiv")
+                                  ("gif"  . "nsxiv")
+                                  ("bmp"  . "nsxiv")
+                                  ("mkv"  . "mpv")
+                                  ("avi"  . "mpv")
+                                  ("mp4"  . "mpv")
+                                  ("mp3"  . "mpv")
+                                  ("pdf"  . "zathura"))))
+
+  ;; Protesilaos snippet
+  ;; (setq dired-guess-shell-alist-user
+        ;; '(("\\.\\(png\\|jpe?g\\|tiff\\)" "feh *" "xdg-open")
+          ;; ("\\.\\(mp[34]\\|m4a\\|ogg\\|flac\\|webm\\|mkv\\)" "mpv *" "xdg-open")
+  		;; (".*" "xdg-open")))
+#+END_SRC
+
+*** config (DIRVISH)
+#+BEGIN_SRC emacs-lisp
+;;;; --- DIRVISH
+(use-package nerd-icons :ensure t)
+
+(use-package dirvish
+  :ensure t
+  :init (dirvish-override-dired-mode)
+  :custom
+  (dirvish-attributes '(nerd-icons file-size file-time))
+  (dirvish-layout '(0 45 55))
+  (dirvish-hilite-line nil)
+  (dirvish-preview-dispatchers '(image standard))
+  :config
+  (setq dirvish-mode-line-format '(:left (sort symlink) :right (omit printable)))
+  ;; DIRVISH QUICK ACCESS (Triggered by 'a' inside Dirvish)
+  (setq dirvish-quick-access-entries
+        '(("h" "~/"                          "Home")
+          ("l" "~/Desk/"                     "Desk")
+          ("w" "~/DLs/"                      "DLs")
+          ("d" "~/Docs/"                     "Docs")
+          ("r" "~/Docs/11.git_docs/"         "git-docs")
+          ("m" "~/Musk/"                     "Musk")
+          ("p" "~/Pix/"                      "Pix")
+          ("v" "~/Vidz/"                     "Vidz")
+          ("t" "~/tmp/"                      "tmp")
+          ("f" "~/.dotfiles/"                ".dotfiles")
+          ("c" "~/.config/"                  ".config")
+          ("e" "~/.emacs.d/"                 ".emacs.d")
+          ("s" "~/.scripts/"                 ".scripts")
+          ("T" "~/.local/share/Trash/files/" "Trash")
+          ("i" "/run/media/"                 "Media")))
+  (dirvish-peek-mode -1)
+  :bind
+  (("C-c f" . dirvish)
+   :map dirvish-mode-map
+   ("g"   . dirvish-quick-access)
+   ("f"   . dirvish-file-info-menu)
+   ("y"   . dirvish-yank-menu)
+   ("s"   . dirvish-quicksort)
+   ("j"   . dired-up-directory)
+   ("k"   . dired-next-line)
+   ("i"   . dired-previous-line)
+   ("l"   . dired-find-file)
+   ("TAB" . dirvish-subtree-toggle)
+   ("v"   . dirvish-layout-toggle)
+   ("q"   . dirvish-quit)))
+
+(use-package dired-open
+  :ensure t
+  :config
+  (setq dired-open-extensions '(("png"  . "nsxiv") ("jpg"  . "nsxiv")
+                                ("jpeg" . "nsxiv") ("gif"  . "nsxiv")
+                                ("bmp"  . "nsxiv") ("mkv"  . "mpv")
+                                ("avi"  . "mpv")   ("mp4"  . "mpv")
+                                ("mp3"  . "mpv")   ("pdf"  . "zathura"))))
 #+END_SRC
 
 *** async
