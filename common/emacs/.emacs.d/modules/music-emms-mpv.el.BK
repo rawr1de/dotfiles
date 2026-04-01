@@ -1,0 +1,112 @@
+;;; music-emms-mpv.el --- epv: Playlist-only EMMS + MPV (silent playback)
+;;;
+;;; This is a minimal, playlist-only EMMS setup focused on simplicity and reliability.
+;;;
+;;; Goals:
+;;;   - Use only the EMMS playlist buffer (no browser)
+;;;   - Keep EMMS playback completely silent (no MPV window)
+;;;   - Easy integration with Dired/Dirvish for adding music
+;;;   - Fast recursive adding from parent folders
+;;;   - Reliable loading even from *scratch* buffer
+;;;
+;;; Keybindings (available globally and in Dired):
+;;;   C-c m p   → Open / show EMMS playlist
+;;;   C-c m c   → Clear current playlist
+;;;   C-c m a   → Add marked files/directories (recursive for folders)
+;;;   C-c m r   → Refresh: clear + recursively add everything from current Dired directory
+;;;
+;;; Author: Grok (assisted)
+;;; Last updated: 2026
+
+(use-package emms
+  :ensure t
+  :demand t
+  :commands (emms emms-playlist-clear)
+
+  :config
+  (require 'emms-setup)
+  (require 'emms-player-mpv)
+
+  (emms-all)
+  (setq emms-player-list '(emms-player-mpv))
+
+  ;; Silent MPV playback (no visible window when playing from playlist)
+  (setq emms-player-mpv-parameters
+        '("--quiet"
+          "--no-video"
+          "--gapless-audio=yes"
+          "--keep-open=no"))
+
+  (setq emms-info-functions '(emms-info-native))
+  (setq emms-browser-enable nil)
+
+  ;; Force insert mode with xah-fly-keys when entering playlist
+  (defun my/emms-force-insert-mode ()
+    (when (eq major-mode 'emms-playlist-mode)
+      (xah-fly-insert-mode-activate)))
+  (add-hook 'emms-playlist-mode-hook #'my/emms-force-insert-mode)
+
+  ;; Global shortcuts
+  (global-set-key (kbd "C-c m p") #'emms)
+  (global-set-key (kbd "C-c m c") #'emms-playlist-clear))
+
+  ;; THEME OVERRIDE (remove EMMS hardcoded colors)
+  (set-face-attribute 'emms-browser-artist-face nil :foreground 'unspecified)
+  (set-face-attribute 'emms-browser-album-face  nil :foreground 'unspecified)
+  (set-face-attribute 'emms-browser-track-face  nil :foreground 'unspecified)
+
+
+
+;;; MODELINE edit: NO ICON artist - song
+;;; MODELINE edit: song countdown
+
+
+
+;; ====================== Dired Integration ======================
+
+(defun my/dired-add-to-emms ()
+  "Add marked files and directories to EMMS playlist.
+Directories are added recursively using `emms-add-directory-tree'.
+Single files are added normally with `emms-add-file'."
+  (interactive)
+  (require 'emms)
+  (let ((items (dired-get-marked-files)))
+    (if items
+        (progn
+          (dolist (item items)
+            (if (file-directory-p item)
+                (emms-add-directory-tree item)
+              (emms-add-file item)))
+          (message "Added %d item(s) to EMMS" (length items)))
+      (message "No items marked"))))
+
+(defun my/emms-refresh-from-dired ()
+  "Refresh the EMMS playlist from current Dired directory.
+
+What this function does:
+  1. Ensures the EMMS playlist buffer exists by calling `emms'
+  2. Clears the current playlist completely (`emms-playlist-clear`)
+  3. Recursively adds ALL music files from the current Dired directory
+     and all its subdirectories using `emms-add-directory-tree`
+  4. Shows a confirmation message
+
+Use case:
+  - You are in a parent folder in Dired
+  - You want to completely replace the current playlist with everything
+    inside this folder + all subfolders
+  - Useful after editing tags or reorganizing files"
+  (interactive)
+  (require 'emms)
+  (when (eq major-mode 'dired-mode)
+    (emms)                                      ; create/open playlist buffer
+    (sleep-for 0.15)                            ; small delay to let buffer settle
+    (emms-playlist-clear)
+    (emms-add-directory-tree (dired-current-directory))
+    (message "Playlist refreshed recursively from %s" (dired-current-directory))))
+
+;; Bind keys in Dired / Dirvish
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "C-c m a") #'my/dired-add-to-emms)
+  (define-key dired-mode-map (kbd "C-c m r") #'my/emms-refresh-from-dired))
+
+(provide 'music-emms-mpv)

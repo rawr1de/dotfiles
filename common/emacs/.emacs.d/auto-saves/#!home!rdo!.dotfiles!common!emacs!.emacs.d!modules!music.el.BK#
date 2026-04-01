@@ -1,0 +1,64 @@
+;; -*- lexical-binding: t; -*-
+;;
+;; EMACS MULTI MEDIA SYSTEM (EMMS)
+;; RDO file
+
+;;; --- PACKAGE CONFIG // MPD BACKEND
+
+(use-package emms
+  :defer t
+  :config
+  (require 'emms-setup)
+  (require 'emms-player-mpd)
+  (emms-all)
+  (setq emms-player-list '(emms-player-mpd))
+  (setq emms-player-mpd-server-name "localhost")
+  (setq emms-player-mpd-server-port "6600")
+  (setq emms-player-mpd-music-directory "~/Music")
+  (setq emms-info-functions '(emms-info-mpd))
+  ;; start dired in XFK insert-mode
+  (emms-player-mpd-connect)
+  (add-hook 'emms-playlist-mode-hook #'xah-fly-insert-mode-activate)
+  (add-hook 'emms-browser-mode-hook  #'xah-fly-insert-mode-activate)
+
+;;; --- TAG EDITOR
+  (with-eval-after-load 'emms-tag-editor
+    (setq emms-tag-editor-tagfile-functions
+          '(("mp3"  . emms-info-mp3info)
+            ("flac" . emms-info-flacinfo)))))
+
+
+;;; --- BROWSER LOOK (b 1)
+  (with-eval-after-load 'emms-browser
+    (setq emms-browser-info-album-format
+          (lambda (bdata _level)
+            (let* ((track (car (emms-browser-bdata-data bdata)))
+                   (year  (emms-track-get track 'info-year))
+                   (album (emms-browser-bdata-name bdata)))
+              (if year
+                  (format "%s - %s" year album)
+                album))))
+
+    (setq emms-browser-info-title-format
+          (lambda (bdata _level)
+            (let* ((track (car (emms-browser-bdata-data bdata)))
+                   (name  (emms-track-get track 'info-title))
+                   (no    (emms-track-get track 'info-tracknumber)))
+              (format "  %02d. %s"
+                      (if no (string-to-number no) 0)
+                      (or name "Unknown Track"))))))
+
+
+(provide 'music)
+
+
+;;; --- END OF FILE !!!
+;;
+;; M-x package-delete (delete installed files)
+;; M-x package-autoremove (remove package dependencies)
+;;
+;; Local Variables:
+;; eval: (outline-minor-mode 1)
+;; eval: (local-set-key (kbd "<tab>") 'outline-cycle)
+;; outline-regexp: ";;;+ ?---"
+;; End:
