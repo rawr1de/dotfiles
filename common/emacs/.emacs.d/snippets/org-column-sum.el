@@ -1,4 +1,4 @@
-;;;; ---- ORG COLUMN SUM  [C-x s]
+;;;; ---- ORG COLUMN SUM
 ;; Sums a specific column in highlighted Org table rows, ignoring h-lines.
 ;; Extracts numbers, builds an equation, and evals via calc to the clipboard.
 ;; Use prefix argument (C-u C-x s) to insert the result instead of copying.

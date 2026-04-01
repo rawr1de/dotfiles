@@ -2,6 +2,30 @@
 # chsh -s /usr/bin/zsh
 
 
+# --- SSH AGENT MANAGEMENT ---
+() { # Anonymous function to keep 'keys' and 'current_host' local
+    local keys=()
+    [[ -f ~/.ssh/id_legion ]] && keys+=(id_legion)
+    [[ -f ~/.ssh/id_templar ]] && keys+=(id_templar)
+
+    if command -v keychain >/dev/null 2>&1; then
+        # The modern keychain way
+        eval $(keychain --eval --quiet "${keys[@]}")
+    else
+        # Fallback for fresh installs / TTY work
+        if [[ -z "$SSH_AUTH_SOCK" ]]; then
+            eval "$(ssh-agent -s)" > /dev/null 2>&1
+
+            local current_host=$(cat /etc/hostname 2>/dev/null)
+            case "$current_host" in
+                legion)  ssh-add ~/.ssh/id_legion  2>/dev/null ;;
+                templar) ssh-add ~/.ssh/id_templar 2>/dev/null ;;
+            esac
+        fi
+    fi
+}
+
+
 # ─── OS & HOSTNAME DETECTION ─────────
 CURRENT_HOSTNAME=$(< /etc/hostname)
 

@@ -2,6 +2,7 @@
 
 ;; 0. Move customization variables outside of init.el
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file 'noerror)
 
 ;; 1. Setup Package Repositories
 (require 'package)
@@ -23,4 +24,4 @@
 
 ;; --- Option 3: Your old base (if you exported it to .el) ---
 ;; (load (expand-file-name "base_cfg_3.el" user-emacs-directory))
-
+(put 'emms-browser-delete-files 'disabled nil)

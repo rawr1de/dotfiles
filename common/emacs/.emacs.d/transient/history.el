@@ -1,4 +1,6 @@
 ((dirvish-file-info-menu nil)
  (dirvish-quick-access nil)
  (dirvish-quicksort nil)
- (dirvish-yank-menu nil))
+ (dirvish-yank-menu nil)
+ (listen-menu nil)
+ (rdo/search-menu nil))

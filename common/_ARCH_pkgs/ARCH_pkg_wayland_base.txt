@@ -12,6 +12,7 @@ nano
 kitty
 zsh
 
+
 # --- Shell tools ---
 atuin
 starship
@@ -37,6 +38,7 @@ wlsunset
 ddcutil
 pacseek
 
+
 # --- Archive tools ---
 atool
 unzip
@@ -44,12 +46,14 @@ unrar
 zip
 p7zip
 
+
 # --- Filesystem ---
 ntfs-3g
 dosfstools
 exfat-utils
 mtools
 plocate
+
 
 # --- System & power ---
 htop
@@ -94,6 +98,7 @@ alsa-utils
 pulsemixer
 libinput-tools
 
+
 # --- Networking ---
 networkmanager
 network-manager-applet
@@ -103,6 +108,8 @@ bluez
 bluez-utils
 bluetui
 iwd
+keychain
+
 
 # --- File management ---
 pcmanfm
@@ -118,6 +125,7 @@ zathura-djvu
 zathura-cb
 pacman-contrib
 
+
 # --- Media viewers ---
 mpv
 mpv-mpris
@@ -126,15 +134,18 @@ mpd
 mpc
 imv
 nsxiv
-grim
-slurp
 mp3info
 vorbis-tools
+fbreader  #epub reader
+
 
 # --- Screenshot & image ---
 imagemagick
 img2pdf
 pdftk
+grim
+slurp
+satty
 
 # --- Web & transfer ---
 firefox
@@ -145,9 +156,12 @@ wormhole-rs
 quickserve
 syncthing
 
+
 # --- Documents & office ---
 # newsboat
 # lnav
+pandoc
+
 
 # --- Fonts ---
 #ttf-jetbrains-mono-nerd
@@ -155,6 +169,8 @@ syncthing
 #otf-commit-mono-nerd
 #noto-fonts-emoji
 #ttf-nerd-fonts-symbols
+adobe-source-han-sans-jp-fonts
+
 
 # --- Misc ---
 gtypist

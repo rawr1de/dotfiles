@@ -1,10 +1,16 @@
 cd ~/Musk/Metal
 
+unbind -f common h
+
 bind -f common i win-up
 bind -f common k win-down
-bind -f common l win-next
 bind -f common i win-up
 bind -f common j win-toggle
-bind -f browser u win-update
 bind -f common o win-sel-cur
 bind -f common space player-pause
+
+bind -f browser i win-up
+bind -f browser j browser-up
+bind -f browser l win-activate
+bind -f browser u win-update
+bind -f library l win-next

@@ -31,29 +31,28 @@ binds  {
     Mod+H                     hotkey-overlay-title="htop"                    { spawn "kitty" "-e" "htop"; }
     Mod+V                     hotkey-overlay-title="Pulsemixer"              { spawn "kitty" "-e" "pulsemixer"; }
     Mod+C                     hotkey-overlay-title="Clipboard (Fuzzel)"      { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
+    Mod+B                     hotkey-overlay-title="Toggle Noctalia Bar"     { spawn-sh "qs -c noctalia-shell ipc call bar toggle"; }
 
 
     // ─────────────────────────────────────────────
     // SESSION / SYSTEM
     // ─────────────────────────────────────────────
-    Super+Alt+0               hotkey-overlay-title="Lock Screen (swaylock)"  { spawn "swaylock"; }
-    Mod+Shift+E               hotkey-overlay-title="Exit (Niri)"             { quit; }
-    Mod+Alt+F4                hotkey-overlay-title="Exit (Noctalia)"         { spawn-sh "qs -c noctalia-shell ipc call sessionMenu toggle"; }
-    Ctrl+Shift+Mod+Alt+P      hotkey-overlay-title="Power Off Monitors"      { power-off-monitors; }
-    Mod+Escape                allow-inhibiting=false                         { toggle-keyboard-shortcuts-inhibit; }
-    Mod+Shift+F12             hotkey-overlay-title="Reload Niri Config"      { spawn "bash" "-c" "niri msg action load-config-file && notify-send 'Niri' 'Config reloaded'"; }
-    Mod+Shift+F5              hotkey-overlay-title="Toggle Trackpad ON/OFF"  { spawn-sh "SH_trackpad_toggle.sh"; }
-    Mod+Shift+Slash                                                           { show-hotkey-overlay; }
-
-    Alt+Space                                                                 { switch-layout "next"; }  // keyboard US,BR
+    Super+Alt+0               hotkey-overlay-title="Lock Screen"         { spawn "swaylock"; }
+    Mod+Shift+E               hotkey-overlay-title="Exit NIRI"           { quit; }
+    Mod+Alt+F4                hotkey-overlay-title="Exit NOCTALIA"       { spawn-sh "qs -c noctalia-shell ipc call sessionMenu toggle"; }
+    Ctrl+Shift+Mod+Alt+P      hotkey-overlay-title="Monitors OFF"        { power-off-monitors; }
+    Mod+Escape                allow-inhibiting=false                     { toggle-keyboard-shortcuts-inhibit; }
+    Mod+Shift+F12             hotkey-overlay-title="Reload Niri Config"  { spawn "bash" "-c" "niri msg action load-config-file && notify-send 'Niri' 'Config reloaded'"; }
+    Mod+Shift+F5              hotkey-overlay-title="Trackpad ON/OFF"     { spawn-sh "SH_trackpad_toggle.sh"; }
+    Mod+Shift+Slash                                                      { show-hotkey-overlay; }
+    Alt+Space                 hotkey-overlay-title="Keyboard Layout"     { switch-layout "next"; }  // keyboard US,BR
 
 
     // ─────────────────────────────────────────────
     // SCREENSHOT
     // ─────────────────────────────────────────────
-    Print                                                                     { screenshot; }
-    Ctrl+Print                                                                { screenshot-screen; }
-    Alt+Print                                                                 { screenshot-window; }
+    Print        hotkey-overlay-title="Screenshot EDIT"   { spawn-sh "grim -g \"$(slurp)\" - | satty --filename -"; }
+    Ctrl+Print   hotkey-overlay-title="Screenshot CLIP"   { spawn-sh "grim -g \"$(slurp)\" - | wl-copy"; }
 
 
     // ─────────────────────────────────────────────

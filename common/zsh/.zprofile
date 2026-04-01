@@ -1,16 +1,4 @@
-# Get hostname from file since the 'hostname' binary may be missing
-CURRENT_HOSTNAME=$(< /etc/hostname)
-
-# Start SSH agent and add machine-specific SSH key
-if [ -z "$SSH_AUTH_SOCK" ]; then
-    eval "$(ssh-agent -s)" > /dev/null 2>&1
-    case "$CURRENT_HOSTNAME" in
-        legion)  ssh-add ~/.ssh/id_legion  2>/dev/null ;;
-        templar) ssh-add ~/.ssh/id_templar 2>/dev/null ;;
-    esac
-fi
-
-# Source Legion-specific tweaks for hardware
+# SOURCE LEGION-SPECIFIC TWEAKS FOR HARDWARE
 if [[ "$CURRENT_HOSTNAME" == "legion" ]]; then
     [[ -f ~/.zsh_legion ]] && source ~/.zsh_legion
 fi
@@ -23,7 +11,8 @@ setfont /usr/share/kbd/consolefonts/latarcyrheb-sun32
 
 # ─── ENVIRONMENT ─────────────────────
 # System-wide PATH — ensures all installed binaries are accessible
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin/vendor_perl
+export PATH="/usr/bin/vendor_perl:$PATH"
 export PATH=$PATH:$HOME/.local/bin
 export PATH=$PATH:$HOME/.config
 export PATH=$PATH:$HOME/.scripts

@@ -35,35 +35,21 @@
 (setq electric-pair-pairs '((?\{ . ?\}) (?\( . ?\)) (?\[ . ?\]) (?\" . ?\")))
 
 
-;;; --- SMART BUFFER/WINDOW CLOSE (C-w)
-(defun rdo/close-buffer-or-prompt ()
-  "Kill current buffer. If modified, prompt once. If yes, discard and kill."
-  (interactive)
-  (if (and (buffer-modified-p) (buffer-file-name))
-      (when (yes-or-no-p
-             (format "Buffer '%s' is unsaved. Kill anyway? " (buffer-name)))
-        (set-buffer-modified-p nil)
-        (kill-buffer (current-buffer))
-        (when (> (count-windows) 1) (delete-window)))
-    (kill-buffer (current-buffer))
-    (when (> (count-windows) 1) (delete-window))))
-
-(global-set-key (kbd "C-w") #'rdo/close-buffer-or-prompt)
-
-
 ;;; --- THEMES & APPEARANCE
 (use-package doom-themes
   :ensure t
   :config
   (setq doom-themes-enable-bold t doom-themes-enable-italic t)
-  (load-theme 'doom-old-hope t)
-  (set-face-attribute 'default nil :height 135)
+    ;; 'latte (light) 'frappe (dark) 'macchiato (darker) 'mocha (darkest)
+    ;; (setq catppuccin-flavor 'mocha)
+    ;; (load-theme 'catppuccin t) ;;
+  (set-face-attribute 'default nil :height 160)
 
   ;; Apply Org faces ONLY after Org is loaded to prevent "Invalid Face" error
   (with-eval-after-load 'org
-    (set-face-attribute 'org-level-1 nil :height 1.3)
-    (set-face-attribute 'org-level-2 nil :height 1.2)
-    (set-face-attribute 'org-level-3 nil :height 1.1)
+    (set-face-attribute 'org-level-1 nil :height 1.1)
+    (set-face-attribute 'org-level-2 nil :height 1.08)
+    (set-face-attribute 'org-level-3 nil :height 1.05)
     (set-face-attribute 'org-level-4 nil :height 1.0)))
 
 (use-package doom-modeline

@@ -1,15 +1,15 @@
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 
   // AUTO START
-  spawn-sh-at-startup "qs -c noctalia-shell"
+  // spawn-at-startup "pipewire"
+  // spawn-at-startup "wireplumber"
+  // spawn-at-startup "kitty"
   // spawn-at-startup "swaybg" "-i" "path_to_wallpaper"
+  spawn-sh-at-startup "qs -c noctalia-shell"
   spawn-at-startup "xwayland-satellite"
   spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
   spawn-at-startup "emacs" "--daemon"
   spawn-at-startup "bash" "-c" "wl-paste --type text --watch cliphist store"
   spawn-at-startup "bash" "-c" "wl-paste --type image --watch cliphist store"
-  // spawn-at-startup "pipewire"
-  // spawn-at-startup "wireplumber"
-  spawn-at-startup "kitty"
   spawn-at-startup "mako"
   spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"

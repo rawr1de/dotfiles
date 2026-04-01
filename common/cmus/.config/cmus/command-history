@@ -1,3 +1,4 @@
+filter 
 source ~/.config/cmus/rc
 live-filter 
 unbind -f common h

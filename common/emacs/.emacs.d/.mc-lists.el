@@ -8,7 +8,12 @@
 	org-kill-line
 	org-metadown
 	org-self-insert-command
+	replace-string
 	wdired--self-insert
+	wdired-exit
+	wdired-finish-edit
+	wdired-upcase-word
+	xah-backward-left-bracket
 	xah-beginning-of-line-or-block
 	xah-comment-dwim
 	xah-copy-line-or-region
@@ -16,6 +21,7 @@
 	xah-end-of-line-or-block
 	xah-fly-command-mode-activate
 	xah-fly-insert-mode-activate
+	xah-forward-right-bracket
 	xah-insert-space-before
 	xah-paste-or-paste-previous
 	xah-shrink-whitespaces
