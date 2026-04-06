@@ -49,3 +49,4 @@ wm/kde/.config/kwinrc
 /common/emacs/.emacs.d/doom-space-grey-theme.el
 /common/emacs/.emacs.d/emms-volume-cache
 /common/emacs/.emacs.d/tree-sitter/
+.gitignore
