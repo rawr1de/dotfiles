@@ -1,0 +1,16 @@
+;; copy file to clipboard
+(defun my-dired-copy-file-to-clipboard ()
+  "Copy marked files (or file at point) to Wayland clipboard as actual files."
+  (interactive)
+  (let* ((files (dired-get-marked-files))
+         ;; Format files as file:// URIs
+         (uri-list (mapconcat (lambda (f) (concat "file://" (expand-file-name f))) 
+                              files "\n")))
+    (let ((process-connection-type nil))
+      (let ((proc (start-process "wl-copy-files" nil "wl-copy" "--type" "text/uri-list")))
+        (process-send-string proc uri-list)
+        (process-send-eof proc)))
+    (message "Copied %d file(s) to clipboard!" (length files))))
+
+
+(provide 'my-dired-copy-file-to-clipboard)

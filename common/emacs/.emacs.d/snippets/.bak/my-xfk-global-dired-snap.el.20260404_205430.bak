@@ -1,0 +1,17 @@
+;;; --- GLOBAL XFK DIRED/DIRVISH SNAP
+(defun my-xfk-global-dired-snap (&optional _)
+  "Globally force XFK insert mode when a Dired/Dirvish window gets focus."
+  (run-at-time 0.01 nil
+               (lambda ()
+                 ;; 1. Are we in Dired or Dirvish?
+                 (when (derived-mode-p 'dired-mode 'dirvish-directory-view-mode)
+                   ;; 2. Are we currently in Command Mode? (Checking the correct variable!)
+                   (when (not xah-fly-insert-state-p)
+                     (xah-fly-insert-mode-activate))))))
+
+;; Fire when switching windows (e.g., C-Tab, consult-buffer, mouse click)
+(add-hook 'window-selection-change-functions #'my-xfk-global-dired-snap)
+;; Fire when the internal buffer list updates
+(add-hook 'buffer-list-update-hook #'my-xfk-global-dired-snap)
+
+(provide 'my-xfk-global-dired-snap)

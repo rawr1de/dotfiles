@@ -1,0 +1,13 @@
+;; copy marked/pointer file(s) to Wayland clipboard as actual files
+
+(defun my-dired-copy-file-to-clipboard ()
+  "Copy marked file paths perfectly to the clipboard."
+  (interactive)
+  (let* ((files (dired-get-marked-files))
+         ;; Join all file paths with an explicit newline
+         (paths-string (mapconcat #'identity files "\n")))
+    ;; Use native Emacs clipboard (Safe because Dired stays open)
+    (kill-new paths-string)
+    (message "Copied %d file(s) to clipboard." (length files))))
+
+(provide 'my-dired-copy-file-to-clipboard)

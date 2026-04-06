@@ -1,0 +1,43 @@
+// Rule 1: ONLY float swayimg when it is called by Emacs
+window-rule {
+    match app-id="emms-art"
+    open-floating true
+
+    // Optional: Give it a nice default size so it doesn't spawn tiny
+    default-column-width { proportion 0.4; }
+    default-window-height { proportion 0.5; }
+}
+
+// Rule 2: Float the Emacs Org-mode EMMS popup
+// window-rule {
+    // Match the exact title we gave this frame
+    // match app-id=r#"^emacs$"# title=r#"^emms-popup$"#
+    // open-floating true
+// }
+
+
+// Rule 2: Float the Kitty EMMS dashboard
+window-rule {
+    match app-id="emms-popup"
+    open-floating true
+
+    // Force the exact massive size you want for the dashboard
+    default-column-width { fixed 1200; }
+    default-window-height { fixed 1200; }
+}
+
+
+// Emacs scratchpad float in the center
+    // window-rule {
+        // match title="niri-scratchpad"
+        // open-floating true
+        // Optional: Force a specific starting size
+        // default-column-width { proportion 0.4; }
+    // }
+
+// Emacs scratchpad in tiled (column mode)
+window-rule {
+        match title="niri-scratchpad"
+        // Force the column to take up exactly 35% of the screen
+        default-column-width { proportion 0.35; }
+    }
