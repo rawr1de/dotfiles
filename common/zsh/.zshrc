@@ -64,7 +64,9 @@ unsetopt beep
 #bindkey -v                              # vim-style line editing
 bindkey -e                              # emacs-style line editing
 bindkey "^[[H" beginning-of-line        # <Home> → beginning of line
-
+# Ergonomic History Search (Alt+K for Up, Alt+J for Down)
+bindkey "^[k" up-line-or-search
+bindkey "^[j" down-line-or-search
 
 
 # ─── COMPLETION ──────────────────────
@@ -135,6 +137,6 @@ alias fz='SH_fzf_search_editor.sh'             # fzf dynamic search
 # ─── EVAL ────────────────────────────
 # FOCE ATUIN to READ HIST FILE
 # HISTFILE=~/.histfile atuin import zsh
-eval "$(atuin init zsh)"            # ATUIN (McFly alike)
+eval "$(atuin init zsh --disable-up-arrow)" # ATUIN (McFly alike)
 eval "$(starship init zsh)"         # STARSHIP (POWERLINE alike)
 eval "$(zoxide init zsh --cmd cd)"  # ZOXIDE

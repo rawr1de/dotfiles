@@ -1,0 +1,42 @@
+## --- GLOBAL POSITIONING ---
+max-visible=3
+sort=-time
+layer=overlay
+anchor=top-right
+margin=20
+padding=15
+width=350
+
+## --- TIMEOUTS ---
+default-timeout=5000
+# Ignore timeout if you are hovering over it with your mouse
+ignore-timeout=1 
+
+## --- STYLING ---
+# Change this to whatever font you use in Kitty/Emacs
+font=JetBrains Mono 16
+
+# Colors (Hex with Alpha: #RRGGBBAA)
+background-color=#282c34f2
+text-color=#abb2bf
+border-color=#61afef
+border-size=2
+border-radius=8
+
+# If a notification has a progress bar (like volume or brightness)
+progress-color=over #98c379
+
+## --- FORMATTING ---
+# %a = app name, %s = summary, %b = body
+format=<b>%s</b>\n%b
+
+## --- RULES (OVERRIDES) ---
+
+# Make critical notifications red and stay on screen forever until clicked
+[urgency=critical]
+border-color=#e06c75
+default-timeout=5000
+
+# Group multiple notifications from the same app
+[grouped=1]
+format=<b>%a (%g)</b>\n%s\n%b

@@ -50,3 +50,4 @@ wm/kde/.config/kwinrc
 /common/emacs/.emacs.d/emms-volume-cache
 /common/emacs/.emacs.d/tree-sitter/
 .gitignore
+/common/emacs/.emacs.d/.scratch_copy

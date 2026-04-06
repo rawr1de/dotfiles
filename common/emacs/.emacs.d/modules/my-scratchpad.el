@@ -1,11 +1,14 @@
-;;;; --- WAYLAND SCRATCHPAD ---
+;;; --- WAYLAND SCRATCHPAD & CLIPBOARD LOGGER ---
+;; Spawns a floating scratchpad buffer. Committing (C-c C-c) copies the text 
+;; to the Wayland clipboard, permanently logs it to ~/.emacs.d/.scratch_copy, 
+;; and safely destroys the frame.
 
 ;; Create a dedicated major mode so we can control XFK behavior
 (define-derived-mode my-scratchpad-mode text-mode "Scratchpad"
   "Dedicated mode for the Wayland scratchpad.")
 
 (defun my-scratchpad-commit ()
-  "Copy only the user's text to the Wayland clipboard and close safely."
+  "Copy text to Wayland clipboard, append to log, and close safely."
   (interactive)
   ;; 1. Jump past the visual separator
   (goto-char (point-min))
@@ -14,14 +17,20 @@
     (goto-char (point-min)))
 
   ;; 2. Grab the text
-  (let ((text (string-trim (buffer-substring-no-properties (point) (point-max)))))
-    ;; 3. The Magic: Pipe to wl-copy asynchronously and force the EOF signal
-    (let* ((process-connection-type nil) ; Force a background pipe, not a terminal
-           (proc (start-process "wl-copy-proc" nil "wl-copy")))
-      (process-send-string proc text)
-      (process-send-eof proc))) ; <--- This stops the freeze!
+  (let* ((text (string-trim (buffer-substring-no-properties (point) (point-max))))
+         (log-file (expand-file-name ".scratch_copy" user-emacs-directory)))
 
-  ;; 4. Nuke the buffer and close the frame
+    (when (> (length text) 0)
+      ;; 3. Write text to the hidden log file (appends to the bottom)
+      (write-region (concat text "\n") nil log-file 'append)
+
+      ;; 4. The Magic: Pipe to wl-copy asynchronously and force EOF
+      (let* ((process-connection-type nil)
+             (proc (start-process "wl-copy-proc" nil "wl-copy")))
+        (process-send-string proc text)
+        (process-send-eof proc))))
+
+  ;; 5. Nuke the buffer and close the frame
   (set-buffer-modified-p nil)
   (erase-buffer)
   (save-buffers-kill-terminal))
@@ -33,7 +42,7 @@
 
   ;; Activate our custom mode
   (my-scratchpad-mode)
-(visual-line-mode 1)
+  (visual-line-mode 1)
   (setq word-wrap t)
 
   ;; Insert your custom visual header if empty
@@ -47,3 +56,4 @@
   (run-at-time 0.05 nil #'xah-fly-insert-mode-activate))
 
 (provide 'my-scratchpad)
+;; my-scratchpad.el  <---  END OF FILE
