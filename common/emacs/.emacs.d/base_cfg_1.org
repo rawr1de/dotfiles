@@ -11,6 +11,19 @@
     (custom-set-faces '(default ((t (:background unspecified))))))
 #+end_src
 
+* LOAD MODULES
+#+begin_src emacs-lisp
+(require 'system)
+(require 'ui)
+(require 'completion)
+(require 'file-manager)
+(require 'musk)
+(require 'tools)
+(require 'org-config)
+(require 'my-scratchpad)
+(require 'my-kde-sms)
+#+end_src
+
 * AUTOLOADS (LAZY LOADING)
 
 ** drag/drop & copy to clipboard files in dired/dirvish
@@ -84,18 +97,6 @@
 (autoload 'my-tab-or-frame-close "my-tab-or-frame-close" nil t)
 #+end_src
 
-* LOAD MODULES
-#+begin_src emacs-lisp
-(require 'system)
-(require 'ui)
-(require 'completion)
-(require 'file-manager)
-(require 'musk)
-(require 'tools)
-(require 'org-config)
-(require 'my-scratchpad)
-#+end_src
-
 * THE MODAL CORE (Xah Fly Keys)
 #+begin_src emacs-lisp
 (use-package xah-fly-keys
@@ -137,7 +138,7 @@
 * (MY) KEY OVERRIDES / BINDINGS / MINOR-MODES
 
 ** /DISABLED KEYS/ & /TERMINAL COLLISION/ (recycle)
-#+begin_comment
+#+begin_comment info1
 terminal key collisions to know about:
 |-----------------+-------------------------------|
 | Identical pair  | Why                           |
@@ -151,6 +152,9 @@ terminal key collisions to know about:
 | SPC / C-@       | Not identical but             |
 |                 | commonly confused             |
 |-----------------+-------------------------------|
+#+end_comment
+#+begin_comment info2
+'emms' DEFAULT keybinds are ALL DISABLED at: 'MUSIC -- EMMS [PKG]'
 #+end_comment
 
 #+begin_src emacs-lisp
@@ -168,7 +172,7 @@ terminal key collisions to know about:
 
 
   ;; XFK MODAL
-    ;; SPC a]
+    ;; [SPC a]
     (define-key xah-fly-leader-key-map (kbd "a") nil)
 
 
@@ -177,6 +181,8 @@ terminal key collisions to know about:
     (define-key ctl-x-map (kbd "C-j") nil)
     ;; mark-paragraph
     (define-key global-map (kbd "M-h") nil)
+    ;; insert single track (emms)
+    (define-key emms-playlist-mode-map (kbd "i") nil)
 #+end_src
 
 ** ORG-MODE
@@ -224,6 +230,7 @@ terminal key collisions to know about:
   (define-key xah-fly-leader-key-map (kbd "9") 'my-clear-all-cycle-marks)
   (define-key xah-fly-leader-key-map (kbd "c") 'my-mini-calc)
   (define-key xah-fly-leader-key-map (kbd ", b") 'my-backup-file)
+  (define-key xah-fly-leader-key-map (kbd "+") 'my-kde-send-sms)
 #+end_src
 
 ** XFK LEADER-KEY-MAP
@@ -354,9 +361,13 @@ terminal key collisions to know about:
     "d"   "load last plist")
 #+end_src
 
-*** COMMENT EMMS PLAYLIST BINDS
+*** EMMS PLAYLIST BINDS
 #+begin_src emacs-lisp
   (with-eval-after-load 'emms-playlist-mode
+    ;; NUKE THE DEFAULT MAP: Overwrite it with a completely blank keymap
+    (setq emms-playlist-mode-map (make-sparse-keymap))
+
+    ;; my 'blank slate' keybinds
     (define-key emms-playlist-mode-map (kbd "i")   'previous-line)
     (define-key emms-playlist-mode-map (kbd "k")   'next-line)
     (define-key emms-playlist-mode-map (kbd "RET") 'emms-playlist-mode-play-current-track)
@@ -387,6 +398,10 @@ terminal key collisions to know about:
 *** EMMS BROWSER KEYBINDS
 #+begin_src emacs-lisp
   (with-eval-after-load 'emms-browser
+    ;; NUKE THE BROWSER MAP
+    (setq emms-browser-mode-map (make-sparse-keymap))
+
+    ;; my 'blank slate' keybinds
     (define-key emms-browser-mode-map (kbd "i")     'previous-line)
     (define-key emms-browser-mode-map (kbd "k")     'next-line)
     (define-key emms-browser-mode-map (kbd "SPC")   'emms-browser-toggle-subitems-recursively)
@@ -399,8 +414,7 @@ terminal key collisions to know about:
 *** TAG EDITOR BINDS
 #+begin_src emacs-lisp
   (with-eval-after-load 'emms-tag-editor
-    (define-key emms-tag-editor-mode-map (kbd "C-c C-c") 'emms-tag-editor-submit)
-    (define-key emms-tag-editor-mode-map (kbd "C-c C-q") 'emms-tag-editor-quit))
+    (define-key emms-tag-editor-mode-map (kbd "C-c C-c") 'emms-tag-editor-submit))
 #+end_src
 
 ** VERT/HORIZ SPLIT CONTROL
