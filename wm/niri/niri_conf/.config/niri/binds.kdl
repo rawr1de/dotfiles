@@ -24,14 +24,22 @@ binds  {
     // ─────────────────────────────────────────────
     // LAUNCHERS / APPS
     // ─────────────────────────────────────────────
-    Mod+Return                hotkey-overlay-title="Kitty"                   { spawn "kitty"; }
-    Mod+D                     hotkey-overlay-title="Fuzzel Launcher"         { spawn "fuzzel"; }
-    Mod+M                     hotkey-overlay-title="Emacs"                   { spawn "emacsclient" "-c" "-a" "emacs"; }
-    Mod+W                     hotkey-overlay-title="Firefox"                 { spawn "firefox"; }
-    Mod+H                     hotkey-overlay-title="htop"                    { spawn "kitty" "-e" "htop"; }
-    Mod+V                     hotkey-overlay-title="Pulsemixer"              { spawn "kitty" "-e" "pulsemixer"; }
-    Mod+C                     hotkey-overlay-title="Clipboard (Fuzzel)"      { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
-    Mod+B                     hotkey-overlay-title="Toggle Noctalia Bar"     { spawn-sh "qs -c noctalia-shell ipc call bar toggle"; }
+    Mod+Return                hotkey-overlay-title="Kitty"               { spawn "kitty"; }
+    Mod+1                     hotkey-overlay-title="Emacs"               { spawn "emacsclient" "-c" "-a" "emacs"; }
+    Mod+2                     hotkey-overlay-title="Firefox"             { spawn "firefox"; }
+    // Mod+Prior // (PageUp)     hotkey-overlay-title=null                { spawn "."; }
+    // Mod+Next  // (PageDown)   hotkey-overlay-title=null                { spawn "."; }
+    // Mod+4                     hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
+    // Mod+5                     hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
+    Mod+Insert                hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
+    Mod+Home                  hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
+    Mod+8                     hotkey-overlay-title="Launcher (Fuzzel)"   { spawn "fuzzel"; }
+    Mod+7                     hotkey-overlay-title="Clipboard (Fuzzel)"  { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
+    Mod+N                     hotkey-overlay-title="Toggle Noctalia Bar" { spawn-sh "qs -c noctalia-shell ipc call bar toggle"; }
+    Mod+P                     hotkey-overlay-title="Song Playing Info"   { spawn "emacsclient" "--eval" "(my-emms-now-playing-popup)"; }
+    Mod+Shift+A               hotkey-overlay-title="Emacs Scratchpad"    { spawn "emacsclient" "-c" "-F" "((title . \"niri-scratchpad\") (width . 70) (height . 20))" "-e" "(my-spawn-scratchpad)"; }
+    // keypad numbers don't work, sub-functions only KP_END
+    // Mod+KP_1                  hotkey-overlay-title="Emacs"               { spawn "emacsclient" "-c" "-a" "emacs"; }
 
 
     // ─────────────────────────────────────────────
@@ -59,9 +67,9 @@ binds  {
     // WINDOW — close / float / tabbed
     // ─────────────────────────────────────────────
     Mod+Q                     repeat=false { close-window; }
-    //Mod+V                                  { toggle-window-floating; }
-    Mod+Shift+V                            { switch-focus-between-floating-and-tiling; }
-    Mod+N                                  { toggle-column-tabbed-display; }
+    Mod+Shift+V                              { toggle-window-floating; }
+    //Mod+Shift+V                            { switch-focus-between-floating-and-tiling; }
+    Mod+9                                  { toggle-column-tabbed-display; }
     Mod+O                     repeat=false { toggle-overview; }
 
 
@@ -131,13 +139,13 @@ binds  {
     // ─────────────────────────────────────────────
     // WORKSPACES — direct jump / move column (1–7)
     // ─────────────────────────────────────────────
-    Mod+1 { focus-workspace 1; }
-    Mod+2 { focus-workspace 2; }
-    Mod+3 { focus-workspace 3; }
-    Mod+4 { focus-workspace 4; }
-    Mod+5 { focus-workspace 5; }
-    Mod+6 { focus-workspace 6; }
-    Mod+7 { focus-workspace 7; }
+    // Mod+1 { focus-workspace 1; }
+    // Mod+2 { focus-workspace 2; }
+    // Mod+3 { focus-workspace 3; }
+    // Mod+4 { focus-workspace 4; }
+    // Mod+5 { focus-workspace 5; }
+    // Mod+6 { focus-workspace 6; }
+    // Mod+7 { focus-workspace 7; }
 
     Mod+Ctrl+1 { move-column-to-workspace 1; }
     Mod+Ctrl+2 { move-column-to-workspace 2; }
@@ -174,9 +182,6 @@ binds  {
     // ─────────────────────────────────────────────
     // NOT SURE / FUTURE USES
     // ─────────────────────────────────────────────
-
-    // Screen reader toggle (orca) — allow-when-locked so it survives lock screen
-    //Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
 
     // Touchpad scroll → volume (continuous scroll split into discrete ticks;
     // inverted because natural-scroll is enabled for touchpad by default)

@@ -115,7 +115,7 @@ alias rm='rm -iv'
 alias frm='\rm -rfv'                 # frm = force rm
 alias yys='yay -S'
 alias yyr='yay -Rns'
-alias pc='pacseek'
+alias pac='pacseek'
 alias x='exit'
 
 

@@ -242,6 +242,32 @@ for label in "${SELECTED_LABELS[@]}"; do
     fi
 done
 
+# ---------------------------------------------------------------------------
+# Post-Stow Hooks
+# ---------------------------------------------------------------------------
+for label in "${SELECTED_LABELS[@]}"; do
+    if [[ "$label" == *"firefox"* ]]; then
+        echo -e "\n${BLUE}Running post-stow hook for Firefox...${NC}"
+
+        # Searching your custom Firefox installation directory
+        FIREFOX_PROFILE=$(find ~/.config/mozilla/firefox -maxdepth 1 -type d -name "*.default-release" | head -n 1)
+
+        if [ -n "$FIREFOX_PROFILE" ]; then
+            # The exact path to the user.js inside your dotfiles repo
+            SOURCE_USER_JS="$HOME/.dotfiles/common/firefox/.config/mozilla/firefox/user.js"
+
+            if [ -f "$SOURCE_USER_JS" ]; then
+                ln -sf "$SOURCE_USER_JS" "$FIREFOX_PROFILE/user.js"
+                echo -e "${GREEN}✓ Firefox user.js successfully linked to $FIREFOX_PROFILE${NC}"
+            else
+                echo -e "${YELLOW}Warning: user.js not found at $SOURCE_USER_JS${NC}"
+            fi
+        else
+            echo -e "${YELLOW}Firefox profile not found in ~/.config/mozilla/firefox. Did you run Firefox at least once?${NC}"
+        fi
+    fi
+done
+
 echo ""
 [ "$ERRORS" -eq 0 ] \
     && echo -e "${GREEN}✓ Done.${NC}" \

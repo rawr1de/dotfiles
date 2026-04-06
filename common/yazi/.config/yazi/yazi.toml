@@ -46,8 +46,7 @@ open_video = [
 open_audio = [
   { run = 'mpv "$@"', desc = "mpv", orphan = true },
 ]
-open_image = [
-  { run = 'nsxiv -af "$@"', desc = "nsxiv", orphan = true },
+open_image = [  { run = 'swayimg "$@"', desc = "swayimg", orphan = true }
 ]
 extract = [
   { run = 'atool --extract --each -- "$@"', desc = "Extract (atool)" },

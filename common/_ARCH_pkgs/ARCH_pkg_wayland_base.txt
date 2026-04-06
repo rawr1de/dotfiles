@@ -133,7 +133,7 @@ emms
 mpd
 mpc
 imv
-nsxiv
+swayimg
 mp3info
 vorbis-tools
 fbreader  #epub reader

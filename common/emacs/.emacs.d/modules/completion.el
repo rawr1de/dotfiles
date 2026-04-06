@@ -15,17 +15,10 @@
 (use-package consult
   :ensure t
   :config
-  (require 'transient)
-  (transient-define-prefix rdo/search-menu ()
-    "Ripgrep search menu."
-    ["Search in:"
-     ("n" "notes"    (lambda () (interactive) (consult-ripgrep "~/Docs/10.notes/")))
-     ("a" "agenda"   (lambda () (interactive) (consult-ripgrep "~/Desk/Dropbox/orgriz/")))
-     ("d" "docs"     (lambda () (interactive) (consult-ripgrep "~/Docs/")))
-     ("g" "git-docs" (lambda () (interactive) (consult-ripgrep "~/Docs/11.git_docs/")))
-     ("e" "emacs.d"  (lambda () (interactive) (consult-ripgrep "~/.emacs.d/")))
-     ("p" "prompt"   (lambda () (interactive) (consult-ripgrep
-                                                (read-directory-name "Search in: " "~/"))))]))
+  ;; Increase history so you don't lose search strings
+  (setq history-length 1000)
+  (setq consult-history-max 1000))
+
 
 ;; CONSULT-DIR
 (use-package consult-dir
@@ -50,8 +43,13 @@
 
 
 ;; ORDERLESS
-(use-package orderless :ensure t
-  :custom (completion-styles '(orderless basic)))
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
+
 
 ;; MARGINALIA
 (use-package marginalia :ensure t :init (marginalia-mode))
@@ -72,11 +70,55 @@
   :hook (dired-after-readin . (lambda () (zoxide-add default-directory))))
 
 
-(provide 'completion)
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-auto-prefix 3)          ;; Trigger popup after 3 chars
+  (corfu-auto-delay 1)           ;; popup wait time (0 for instant)
+  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  (corfu-quit-no-match t)        ;; Auto-quit if there are no matches
+  (corfu-preview-current nil)    ;; Disable inline preview (keeps buffer clean)
+  (corfu-preselect 'prompt)      ;; Preselect the prompt, not the first candidate
+
+  :init
+  (global-corfu-mode)
+
+  :bind
+  (:map corfu-map
+        ;; use standard modal keys for navigating the popup
+        ("C-i"      . corfu-next)
+        ("C-k"      . corfu-previous)
+        ("C-g"      . corfu-quit)
+        ("RET"      . corfu-insert)
+        ;; Allows you to type "foo bar" to filter fuzzy matches via Orderless
+        ("SPC"      . corfu-insert-separator)))
+
+;; Add extensions for better Elisp/Code completion
+(use-package cape
+  :ensure t
+  :init
+  ;; Add these to the global completion list. Order matters!
+  ;; The top of the list is prioritized.
+  (add-to-list 'completion-at-point-functions #'cape-keyword) ;; Programming keywords
+  (add-to-list 'completion-at-point-functions #'cape-file)    ;; File paths
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev) ;; Words in current buffer
+
+  :bind
+  ;; Optional: Dedicated keys to FORCE a specific completion menu
+  ;; (e.g., "I only want to see file paths right now")
+  (("C-c p f" . cape-file)
+   ("C-c p w" . cape-dict)))
+
+
 
 
 ;;; --- END OF FILE !!!
-;;
+(provide 'completion)
+
+
+
 ;; M-x package-delete (delete installed files)
 ;; M-x package-autoremove (remove package dependencies)
 ;;

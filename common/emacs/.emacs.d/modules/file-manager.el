@@ -10,11 +10,47 @@
 (use-package dired
   :ensure nil
   :config
+
+  ;; 1. Global Auto-Revert (The "Watchdog")
+  (setq global-auto-revert-non-file-buffers t)
+  (setq auto-revert-verbose nil)
+  (add-hook 'dired-mode-hook 'auto-revert-mode)
+
+  ;; 2. The "Hard Kick" (Refresh immediately after Emacs commands)
+  (defun my-dired-revert-all-buffers (&rest _)
+    "Refresh all dired buffers after an operation."
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (derived-mode-p 'dired-mode)
+          (revert-buffer nil t)))))
+
+  (advice-add 'dired-do-copy :after #'my-dired-revert-all-buffers)
+  (advice-add 'dired-do-rename :after #'my-dired-revert-all-buffers)
+  (advice-add 'dired-do-delete :after #'my-dired-revert-all-buffers)
+  ;; Added for directory creation as well
+  (advice-add 'dired-create-directory :after #'my-dired-revert-all-buffers)
+
   (setq dired-kill-when-opening-new-dired-buffers t
         dired-dwim-target t
         delete-by-moving-to-trash t
         dired-recursive-deletes 'always
+	dired-create-destination-dirs 'always
         dired-recursive-copies 'always)
+
+;; --- AUTO-CREATE DIRECTORIES ON MOVE/COPY (The Bulletproof Way) ---
+  (defun my-dired-auto-create-target-dir (orig-fun &rest args)
+    "Silently create target directories the moment the Dired prompt receives a path."
+    (let* ((target (apply orig-fun args))
+           ;; Check if the target is a directory path (ends in /) or a file path
+           (dir (if (string-suffix-p "/" target) target (file-name-directory target))))
+      ;; If it's a directory and doesn't exist, build the full path instantly
+      (when (and dir (not (file-exists-p dir)))
+        (make-directory dir t))
+      target))
+
+  ;; Attach this to the Dired destination prompt
+  (advice-add 'dired-mark-read-file-name :around #'my-dired-auto-create-target-dir)
+
 
   ;; Moved from init.el as requested
   (put 'dired-find-alternate-file 'disabled nil)
@@ -48,6 +84,7 @@
   (advice-add 'dired-find-file-other-window :around #'my/dired-open-with-mpv))
 
 
+
 ;;; --- DIRVISH
 (use-package dirvish
   :ensure t
@@ -66,9 +103,10 @@
   (require 'dirvish-peek)
   (dirvish-peek-mode 1)
   (define-key dirvish-mode-map (kbd "M-i")
-  (lambda () (interactive) (scroll-other-window-down 1)))
+    (lambda () (interactive) (scroll-other-window-down 1)))
   (define-key dirvish-mode-map (kbd "M-k")
-  (lambda () (interactive) (scroll-other-window 1)))
+    (lambda () (interactive) (scroll-other-window 1)))
+  (define-key dired-mode-map (kbd "'") #'delete-other-windows)
   (setq dirvish-mode-line-format '(:left (sort symlink) :right (omit)))
   (setq dirvish-preview-dispatchers '(font gif epub archive pdf audio image))
   ;; define the XFK segment for dirvish
@@ -82,7 +120,7 @@
   (setq dirvish-mode-line-format '(:left (sort symlink) :right (omit xfk-mode)))
 
   ;; start dired in XFK insert-mode
-  (add-hook 'dired-mode-hook #'xah-fly-insert-mode-activate)
+  ;; (add-hook 'dired-mode-hook #'xah-fly-insert-mode-activate)
   (setq dirvish-quick-access-entries
         '(("h" "~/"                          "Home")
           ("l" "~/Desk/"                     "Desk")
@@ -100,11 +138,11 @@
           ("T" "~/.local/share/Trash/files/" "Trash")
           ("i" "/run/media/"                 "Media")))
   (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("x" "Cut"   dired-copy-paste-do-cut))
+    '("x" "Cut"   my-dired-copy-paste-do-cut))
   (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("c" "Copy"  dired-copy-paste-do-copy))
+    '("c" "Copy"  my-dired-copy-paste-do-copy))
   (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("v" "Paste" dired-copy-paste-do-paste))
+    '("v" "Paste" my-dired-copy-paste-do-paste))
   (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
     '("q" "Quit" transient-quit-one))
 
@@ -134,17 +172,41 @@
 (use-package dired-open
   :ensure t
   :config
-  (setq dired-open-extensions '(("png"  . "nsxiv") ("jpg"  . "nsxiv")
-                                ("jpeg" . "nsxiv") ("gif"  . "nsxiv")
-                                ("bmp"  . "nsxiv") ("mkv"  . "mpv")
-                                ("avi"  . "mpv")   ("mp4"  . "mpv")
-                                ("mp3"  . "mpv")   ("pdf"  . "zathura")
-				("epub"  . "FBReader"))))
+  (setq dired-open-extensions
+        '(
+          ;; --- IMAGES (swayimg) ---
+          ("png"  . "swayimg")  ("jpg"  . "swayimg")  ("jpeg" . "swayimg")
+          ("gif"  . "swayimg")  ("bmp"  . "swayimg")  ("ico"  . "swayimg")
+          ("svg"  . "swayimg")  ("webp" . "swayimg")  ("avif" . "swayimg")
+          ("tiff" . "swayimg")  ("tif"  . "swayimg")  ("tga"  . "swayimg")
+          ("heic" . "swayimg")  ("heif" . "swayimg")  ("jxl"  . "swayimg")
+
+          ;; --- VIDEO (mpv) ---
+          ("mkv"  . "mpv")      ("mp4"  . "mpv")      ("avi"  . "mpv")
+          ("mov"  . "mpv")      ("webm" . "mpv")      ("flv"  . "mpv")
+          ("wmv"  . "mpv")      ("m4v"  . "mpv")      ("mpg"  . "mpv")
+          ("mpeg" . "mpv")      ("ts"   . "mpv")
+
+          ;; --- AUDIO (mpv) ---
+          ("mp3"  . "mpv")      ("flac" . "mpv")      ("wav"  . "mpv")
+          ("ogg"  . "mpv")      ("opus" . "mpv")      ("m4a"  . "mpv")
+          ("aac"  . "mpv")      ("alac" . "mpv")
+
+          ;; --- DOCUMENTS & COMICS (zathura) ---
+          ("pdf"  . "zathura")  ("djvu" . "zathura")  ("ps"   . "zathura")
+          ("eps"  . "zathura")  ("cbz"  . "zathura")  ("cbr"  . "zathura")
+
+          ;; --- E-BOOKS (FBReader) ---
+          ("epub" . "FBReader") ("mobi" . "FBReader") ("fb2"  . "FBReader")
+          ("azw3" . "FBReader")
+          )))
+
+
 
 ;; COPY/PASTE/CUT for DIRED/DIRVISH
 (with-eval-after-load 'dired
-  (require 'dired-copy-paste))
-
+  (require 'my-dired-copy-paste)
+  (require 'my-ranger-renaming))
 
 (provide 'file-manager)
 

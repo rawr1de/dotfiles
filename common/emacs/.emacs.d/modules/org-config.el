@@ -67,14 +67,33 @@
 (setq org-startup-indented t)
 
 
+;;; --- ORG-TEMPO
+  ;; Enable quick template expansion in Org
+  (require 'org-tempo)
+  (with-eval-after-load 'org
+    (require 'org-tempo)
+    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+    (add-to-list 'org-structure-template-alist '("sh" . "src bash"))
+    (add-to-list 'org-structure-template-alist '("py" . "src python")))
+    ;; add more languages if necessary above
+
+
 ;;; --- OTHER ORG CONFIGS
+(setq org-file-apps
+      '((auto-mode . emacs)
+        (directory . emacs)
+        ("\\.mm\\'" . default)
+        ("\\.x?html?\\'" . default)
+        ("\\.pdf\\'" . system)   ; Opens PDF in system default app
+        ("\\.png\\'" . system)   ; Opens images in system default app
+        ("\\.jpg\\'" . system)))
 
 
+;;; --- END OF FILE
 (provide 'org-config)
 
 
-;;; --- END OF FILE !!!
-;;
+
 ;; M-x package-delete (delete installed files)
 ;; M-x package-autoremove (remove package dependencies)
 ;;

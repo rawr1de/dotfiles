@@ -211,6 +211,13 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
 #+END_SRC
 
+*** org-tempo
+#+BEGIN_SRC emacs-lisp
+;; Enable quick template expansion in Org
+(require 'org-tempo)
+#+END_SRC
+
+
 ** registers
 #+BEGIN_SRC emacs-lisp
 (set-register ?a (cons 'file (concat dropbox-orgriz "/[PERSO]_agenda_2026.org")))

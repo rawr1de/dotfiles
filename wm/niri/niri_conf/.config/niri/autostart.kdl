@@ -12,4 +12,7 @@
   spawn-at-startup "bash" "-c" "wl-paste --type text --watch cliphist store"
   spawn-at-startup "bash" "-c" "wl-paste --type image --watch cliphist store"
   spawn-at-startup "mako"
+  // spawn-at-startup "mpd" ()
   spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
+  spawn-at-startup "systemctl" "--user" "import-environment" "WAYLAND_DISPLAY" "XDG_RUNTIME_DIR" "DISPLAY" "DBUS_SESSION_BUS_ADDRESS" "XDG_CURRENT_DESKTOP"
+  spawn-at-startup "udiskie" "--no-notify" "--tray"

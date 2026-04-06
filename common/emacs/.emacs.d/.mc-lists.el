@@ -3,13 +3,21 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+	avy-goto-char-2
+	embark-act
 	magit-stage
+	my-scroll-one-line-down
+	my-scroll-one-line-up
 	org-ctrl-c-ctrl-c
+	org-cycle
+	org-delete-char
 	org-kill-line
 	org-metadown
+	org-open-line
 	org-self-insert-command
 	replace-string
 	wdired--self-insert
+	wdired-downcase-word
 	wdired-exit
 	wdired-finish-edit
 	wdired-upcase-word
@@ -19,11 +27,14 @@
 	xah-copy-line-or-region
 	xah-cut-line-or-region
 	xah-end-of-line-or-block
+	xah-extend-selection
 	xah-fly-command-mode-activate
 	xah-fly-insert-mode-activate
 	xah-forward-right-bracket
 	xah-insert-space-before
 	xah-paste-or-paste-previous
+	xah-select-block
+	xah-select-line
 	xah-shrink-whitespaces
 	xah-smart-delete
 	))

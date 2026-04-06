@@ -13,6 +13,9 @@ include "input.kdl"
 // output
 include "output.kdl"
 
+// load external window rules
+include "window-rules.kdl"
+
 // auto start
 include "autostart.kdl"
 

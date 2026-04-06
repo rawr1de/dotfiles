@@ -40,5 +40,6 @@ export XDG_MENU_PREFIX=gnome-
      export MOZ_ENABLE_WAYLAND=1
      export QT_QPA_PLATFORM=wayland
      export ELECTRON_OZONE_PLATFORM_HINT=wayland
+     # export WAYLAND_DISPLAY=wayland-1
      exec dbus-run-session niri
 fi
