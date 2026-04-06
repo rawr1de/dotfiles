@@ -3,4 +3,9 @@
  (dirvish-quicksort nil)
  (dirvish-yank-menu nil)
  (listen-menu nil)
+ (magit-commit
+  ("--verbose"))
+ (magit-dispatch nil)
+ (magit-gitignore nil)
+ (magit-push nil)
  (rdo/search-menu nil))

@@ -76,7 +76,7 @@
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)                 ;; Enable auto completion
   (corfu-auto-prefix 3)          ;; Trigger popup after 3 chars
-  (corfu-auto-delay 1)           ;; popup wait time (0 for instant)
+  (corfu-auto-delay .8)          ;; popup wait time (0 for instant)
   (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   (corfu-quit-no-match t)        ;; Auto-quit if there are no matches
   (corfu-preview-current nil)    ;; Disable inline preview (keeps buffer clean)

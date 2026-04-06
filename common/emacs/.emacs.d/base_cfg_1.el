@@ -29,6 +29,15 @@
 (autoload 'my-convert-md-to-org "my-convert-md-to-org" nil t)
 (autoload 'my-org-tables-align "my-org-tables-align" nil t)
 
+;; kitty popup artwork
+(autoload 'my-emms-now-playing-popup "my-emms-now-playing-popup" nil t)
+;; artwork scan folder
+(autoload 'my-musk-show-album-art    "my-musk-show-album-art"    nil t)
+
+(autoload 'my-dired-kdeconnect-share "my-dired-kdeconnect-share" nil t)
+(autoload 'my-dired-wormhole-send "my-dired-wormhole-send" nil t)
+(autoload 'my-dired-syncthing-transfer "my-dired-syncthing-transfer" nil t)
+
 (autoload 'my-backup-file "my-backup-file" nil t)
 
 (autoload 'my-batt-conserv-change "my-batt-conserv-change" nil t)
@@ -36,11 +45,6 @@
 (autoload 'my-browse-url-and-focus "my-browse-url-and-focus" nil t)
 
 (autoload 'my-tab-or-frame-close "my-tab-or-frame-close" nil t)
-
-;; kitty popup artwork
-(autoload 'my-emms-now-playing-popup "my-emms-now-playing-popup" nil t)
-;; artwork scan folder
-(autoload 'my-musk-show-album-art    "my-musk-show-album-art"    nil t)
 
 (require 'system)
 (require 'ui)
@@ -158,12 +162,13 @@
     "SPC" "Dirvish Menu"))
 
 ;; 5. menus items
-(define-key my-dired-spc-map (kbd "1") '("drag/drop" . my-dired-ripdrag))
-(define-key my-dired-spc-map (kbd "2") '("wl-copy" . my-dired-copy-file-to-clipboard))
-(define-key my-dired-spc-map (kbd "m") '("dired-jump" . dired-jump))
-(define-key my-dired-spc-map (kbd "u") '("consult-buffer" . consult-buffer))
-(define-key my-dired-spc-map (kbd "f") '("iBuffer" . ibuffer))
-(define-key my-dired-spc-map (kbd "r") '("ranger-rename" . my-ranger-renaming))
+(define-key my-dired-spc-map (kbd "1") '("drag/drop"       . my-dired-ripdrag))
+(define-key my-dired-spc-map (kbd "2") '("wl-copy"         . my-dired-copy-file-to-clipboard))
+(define-key my-dired-spc-map (kbd "m") '("dired-jump"      . dired-jump))
+(define-key my-dired-spc-map (kbd "u") '("consult-buffer"  . consult-buffer))
+(define-key my-dired-spc-map (kbd "f") '("iBuffer"         . ibuffer))
+(define-key my-dired-spc-map (kbd "r") '("ranger-rename"   . my-ranger-renaming))
+(define-key my-dired-spc-map (kbd "b") '("backup files"    . my-backup-file))
 
 (defvar my-dired-rename-map (make-sparse-keymap) "Ranger Renaming Map")
 (define-key my-dired-spc-map (kbd "r") my-dired-rename-map)
@@ -177,6 +182,21 @@
 (define-key my-dired-rename-map (kbd "i") '("Insert (Beginning)" . my-ranger-rename-prepend))
 (define-key my-dired-rename-map (kbd "e") '("Change Extension" . my-ranger-rename-extension))
 (define-key my-dired-rename-map (kbd "w") '("spc → _" . dirvish-rename-space-to-underscore))
+
+;; 1. Create the new Share Sub-Map
+(defvar my-dired-share-map (make-sparse-keymap) "Share to Phone Map")
+
+;; 2. Attach the Share map to 'p' INSIDE your main SPC map
+(define-key my-dired-spc-map (kbd "p") my-dired-share-map)
+
+;; 3. Tell which-key what to call this menu
+(with-eval-after-load 'which-key
+  (which-key-add-keymap-based-replacements my-dired-spc-map "p" "Share Menu"))
+
+;; 4. Bind the share functions INTO THE SHARE MAP (not the spc map!)
+(define-key my-dired-share-map (kbd "k") '("to phone > KDE"  . my-dired-kdeconnect-share))
+(define-key my-dired-share-map (kbd "w") '("to phone > worm" . my-dired-wormhole-send))
+(define-key my-dired-share-map (kbd "s") '("syncthing folder" . my-dired-syncthing-transfer))
 
 ;; kill buffer with no confirmation (!)
 (global-set-key (kbd "C-w") 'my-kill-buffer-no-confirm)
@@ -300,7 +320,7 @@
   (define-key ibuffer-mode-map  (kbd "k") '("next line " . ibuffer-forward-line))
   (define-key ibuffer-mode-map  (kbd "i") '("prev line" . ibuffer-backward-line))
 
-(defun my/org-babel-tangle-config ()
+(defun my-org-babel-tangle-config ()
   "Automatically tangle our Org config file when we save it"
   (when (string-equal (buffer-file-name)
                       (expand-file-name "base_cfg_1.org" user-emacs-directory))
@@ -310,4 +330,4 @@
 
 (add-hook 'org-mode-hook
           (lambda ()
-            (add-hook 'after-save-hook #'my/org-babel-tangle-config nil 'make-it-local)))
+            (add-hook 'after-save-hook #'my-org-babel-tangle-config nil 'make-it-local)))
