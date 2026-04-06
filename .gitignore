@@ -52,3 +52,4 @@ wm/kde/.config/kwinrc
 .gitignore
 /common/emacs/.emacs.d/.scratch_copy
 base_cfg_1.el
+base_cfg_1.el
