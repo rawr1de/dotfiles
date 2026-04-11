@@ -43,27 +43,33 @@
 
 *** org-capture
 #+begin_src emacs-lisp
-  ;; CAPTURE TEMPLATE
+   ;; CAPTURE TEMPLATE
+
+  ;; custom Kanban-style states
+  ;; (The letter in parentheses is the fast-access shortcut key)
+  (setq org-todo-keywords
+    '((sequence "TODO(t)" "IN-PROGRESS(i)" "VERIFY(v)" "|" "DONE(d)")))
+
   (setq org-capture-templates
-        '(
-          ;; Day Trading Log (Datetree)
-          ("t" "Trade Log" entry
-           (file+olp+datetree "~/Docs/09.notes/trading-log.org")
-           "* Trade: %?\n  - Entry: \n  - Exit: \n  - Notes: "
-           :empty-lines 1)
+    '(
+       ;; Day Trading Log (Datetree)
+       ("t" "Trade Log" entry
+       (file+olp+datetree "~/Docs/09.notes/trading-log.org")
+       "* Trade: %?\n  - Entry: \n  - Exit: \n  - Notes: "
+       :empty-lines 1)
 
-          ;; Study Tracker (Backlog Inbox)
-          ("s" "Study Backlog (Trading)" entry
-           (file+headline "~/Docs/09.notes/trading-study-tracker.org" "MASTER BACKLOG")
-           "** BACKLOG %?\n  %i\n  Context: %a\n"
-           :empty-lines 1)
+       ;; Study Tracker (Backlog Inbox)
+       ("s" "Study Backlog (Trading)" entry
+        (file+headline "~/Docs/09.notes/trading-study-tracker.org" "MASTER BACKLOG")
+        "** BACKLOG %?\n  %i\n  Context: %a\n"
+        :empty-lines 1)
 
-          ;; System Ticketing template
-          ("t" "System Ticket" entry
-           (file+headline "~/Org/roam/system-tickets.org" "OPEN TICKETS")
-           "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%a\n"
-           :empty-lines 1)
-))
+        ;; System Ticketing template
+        ("x" "System Ticket" entry
+         (file+headline "~/Docs/10.Org/roam/system-tickets.org" "OPEN TICKETS")
+         "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%a\n"
+         :empty-lines 1)
+    ))
 #+end_src
 
 *** org-bullets

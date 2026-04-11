@@ -654,15 +654,18 @@
 #+end_src
 
 ** TOOLS
-*** multiple cursors
+*** org
 #+begin_src emacs-lisp
-(use-package multiple-cursors
-  :ensure t
-  :bind (("C-S-c C-S-c" . mc/edit-lines)
-         ("C->"         . mc/mark-next-like-this)
-         ("C-<"         . mc/mark-previous-like-this)
-         ("C-c C-<"     . mc/mark-all-like-this))
-  :config (setq mc/always-run-for-all t))
+(global-set-key (kbd "C-c c") 'org-capture)
+#+end_src
+
+*** roam
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c n l") 'org-roam-buffer-toggle)
+  (global-set-key (kbd "C-c n f") 'org-roam-node-find)
+  (global-set-key (kbd "C-c n g") 'org-roam-graph)
+  (global-set-key (kbd "C-c n i") 'org-roam-node-insert)
+  (global-set-key (kbd "C-c n c") 'org-roam-capture)
 #+end_src
 
 *** embrace
@@ -676,13 +679,15 @@
   (define-key my-embrace-map (kbd "d") #'embrace-delete)
 #+end_src
 
-*** roam
+*** multiple cursors
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c n l") 'org-roam-buffer-toggle)
-  (global-set-key (kbd "C-c n f") 'org-roam-node-find)
-  (global-set-key (kbd "C-c n g") 'org-roam-graph)
-  (global-set-key (kbd "C-c n i") 'org-roam-node-insert)
-  (global-set-key (kbd "C-c n c") 'org-roam-capture)
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->"         . mc/mark-next-like-this)
+         ("C-<"         . mc/mark-previous-like-this)
+         ("C-c C-<"     . mc/mark-all-like-this))
+  :config (setq mc/always-run-for-all t))
 #+end_src
 
 ** COMPLETION
