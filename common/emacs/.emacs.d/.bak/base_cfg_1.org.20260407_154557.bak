@@ -24,6 +24,67 @@
 (require 'my-kde-sms)
 #+end_src
 
+#+begin_comment
+(provide 'file-manager)
+  (require 'my-dired-copy-paste)
+  (require 'my-ranger-renaming)
+  (use-package dired)
+  (use-package dired-open)
+  (use-package dirvish)
+  (use-package async)
+
+(provide 'completion)
+  (use-package vertico)
+  (use-package consult)
+  (use-package consult-dir)
+  (use-package orderless)
+  (use-package marginalia)
+  (use-package embark)
+  (use-package embark-consult)
+  (use-package zoxide)
+  (use-package corfu)
+  (use-package cape)
+
+(provide 'system)
+  (require 'my-clean-unused-buffers)
+  (require 'my-xfk-universal-snap)
+  (use-package ibuffer)
+  (use-package savehist)
+
+(provide 'tools)
+  (use-package magit)
+  (use-package vterm)
+  (use-package iedit)
+  (use-package avy)
+  (use-package which-key)
+  (use-package sudo-edit)
+  (use-package lua-mode)
+  (use-package kdl-mode)
+  (use-package keyfreq)
+  (use-package embrace)
+
+(provide 'ui)
+  (use-package doom-themes)
+  (use-package doom-modeline)
+
+(provide 'org-config)
+  (use-package org)
+  (use-package org-capture)
+  (use-package org-bullets)
+  (use-package org-modern)
+
+(provide 'musk)
+  (use-package emms)
+
+(provide 'musk-visuals)
+  (require 'emms)
+  (require 'emms-browser)
+
+(provide 'my-scratchpad)
+
+(provide 'my-kde-sms)
+#+end_comment
+
 * AUTOLOADS (LAZY LOADING)
 
 ** drag/drop & copy to clipboard files in dired/dirvish
@@ -97,18 +158,31 @@
 (autoload 'my-tab-or-frame-close "my-tab-or-frame-close" nil t)
 #+end_src
 
-* THE MODAL CORE (Xah Fly Keys)
+** use-package OVER lazy load
 #+begin_src emacs-lisp
-(use-package xah-fly-keys
-  :load-path "~/.emacs.d/lisp/"
-  :config
-  (setq xah-fly-use-control-key t)
-  (setq xah-fly-command-mode-cursor-color nil)
-  (setq xah-fly-insert-mode-cursor-color nil)
-  (xah-fly-keys-set-layout "qwerty")
-  (xah-fly-keys 1))
-  (add-hook 'server-after-make-frame-hook 'xah-fly-command-mode-activate)
-  (global-set-key (kbd "<home>") 'xah-fly-command-mode-activate)
+  ;; (use-package my-xfk-help-info-snap
+    ;; :hook ((window-selection-change-functions . my-xfk-snap-command-mode)
+           ;; (help-mode . my-xfk-help-override-mode)
+           ;; (Info-mode . my-xfk-help-override-mode)))
+#+end_src
+
+* THE MODAL CORE (xah-fly-keys)
+
+#+begin_src emacs-lisp
+  (use-package xah-fly-keys
+    :load-path "~/.emacs.d/lisp/"
+    :config
+    (setq xah-fly-use-control-key t)
+    (setq xah-fly-command-mode-cursor-color nil)
+    (setq xah-fly-insert-mode-cursor-color nil)
+    (xah-fly-keys-set-layout "qwerty")
+    (xah-fly-keys 1))
+    (add-hook 'server-after-make-frame-hook 'xah-fly-command-mode-activate)
+    (global-set-key (kbd "<home>") 'xah-fly-command-mode-activate)
+
+     ;; COMMAND MODE EVERYWHERE!
+     (add-hook 'find-file-hook #'xah-fly-command-mode-activate)
+     (add-hook 'after-change-major-mode-hook #'xah-fly-command-mode-activate)
 #+end_src
 
 #+begin_comment
@@ -135,11 +209,13 @@
     ;; rest of your mode-line
     ;; ))
 #+end_comment
-* (MY) KEY OVERRIDES / BINDINGS / MINOR-MODES
 
-** /DISABLED KEYS/ & /TERMINAL COLLISION/ (recycle)
+* KEY BINDINGS
+** GLOBAL
+*** DISABLED
+
 #+begin_comment info1
-terminal key collisions to know about:
+/terminal key collisions to know about:/
 |-----------------+-------------------------------|
 | Identical pair  | Why                           |
 |-----------------+-------------------------------|
@@ -153,9 +229,7 @@ terminal key collisions to know about:
 |                 | commonly confused             |
 |-----------------+-------------------------------|
 #+end_comment
-#+begin_comment info2
-'emms' DEFAULT keybinds are ALL DISABLED at: 'MUSIC -- EMMS [PKG]'
-#+end_comment
+
 
 #+begin_src emacs-lisp
   ;; ORG-MODE
@@ -163,7 +237,6 @@ terminal key collisions to know about:
     (define-key org-mode-map (kbd "C-k") nil)
     ;; org-mode  org-cycle ;; org-mode  org-cycle
     (define-key org-mode-map (kbd "C-i") nil)
-
 
   ;; TERMINAL COLLISION
     ;; Distinguish terminal key aliases in GUI
@@ -183,10 +256,83 @@ terminal key collisions to know about:
     (define-key global-map (kbd "M-h") nil)
     ;; insert single track (emms)
     (define-key emms-playlist-mode-map (kbd "i") nil)
+
+
+  ;; EMMS BROWSER MAP NUKE!
+  (with-eval-after-load 'emms-browser
+    (setq emms-browser-mode-map (make-sparse-keymap)))
+
+  ;; EMMS PLAYLIST MAP NUKE!
+  (with-eval-after-load 'emms-playlist-mode
+    (setq emms-playlist-mode-map (make-sparse-keymap)))
+#+end_src
+
+*** GLOBAL KEYS
+**** SYSTEM
+#+begin_src emacs-lisp
+  ;; kill buffer with no confirmation (!)
+  (global-set-key (kbd "C-w") 'my-kill-buffer-no-confirm)
+  ;; toggle XFK modal
+  (global-set-key (kbd "<f12>") 'xah-fly-keys)
+#+end_src
+
+**** VERT/HORIZ SPLIT CONTROL
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-S-i") 'enlarge-window)
+  (global-set-key (kbd "C-S-k") 'shrink-window)
+  (global-set-key (kbd "C-S-l") 'enlarge-window-horizontally)
+  (global-set-key (kbd "C-S-j") 'shrink-window-horizontally)
+  (define-key xah-fly-leader-key-map (kbd "=") 'balance-windows)
+#+end_src
+
+**** TAB NAVIGATION
+#+begin_src emacs-lisp
+  ;; cycle through tabs
+  (global-set-key (kbd "C-S-o") 'tab-next)
+  ;; close tab & frame
+  (global-set-key (kbd "C-S-w") 'my-tab-or-frame-close)
+  ;; open/jump to new tab
+  (define-key xah-fly-key-map (kbd "SPC t") 'tab-new)
+  ;; disable (hide) tabs
+  (define-key xah-fly-key-map (kbd "SPC T") 'tab-bar-mode)
+#+end_src
+
+**** SCREEN SCROLLING
+#+begin_src emacs-lisp
+  (global-set-key (kbd "M-i") 'my-scroll-one-line-down)
+  (global-set-key (kbd "M-k") 'my-scroll-one-line-up)
+#+end_src
+
+*** xah-fly-keys (XFK)
+**** leader-key-map
+#+begin_src emacs-lisp
+  (define-key xah-fly-leader-key-map (kbd "0") 'my-set-cycle-mark)
+  (define-key xah-fly-command-map    (kbd "0") 'my-jump-cycle-mark)
+  (define-key xah-fly-leader-key-map (kbd "9") 'my-clear-all-cycle-marks)
+  (define-key xah-fly-leader-key-map (kbd "c") 'my-mini-calc)
+  (define-key xah-fly-leader-key-map (kbd ", b") 'my-backup-file)
+  (define-key xah-fly-leader-key-map (kbd "+") 'my-kde-send-sms)
+  (define-key xah-fly-leader-key-map (kbd ", s") 'save-buffer)
+  (define-key xah-fly-leader-key-map (kbd "u") 'consult-buffer)
+  (define-key xah-fly-leader-key-map (kbd "s") 'consult-line)
+  (define-key xah-fly-leader-key-map (kbd "r") 'replace-string)
+  (define-key xah-fly-leader-key-map (kbd "R") 'query-replace)
+  (define-key xah-fly-leader-key-map (kbd "f") 'ibuffer)
+  (define-key xah-fly-leader-key-map (kbd "SPC") 'kill-line)
+  (define-key xah-fly-leader-key-map (kbd ";") 'consult-ripgrep)
+  (define-key xah-fly-key-map (kbd "n") 'consult-line)
+#+end_src
+
+**** numbers row
+#+begin_src emacs-lisp
+  (define-key xah-fly-key-map (kbd "5") 'delete-char)
+  (define-key xah-fly-key-map (kbd "6") 'xah-select-block)
+  (define-key xah-fly-key-map (kbd "7") 'xah-select-line)
+  (define-key xah-fly-key-map (kbd "8") 'xah-select-text-in-quote)
 #+end_src
 
 ** ORG-MODE
-*** org-mode sub-map for XFK
+*** XFK sub-map (org-mode)
 #+begin_src emacs-lisp
    ;; submap definition
   (defvar my-xah-org-prefix-map (make-sparse-keymap) "Org-mode sub-menu for XFK")
@@ -217,49 +363,36 @@ terminal key collisions to know about:
                   (t nil)))))
 #+end_src
 
-*** rebinds for org-mode
+*** re-binds (org-mode)
 #+begin_src emacs-lisp
   ;; org-mode  org-cycle | restore TAB explicitly
   (define-key org-mode-map (kbd "TAB") #'org-cycle)
 #+end_src
 
-** (MY) CUSTOM FUNCTIONS KEYBINDINGS (GLOBAL)
-#+begin_src emacs-lisp
-  (define-key xah-fly-leader-key-map (kbd "0") 'my-set-cycle-mark)
-  (define-key xah-fly-command-map    (kbd "0") 'my-jump-cycle-mark)
-  (define-key xah-fly-leader-key-map (kbd "9") 'my-clear-all-cycle-marks)
-  (define-key xah-fly-leader-key-map (kbd "c") 'my-mini-calc)
-  (define-key xah-fly-leader-key-map (kbd ", b") 'my-backup-file)
-  (define-key xah-fly-leader-key-map (kbd "+") 'my-kde-send-sms)
-#+end_src
-
-** XFK LEADER-KEY-MAP
-#+begin_src emacs-lisp
-    ;; toggle XFK modal
-    (global-set-key (kbd "<f12>") 'xah-fly-keys)
-
-    ;; assorted keys
-    (define-key xah-fly-leader-key-map (kbd ", s") 'save-buffer)
-    (define-key xah-fly-leader-key-map (kbd "u") 'consult-buffer)
-    (define-key xah-fly-leader-key-map (kbd "s") 'consult-line)
-    (define-key xah-fly-leader-key-map (kbd "r") 'replace-string)
-    (define-key xah-fly-leader-key-map (kbd "R") 'query-replace)
-    (define-key xah-fly-leader-key-map (kbd "f") 'ibuffer)
-    (define-key xah-fly-leader-key-map (kbd "SPC") 'kill-line)
-    (define-key xah-fly-key-map (kbd "n") 'consult-line)
-#+end_src
-
-** DIRED/DIRVISH [PKG]
-*** GENERAL KEYS
+** FILE-MANAGER
+*** general keys (dired/dirvish)
 #+begin_src emacs-lisp
   ;; dired/dirvish keys
   (with-eval-after-load 'dired
-  ;; Bind a key in all Dired/Dirvish buffers
-  (define-key dired-mode-map (kbd "\\") 'dired-narrow-fuzzy)
-  (define-key dired-mode-map (kbd "n") 'consult-line))
+    ;; Bind a key in all Dired/Dirvish buffers
+    (define-key dired-mode-map (kbd "\\")    #'dired-narrow-fuzzy)
+    (define-key dired-mode-map (kbd "n")     #'consult-line)
+    (define-key dired-mode-map (kbd "h")     #'dired-maybe-insert-subdir))
+
+  (with-eval-after-load 'dirvish
+    ;; 1. This catches your physical Ctrl+I (because input-decode-map saved it)
+    (define-key dirvish-mode-map (kbd "<C-i>") #'dired-prev-subdir)
+
+    ;; 2. This catches your physical Tab key (Emacs' fallback for <tab>)
+    (define-key dirvish-mode-map (kbd "TAB") #'dirvish-subtree-toggle)
+
+    ;; 3. Your other bindings
+    (define-key dirvish-mode-map (kbd "C-k") #'dired-next-subdir)
+    (define-key dirvish-mode-map (kbd "z")   #'describe-mode)
+    (define-key dirvish-mode-map (kbd "b")   #'xah-pop-local-mark-ring))
 #+end_src
 
-*** INSERT-MODE 'SPC' MENU
+*** insert-mode (spc menu)
 #+begin_src emacs-lisp
   ;; 1. create a brand new keymap
   (defvar my-dired-spc-map (make-sparse-keymap)
@@ -281,28 +414,30 @@ terminal key collisions to know about:
   (define-key my-dired-spc-map (kbd "2") '("wl-copy"         . my-dired-copy-file-to-clipboard))
   (define-key my-dired-spc-map (kbd "m") '("dired-jump"      . dired-jump))
   (define-key my-dired-spc-map (kbd "u") '("consult-buffer"  . consult-buffer))
+  (define-key my-dired-spc-map (kbd ";") '("consult-ripgrep" . consult-ripgrep))
   (define-key my-dired-spc-map (kbd "f") '("iBuffer"         . ibuffer))
   (define-key my-dired-spc-map (kbd "r") '("ranger-rename"   . my-ranger-renaming))
   (define-key my-dired-spc-map (kbd "b") '("backup files"    . my-backup-file))
 #+end_src
 
-*** SUB-MAP 'r' (RANGER RENAME MENU)
+*** sub-map 'r' (ranger rename menu)
 #+begin_src emacs-lisp
-    (defvar my-dired-rename-map (make-sparse-keymap) "Ranger Renaming Map")
-    (define-key my-dired-spc-map (kbd "r") my-dired-rename-map)
-    (with-eval-after-load 'which-key
-      (which-key-add-keymap-based-replacements my-dired-spc-map "r" "Rename Menu"))
+  (defvar my-dired-rename-map (make-sparse-keymap) "Ranger Renaming Map")
+  (define-key my-dired-spc-map (kbd "r") my-dired-rename-map)
+  (with-eval-after-load 'which-key
+    (which-key-add-keymap-based-replacements my-dired-spc-map "r" "Rename Menu"))
 
-    ;; Bind the Ranger functions
-    (define-key my-dired-rename-map (kbd "r") '("Rename Standard" . my-ranger-rename-standard))
-    (define-key my-dired-rename-map (kbd "a") '("Append (Before Ext)" . my-ranger-rename-append))
-    (define-key my-dired-rename-map (kbd "A") '("Append (Absolute End)" . my-ranger-rename-append-end))
-    (define-key my-dired-rename-map (kbd "i") '("Insert (Beginning)" . my-ranger-rename-prepend))
-    (define-key my-dired-rename-map (kbd "e") '("Change Extension" . my-ranger-rename-extension))
-    (define-key my-dired-rename-map (kbd "w") '("spc → _" . dirvish-rename-space-to-underscore))
+  ;; Bind the Ranger functions
+  (define-key my-dired-rename-map (kbd "r") '("rm standard" . my-ranger-rename-standard))
+  (define-key my-dired-rename-map (kbd "a") '("append" . my-ranger-rename-append))
+  (define-key my-dired-rename-map (kbd "A") '("Appen/Absolute" . my-ranger-rename-append-end))
+  (define-key my-dired-rename-map (kbd "i") '("Insert" . my-ranger-rename-prepend))
+  (define-key my-dired-rename-map (kbd "e") '("Extension" . my-ranger-rename-extension))
+  (define-key my-dired-rename-map (kbd "u") '("spc → _" . dirvish-rename-space-to-underscore))
+  (define-key my-dired-rename-map (kbd "w") '("wDired" . dired-toggle-read-only))
 #+end_src
 
-*** SUB-MAP 'p' (share to PHONE)
+*** sub-map 'p' (share to phone/others)
 #+begin_src emacs-lisp
   ;; 1. Create the new Share Sub-Map
   (defvar my-dired-share-map (make-sparse-keymap) "Share to Phone Map")
@@ -315,18 +450,58 @@ terminal key collisions to know about:
     (which-key-add-keymap-based-replacements my-dired-spc-map "p" "Share Menu"))
 
   ;; 4. Bind the share functions INTO THE SHARE MAP (not the spc map!)
-  (define-key my-dired-share-map (kbd "k") '("to phone > KDE"  . my-dired-kdeconnect-share))
-  (define-key my-dired-share-map (kbd "w") '("to phone > worm" . my-dired-wormhole-send))
+  (define-key my-dired-share-map (kbd "k") '("to phone > KDE"   . my-dired-kdeconnect-share))
+  (define-key my-dired-share-map (kbd "w") '("to phone > worm"  . my-dired-wormhole-send))
   (define-key my-dired-share-map (kbd "s") '("syncthing folder" . my-dired-syncthing-transfer))
 #+end_src
 
-** OTHER BINDINGS
+** SYSTEM
+*** IBUFFER INSERT-MODE
 #+begin_src emacs-lisp
-  ;; kill buffer with no confirmation (!)
-  (global-set-key (kbd "C-w") 'my-kill-buffer-no-confirm)
+  (with-eval-after-load 'ibuffer
+    ;; 1. Create a brand new keymap
+    (defvar my-ibuffer-spc-map (make-sparse-keymap)
+      "Custom SPC leader map for Ibuffer in Insert Mode.")
+
+    ;; 2. Nuke the default SPC binding in Ibuffer
+    (define-key ibuffer-mode-map (kbd "SPC") nil)
+
+    ;; 3. Bind SPC to our new map
+    (define-key ibuffer-mode-map (kbd "SPC") my-ibuffer-spc-map)
+
+    ;; 4. Tell which-key what this menu is called
+    (with-eval-after-load 'which-key
+      (which-key-add-major-mode-key-based-replacements 'ibuffer-mode
+        "SPC" "Ibuffer Menu"))
+
+    ;; 5. Populate the menu
+    (define-key my-ibuffer-spc-map (kbd "m") '("dired-jump" . dired-jump))
+    (define-key my-ibuffer-spc-map (kbd "f") '("Filter by Mode" . ibuffer-filter-by-mode))
+    (define-key my-ibuffer-spc-map (kbd "c") '("Clear Filters" . ibuffer-filter-disable))
+    (define-key my-ibuffer-spc-map (kbd "u") '("consult-buffer" . consult-buffer))
+    (define-key my-ibuffer-spc-map (kbd "k") '("kill-lines" . ibuffer-do-kill-lines))
+    (define-key my-ibuffer-spc-map (kbd "s") '("Save (Write)" . ibuffer-do-save)))
+    (define-key my-ibuffer-spc-map (kbd "a") '("Clean Unused" . my-clean-unused-buffers))
+
+    ;; iBuffer navigation
+    (define-key ibuffer-mode-map  (kbd "k") '("next line " . ibuffer-forward-line))
+    (define-key ibuffer-mode-map  (kbd "i") '("prev line" . ibuffer-backward-line))
 #+end_src
 
-** MUSIC -- EMMS [PKG]
+*** REGISTERS
+
+#+begin_src emacs-lisp
+(set-register ?a (cons 'file "~/Desk/Dropbox/orgriz/[PERSO]_agenda_2026.org"))
+(set-register ?h (cons 'file "~/Desk/Dropbox/orgriz/health.org"))
+(set-register ?s (cons 'file "~/Desk/Dropbox/configs/[BIZ]_sys_config.org"))
+(set-register ?t (cons 'file "~/Docs/Org/trade_kbase.org"))
+(set-register ?p (cons 'file "~/Docs/Org/perso_search.org"))
+(set-register ?f (cons 'file "~/Docs/11.git_docs/03.system/FIXES_LOG.org"))
+#+end_src
+
+*** BOOKMARKS
+
+** MUSK
 *** Z MODE MAP FOR XFK
 #+begin_src emacs-lisp
   (defvar z-emms-map (make-sparse-keymap))
@@ -363,44 +538,61 @@ terminal key collisions to know about:
 
 *** EMMS PLAYLIST BINDS
 #+begin_src emacs-lisp
-  (with-eval-after-load 'emms-playlist-mode
-    ;; NUKE THE DEFAULT MAP: Overwrite it with a completely blank keymap
-    (setq emms-playlist-mode-map (make-sparse-keymap))
+  (add-hook 'emms-playlist-mode-hook
+        (lambda ()
+          ;; 1. Turn on the current-line highlight
+          (hl-line-mode 1)
 
-    ;; my 'blank slate' keybinds
-    (define-key emms-playlist-mode-map (kbd "i")   'previous-line)
-    (define-key emms-playlist-mode-map (kbd "k")   'next-line)
-    (define-key emms-playlist-mode-map (kbd "RET") 'emms-playlist-mode-play-current-track)
-    (define-key emms-playlist-mode-map (kbd "SPC") 'emms-pause)
-    (define-key emms-playlist-mode-map (kbd "v")   'emms-stop)
-    (define-key emms-playlist-mode-map (kbd "m")   'emms-next)
-    (define-key emms-playlist-mode-map (kbd "n")   'emms-previous)
-    (define-key emms-playlist-mode-map (kbd ",")   'xah-next-window-or-frame)
-    (define-key emms-playlist-mode-map (kbd ";")   'my-emms-now-playing-popup)
-    (define-key emms-playlist-mode-map (kbd "h")   'my-musk-show-album-art)
-    (define-key emms-playlist-mode-map (kbd "p")    nil))
+          ;; 2. Override the color locally (only in this buffer)
+          (face-remap-add-relative 'hl-line
+                                   :background "#3e4451"
+                                   :foreground "#61afef"
+                                   :weight 'bold)))
 
-    ;; volume (MPV internal)
-    (define-key emms-playlist-mode-map (kbd "u") (lambda () (interactive) (musk-volume-change -5)))
-    (define-key emms-playlist-mode-map (kbd "o") (lambda () (interactive) (musk-volume-change  5)))
-    (define-key emms-playlist-mode-map (kbd "U") (lambda () (interactive) (musk-volume-change -1)))
-    (define-key emms-playlist-mode-map (kbd "O") (lambda () (interactive) (musk-volume-change  1)))
+  ;; my 'blank slate' keybinds
+  (define-key emms-playlist-mode-map (kbd "i")   'previous-line)
+  (define-key emms-playlist-mode-map (kbd "k")   'next-line)
+  (define-key emms-playlist-mode-map (kbd "RET") 'emms-playlist-mode-play-current-track)
+  (define-key emms-playlist-mode-map (kbd "SPC") 'emms-pause)
+  (define-key emms-playlist-mode-map (kbd "v")   'emms-stop)
+  (define-key emms-playlist-mode-map (kbd "m")   'emms-next)
+  (define-key emms-playlist-mode-map (kbd "n")   'emms-previous)
+  (define-key emms-playlist-mode-map (kbd ",")   'xah-next-window-or-frame)
+  (define-key emms-playlist-mode-map (kbd ";")   'my-emms-now-playing-popup)
+  (define-key emms-playlist-mode-map (kbd "h")   'my-musk-show-album-art)
+  (define-key emms-playlist-mode-map (kbd "d")   'emms-playlist-mode-goto-dired-at-point)
+  (define-key emms-playlist-mode-map (kbd "q")   'emms-playlist-mode-bury-buffer)
+  (define-key emms-playlist-mode-map (kbd "D")   'emms-playlist-mode-kill-track)
+  (define-key emms-playlist-mode-map (kbd "C")   'emms-playlist-clear)
+  (define-key emms-playlist-mode-map (kbd "y")   'emms-playlist-mode-center-current)
+  ;; (define-key emms-playlist-mode-map (kbd "SPC") 'emms-playlist-mode-center-current)
+  ;; disable 'p' asd
+  (define-key emms-playlist-mode-map (kbd "p")    nil)
 
-    ;; seek 5sec
-    (define-key emms-playlist-mode-map (kbd "j") (lambda () (interactive) (emms-seek -5)))
-    (define-key emms-playlist-mode-map (kbd "l") (lambda () (interactive) (emms-seek  5)))
+  ;; volume (MPV internal)
+  (define-key emms-playlist-mode-map (kbd "u") (lambda () (interactive) (musk-volume-change -5)))
+  (define-key emms-playlist-mode-map (kbd "o") (lambda () (interactive) (musk-volume-change  5)))
+  (define-key emms-playlist-mode-map (kbd "U") (lambda () (interactive) (musk-volume-change -1)))
+  (define-key emms-playlist-mode-map (kbd "O") (lambda () (interactive) (musk-volume-change  1)))
 
-    ;; shift tracks
-    (define-key emms-playlist-mode-map (kbd "w") 'emms-playlist-mode-shift-track-up)
-    (define-key emms-playlist-mode-map (kbd "s") 'emms-playlist-mode-shift-track-down)
+  ;; seek 5sec
+  (define-key emms-playlist-mode-map (kbd "j") (lambda () (interactive) (emms-seek -5)))
+  (define-key emms-playlist-mode-map (kbd "l") (lambda () (interactive) (emms-seek  5)))
+
+  ;; shift tracks
+  (define-key emms-playlist-mode-map (kbd "w") 'emms-playlist-mode-shift-track-up)
+  (define-key emms-playlist-mode-map (kbd "s") 'emms-playlist-mode-shift-track-down)
+
+
+  ;; set this AFTER the keybinds
+  ;; (set-face-attribute 'emms-playlist-selected-face nil
+                      ;; :background "#3e4451" ; A subtle grey-blue
+                      ;; :foreground "#61afef" ; Blue text
+  ;; :weight 'bold)
 #+end_src
 
 *** EMMS BROWSER KEYBINDS
 #+begin_src emacs-lisp
-  (with-eval-after-load 'emms-browser
-    ;; NUKE THE BROWSER MAP
-    (setq emms-browser-mode-map (make-sparse-keymap))
-
     ;; my 'blank slate' keybinds
     (define-key emms-browser-mode-map (kbd "i")     'previous-line)
     (define-key emms-browser-mode-map (kbd "k")     'next-line)
@@ -408,7 +600,7 @@ terminal key collisions to know about:
     (define-key emms-browser-mode-map (kbd "<tab>") 'emms-playlist-mode-go)
     (define-key emms-browser-mode-map (kbd "a")     'emms-browser-add-tracks)
     (define-key emms-browser-mode-map (kbd "RET")   'emms-browser-add-tracks-and-play)
-    (define-key emms-browser-mode-map (kbd ",")     'xah-next-window-or-frame))
+    (define-key emms-browser-mode-map (kbd ",")     'xah-next-window-or-frame)
 #+end_src
 
 *** TAG EDITOR BINDS
@@ -417,42 +609,8 @@ terminal key collisions to know about:
     (define-key emms-tag-editor-mode-map (kbd "C-c C-c") 'emms-tag-editor-submit))
 #+end_src
 
-** VERT/HORIZ SPLIT CONTROL
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-S-i") 'enlarge-window)
-  (global-set-key (kbd "C-S-k") 'shrink-window)
-  (global-set-key (kbd "C-S-l") 'enlarge-window-horizontally)
-  (global-set-key (kbd "C-S-j") 'shrink-window-horizontally)
-  (define-key xah-fly-leader-key-map (kbd "=") 'balance-windows)
-#+end_src
-
-** NUMBERS ROW
-#+begin_src emacs-lisp
-  (define-key xah-fly-key-map (kbd "5") 'delete-char)
-  (define-key xah-fly-key-map (kbd "6") 'xah-select-block)
-  (define-key xah-fly-key-map (kbd "7") 'xah-select-line)
-  (define-key xah-fly-key-map (kbd "8") 'xah-select-text-in-quote)
-#+end_src
-
-** TAB NAVIGATION
-#+begin_src emacs-lisp
-  ;; cycle through tabs
-  (global-set-key (kbd "C-S-o") 'tab-next)
-  ;; close tab & frame
-  (global-set-key (kbd "C-S-w") 'my-tab-or-frame-close)
-  ;; open/jump to new tab
-  (define-key xah-fly-key-map (kbd "SPC t") 'tab-new)
-  ;; disable (hide) tabs
-  (define-key xah-fly-key-map (kbd "SPC T") 'tab-bar-mode)
-#+end_src
-
-** SCREEN SCROLLING
-#+begin_src emacs-lisp
-  (global-set-key (kbd "M-i") 'my-scroll-one-line-down)
-  (global-set-key (kbd "M-k") 'my-scroll-one-line-up)
-#+end_src
-
-** MULTIPLE CURSORS (PKG)
+** TOOLS
+*** multiple cursors
 #+begin_src emacs-lisp
 (use-package multiple-cursors
   :ensure t
@@ -463,18 +621,7 @@ terminal key collisions to know about:
   :config (setq mc/always-run-for-all t))
 #+end_src
 
-** REGISTERS
-#+begin_src emacs-lisp
-(set-register ?a (cons 'file "~/Desk/Dropbox/orgriz/[PERSO]_agenda_2026.org"))
-(set-register ?h (cons 'file "~/Desk/Dropbox/orgriz/health.org"))
-(set-register ?s (cons 'file "~/Desk/Dropbox/configs/[BIZ]_sys_config.org"))
-(set-register ?t (cons 'file "~/Docs/Org/trade_kbase.org"))
-(set-register ?p (cons 'file "~/Docs/Org/perso_search.org"))
-(set-register ?f (cons 'file "~/Docs/11.git_docs/03.system/FIXES_LOG.org"))
-#+end_src
-
-** BOOKMARKS
-** EMBRACE (PKG)
+*** embrace
 #+begin_src emacs-lisp
   ;; Bind the map to 'SPC q'
   (define-key xah-fly-leader-key-map (kbd "\\") my-embrace-map)
@@ -485,38 +632,15 @@ terminal key collisions to know about:
   (define-key my-embrace-map (kbd "d") #'embrace-delete)
 #+end_src
 
-** IBUFFER INSERT-MODE
+** COMPLETION
+*** vertico
 #+begin_src emacs-lisp
-  (with-eval-after-load 'ibuffer
-    ;; 1. Create a brand new keymap
-    (defvar my-ibuffer-spc-map (make-sparse-keymap)
-      "Custom SPC leader map for Ibuffer in Insert Mode.")
-
-    ;; 2. Nuke the default SPC binding in Ibuffer
-    (define-key ibuffer-mode-map (kbd "SPC") nil)
-
-    ;; 3. Bind SPC to our new map
-    (define-key ibuffer-mode-map (kbd "SPC") my-ibuffer-spc-map)
-
-    ;; 4. Tell which-key what this menu is called
-    (with-eval-after-load 'which-key
-      (which-key-add-major-mode-key-based-replacements 'ibuffer-mode
-        "SPC" "Ibuffer Menu"))
-
-    ;; 5. Populate the menu
-    (define-key my-ibuffer-spc-map (kbd "m") '("dired-jump" . dired-jump))
-    (define-key my-ibuffer-spc-map (kbd "f") '("Filter by Mode" . ibuffer-filter-by-mode))
-    (define-key my-ibuffer-spc-map (kbd "c") '("Clear Filters" . ibuffer-filter-disable))
-    (define-key my-ibuffer-spc-map (kbd "u") '("consult-buffer" . consult-buffer))
-    (define-key my-ibuffer-spc-map (kbd "k") '("kill-lines" . ibuffer-do-kill-lines))
-    (define-key my-ibuffer-spc-map (kbd "s") '("Save (Write)" . ibuffer-do-save)))
-    (define-key my-ibuffer-spc-map (kbd "a") '("Clean Unused" . my-clean-unused-buffers))
-
-    ;; iBuffer navigation
-    (define-key ibuffer-mode-map  (kbd "k") '("next line " . ibuffer-forward-line))
-    (define-key ibuffer-mode-map  (kbd "i") '("prev line" . ibuffer-backward-line))
+(with-eval-after-load 'vertico
+  (define-key vertico-map (kbd "C-j") #'vertico-exit-input))
 #+end_src
 
+** MY-SCRATCHPAD
+** MY-KDE-SMS
 * END OF FILE
 #+begin_comment
 ;; M-x package-delete (delete installed files)

@@ -1,0 +1,11 @@
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("org-capture-last-stored"
+ (filename . "~/Docs/09.notes/trading-study-tracker.org")
+ (front-context-string . "** BACKLOG Sprin")
+ (rear-context-string . ": The Playbook\n\n")
+ (position . 269)
+ (last-modified 27095 64504 606675 79000))
+)

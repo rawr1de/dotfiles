@@ -4,19 +4,26 @@
 (setq mc/cmds-to-run-for-all
       '(
 	avy-goto-char-2
+	beginning-of-buffer
 	embark-act
+	emms-tag-editor-submit
+	indent-for-tab-command
 	magit-stage
 	my-scroll-one-line-down
 	my-scroll-one-line-up
+	my-set-cycle-mark
 	org-ctrl-c-ctrl-c
 	org-cycle
 	org-delete-char
 	org-kill-line
 	org-metadown
+	org-metaleft
+	org-metaright
 	org-open-line
 	org-self-insert-command
 	replace-string
 	wdired--self-insert
+	wdired-capitalize-word
 	wdired-downcase-word
 	wdired-exit
 	wdired-finish-edit
@@ -42,4 +49,5 @@
 (setq mc/cmds-to-run-once
       '(
 	iedit-switch-to-mc-mode
+	my-force-fullscreen-toggle
 	))

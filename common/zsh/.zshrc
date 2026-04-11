@@ -121,6 +121,36 @@ alias pac='pacseek'
 alias x='exit'
 
 
+# ─── HEX COLOR CHECKER ─────────
+# Usage: color #abb2bf
+color() {
+    local hex=${1#\#}
+    local r=$((16#${hex:0:2}))
+    local g=$((16#${hex:2:2}))
+    local b=$((16#${hex:4:2}))
+    printf "\n  \e[48;2;%s;%s;%sm        \e[0m  #%s\n\n" "$r" "$g" "$b" "$hex"
+}
+
+
+# ─── FIREFOX RIPGREP SEARCHER ─────────
+ff-book() {
+  # 1. Force find the profile in YOUR specific path
+  local profile=$(ls -d ~/.config/mozilla/firefox/*.default-release 2>/dev/null | head -n 1)
+
+  if [[ -z "$profile" ]]; then
+    echo "Error: Profile not found in ~/.config/mozilla/firefox/"
+    return 1
+  fi
+
+  # 2. Use \cp to FORCE overwrite /tmp without asking
+  \cp -f "$profile/places.sqlite" /tmp/ff_places.sqlite
+
+  # 3. Query bookmarks
+  sqlite3 /tmp/ff_places.sqlite \
+    "SELECT b.title, h.url FROM moz_bookmarks b JOIN moz_places h ON b.fk = h.id WHERE b.title IS NOT NULL;" | rg -i "$1"
+}
+
+
 # ─── ALIASES: DISPLAY-DEPENDENT ──────
 if [[ -n "$WAYLAND_DISPLAY" ]]; then
     alias cl='wl-copy'                          # clipboard (Wayland)

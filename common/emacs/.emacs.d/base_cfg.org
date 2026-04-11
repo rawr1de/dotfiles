@@ -1,4 +1,19 @@
+# -*- lexical-binding: t; buffer-read-only: t -*-
 #+PROPERTY: header-args:emacs-lisp :tangle yes
+
+#+begin_comment MODULES/SNIPPETS
+*MODULES*
+[[file:modules/completion.org][completion.org]]
+[[file:modules/file-manager.org][file-manager.org]]
+[[file:modules/musk.org][musk.org]]
+[[file:modules/system.org][system.org]]
+[[file:modules/tools.org][tools.org]]
+[[file:modules/ui.el][ui.el]]
+[[file:modules/my-scratchpad.el][my-scratchpad.el]]
+[[/home/rdo/.emacs.d/modules/my-kde-sms.el][my-kde-sms.el]]
+
+[[file:snippets/][SNIPPETS]] *(FOLDER)*
+#+end_comment
 
 * LOADOUT FOLDERS
 #+begin_src emacs-lisp
@@ -19,9 +34,9 @@
 (require 'file-manager)
 (require 'musk)
 (require 'tools)
-(require 'org-config)
 (require 'my-scratchpad)
 (require 'my-kde-sms)
+(require 'my-force-fullscreen-toggle)
 #+end_src
 
 #+begin_comment
@@ -62,6 +77,7 @@
   (use-package kdl-mode)
   (use-package keyfreq)
   (use-package embrace)
+  (use-package org-roam)
 
 (provide 'ui)
   (use-package doom-themes)
@@ -75,8 +91,6 @@
 
 (provide 'musk)
   (use-package emms)
-
-(provide 'musk-visuals)
   (require 'emms)
   (require 'emms-browser)
 
@@ -239,35 +253,48 @@
     (define-key org-mode-map (kbd "C-i") nil)
 
 
-  ;; TERMINAL COLLISION
-    ;; Distinguish terminal key aliases in GUI
-    (define-key input-decode-map (kbd "C-i") (kbd "<C-i>"))
-    (define-key input-decode-map (kbd "C-m") (kbd "<C-m>"))
+  ;; ==============================================
+  ;; TERMINAL COLLISION (DAEMON & STANDALONE SAFE)
+  ;; ==============================================
+
+  (defun my-apply-terminal-key-decodes (&optional frame)
+    "Apply input-decode-map to the current frame. Mandatory for emacsclient."
+    (with-selected-frame (or frame (selected-frame))
+      ;; We must check if we are in a GUI or a terminal, because TTYs handle this differently
+      (when (display-graphic-p)
+        (define-key input-decode-map (kbd "C-i") (kbd "<C-i>"))
+        (define-key input-decode-map (kbd "C-m") (kbd "<C-m>")))))
+
+  ;; 1. Run it immediately for standalone Emacs (if you aren't using the daemon)
+  (my-apply-terminal-key-decodes)
+
+  ;; 2. Force the Daemon to run it every time you connect a new emacsclient frame
+  (add-hook 'after-make-frame-functions #'my-apply-terminal-key-decodes)
 
 
   ;; XFK MODAL
     ;; [SPC a]
     (define-key xah-fly-leader-key-map (kbd "a") nil)
-
-
   ;; OTHER
     ;; dired-jump
     (define-key ctl-x-map (kbd "C-j") nil)
     ;; mark-paragraph
     (define-key global-map (kbd "M-h") nil)
-    ;; insert single track (emms)
-    (define-key emms-playlist-mode-map (kbd "i") nil)
-    ;; dirvish-mode-map ;; dirvish-subtree-toggle
-    (define-key dirvish-mode-map (kbd "C-i") nil)
+
 
 
   ;; EMMS BROWSER MAP NUKE!
-  (with-eval-after-load 'emms-browser
-    (setq emms-browser-mode-map (make-sparse-keymap))
+  ;; (with-eval-after-load 'emms-browser
+    ;; (setq emms-browser-mode-map (make-sparse-keymap)))
 
   ;; EMMS PLAYLIST MAP NUKE!
   (with-eval-after-load 'emms-playlist-mode
-    (setq emms-playlist-mode-map (make-sparse-keymap)))
+    ;; (setq emms-playlist-mode-map (make-sparse-keymap)))
+    (define-key emms-playlist-mode-map (kbd "a") nil)
+    ;; insert single track (emms)
+    (define-key emms-playlist-mode-map (kbd "i") nil)
+    (define-key emms-playlist-mode-map (kbd "S-i") nil)
+    (define-key emms-playlist-mode-map (kbd "S-k") nil))
 #+end_src
 
 *** GLOBAL KEYS
@@ -277,6 +304,14 @@
   (global-set-key (kbd "C-w") 'my-kill-buffer-no-confirm)
   ;; toggle XFK modal
   (global-set-key (kbd "<f12>") 'xah-fly-keys)
+
+  ;; toggle corfu GLOBALLY
+  (global-set-key (kbd "<C-f12>") #'global-corfu-mode)
+  ;; toggle corfu LOCALLY
+  ;; (global-set-key (kbd "<C-f12>") #'corfu-mode)
+
+  ;; Explicitly bind the GUI <f11> key to the native toggle command
+  ;; (global-set-key (kbd "<f11>") #'toggle-frame-fullscreen)
 #+end_src
 
 **** VERT/HORIZ SPLIT CONTROL
@@ -377,20 +412,22 @@
 #+begin_src emacs-lisp
   ;; dired/dirvish keys
   (with-eval-after-load 'dired
-  ;; Bind a key in all Dired/Dirvish buffers
-  (define-key dired-mode-map (kbd "\\")    #'dired-narrow-fuzzy)
-  (define-key dired-mode-map (kbd "n")     #'consult-line)
-  (define-key dired-mode-map (kbd "h")     #'dired-maybe-insert-subdir))
+    ;; Bind a key in all Dired/Dirvish buffers
+    (define-key dired-mode-map (kbd "\\")    #'dired-narrow-fuzzy)
+    (define-key dired-mode-map (kbd "n")     #'consult-line)
+    (define-key dired-mode-map (kbd "h")     #'dired-maybe-insert-subdir))
 
   (with-eval-after-load 'dirvish
-  (define-key dirvish-mode-map (kbd "C-k") #'dired-next-subdir)
-  ;; special note to C-i -> now <C-i> due to Terminal disassociation
-  (define-key dirvish-mode-map (kbd "<C-i>") #'dired-prev-subdir)
-  (define-key dirvish-mode-map (kbd "z")     #'describe-mode)
-  (define-key dirvish-mode-map (kbd "b")     #'xah-pop-local-mark-ring)
+    ;; 1. This catches your physical Ctrl+I (because input-decode-map saved it)
+    (define-key dirvish-mode-map (kbd "<C-i>") #'dired-prev-subdir)
 
-  ;; dirvish-mode-map  | restore TAB explicitly
-  (define-key dirvish-mode-map (kbd "TAB") #'dirvish-subtree-toggle))
+    ;; 2. This catches your physical Tab key (Emacs' fallback for <tab>)
+    (define-key dirvish-mode-map (kbd "TAB") #'dirvish-subtree-toggle)
+
+    ;; 3. Your other bindings
+    (define-key dirvish-mode-map (kbd "C-k") #'dired-next-subdir)
+    (define-key dirvish-mode-map (kbd "z")   #'describe-mode)
+    (define-key dirvish-mode-map (kbd "b")   #'xah-pop-local-mark-ring))
 #+end_src
 
 *** insert-mode (spc menu)
@@ -492,12 +529,12 @@
 *** REGISTERS
 
 #+begin_src emacs-lisp
-(set-register ?a (cons 'file "~/Desk/Dropbox/orgriz/[PERSO]_agenda_2026.org"))
-(set-register ?h (cons 'file "~/Desk/Dropbox/orgriz/health.org"))
-(set-register ?s (cons 'file "~/Desk/Dropbox/configs/[BIZ]_sys_config.org"))
-(set-register ?t (cons 'file "~/Docs/Org/trade_kbase.org"))
-(set-register ?p (cons 'file "~/Docs/Org/perso_search.org"))
-(set-register ?f (cons 'file "~/Docs/11.git_docs/03.system/FIXES_LOG.org"))
+  (set-register ?a (cons 'file "~/Desk/Dropbox/orgriz/[PERSO]_agenda_2026.org"))
+  (set-register ?h (cons 'file "~/Desk/Dropbox/orgriz/health.org"))
+  (set-register ?s (cons 'file "~/Docs/09.notes/trading-study-tracker.org"))
+  (set-register ?t (cons 'file "~/Docs/Org/trade_kbase.org"))
+  (set-register ?p (cons 'file "~/Docs/Org/perso_search.org"))
+  (set-register ?f (cons 'file "~/Docs/11.git_docs/03.system/FIXES_LOG.org"))
 #+end_src
 
 *** BOOKMARKS
@@ -565,9 +602,11 @@
   (define-key emms-playlist-mode-map (kbd "q")   'emms-playlist-mode-bury-buffer)
   (define-key emms-playlist-mode-map (kbd "D")   'emms-playlist-mode-kill-track)
   (define-key emms-playlist-mode-map (kbd "C")   'emms-playlist-clear)
-  (define-key emms-playlist-mode-map (kbd "y")   'emms-playlist-mode-center-current)
-  ;; (define-key emms-playlist-mode-map (kbd "SPC") 'emms-playlist-mode-center-current)
-  ;; disable 'p' asd
+  (define-key emms-playlist-mode-map (kbd "'")   'delete-other-windows)
+  (define-key emms-playlist-mode-map (kbd "S-k")   'end-of-buffer)
+  (define-key emms-playlist-mode-map (kbd "S-i")   'beginning-of-buffer)
+  (define-key emms-playlist-mode-map (kbd "y") 'emms-playlist-mode-center-current)
+  ;; disable 'p' ASDF
   (define-key emms-playlist-mode-map (kbd "p")    nil)
 
   ;; volume (MPV internal)
@@ -589,19 +628,23 @@
   ;; (set-face-attribute 'emms-playlist-selected-face nil
                       ;; :background "#3e4451" ; A subtle grey-blue
                       ;; :foreground "#61afef" ; Blue text
-                      ;; :weight 'bold))
+  ;; :weight 'bold)
 #+end_src
 
 *** EMMS BROWSER KEYBINDS
 #+begin_src emacs-lisp
-    ;; my 'blank slate' keybinds
-    (define-key emms-browser-mode-map (kbd "i")     'previous-line)
-    (define-key emms-browser-mode-map (kbd "k")     'next-line)
-    (define-key emms-browser-mode-map (kbd "SPC")   'emms-browser-toggle-subitems-recursively)
-    (define-key emms-browser-mode-map (kbd "<tab>") 'emms-playlist-mode-go)
-    (define-key emms-browser-mode-map (kbd "a")     'emms-browser-add-tracks)
-    (define-key emms-browser-mode-map (kbd "RET")   'emms-browser-add-tracks-and-play)
-    (define-key emms-browser-mode-map (kbd ",")     'xah-next-window-or-frame))
+  ;; my 'blank slate' keybinds
+  (define-key emms-browser-mode-map (kbd "i")     #'previous-line)
+  (define-key emms-browser-mode-map (kbd "k")     #'next-line)
+  (define-key emms-browser-mode-map (kbd "SPC")   #'emms-browser-toggle-subitems-recursively)
+  (define-key emms-browser-mode-map (kbd "<tab>") #'emms-playlist-mode-go)
+  (define-key emms-browser-mode-map (kbd "a")     #'emms-browser-add-tracks)
+  (define-key emms-browser-mode-map (kbd "RET")   #'emms-browser-add-tracks-and-play)
+  (define-key emms-browser-mode-map (kbd ",")     #'xah-next-window-or-frame)
+  ;; (define-key emms-browser-mode-map (kbd "1")     #'emms-browser-collapse-all)
+  ;; (define-key emms-browser-mode-map (kbd "2")     #'emms-browser-expand-level-2)
+  ;; (define-key emms-browser-mode-map (kbd "3")     #'emms-browser-expand-level-3)
+  ;; (define-key emms-browser-mode-map (kbd "4")     #'emms-browser-expand-all)
 #+end_src
 
 *** TAG EDITOR BINDS
@@ -633,6 +676,15 @@
   (define-key my-embrace-map (kbd "d") #'embrace-delete)
 #+end_src
 
+*** roam
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c n l") 'org-roam-buffer-toggle)
+  (global-set-key (kbd "C-c n f") 'org-roam-node-find)
+  (global-set-key (kbd "C-c n g") 'org-roam-graph)
+  (global-set-key (kbd "C-c n i") 'org-roam-node-insert)
+  (global-set-key (kbd "C-c n c") 'org-roam-capture)
+#+end_src
+
 ** COMPLETION
 *** vertico
 #+begin_src emacs-lisp
@@ -642,38 +694,31 @@
 
 ** MY-SCRATCHPAD
 ** MY-KDE-SMS
-* END OF FILE
-#+begin_comment
-;; M-x package-delete (delete installed files)
-;; M-x package-autoremove (remove package dependencies)
-#+end_comment
-
-* CONFIG FILES/FOLDERS
-
-*MODULES*
-[[file:modules/completion.el][completion.el]]
-[[file:modules/file-manager.el][file-manager.el]]
-[[file:modules/musk-visuals.el][musk-visuals.el]]
-[[file:modules/musk.el][musk.el]]
-[[file:modules/my-scratchpad.el][my-scratchpad.el]]
-[[file:modules/org-config.el][org-config.el]]
-[[file:modules/system.el][system.el]]
-[[file:modules/tools.el][tools.el]]
-[[file:modules/ui.el][ui.el]]
-
-[[file:snippets/][SNIPPETS]] *(FOLDER)*
 
 * AUTO-TANGLE CONFIGURATION
 #+begin_src emacs-lisp
-(defun my-org-babel-tangle-config ()
-  "Automatically tangle our Org config file when we save it"
-  (when (string-equal (buffer-file-name)
-                      (expand-file-name "base_cfg_1.org" user-emacs-directory))
-    ;; Dynamic scoping to the rescue
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle))))
+  ;; tangle multiple org files, why this?
+  ;; main config (base_cfg.org) is read-only
+  ;; experimental changes will be tested out in a sandbox called 'test_new.el'
+  ;; after approval, changes will migrate to main config
+  ;; the idea is protect the core config file from breakage
 
-(add-hook 'org-mode-hook
+  (defun my-org-babel-tangle-config ()
+    "Automatically tangle our Org config files when we save them"
+    (when (member (buffer-file-name)
+                  (list (expand-file-name "base_cfg.org"     user-emacs-directory)
+                        ;; (expand-file-name "test_new.org"     user-emacs-directory)
+                        (expand-file-name "modules/completion.org"   user-emacs-directory)
+                        (expand-file-name "modules/file-manager.org" user-emacs-directory)
+                        (expand-file-name "modules/system.org"   user-emacs-directory)
+                        (expand-file-name "modules/musk.org"     user-emacs-directory)
+                        (expand-file-name "modules/tools.org"    user-emacs-directory)))
+
+      ;; Dynamic scoping to the rescue
+      (let ((org-confirm-babel-evaluate nil))
+        (org-babel-tangle))))
+
+  (add-hook 'org-mode-hook
           (lambda ()
             (add-hook 'after-save-hook #'my-org-babel-tangle-config nil 'make-it-local)))
 #+end_src

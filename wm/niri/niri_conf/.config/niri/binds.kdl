@@ -37,7 +37,7 @@ binds  {
     Mod+7                     hotkey-overlay-title="Clipboard (Fuzzel)"  { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
     Mod+N                     hotkey-overlay-title="Toggle Noctalia Bar" { spawn-sh "qs -c noctalia-shell ipc call bar toggle"; }
     Mod+P                     hotkey-overlay-title="Song Playing Info"   { spawn "emacsclient" "--eval" "(my-emms-now-playing-popup)"; }
-    Mod+Shift+A               hotkey-overlay-title="Emacs Scratchpad"    { spawn "emacsclient" "-c" "-F" "((title . \"niri-scratchpad\") (width . 70) (height . 20))" "-e" "(my-spawn-scratchpad)"; }
+    Mod+Shift+M               hotkey-overlay-title="Emacs Scratchpad"    { spawn "emacsclient" "-c" "-F" "((title . \"niri-scratchpad\") (width . 70) (height . 20))" "-e" "(my-spawn-scratchpad)"; }
     // keypad numbers don't work, sub-functions only KP_END
     // Mod+KP_1                  hotkey-overlay-title="Emacs"               { spawn "emacsclient" "-c" "-a" "emacs"; }
 
