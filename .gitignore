@@ -43,13 +43,12 @@ wm/kde/.config/kwinrc
 /common/emacs/.emacs.d/custom.el
 /common/emacs/.emacs.d/backups/
 /common/emacs/.emacs.d/emms/
-/common/emacs/.emacs.d/auto-saves/#!home!rdo!.dotfiles!common!emacs!.emacs.d!snippets!my-batt-conserv-change.el#
-/common/emacs/.emacs.d/auto-saves/#!home!rdo!.dotfiles!common!emacs!.emacs.d!snippets!my-colored-jump-marks.el#
+/common/emacs/.emacs.d/auto-saves/
 /common/emacs/.emacs.d/%backup%~
 /common/emacs/.emacs.d/doom-space-grey-theme.el
 /common/emacs/.emacs.d/emms-volume-cache
 /common/emacs/.emacs.d/tree-sitter/
 .gitignore
 /common/emacs/.emacs.d/.scratch_copy
-base_cfg_1.el
-base_cfg_1.el
+/common/emacs/.emacs.d/base_cfg_1.el
+/common/emacs/.emacs.d/modules/*.el
