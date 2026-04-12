@@ -220,6 +220,17 @@
   :commands (sudo-edit))
 #+end_src
 
+** ultra-scroll
+#+begin_src emacs-lisp
+  (use-package ultra-scroll
+    :ensure t
+    :init
+    (setq scroll-conservatively 3     ; or any value you like (v0.4+)
+          scroll-margin 0)            ; ultra-scroll requires this
+    :config
+    (ultra-scroll-mode 1))
+#+end_src
+
 * END-OF-FILE
 #+begin_src emacs-lisp
 (provide 'tools)

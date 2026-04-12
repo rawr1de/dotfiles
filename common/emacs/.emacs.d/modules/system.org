@@ -13,8 +13,8 @@
   (setq use-short-answers t)
   (setq inhibit-startup-message t
         ring-bell-function 'ignore
-        scroll-conservatively 100
         scroll-preserve-screen-position t
+        scroll-step 1
         create-lockfiles nil
         case-fold-search t
         read-quoted-char-radix 10)
