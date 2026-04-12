@@ -53,3 +53,4 @@ wm/kde/.config/kwinrc
 /common/emacs/.emacs.d/modules/*.el
 /common/emacs/.emacs.d/*.el
 .gitignore
+/common/zsh/
