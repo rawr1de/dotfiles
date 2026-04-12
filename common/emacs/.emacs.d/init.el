@@ -19,7 +19,7 @@
 (org-babel-load-file (expand-file-name "base_cfg.org" user-emacs-directory))
 
 ;; load experimental config second
-;; (load (expand-file-name "test_new.el" user-emacs-directory))
+(load (expand-file-name "test_new.el" user-emacs-directory))
 
 (put 'emms-browser-delete-files 'disabled nil)
 ;; END OF FILE

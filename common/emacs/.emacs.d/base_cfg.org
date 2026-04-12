@@ -43,6 +43,7 @@
 (provide 'file-manager)
   (require 'my-dired-copy-paste)
   (require 'my-ranger-renaming)
+  (require 'my-dired-copy-file-contents)
   (use-package dired)
   (use-package dired-open)
   (use-package dirvish)
@@ -712,7 +713,6 @@
     "Automatically tangle our Org config files when we save them"
     (when (member (buffer-file-name)
                   (list (expand-file-name "base_cfg.org"     user-emacs-directory)
-                        ;; (expand-file-name "test_new.org"     user-emacs-directory)
                         (expand-file-name "modules/completion.org"   user-emacs-directory)
                         (expand-file-name "modules/file-manager.org" user-emacs-directory)
                         (expand-file-name "modules/system.org"   user-emacs-directory)

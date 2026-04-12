@@ -1,0 +1,1180 @@
+# -*- lexical-binding: t; buffer-read-only: t -*-
+#+TITLE: RDO System Dotfiles
+#+PROPERTY: header-args :mkdirp yes
+
+* common (wayland/x11)
+** .config/
+**** atuin (shell history)                                        :common:
+ui customized to show exit codes. executes commands immediately on enter
+
+#+begin_src sh :tangle no
+  atuin default-config > ~/.config/atuin/config.default.toml
+#+end_src
+
+#+begin_src toml :tangle ~/.config/atuin/config.toml
+enter_accept = true
+
+[sync]
+records = true
+
+[ui]
+style = "auto"
+inline_height = 0
+columns = ["exit", "duration", "command"]
+#+end_src
+
+**** bash (shell environment)                                     :common:
+login profile and interactive shell configuration
+***** .bash_profile
+
+#+begin_src sh :tangle ~/.bash_profile
+[[ -f ~/.bashrc ]] && . ~/.bashrc
+
+setfont ter-124n
+
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -t"
+export VISUAL="emacsclient -c -a emacs"
+export TERMINAL="kitty"
+export BROWSER="brave"
+export READER="zathura"
+export FILE="ranger"
+export NETCTL_DEBUG="yes"
+export XDG_CONFIG_HOME="$HOME/.config"
+export MPLAYER_HOME="$HOME/.config"
+
+alias sx="startx"
+#+end_src
+
+***** .bashrc
+#+begin_src sh :tangle ~/.bashrc
+# If not running interactively, don't do anything [[ $- != *i* ]] && return
+
+PS1='[ $USER ] \$ '
+
+alias fix='reset; stty sane; tput rs1; clear; echo -e "\033c"'
+alias ll='lsd -lAh --group-dirs first --hyperlink=auto'
+alias ls='ls -h --color=auto --group-directories-first --hyperlink=auto'
+alias le='bat'
+
+alias ra='ranger'
+alias cm='cmus'
+alias tl='tldr'
+alias m='emacsclient -c -a emacs'
+
+alias pu='pushd'
+alias po='popd'
+alias mv='mv -iv'
+alias cp='cp -iv'
+alias cpr='rsync -ah --progress'
+alias rm='rm -iv'
+alias frm='\rm -rfv'
+alias x='exit'
+
+alias se='script_editor.sh'
+alias fe='file_editor.sh'
+alias mm='rofi_man.sh '
+
+PATH=$PATH:~/.config
+PATH=$PATH:~/.scripts
+PATH=$PATH:~/.scripts/groff_helpers/helpers
+PATH=$PATH:~/.scripts/PCs/Legion5/kb_controls/
+PATH=$PATH:~/.themes
+PATH=$PATH:~/.icons
+
+complete -cf sudo
+
+HISTCONTROL=ignoreboth
+HISTSIZE=3000
+HISTFILESIZE=2000
+
+eval "$(mcfly init bash)"
+
+PATH="/home/rdo/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/rdo/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/rdo/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/rdo/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/rdo/perl5"; export PERL_MM_OPT;
+
+# BEGIN_KITTY_SHELL_INTEGRATION
+if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi
+# END_KITTY_SHELL_INTEGRATION
+#+end_src
+
+**** cmus (music player)                                          :common:
+custom manjaro green theme and core settings with xfk navigation
+***** rc
+#+begin_src conf :tangle ~/.config/cmus/rc
+cd ~/Musk/Metal
+
+unbind -f common h
+
+bind -f common i win-up
+bind -f common k win-down
+bind -f common i win-up
+bind -f common j win-toggle
+bind -f common o win-sel-cur
+bind -f common space player-pause
+
+bind -f browser i win-up
+bind -f browser j browser-up
+bind -f browser l win-activate
+bind -f browser u win-update
+bind -f library l win-next
+#+end_src
+
+***** RDO_manj_green.theme
+#+begin_src conf :tangle ~/.config/cmus/RDO_manj_green.theme
+set color_win_fg=default
+set color_win_bg=default
+set color_cmdline_bg=default
+set color_cmdline_fg=default
+set color_error=124
+set color_info=172
+set color_separator=246
+set color_statusline_bg=237
+set color_statusline_fg=72
+set color_titleline_bg=236
+set color_titleline_fg=142
+set color_win_title_bg=246
+set color_win_title_fg=235
+set color_win_cur=10
+set color_win_cur_sel_bg=30
+set color_win_cur_sel_fg=220
+set color_win_inactive_cur_sel_bg=236
+set color_win_inactive_cur_sel_fg=175
+set color_win_sel_bg=29
+set color_win_sel_fg=229
+set color_win_inactive_sel_bg=236
+set color_win_inactive_sel_fg=229
+set color_win_dir=229
+#+end_src
+
+**** firefox (web browser)                                        :common:
+
+#+begin_src javascript :tangle (expand-file-name "user.js" (car (file-expand-wildcards "~/.config/mozilla/firefox/*.default-release")))
+user_pref("ui.key.menuAccessKeyFocuses", false);
+#+end_src
+
+**** fuzzel (application launcher)                               :wayland:
+key bindings modified for xfk insert-mode navigation (mod1 + i/k)
+
+#+begin_src sh :tangle no
+  cp /etc/xdg/fuzzel/fuzzel.ini ~/.config/fuzzel/fuzzel.default.ini
+#+end_src
+
+#+begin_src conf :tangle ~/.config/fuzzel/fuzzel.ini
+[key-bindings]
+prev=Up Mod1+i
+next=Down Mod1+k
+#+end_src
+
+**** glow (markdown reader)                                       :common:
+terminal markdown renderer display settings
+
+#+begin_src yaml :tangle ~/.config/glow/glow.yml
+style: "auto"
+mouse: false
+pager: false
+width: 80
+all: false
+#+end_src
+
+**** inputrc (readline config BASH ONLY)                          :common:
+**** kitty (terminal emulator)                                    :common:
+terminal settings and window management
+
+#+begin_src conf :tangle ~/.config/kitty/kitty.conf
+  background_opacity 0.95
+  dynamic_background_opacity yes
+  shell_integration enabled
+  allow_remote_control yes
+  linux_display_server auto
+
+  kitty_mod ctrl+shift
+
+  map ctrl+f>1 set_font_size 16
+  map ctrl+f>2 set_font_size 18
+
+  map kitty_mod+c copy_to_clipboard
+  map kitty_mod+v paste_from_clipboard
+  map kitty_mod+o pass_selection_to_program
+
+  map kitty_mod+up        scroll_line_up
+  map kitty_mod+i         scroll_line_up
+  map kitty_mod+down      scroll_line_down
+  map kitty_mod+k         scroll_line_down
+  map kitty_mod+page_up   scroll_page_up
+  map kitty_mod+page_down scroll_page_down
+  map kitty_mod+home      scroll_home
+  map kitty_mod+end       scroll_end
+  map kitty_mod+h         show_scrollback
+
+  map kitty_mod+enter   new_window
+  map ctrl+alt+enter    launch --cwd=current
+  map kitty_mod+;       next_window
+
+  enable_audio_bell no
+  tab_bar_edge top
+  tab_bar_style powerline
+  tab_bar_min_tabs 1
+
+  map kitty_mod+right next_tab
+  map kitty_mod+l     next_tab
+  map kitty_mod+left  previous_tab
+  map kitty_mod+j     previous_tab
+  map kitty_mod+o     move_tab_forward
+  map kitty_mod+u     move_tab_backward
+
+  map kitty_mod+]      set_background_opacity +0.05
+  map kitty_mod+[      set_background_opacity -0.05
+  map kitty_mod+delete clear_terminal reset active
+
+  font_family      family='JetBrainsMono Nerd Font Mono' postscript_name=JetBrainsMonoNFM-Regular
+  bold_font        auto
+  italic_font      auto
+  bold_italic_font auto
+  disable_ligatures never
+  font_size         14
+
+  include current-theme.conf
+#+end_src
+
+**** mako (notifications)                                        :wayland:
+wayland notification daemon configuration
+
+#+begin_src conf :tangle ~/.config/mako/config
+sort=-time
+layer=overlay
+anchor=top-right
+margin=20
+padding=15
+width=350
+
+default-timeout=5000
+ignore-timeout=1 
+
+font=JetBrains Mono 16
+background-color=#10152a
+text-color=#61afef
+border-color=#61afef
+progress-color=#38498c
+border-size=2
+border-radius=5
+
+[urgency=critical]
+border-color=#e06c75
+default-timeout=5000
+progress-color=over #98c379
+
+format=<b>%s</b>\n%b
+
+[grouped=1]
+format=<b>%a (%g)</b>\n%s\n%b
+#+end_src
+**** starship (shell prompt)                                      :common:
+gruvbox dark powerline prompt configuration
+
+#+begin_src toml :tangle ~/.config/starship.toml
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](color_orange)\
+$os\
+$hostname\
+[](bg:color_yellow fg:color_orange)\
+$directory\
+[](fg:color_yellow bg:color_aqua)\
+$git_branch\
+$git_status\
+[](fg:color_aqua bg:color_blue)\
+$c\
+$cpp\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+[](fg:color_blue bg:color_bg3)\
+$docker_context\
+$conda\
+$pixi\
+[](fg:color_bg3 bg:color_bg1)\
+$time\
+[ ](fg:color_bg1)\
+$line_break$character"""
+
+palette = 'gruvbox_dark'
+
+[palettes.gruvbox_dark]
+color_fg0 = '#fbf1c7'
+color_bg1 = '#3c3836'
+color_bg3 = '#665c54'
+color_blue = '#458588'
+color_aqua = '#689d6a'
+color_green = '#98971a'
+color_orange = '#d65d0e'
+color_purple = '#b16286'
+color_red = '#cc241d'
+color_yellow = '#d79921'
+
+[os]
+disabled = false
+style = "bg:color_orange fg:color_fg0"
+
+[hostname]
+ssh_only = false
+format = "[ $hostname ]($style)"
+style = "bg:color_orange fg:black"
+
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+AOSC = ""
+Arch = "󰣇"
+Artix = "󰣇"
+EndeavourOS = ""
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+Pop = ""
+
+[username]
+show_always = true
+style_user = "bg:color_orange fg:color_fg0"
+style_root = "bg:color_orange fg:color_fg0"
+format = '[ $user ]($style)'
+
+[directory]
+style = "fg:color_fg0 bg:color_yellow"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+
+[git_branch]
+symbol = ""
+style = "bg:color_aqua"
+format = '[[ $symbol $branch ](fg:color_fg0 bg:color_aqua)]($style)'
+
+[git_status]
+style = "bg:color_aqua"
+format = '[[($all_status$ahead_behind )](fg:color_fg0 bg:color_aqua)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[c]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[cpp]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[php]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[java]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[haskell]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[python]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[docker_context]
+symbol = ""
+style = "bg:color_bg3"
+format = '[[ $symbol( $context) ](fg:#83a598 bg:color_bg3)]($style)'
+
+[conda]
+style = "bg:color_bg3"
+format = '[[ $symbol( $environment) ](fg:#83a598 bg:color_bg3)]($style)'
+
+[pixi]
+style = "bg:color_bg3"
+format = '[[ $symbol( $version)( $environment) ](fg:color_fg0 bg:color_bg3)]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:color_bg1"
+format = '[[  $time ](fg:color_fg0 bg:color_bg1)]($style)'
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[➜](bold fg:color_green)'
+error_symbol = '[➜](bold fg:color_red)'
+vimcmd_symbol = '[←](bold fg:color_green)'
+vimcmd_replace_one_symbol = '[←](bold fg:color_purple)'
+vimcmd_replace_symbol = '[←](bold fg:color_purple)'
+vimcmd_visual_symbol = '[←](bold fg:color_yellow)'
+#+end_src
+
+**** swayimg (image viewer)                                      :wayland:
+wayland image viewer configuration with custom vim-like binds and api dumps
+
+#+begin_src lua :tangle ~/.config/swayimg/init.lua
+swayimg.viewer.on_key("F12", function()
+  print("\n--- SWAYIMG VIEWER API ---")
+  for k, v in pairs(swayimg.viewer) do
+    if type(v) == "function" then print("swayimg.viewer." .. k) end
+  end
+  print("\n--- SWAYIMG CORE API ---")
+  for k, v in pairs(swayimg) do
+    if type(v) == "function" then print("swayimg." .. k) end
+  end
+end)
+
+swayimg.set_mode("viewer")
+swayimg.enable_antialiasing(true)
+swayimg.enable_decoration(true)
+swayimg.enable_overlay(false)
+swayimg.enable_exif_orientation(true)
+swayimg.set_dnd_button("MouseRight")
+
+swayimg.imagelist.set_order("numeric")
+swayimg.imagelist.enable_reverse(false)
+swayimg.imagelist.enable_recursive(false)
+swayimg.imagelist.enable_adjacent(true)
+swayimg.imagelist.enable_fsmon(true)
+
+swayimg.text.set_font("monospace")
+swayimg.text.set_size(24)
+swayimg.text.set_spacing(0)
+swayimg.text.set_padding(10)
+swayimg.text.set_foreground(0xffcccccc)
+swayimg.text.set_background(0x00000000)
+swayimg.text.set_shadow(0x0d000000)
+swayimg.text.set_timeout(0)
+swayimg.text.set_status_timeout(0)
+
+swayimg.viewer.set_default_scale("optimal")
+swayimg.viewer.set_default_position("center")
+swayimg.viewer.set_drag_button("MouseLeft")
+swayimg.viewer.set_window_background(0xff000000)
+swayimg.viewer.set_image_chessboard(20, 0xff333333, 0xff4c4c4c)
+swayimg.viewer.enable_centering(true)
+swayimg.viewer.enable_loop(true)
+swayimg.viewer.limit_preload(1)
+swayimg.viewer.limit_history(1)
+swayimg.viewer.set_mark_color(0xff808080)
+swayimg.viewer.set_text("topleft", {})
+swayimg.viewer.set_text("topright", {})
+swayimg.viewer.set_text("bottomleft", {})
+
+local info_is_on = true
+local full_topleft = {
+  "File: {name}", "Format: {format}", "File size: {sizehr}",
+  "File time: {time}", "EXIF date: {meta.Exif.Photo.DateTimeOriginal}",
+  "EXIF camera: {meta.Exif.Image.Model}"
+}
+local full_topright = {
+  "Image: {list.index} of {list.total}", "Frame: {frame.index} of {frame.total}",
+  "Size: {frame.width}x{frame.height}"
+}
+local full_bottomleft = { "Scale: {scale}" }
+
+swayimg.viewer.on_key("Tab", function()
+  info_is_on = not info_is_on
+  if info_is_on then
+    swayimg.viewer.set_text("topleft", full_topleft)
+    swayimg.viewer.set_text("topright", full_topright)
+    swayimg.viewer.set_text("bottomleft", full_bottomleft)
+  else
+    swayimg.viewer.set_text("topleft", {})
+    swayimg.viewer.set_text("topright", {})
+    swayimg.viewer.set_text("bottomleft", {})
+  end
+  swayimg.text.set_status("")
+end)
+
+swayimg.viewer.on_key("Escape", function() swayimg.exit() end)
+swayimg.viewer.on_key("q",      function() swayimg.exit() end)
+
+local pan_step = 10
+swayimg.viewer.on_key("i", function()
+  local wnd, pos = swayimg.get_window_size(), swayimg.viewer.get_position()
+  swayimg.viewer.set_abs_position(pos.x, math.floor(pos.y + wnd.height / pan_step))
+end)
+swayimg.viewer.on_key("k", function()
+  local wnd, pos = swayimg.get_window_size(), swayimg.viewer.get_position()
+  swayimg.viewer.set_abs_position(pos.x, math.floor(pos.y - wnd.height / pan_step))
+end)
+swayimg.viewer.on_key("j", function()
+  local wnd, pos = swayimg.get_window_size(), swayimg.viewer.get_position()
+  swayimg.viewer.set_abs_position(math.floor(pos.x + wnd.width / pan_step), pos.y)
+end)
+swayimg.viewer.on_key("l", function()
+  local wnd, pos = swayimg.get_window_size(), swayimg.viewer.get_position()
+  swayimg.viewer.set_abs_position(math.floor(pos.x - wnd.width / pan_step), pos.y)
+end)
+
+swayimg.viewer.on_key("o", function() swayimg.viewer.switch_image("next") end)
+swayimg.viewer.on_key("u", function() swayimg.viewer.switch_image("prev") end)
+swayimg.viewer.on_key("n", function() swayimg.viewer.flip_horizontal() end)
+
+swayimg.viewer.on_key("Left", function()
+  local wnd = swayimg.get_window_size()
+  local pos = swayimg.viewer.get_position()
+  swayimg.viewer.set_abs_position(math.floor(pos.x + wnd.width / 10), pos.y);
+end)
+
+swayimg.viewer.on_mouse("Ctrl-ScrollUp", function()
+  local pos = swayimg.get_mouse_pos()
+  local scale = swayimg.viewer.get_scale()
+  scale = scale + scale / 10
+  swayimg.viewer.set_abs_scale(scale, pos.x, pos.y);
+end)
+
+swayimg.viewer.on_key("d", function()
+  local image = swayimg.viewer.get_image()
+  os.execute(string.format("ripdrag %q 2>/dev/null &", image.path))
+end)
+
+swayimg.slideshow.set_timeout(5)
+swayimg.slideshow.set_default_scale("fit")
+swayimg.slideshow.set_window_background("auto")
+swayimg.slideshow.limit_history(0)
+swayimg.slideshow.set_text("topleft", { "{name}" })
+
+swayimg.gallery.set_aspect("fill")
+swayimg.gallery.set_thumb_size(200)
+swayimg.gallery.set_padding_size(5)
+swayimg.gallery.set_border_size(5)
+swayimg.gallery.set_border_color(0xffaaaaaa)
+swayimg.gallery.set_selected_scale(1.15)
+swayimg.gallery.set_selected_color(0xff404040)
+swayimg.gallery.set_unselected_color(0xff202020)
+swayimg.gallery.set_window_color(0xff000000)
+swayimg.gallery.limit_cache(100)
+swayimg.gallery.enable_preload(false)
+swayimg.gallery.enable_pstore(false)
+swayimg.gallery.set_text("topleft", { "File: {name}" })
+swayimg.gallery.set_text("topright", { "{list.index} of {list.total}" })
+
+swayimg.gallery.on_key("Return", function() swayimg.set_mode("viewer") end)
+swayimg.gallery.on_key("Left", function() swayimg.gallery.switch_image("left") end)
+
+swayimg.on_window_resize(function() swayimg.viewer.set_fix_scale("optimal") end)
+
+swayimg.slideshow.on_key("Delete", function()
+  local image = swayimg.slideshow.get_image()
+  os.remove(image.path)
+  swayimg.text.set_status("File "..image.path.." removed")
+end)
+
+swayimg.gallery.on_image_change(function()
+  local image = swayimg.gallery.get_image()
+  swayimg.set_title("Gallery: "..image.path)
+end)
+
+swayimg.gallery.on_key("Ctrl-p", function()
+  local entries = swayimg.imagelist.get()
+  for _, entry in ipairs(entries) do
+    if entry.mark then print(entry.path) end
+  end
+end)
+#+end_src
+
+**** tealdeer (tldr client)                                       :common:
+custom styles and display settings for tldr
+
+#+begin_src toml :tangle ~/.config/tealdeer/config.toml
+[style.description]
+underline = false
+bold = false
+italic = false
+
+[style.command_name]
+foreground = "cyan"
+underline = false
+bold = false
+italic = false
+
+[style.example_text]
+foreground = "green"
+underline = false
+bold = false
+italic = false
+
+[style.example_code]
+foreground = "cyan"
+underline = false
+bold = false
+italic = false
+
+[style.example_variable]
+foreground = "cyan"
+underline = true
+bold = false
+italic = false
+
+[display]
+compact = false
+use_pager = false
+show_title = false
+
+[updates]
+auto_update = false
+auto_update_interval_hours = 720
+archive_source = "https://github.com/tldr-pages/tldr/releases/latest/download/"
+tls_backend = "rustls-with-webpki-roots"
+
+[directories]
+
+[search]
+#+end_src
+
+**** XDG (user directories)                                       :common:
+overwrites the default system folders generated by xdg-user-dirs
+
+#+begin_src conf :tangle ~/.config/user-dirs.dirs
+XDG_DESKTOP_DIR="$HOME/Desk"
+XDG_DOCUMENTS_DIR="$HOME/Docs"
+XDG_DOWNLOAD_DIR="$HOME/DLs"
+XDG_MUSIC_DIR="$HOME/Musk"
+XDG_PICTURES_DIR="$HOME/Pix"
+XDG_PUBLICSHARE_DIR="$HOME/"
+XDG_TEMPLATES_DIR="$HOME/tmp"
+XDG_TEMP_DIR="$HOME/tmp"
+XDG_VIDEOS_DIR="$HOME/Vidz"
+#+end_src
+
+**** Xmodmap                                                        :x11:
+keyboard mapping for x11
+#+begin_src conf :tangle ~/.Xmodmap
+clear Lock
+keycode 66 = Home NoSymbol Home
+#+end_src
+
+**** Xresources                                                     :x11:
+color overrides
+#+begin_src conf :tangle ~/.Xresources
+*.WINDOW_FOREGROUND: white
+#+end_src
+
+**** yazi (terminal file manager)                                 :common:
+file manager configuration and custom keymaps
+***** yazi.toml
+#+begin_src toml :tangle ~/.config/yazi/yazi.toml
+[mgr]
+ratio          = [1, 3, 4]
+sort_by        = "natural"
+sort_sensitive = false
+sort_reverse   = false
+sort_dir_first = true
+show_hidden    = true
+show_symlink   = true
+scrolloff      = 8
+linemode       = "size"
+
+[preview]
+image_filter = "triangle"
+image_quality = 75
+sixel_fraction = 15
+
+[opener]
+bulk-rename = [
+  { run = 'emacsclient -c "$@"', block = true },
+]
+editor = [
+  { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (GUI)", orphan = true },
+]
+edit_sh = [
+  { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (GUI)",      orphan = true },
+  { run = 'emacsclient -nw "$@"',      desc = "Emacs (Terminal)", block = true  },
+  { run = 'nano "$@"',                 desc = "Nano",             block = true  },
+]
+edit = [
+  { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (gui)",      orphan = true },
+  { run = 'emacsclient -nw "$@"',      desc = "Emacs (terminal)", block = true  },
+  { run = 'nano "$@"',                 desc = "Nano",             block = true  },
+]
+open_md = [
+  { run = 'kitty --class md_floating -e glow -t "$@"', desc = "glow", orphan = true },
+]
+open_pdf = [
+  { run = 'zathura "$@"', desc = "Zathura", orphan = true },
+]
+open_video = [
+  { run = 'mpv "$@"', desc = "mpv", orphan = true },
+]
+open_audio = [
+  { run = 'mpv "$@"', desc = "mpv", orphan = true },
+]
+open_image = [
+  { run = 'swayimg "$@"', desc = "swayimg", orphan = true }
+]
+extract = [
+  { run = 'atool --extract --each -- "$@"', desc = "Extract (atool)" },
+]
+list_archive = [
+  { run = 'atool --list --each -- "$@" | "$PAGER"', desc = "List (atool)", block = true },
+]
+
+[open]
+prepend_rules = [
+  { url  = "bulk-rename.txt",              use = "bulk-rename"},
+  { url  = "*.sh",                         use = "edit_sh" },
+  { url  = "*.md",                         use = ["open_md", "edit"] },
+  { url  = "*.py",                         use = "edit" },
+  { url  = "*.org",                        use = "edit" },
+  { mime = "application/pdf",              use = "open_pdf" },
+  { mime = "video/*",                      use = "open_video" },
+  { mime = "audio/*",                      use = "open_audio" },
+  { mime = "image/*",                      use = "open_image" },
+  { mime = "application/zip",              use = ["extract", "list_archive"] },
+  { mime = "application/x-tar",            use = ["extract", "list_archive"] },
+  { mime = "application/x-rar",            use = ["extract", "list_archive"] },
+  { mime = "application/x-7z-compressed",  use = ["extract", "list_archive"] },
+]
+
+[tasks]
+micro_workers    = 10
+macro_workers    = 25
+bizarre_retry    = 5
+image_alloc      = 536870912
+image_bound      = [0, 0]
+suppress_preload = false
+
+[log]
+enabled = false
+#+end_src
+
+***** keymap.toml
+#+begin_src toml :tangle ~/.config/yazi/keymap.toml
+[[pick.prepend_keymap]]
+on = "i"
+run = "arrow prev"
+
+[[select.prepend_keymap]]
+on = "i"
+run = "arrow -1"
+
+[[mgr.prepend_keymap]]
+on = "i"
+run = "arrow prev"
+
+[[pick.prepend_keymap]]
+on = "k"
+run = "arrow next"
+
+[[select.prepend_keymap]]
+on = "k"
+run = "arrow 1"
+
+[[mgr.prepend_keymap]]
+on = "k"
+run = "arrow next"
+
+[[mgr.prepend_keymap]]
+on = "l"
+run = "enter"
+
+[[mgr.prepend_keymap]]
+on = ["g", "h"]
+run = "cd ~"
+
+[[mgr.prepend_keymap]]
+on = ["g", "l"]
+run = "cd ~/Desk"
+
+[[mgr.prepend_keymap]]
+on = ["g", "w"]
+run = "cd ~/DLs"
+
+[[mgr.prepend_keymap]]
+on = ["g", "d"]
+run = "cd ~/Docs"
+
+[[mgr.prepend_keymap]]
+on = ["g", "m"]
+run = "cd ~/Musk"
+
+[[mgr.prepend_keymap]]
+on = ["g", "p"]
+run = "cd ~/Pix"
+
+[[mgr.prepend_keymap]]
+on = ["g", "v"]
+run = "cd ~/Vidz"
+
+[[mgr.prepend_keymap]]
+on = ["g", "t"]
+run = "cd ~/tmp"
+
+[[mgr.prepend_keymap]]
+on = ["g", "T"]
+run = "cd ~/.local/share/Trash/files"
+
+[[mgr.prepend_keymap]]
+on = ["g", "f"]
+run = "cd ~/.dotfiles"
+
+[[mgr.prepend_keymap]]
+on = ["g", "e"]
+run = "cd ~/.emacs.d"
+
+[[mgr.prepend_keymap]]
+on = ["g", "c"]
+run = "cd ~/.config"
+
+[[mgr.prepend_keymap]]
+on = ["g", "s"]
+run = "cd ~/.scripts"
+
+[[mgr.prepend_keymap]]
+on = ["g", "r"]
+run = "cd ~/Docs/11.git_docs"
+
+[[mgr.prepend_keymap]]
+on = ["g", "i"]
+run = "cd /run/media/$USER"
+
+[[mgr.prepend_keymap]]
+on = ["g", "/"]
+run = "cd /"
+
+[[mgr.prepend_keymap]]
+on = "j"
+run = "leave"
+
+[[mgr.prepend_keymap]]
+on = "A"
+run = "rename --cursor=end"
+
+[[mgr.prepend_keymap]]
+on = "I"
+run = "rename --cursor=start"
+
+[[mgr.prepend_keymap]]
+on = "a"
+run = "rename --cursor=before_ext"
+
+[[mgr.prepend_keymap]]
+on = "h"
+run = "shell 'bat \"$1\"' --block --confirm"
+
+[[mgr.prepend_keymap]]
+on = ["b", "p"]
+run = "shell 'RANGER_send2phone $@' --confirm=always"
+
+[[mgr.prepend_keymap]]
+on = ["b", "z"]
+run = "shell 'zip -r a.zip $@' --confirm=always"
+
+[[mgr.prepend_keymap]]
+on = ["b", "d"]
+run = "shell 'ripdrag -a -x $@'"
+#+end_src
+
+**** zathura (document viewer)                                    :common:
+pdf reader configuration with custom colors and xfk navigation
+
+#+begin_src conf :tangle ~/.config/zathura/zathurarc
+  set sandbox none
+  set guioptions ""
+  set adjust-open "best-fit"
+  set pages-per-row 1
+  set scroll-page-aware "true"
+  set scroll-full-overlap 0.01
+  set scroll-step 15
+  set scroll-hstep 15
+
+  set font "inconsolata 15"
+  set default-bg "#5B575C"
+  set default-fg "#F7F7F6"
+  set statusbar-fg "#B0B0B0"
+  set statusbar-bg "#202020"
+  set inputbar-bg "#151515"
+  set inputbar-fg "#FFFFFF"
+  set notification-error-bg "#AC4142"
+  set notification-error-fg "#151515"
+  set notification-warning-bg "#AC4142"
+  set notification-warning-fg "#151515"
+  set highlight-color "#F4BF75"
+  set highlight-active-color "#6A9FB5"
+  set completion-highlight-fg "#151515"
+  set completion-highlight-bg "#90A959"
+  set completion-bg "#303030"
+  set completion-fg "#E0E0E0"
+  set notification-bg "#90A959"
+  set notification-fg "#151515"
+
+  set recolor "true"
+  set recolor-lightcolor "#3D3D3D"
+  set recolor-darkcolor "#9C9C9C"
+  set recolor-reverse-video "true"
+  set recolor-keephue "true"
+
+  set selection-clipboard clipboard
+  set statusbar-h-padding 0
+  set statusbar-v-padding 0
+  set page-padding 2
+
+  map p print
+  map [fullscreen] p print
+
+  map u recolor
+  map [fullscreen] u recolor
+  map [presentation] u recolor
+
+  map j scroll left
+  map [fullscreen] j scroll left
+  map [presentation] j scroll left
+  map [index] j navigate_index collapse
+
+  map k scroll down
+  map [fullscreen] k scroll down
+  map [presentation] k scroll down
+  map [index] k scroll down
+  map [index] k navigate_index down
+
+  map l scroll right
+  map [fullscreen] l scroll right
+  map [presentation] l scroll right
+  map [index] l scroll right
+  map [index] l navigate_index expand
+
+  map i scroll up
+  map [fullscreen] i scroll up
+  map [presentation] i scroll up
+  map [index] i scroll up
+  map [index] i navigate_index up
+#+end_src
+
+**** zsh (shell environment)                                      :common:
+login profile and interactive shell configuration for zsh
+
+***** .zshenv
+#+begin_src sh :tangle ~/.zshenv
+export PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
+export WAYLAND_DISPLAY=wayland-1
+#+end_src
+
+***** .zprofile
+#+begin_src sh :tangle ~/.zprofile
+# SOURCE LEGION-SPECIFIC TWEAKS FOR HARDWARE
+if [[ "$CURRENT_HOSTNAME" == "legion" ]]; then
+    [[ -f ~/.zsh_legion ]] && source ~/.zsh_legion
+fi
+
+# ─── VISUAL ─────────────────────
+setfont /usr/share/kbd/consolefonts/latarcyrheb-sun32
+
+# ─── ENVIRONMENT ─────────────────────
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin/vendor_perl
+export PATH="/usr/bin/vendor_perl:$PATH"
+export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/.config
+export PATH=$PATH:$HOME/.scripts
+export PATH=$PATH:$HOME/.scripts/groff_helpers/helpers
+export PATH=$PATH:$HOME/.scripts/PCs/Legion5/kb_controls/
+export PATH=$PATH:$HOME/.themes
+export PATH=$PATH:$HOME/.icons
+
+export EDITOR="emacsclient -c"
+export VISUAL="emacsclient -c"
+
+export MOZ_ENABLE_WAYLAND=1 firefox
+export XDG_CURRENT_DESKTOP=niri
+export XDG_SESSION_TYPE=wayland
+export XDG_MENU_PREFIX=gnome-
+
+# ─── WAYLAND AUTOSTART ─────────────────────
+if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+     export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+     export XDG_SESSION_TYPE=wayland
+     export XDG_SESSION_DESKTOP=niri
+     export MOZ_ENABLE_WAYLAND=1
+     export QT_QPA_PLATFORM=wayland
+     export ELECTRON_OZONE_PLATFORM_HINT=wayland
+     exec dbus-run-session niri
+fi
+#+end_src
+
+***** .zshrc
+#+begin_src sh :tangle ~/.zshrc
+  # --- SSH AGENT MANAGEMENT ---
+  () {
+      local keys=()
+      [[ -f ~/.ssh/id_legion ]] && keys+=(id_legion)
+      [[ -f ~/.ssh/id_templar ]] && keys+=(id_templar)
+
+      if command -v keychain >/dev/null 2>&1; then
+          eval $(keychain --eval --quiet "${keys[@]}")
+      else
+          if [[ -z "$SSH_AUTH_SOCK" ]]; then
+              eval "$(ssh-agent -s)" > /dev/null 2>&1
+              local current_host=$(cat /etc/hostname 2>/dev/null)
+              case "$current_host" in
+                  legion)  ssh-add ~/.ssh/id_legion  2>/dev/null ;;
+                  templar) ssh-add ~/.ssh/id_templar 2>/dev/null ;;
+              esac
+          fi
+      fi
+  }
+
+  # ─── OS & HOSTNAME DETECTION ─────────
+  CURRENT_HOSTNAME=$(< /etc/hostname)
+  if [[ -f /etc/os-release ]]; then
+      source /etc/os-release
+      CURRENT_OS="$ID"
+  fi
+
+  # ─── HARDWARE & OS SPECIFIC TWEAKS ───
+  if [[ "$CURRENT_HOSTNAME" == "legion" ]]; then
+      if [[ "$CURRENT_OS" == "void" && -f ~/.zsh_legion_VOID ]]; then
+          source ~/.zsh_legion_VOID
+      elif [[ "$CURRENT_OS" == "arch" && -f ~/.zsh_legion_ARCH ]]; then
+          source ~/.zsh_legion_ARCH
+      fi
+  fi
+
+  # ─── HISTORY ─────────────────────
+  HISTFILE=~/.histfile
+  HISTSIZE=10000
+  SAVEHIST=10000
+  setopt APPEND_HISTORY
+  setopt HIST_IGNORE_DUPS
+  setopt HIST_IGNORE_SPACE
+
+  # ─── KEYBINDINGS ─────────────────────
+  unsetopt beep
+  bindkey -e
+  bindkey "^[[H" beginning-of-line
+  bindkey "^[k" up-line-or-search
+  bindkey "^[j" down-line-or-search
+
+  # ─── COMPLETION ──────────────────────
+  zstyle :compinstall filename '/home/rdo/.zshrc'
+  autoload -Uz compinit
+  compinit
+
+  # ─── ENVIRONMENT ─────────────────────
+  PATH=$PATH:~/.local/bin
+  PATH=$PATH:~/.config
+  PATH=$PATH:~/.scripts
+  PATH=$PATH:~/.scripts/groff_helpers/helpers
+  PATH=$PATH:~/.scripts/PCs/Legion5/kb_controls/
+  PATH=$PATH:~/.themes
+  PATH=$PATH:~/.icons
+
+  EDITOR="emacsclient -c"
+  VISUAL="emacsclient -c"
+
+  export MOZ_ENABLE_WAYLAND=1 firefox
+
+  # ─── ALIASES ───────────────
+  alias ra='ranger'
+  alias zi='yazi'
+  alias cm='cmus'
+  alias mk='musikcube'
+  alias tl='tldr'
+  alias m='emacsclient -c -a emacs'
+  alias ll='lsd -lAh --group-dirs first --hyperlink=auto'
+  alias ls='ls -h --color=auto --group-directories-first --hyperlink=auto'
+  alias le='bat'
+  alias df='duf -hide special'
+  alias ggu='git add . && git commit && git push'
+  alias ggs='git status'
+  alias ggp='git pull'
+
+  alias pu='pushd'
+  alias po='popd'
+  alias mv='mv -iv'
+  alias cp='cp -iv'
+  alias cpr='rsync -ah --progress'
+  alias rm='rm -iv'
+  alias frm='\rm -rfv'
+  alias yys='yay -S'
+  alias yyr='yay -Rns'
+  alias pac='pacseek'
+  alias x='exit'
+
+  color() {
+      local hex=${1#\#}
+      local r=$((16#${hex:0:2}))
+      local g=$((16#${hex:2:2}))
+      local b=$((16#${hex:4:2}))
+      printf "\n  \e[48;2;%s;%s;%sm        \e[0m  #%s\n\n" "$r" "$g" "$b" "$hex"
+  }
+
+  ff-book() {
+    local profile=$(ls -d ~/.config/mozilla/firefox/*.default-release 2>/dev/null | head -n 1)
+    if [[ -z "$profile" ]]; then
+      echo "Error: Profile not found in ~/.config/mozilla/firefox/"
+      return 1
+    fi
+    \cp -f "$profile/places.sqlite" /tmp/ff_places.sqlite
+    sqlite3 /tmp/ff_places.sqlite \
+      "SELECT b.title, h.url FROM moz_bookmarks b JOIN moz_places h ON b.fk = h.id WHERE b.title IS NOT NULL;" | rg -i "$1"
+  }
+
+  if [[ -n "$WAYLAND_DISPLAY" ]]; then
+      alias cl='wl-copy'
+  elif [[ -n "$DISPLAY" ]]; then
+      alias cl='xclip -selection clipboard'
+  fi
+
+  alias fz='SH_fzf_search_editor.sh'
+
+  # ─── EVAL ────────────────────────────
+  eval "$(atuin init zsh --disable-up-arrow)"
+  eval "$(starship init zsh)"
+  eval "$(zoxide init zsh --cmd cd)"
+#+end_src

@@ -64,7 +64,7 @@
           ls-lisp-ignore-case t
           dired-listing-switches "-AGFhlv --time-style=long-iso")
     (add-hook 'dired-mode-hook #'dired-hide-details-mode)
-
+  )
     ;; Force music and video files to open in external MPV with visible window
     ;; (defun my/dired-open-with-mpv (orig-fun &rest args)
       ;; "Open music/video files with MPV in a visible window instead of inside Emacs."
@@ -89,91 +89,92 @@
 
 * dirvish
 #+begin_src emacs-lisp
-(use-package dirvish
-  :ensure t
-  :init (dirvish-override-dired-mode)
-  :custom
-  (dirvish-attributes '(nerd-icons file-size file-time))
-  (dirvish-layout '(0 45 55))
-  (dirvish-hilite-line nil)
-  (setq auto-revert-use-notify t)
-  ;; (setq transient-default-level 7)
-  (global-auto-revert-mode 1)
-  ;; FIXED: removed 'standard' to stop the void-function error
-  (dirvish-preview-dispatchers '(image))
-  :config
-  (require 'dirvish-extras)
-  (require 'dirvish-peek)
-  (dirvish-peek-mode 1)
-  (define-key dirvish-mode-map (kbd "M-i")
-    (lambda () (interactive) (scroll-other-window-down 1)))
-  (define-key dirvish-mode-map (kbd "M-k")
-    (lambda () (interactive) (scroll-other-window 1)))
-  (define-key dired-mode-map (kbd "'") #'delete-other-windows)
-  (setq dirvish-mode-line-format '(:left (sort symlink) :right (omit)))
-  (setq dirvish-preview-dispatchers '(font gif epub archive pdf audio image))
-  ;; define the XFK segment for dirvish
-  (dirvish-define-mode-line xfk-mode
-    "Show current XFK mode."
-    (if xah-fly-insert-state-p
-        (propertize " INSERT " 'face '(:foreground "#5faf5f"))
-      (propertize " COMMAND " 'face '(:foreground "#ff5f5f"))))
+  (use-package dirvish
+    :ensure t
+    :init (dirvish-override-dired-mode)
+    :custom
+    (dirvish-attributes '(nerd-icons file-size file-time))
+    (dirvish-layout '(0 45 55))
+    (dirvish-hilite-line nil)
+    (setq auto-revert-use-notify t)
+    ;; (setq transient-default-level 7)
+    (global-auto-revert-mode 1)
+    ;; FIXED: removed 'standard' to stop the void-function error
+    (dirvish-preview-dispatchers '(image))
+    :config
+    (require 'dirvish-extras)
+    (require 'dirvish-peek)
+    (dirvish-peek-mode 1)
+    (define-key dirvish-mode-map (kbd "M-i")
+      (lambda () (interactive) (scroll-other-window-down 1)))
+    (define-key dirvish-mode-map (kbd "M-k")
+      (lambda () (interactive) (scroll-other-window 1)))
+    (define-key dired-mode-map (kbd "'") #'delete-other-windows)
+    (setq dirvish-mode-line-format '(:left (sort symlink) :right (omit)))
+    (setq dirvish-preview-dispatchers '(font gif epub archive pdf audio image))
+    ;; define the XFK segment for dirvish
+    (dirvish-define-mode-line xfk-mode
+      "Show current XFK mode."
+      (if xah-fly-insert-state-p
+          (propertize " INSERT " 'face '(:foreground "#5faf5f"))
+        (propertize " COMMAND " 'face '(:foreground "#ff5f5f"))))
 
-  ;; add it to the mode line
-  (setq dirvish-mode-line-format '(:left (sort symlink) :right (omit xfk-mode)))
+    ;; add it to the mode line
+    (setq dirvish-mode-line-format '(:left (sort symlink) :right (omit xfk-mode)))
 
-  ;; start dired in XFK insert-mode
-  ;; (add-hook 'dired-mode-hook #'xah-fly-insert-mode-activate)
-  (setq dirvish-quick-access-entries
-        '(("h" "~/"                          "Home")
-          ("l" "~/Desk/"                     "Desk")
-          ("w" "~/DLs/"                      "DLs")
-          ("d" "~/Docs/"                     "Docs")
-          ("r" "~/Docs/11.git_docs/"         "git-docs")
-          ("m" "~/Musk/"                     "Musk")
-          ("p" "~/Pix/"                      "Pix")
-          ("v" "~/Vidz/"                     "Vidz")
-          ("t" "~/tmp/"                      "tmp")
-          ("f" "~/.dotfiles/"                ".dotfiles")
-          ("c" "~/.config/"                  ".config")
-          ("e" "~/.emacs.d/"                 ".emacs.d")
-          ("s" "~/.scripts/"                 ".scripts")
-          ("T" "~/.local/share/Trash/files/" "Trash")
-          ("i" "/run/media/"                 "Media")))
-  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("x" "Cut"   my-dired-copy-paste-do-cut))
-  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("c" "Copy"  my-dired-copy-paste-do-copy))
-  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("v" "Paste" my-dired-copy-paste-do-paste))
-  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("q" "Quit" transient-quit-one))
+    ;; start dired in XFK insert-mode
+    ;; (add-hook 'dired-mode-hook #'xah-fly-insert-mode-activate)
+    (setq dirvish-quick-access-entries
+          '(("h" "~/"                          "Home")
+            ("l" "~/Desk/"                     "Desk")
+            ("w" "~/DLs/"                      "DLs")
+            ("d" "~/Docs/"                     "Docs")
+            ("r" "~/Docs/11.git_docs/"         "git-docs")
+            ("m" "~/Musk/"                     "Musk")
+            ("p" "~/Pix/"                      "Pix")
+            ("v" "~/Vidz/"                     "Vidz")
+            ("t" "~/tmp/"                      "tmp")
+            ("f" "~/.dotfiles/"                ".dotfiles")
+            ("c" "~/.config/"                  ".config")
+            ("e" "~/.emacs.d/"                 ".emacs.d")
+            ("s" "~/.scripts/"                 ".scripts")
+            ("T" "~/.local/share/Trash/files/" "Trash")
+            ("i" "/run/media/"                 "Media")))
+    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+      '("t" "Quit" my-dired-copy-file-contents))
+    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+      '("x" "Cut"   my-dired-copy-paste-do-cut))
+    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+      '("c" "Copy"  my-dired-copy-paste-do-copy))
+    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+      '("v" "Paste" my-dired-copy-paste-do-paste))
+    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+      '("q" "Quit" transient-quit-one))
 
 
-  :bind
-  (("C-c f" . dirvish)
-   :map dirvish-mode-map
-   ("f"   . dirvish-file-info-menu)
-   ("g"   . dirvish-quick-access)
-   ("y"   . dirvish-yank-menu)
-   ("s"   . dirvish-quicksort)
-   ("j"   . dired-up-directory)
-   ("k"   . dired-next-line)
-   ("i"   . dired-previous-line)
-   ("l"   . dired-find-file)
-   ("TAB" . dirvish-subtree-toggle)
-   ("v"   . dirvish-layout-toggle)
-   ("r"   . revert-buffer)
-   ("I"   . beginning-of-buffer)
-   ("K"   . end-of-buffer)
-   (","   . xah-next-window-or-frame)
-   ("q"   . dirvish-quit)))
+
+    :bind
+    (("C-c f" . dirvish)
+     :map dirvish-mode-map
+     ("f"   . dirvish-file-info-menu)
+     ("g"   . dirvish-quick-access)
+     ("y"   . dirvish-yank-menu)
+     ("s"   . dirvish-quicksort)
+     ("j"   . dired-up-directory)
+     ("k"   . dired-next-line)
+     ("i"   . dired-previous-line)
+     ("l"   . dired-find-file)
+     ("TAB" . dirvish-subtree-toggle)
+     ("v"   . dirvish-layout-toggle)
+     ("r"   . revert-buffer)
+     ("I"   . beginning-of-buffer)
+     ("K"   . end-of-buffer)
+     (","   . xah-next-window-or-frame)
+     ("q"   . dirvish-quit)))
 #+end_src
 
 * dired-open
 #+begin_src emacs-lisp
-  ,* dired-open
-  ,#+begin_src emacs-lisp
   (use-package dired-open
     :ensure t
     :config
@@ -217,7 +218,6 @@
             ("epub" . "FBReader") ("mobi" . "FBReader") ("fb2"  . "FBReader")
             ("azw3" . "FBReader")
             )))
-  ,#+end_src
 #+end_src
 
 * END-OF-FILE
@@ -226,7 +226,7 @@
   (with-eval-after-load 'dired
     (require 'my-dired-copy-paste)
     (require 'my-ranger-renaming))
-
+    (require 'my-dired-copy-file-contents)
   (provide 'file-manager)
 #+end_src
 
