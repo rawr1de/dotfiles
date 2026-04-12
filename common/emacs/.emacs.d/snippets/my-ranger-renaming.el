@@ -43,7 +43,10 @@
                     (insert dir "." ext)
                     (backward-char (1+ (length ext))))
                 (insert dir)))))
-      (call-interactively (if current-prefix-arg 'dired-do-copy 'dired-do-rename)))))
+      ;; Let-bind disables completion frameworks for THIS command only
+      (let ((read-file-name-function #'read-file-name-default)
+            (completing-read-function #'completing-read-default))
+        (call-interactively (if current-prefix-arg 'dired-do-copy 'dired-do-rename))))))
 
 ;; 2. Append (a): Keep name, move point right before the dot
 (defun my-ranger-rename-append ()
@@ -58,7 +61,9 @@
             (insert file)
             (when ext
               (backward-char (1+ (length ext))))))
-      (call-interactively (if current-prefix-arg 'dired-do-copy 'dired-do-rename)))))
+      (let ((read-file-name-function #'read-file-name-default)
+            (completing-read-function #'completing-read-default))
+        (call-interactively (if current-prefix-arg 'dired-do-copy 'dired-do-rename))))))
 
 ;; 3. Append Absolute End (A): Point at the very end (after extension)
 (defun my-ranger-rename-append-end ()
@@ -70,7 +75,9 @@
           (when file
             (delete-region (minibuffer-prompt-end) (point-max))
             (insert file)))
-      (call-interactively (if current-prefix-arg 'dired-do-copy 'dired-do-rename)))))
+      (let ((read-file-name-function #'read-file-name-default)
+            (completing-read-function #'completing-read-default))
+        (call-interactively (if current-prefix-arg 'dired-do-copy 'dired-do-rename))))))
 
 ;; 4. Insert Beginning (i): Point at the start of the filename
 (defun my-ranger-rename-prepend ()
@@ -84,7 +91,9 @@
             (delete-region (minibuffer-prompt-end) (point-max))
             (insert file)
             (goto-char (+ (minibuffer-prompt-end) (length dir)))))
-      (call-interactively (if current-prefix-arg 'dired-do-copy 'dired-do-rename)))))
+      (let ((read-file-name-function #'read-file-name-default)
+            (completing-read-function #'completing-read-default))
+        (call-interactively (if current-prefix-arg 'dired-do-copy 'dired-do-rename))))))
 
 ;; 5. Change Extension (e): Erase extension, leave the dot
 (defun my-ranger-rename-extension ()
@@ -101,7 +110,9 @@
             (if ext
                 (insert (concat dir base "."))
               (insert file))))
-      (call-interactively (if current-prefix-arg 'dired-do-copy 'dired-do-rename)))))
+      (let ((read-file-name-function #'read-file-name-default)
+            (completing-read-function #'completing-read-default))
+        (call-interactively (if current-prefix-arg 'dired-do-copy 'dired-do-rename))))))
 
 (provide 'my-ranger-renaming)
 ;;; my-ranger-renaming.el ends here
