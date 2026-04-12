@@ -2,12 +2,12 @@
 ;;;; --- RANGER-STYLE RENAMING & DUPLICATING
 
 ;; --- XFK Minibuffer Setup (SMART ESCAPE) ---
-(defun my/xfk-minibuffer-setup ()
+(defun my-xfk-minibuffer-setup ()
   "Force Xah Fly Keys into insert mode when entering the minibuffer."
   (when (bound-and-true-p xah-fly-keys)
     (xah-fly-insert-mode-activate)))
 
-(add-hook 'minibuffer-setup-hook #'my/xfk-minibuffer-setup)
+(add-hook 'minibuffer-setup-hook #'my-xfk-minibuffer-setup)
 
 ;; The Smart Escape Function
 (defun my-xfk-smart-escape ()
@@ -34,6 +34,8 @@
          (ext (and file (file-name-extension file))))
     (minibuffer-with-setup-hook
         (lambda ()
+          ;; SLEDGEHAMMER: Force insert mode AFTER all other setup hooks finish
+          (run-with-idle-timer 0 nil #'my-xfk-minibuffer-setup)
           (let* ((current-path (buffer-substring-no-properties (minibuffer-prompt-end) (point-max)))
                  (dir (file-name-directory current-path)))
             (when dir
@@ -56,6 +58,7 @@
          (ext  (and file (file-name-extension file))))
     (minibuffer-with-setup-hook
         (lambda ()
+          (run-with-idle-timer 0 nil #'my-xfk-minibuffer-setup)
           (when file
             (delete-region (minibuffer-prompt-end) (point-max))
             (insert file)
@@ -72,6 +75,7 @@
   (let ((file (dired-get-filename nil t)))
     (minibuffer-with-setup-hook
         (lambda ()
+          (run-with-idle-timer 0 nil #'my-xfk-minibuffer-setup)
           (when file
             (delete-region (minibuffer-prompt-end) (point-max))
             (insert file)))
@@ -87,6 +91,7 @@
          (dir  (and file (file-name-directory file))))
     (minibuffer-with-setup-hook
         (lambda ()
+          (run-with-idle-timer 0 nil #'my-xfk-minibuffer-setup)
           (when file
             (delete-region (minibuffer-prompt-end) (point-max))
             (insert file)
@@ -105,6 +110,7 @@
          (base (and file (file-name-base file))))
     (minibuffer-with-setup-hook
         (lambda ()
+          (run-with-idle-timer 0 nil #'my-xfk-minibuffer-setup)
           (when file
             (delete-region (minibuffer-prompt-end) (point-max))
             (if ext
