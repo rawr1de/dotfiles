@@ -64,7 +64,7 @@
           ls-lisp-ignore-case t
           dired-listing-switches "-AGFhlv --time-style=long-iso")
     (add-hook 'dired-mode-hook #'dired-hide-details-mode)
-  )
+
     ;; Force music and video files to open in external MPV with visible window
     ;; (defun my/dired-open-with-mpv (orig-fun &rest args)
       ;; "Open music/video files with MPV in a visible window instead of inside Emacs."
@@ -172,6 +172,8 @@
 
 * dired-open
 #+begin_src emacs-lisp
+  ,* dired-open
+  ,#+begin_src emacs-lisp
   (use-package dired-open
     :ensure t
     :config
@@ -215,6 +217,7 @@
             ("epub" . "FBReader") ("mobi" . "FBReader") ("fb2"  . "FBReader")
             ("azw3" . "FBReader")
             )))
+  ,#+end_src
 #+end_src
 
 * END-OF-FILE
