@@ -235,6 +235,32 @@
     (ultra-scroll-mode 1))
 #+end_src
 
+** hunspell
+#+begin_src emacs-lisp
+  ;; --- 1. Set the Engine and Default Language ---
+  (setq ispell-program-name "hunspell")
+  ;; Set default to English (or "pt_BR" if you prefer)
+  (setq ispell-dictionary "en_US")
+
+  ;; --- 2. Auto-enable in Specific Modes ---
+  ;; On-the-fly checking for prose (Markdown, Org, txt)
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  ;; On-the-fly checking ONLY in comments/strings for code
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
+  ;; --- 3. Fast Language Toggle ---
+  (defun my-toggle-spell-language ()
+    "Toggle the spell-checking dictionary between English and Portuguese."
+    (interactive)
+    (let* ((current-dict (or ispell-local-dictionary ispell-dictionary))
+           (new-dict (if (string= current-dict "en_US") "pt_BR" "en_US")))
+      (ispell-change-dictionary new-dict)
+      (message "Dictionary switched to: %s" new-dict)))
+
+  ;; Bind the toggle to a convenient key, like Ctrl-c d
+  (global-set-key (kbd "s-<F3>") 'my-toggle-spell-language)
+#+end_src
+
 * END-OF-FILE
 #+begin_src emacs-lisp
 (provide 'tools)

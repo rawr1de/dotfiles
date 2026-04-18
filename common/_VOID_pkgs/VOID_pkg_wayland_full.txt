@@ -67,6 +67,10 @@ perl-Image-ExifTool
 # --- Documents ---
 #texlive-latexextra
 #irssi
+# spell checking in emacs
+hunspell
+hunspell-en_us
+hunspell-pt_br
 
 # --- File sharing ---
 #vsftpd
