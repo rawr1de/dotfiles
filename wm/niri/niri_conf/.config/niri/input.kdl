@@ -6,6 +6,11 @@ input {
             layout "us,br"
             variant ",abnt2"
             model "pc105"
+
+            // Optional: Specify a variant (e.g., "dvorak", "colemak_dh_ortho")
+            // layout "us"
+            // variant "colemak_dh_ortho"
+
         }
 
         // Enable numlock on startup, omitting this setting disables it.

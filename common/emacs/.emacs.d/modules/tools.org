@@ -123,21 +123,25 @@
 
 ** roam
 #+begin_src emacs-lisp
-  ;; "second brain" mode for note taking (forget obsidian)
-  (use-package org-roam
-    :ensure t
-    :custom
-    (org-roam-directory (file-truename "~/Docs/10.Org/roam"))
-    :config
-    (org-roam-db-autosync-mode))
+  ;; Dedicated Org-roam capture templates (Logseq Compatible)
+    (setq org-roam-capture-templates
+          '(("c" "Cheat Sheet / Hub" plain
+             "%?"
+  :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                     ":PROPERTIES:\n:ID:       %(org-id-uuid)\n:END:\n#+title: ${title}\n#+filetags: :%(mapconcat #'identity (completing-read-multiple \"Tags (comma separated): \" '(\"linux\" \"emacs\" \"audio\" \"video\" \"image\" \"network\" \"hardware\" \"terminal\" \"scripting\" \"pacman\" \"arch linux\" \"void linux\")) \":\"):\n\n* QUICK REFERENCE\n\n* COMMANDS\n")
+  :unnarrowed t)
 
-  ;; this VAR is NOT EQUAL to org-mode's capture-template
-  (setq org-roam-capture-templates
-        '(("c" "Linux Command / Helper Doc" plain
-           "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                              "#+title: ${title}\n#+filetags: :linux:command:\n\n* Execution\n#+begin_src bash\n\n#+end_src\n\n* Notes\n")
-           :unnarrowed t)))
+            ("e" "Emacs Custom Function" plain
+             "%?"
+             :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                                ":PROPERTIES:\n:ID:       %(org-id-uuid)\n:END:\n#+title: ${title}\n#+filetags: :emacs:elisp:\n\n* DESCRIPTION\n\n* CODE\n#+begin_src elisp\n\n#+end_src\n")
+             :unnarrowed t)
+
+            ("t" "Troubleshooting Fix" plain
+             "%?"
+             :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                                ":PROPERTIES:\n:ID:       %(org-id-uuid)\n:END:\n#+title: ${title}\n#+filetags: :fix:linux:\n\n* THE PROBLEM\n\n* THE SOLUTION\n#+begin_src bash\n\n#+end_src\n")
+             :unnarrowed t)))
 #+end_src
 
 ** which-key

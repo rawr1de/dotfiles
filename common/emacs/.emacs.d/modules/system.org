@@ -9,6 +9,7 @@
 #+end_src
 
 ** system improvements
+*** built-in
 #+begin_src emacs-lisp
   (setq use-short-answers t)
   (setq inhibit-startup-message t
@@ -26,13 +27,23 @@
         (recentf-mode 1)
   ;; maximum number of saved items
         (setq recentf-max-saved-items 50)
+#+end_src
 
+*** external snippets
+#+begin_src emacs-lisp
   ;; FORCE kill-buffer to quit without saving
-  (defun my-kill-buffer-no-confirm ()
-    "Kill buffer without save prompt"
-    (interactive)
-    (set-buffer-modified-p nil)
-    (kill-buffer))
+  (require 'my-kill-buffer-no-confirm)
+
+  ;; clean unused buffers in iBuffer
+  (require 'my-clean-unused-buffers)
+
+  ;; Globally force XFK states based on the major-mode we land in
+  (require 'my-xfk-universal-snap)
+
+  ;; prevents XFK snap back to command-mode while typing on
+  ;; top of a source_code other than emacs-elisp
+  (with-eval-after-load 'xah-fly-keys
+    (require 'my-xfk-ignore-org-src-fontification))
 #+end_src
 
 * iBuffer
@@ -138,8 +149,6 @@
 
 * END-OF-FILE
 #+begin_src emacs-lisp
-(require 'my-clean-unused-buffers)
-(require 'my-xfk-universal-snap)
 (provide 'system)
 #+end_src
 

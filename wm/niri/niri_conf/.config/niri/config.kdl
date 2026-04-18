@@ -105,7 +105,7 @@ layout {
 
 
 hotkey-overlay {
-    // skip-at-startup
+    skip-at-startup
     hide-not-bound
 }
 

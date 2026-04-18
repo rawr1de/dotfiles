@@ -4,24 +4,50 @@
 ;; matches to contacts, and triggers the kde reply sequence in a split frame
 
 (defun my-clean-phone-number (num-str)
-  "Strips everything except numbers and the plus sign from a phone string."
-  (replace-regexp-in-string "[^0-9+]" "" num-str))
+  "Strips absolutely everything except raw digits. Preserves leading plus sign."
+  (let ((clean (replace-regexp-in-string "[^0-9]" "" (or num-str ""))))
+    (if (string-prefix-p "+" (or num-str ""))
+        (concat "+" clean)
+      clean)))
 
 (defun my-find-contact-by-number (clean-num)
   "Searches `my-kde-contacts' for a matching number. Returns the name or nil."
   (let ((matched-name nil))
-    ;; Make sure the contact list actually exists before searching
     (when (boundp 'my-kde-contacts)
       (catch 'found
         (dolist (contact my-kde-contacts)
-          ;; contact is (name . "+1470...")
-          ;; We check if the contact's number is inside the raw number we got, or vice-versa
           (let ((stored-num (my-clean-phone-number (cdr contact))))
-            (when (or (string-match-p stored-num clean-num)
-                      (string-match-p clean-num stored-num))
+            ;; Ensure we aren't matching empty strings, and then check if the
+            ;; raw digits of one number exist inside the other.
+            (when (and (> (length stored-num) 5)
+                       (> (length clean-num) 5)
+                       (or (string-match-p stored-num clean-num)
+                           (string-match-p clean-num stored-num)))
               (setq matched-name (car contact))
               (throw 'found t))))))
     matched-name))
+
+;; --- ISOLATION MINOR MODE ---
+
+(defun my-mako-sms-abort ()
+  "Safely kill the SMS buffer and close the isolated frame."
+  (interactive)
+  (let ((frame (selected-frame)))
+    (when (get-buffer "*Last SMS*")
+      (kill-buffer "*Last SMS*"))
+    (delete-frame frame)))
+
+(define-minor-mode my-mako-sms-mode
+  "Minor mode for isolated Mako SMS frames."
+  :init-value nil
+  :lighter " MakoSMS"
+  :keymap (let ((map (make-sparse-keymap)))
+            ;; Safely close the frame without triggering save-buffers-kill-terminal
+            (define-key map (kbd "C-c C-x") #'my-mako-sms-abort)
+            (define-key map (kbd "C-c C-k") #'my-mako-sms-abort)
+            map))
+
+;; --- MAIN COMMAND ---
 
 (defun my-mako-last-sms ()
   "Parse mako history, find the last sms, copy it, show it, and pre-fill the reply prompt."
@@ -49,38 +75,48 @@
               (progn
                 (setq sms-sender-raw (match-string 1 sms-body))
                 (setq sms-body (match-string 2 sms-body)))
-            ;; Fallback if regex fails: just use the whole body
             (setq sms-sender-raw "Unknown"))
 
           (kill-new sms-body)
 
-          ;; 3. Spawn the new frame and split it
-          (select-frame (make-frame))
-          (let ((buf (get-buffer-create "*Last SMS*")))
-            (with-current-buffer buf
-              (erase-buffer)
-              (insert "--- RECEIVED MESSAGE ---\n\n"
-                      "From: " sms-sender-raw "\n\n"
-                      sms-body)
-              (visual-line-mode 1))
-            (switch-to-buffer buf))
+          ;; 3. Spawn the new frame
+          (let ((new-frame (make-frame)))
+            (select-frame new-frame)
 
-          (split-window-below)
-          (other-window 1)
+            ;; THE ISOLATION HACK:
+            ;; Tell this specific frame to pretend no other buffers exist.
+            (set-frame-parameter new-frame 'buffer-predicate (lambda (buf) (eq buf (current-buffer))))
 
-          ;; 4. Figure out who sent this so we can pre-fill the prompt
-          (let* ((clean-num (my-clean-phone-number sms-sender-raw))
-                 (contact-name (my-find-contact-by-number clean-num))
-                 ;; If we found a name, use it. Otherwise use the raw number.
-                 (prefill-val (or contact-name sms-sender-raw)))
+            (let ((buf (get-buffer-create "*Last SMS*")))
+              (with-current-buffer buf
+                (erase-buffer)
+                (insert "--- RECEIVED MESSAGE ---\n\n"
+                        "From: " sms-sender-raw "\n\n"
+                        sms-body)
+                (visual-line-mode 1)
+                ;; Activate our custom minor mode for safe closing
+                (my-mako-sms-mode 1))
+              (switch-to-buffer buf))
 
-            ;; 5. We temporarily override `completing-read-default` to force
-            ;; the initial-input to be our sender so you don't have to type it.
-            (minibuffer-with-setup-hook
-                (lambda () (insert prefill-val))
-              (if (fboundp 'my-kde-send-sms)
-                  (call-interactively 'my-kde-send-sms)
-                (message "Warning: my-kde-send-sms is not defined yet!")))))
+            (split-window-below)
+            (other-window 1)
+
+            ;; 4. Figure out who sent this so we can pre-fill the prompt
+            (let* ((clean-num (my-clean-phone-number sms-sender-raw))
+                   (contact-name (my-find-contact-by-number clean-num))
+                   ;; CRITICAL FIX: Never fall back to 'sms-sender-raw'. Use 'clean-num'.
+                   (prefill-val (or contact-name clean-num)))
+
+              ;; 5. Setup the prompt and cleanly handle C-g aborts
+              (minibuffer-with-setup-hook
+                  (lambda () (insert prefill-val))
+                (if (fboundp 'my-kde-send-sms)
+                    ;; If you press C-g in the minibuffer, intercept the 'quit' signal
+                    ;; and safely close the whole frame instead of throwing an error.
+                    (condition-case nil
+                        (call-interactively 'my-kde-send-sms)
+                      (quit (my-mako-sms-abort)))
+                  (message "Warning: my-kde-send-sms is not defined yet!"))))))
       (message "No SMS found in the last 3 Mako notifications"))))
 
 (provide 'my-mako-last-sms)

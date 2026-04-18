@@ -18,6 +18,24 @@ fatsort
 
 # --- Libs ---
 qt5-wayland
+# Qt Rendering
+qt6-svg
+qt5-svg
+kimageformats
+
+# Tray Support
+libappindicator-gtk3
+libayatana-appindicator
+libdbusmenu-gtk3
+
+# GTK Rendering
+librsvg
+gdk-pixbuf2
+
+# Theming
+qt6ct
+papirus-icon-theme
+#adwaita-icon-theme
 
 
 # --- Image & graphics ---

@@ -17,7 +17,7 @@ slow() {
 }
 
 case "$1" in
-    faster) faster ;;    
+    faster) faster ;;
     fast) fast ;;
     slow) slow ;;
     *) echo "Usage: $(basename "$0") [fast|slow]" ;;

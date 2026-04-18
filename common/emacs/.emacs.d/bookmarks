@@ -3,9 +3,9 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
- (filename . "~/Docs/09.notes/trading-study-tracker.org")
- (front-context-string . "** BACKLOG Sprin")
- (rear-context-string . ": The Playbook\n\n")
- (position . 269)
- (last-modified 27095 64504 606675 79000))
+ (filename . "~/Docs/10.Org/roam/20260417193707-linux_commands_index.org")
+ (front-context-string . "\n* QUICK REFEREN")
+ (rear-context-string . ": :cheat_sheet:\n")
+ (position . 191)
+ (last-modified 27106 50531 197277 82000))
 )

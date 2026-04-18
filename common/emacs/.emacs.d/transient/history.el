@@ -8,4 +8,5 @@
  (magit-dispatch nil)
  (magit-gitignore nil)
  (magit-push nil)
+ (magit-run nil)
  (rdo/search-menu nil))

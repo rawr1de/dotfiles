@@ -2,12 +2,12 @@
 # templar/.ARCH_pkgs/pkg_machine.txt
 # Machine-specific packages for Templar (Intel GPU) on Arch
 # ============================================================
- 
+
 # --- Intel microcode & media ---
 intel-ucode
 intel-media-driver
 libva-intel-driver
- 
+
 # --- Mesa / Vulkan (Intel) ---
 lib32-libva-intel-driver
 vulkan-intel

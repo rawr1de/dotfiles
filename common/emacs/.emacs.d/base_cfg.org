@@ -13,6 +13,7 @@
 [[/home/rdo/.emacs.d/modules/my-kde-sms.el][my-kde-sms.el]]
 
 [[file:snippets/][SNIPPETS]] *(FOLDER)*
+[[file:~/.dotfiles/common/rdo_dots.org][rdo_dots.org]] *(DOTFILES)*
 #+end_comment
 
 * LOADOUT FOLDERS
@@ -370,6 +371,14 @@
   (define-key xah-fly-key-map (kbd "8") 'xah-select-text-in-quote)
 #+end_src
 
+**** system/function keys
+#+begin_src emacs-lisp
+  ;; close help/info/apropos/man 'mode' windows
+  ;; while in XFK command-mode with 'q'
+  (with-eval-after-load 'xah-fly-keys
+    (require 'my-xfk-smart-quit)
+    (define-key xah-fly-command-map (kbd "q") 'my-xfk-smart-quit))
+#+end_src
 ** ORG-MODE
 *** XFK sub-map (org-mode)
 #+begin_src emacs-lisp
@@ -535,7 +544,7 @@
   (set-register ?s (cons 'file "~/Docs/09.notes/trading-study-tracker.org"))
   (set-register ?t (cons 'file "~/Docs/Org/trade_kbase.org"))
   (set-register ?p (cons 'file "~/Docs/Org/perso_search.org"))
-  (set-register ?f (cons 'file "~/Docs/11.git_docs/03.system/FIXES_LOG.org"))
+  (set-register ?f (cons 'file "~/Docs/10.Org/roam/system-tickets.org"))
 #+end_src
 
 *** BOOKMARKS

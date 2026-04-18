@@ -1,18 +1,21 @@
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 
-  // AUTO START
-  // spawn-at-startup "pipewire"
-  // spawn-at-startup "wireplumber"
-  // spawn-at-startup "kitty"
-  // spawn-at-startup "swaybg" "-i" "path_to_wallpaper"
-  spawn-sh-at-startup "qs -c noctalia-shell"
-  spawn-at-startup "xwayland-satellite"
-  spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
-  spawn-at-startup "emacs" "--daemon"
-  spawn-at-startup "bash" "-c" "wl-paste --type text --watch cliphist store"
-  spawn-at-startup "bash" "-c" "wl-paste --type image --watch cliphist store"
-  spawn-at-startup "mako"
-  // spawn-at-startup "mpd" ()
-  spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
-  spawn-at-startup "systemctl" "--user" "import-environment" "WAYLAND_DISPLAY" "XDG_RUNTIME_DIR" "DISPLAY" "DBUS_SESSION_BUS_ADDRESS" "XDG_CURRENT_DESKTOP"
-  spawn-at-startup "udiskie" "--no-notify" "--tray"
+// AUTO START
+// spawn-at-startup "pipewire"
+// spawn-at-startup "wireplumber"
+// spawn-at-startup "kitty"
+// spawn-at-startup "swaybg" "-i" "path_to_wallpaper"
+// spawn-at-startup "mpd" ()
+spawn-at-startup "xwayland-satellite"
+spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
+spawn-at-startup "emacs" "--daemon"
+spawn-at-startup "bash" "-c" "wl-paste --type text --watch cliphist store"
+spawn-at-startup "bash" "-c" "wl-paste --type image --watch cliphist store"
+spawn-at-startup "mako"
+spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
+spawn-at-startup "systemctl" "--user" "import-environment" "WAYLAND_DISPLAY" "XDG_RUNTIME_DIR" "DISPLAY" "DBUS_SESSION_BUS_ADDRESS" "XDG_CURRENT_DESKTOP"
+spawn-at-startup "udiskie" "--no-notify" "--tray" "--appindicator"
+spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "icon-theme" "Papirus-Dark"
+spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "gtk-theme" "Nordic"
+spawn-at-startup "dbus-update-activation-environment" "--all"
+spawn-sh-at-startup "env QT_QPA_PLATFORMTHEME=qt6ct QT_ICON_THEME=Papirus-Dark qs -c noctalia-shell"
