@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+BIND_FILE="$HOME/.config/niri/binds.kdl"
+OUTPUT=""
+
+# ── 1. Manual Overrides ───────────────────────────────────────────────────────
+OUTPUT+="MANUAL OVERRIDES | \n"
+OUTPUT+="────────────────────── | ──────────────────────\n"
+OUTPUT+="Mod+Return              | Launch Kitty Terminal\n"
+OUTPUT+="Mod+D                   | Fuzzel App Launcher\n"
+OUTPUT+="Mod+Q                   | Close Active Window\n"
+OUTPUT+="Mod+Shift+Slash         | Show this Keybinds Helper\n"
+OUTPUT+="Mod+Left                | Focus Window Left\n"
+OUTPUT+="Mod+Right               | Focus Window Right\n"
+
+# ── 2. Parse Niri Config Sequentially ─────────────────────────────────────────
+if [[ -f "$BIND_FILE" ]]; then
+    while read -r line; do
+
+        # A. Detect Headers: Matches // NAME followed by // ───
+        if [[ "$line" =~ ^[[:space:]]*//[[:space:]]*([A-Z]{2,}.*) ]]; then
+            header="${BASH_REMATCH[1]}"
+            OUTPUT+="\n | \n"
+            OUTPUT+="${header} | \n"
+            OUTPUT+="\n────────────────────── | ──────────────────────\n"
+            continue
+        fi
+
+        # B. Skip all other comments
+        if [[ "$line" =~ ^[[:space:]]*(//|/-|#) ]]; then
+            continue
+        fi
+
+        # C. Parse actual binds with hotkey-overlay-title
+        # This regex finds: Key { ... hotkey-overlay-title="Description" ... }
+        if [[ "$line" =~ ^[[:space:]]*([^[:space:]]+).+hotkey-overlay-title=\"([^\"]+)\" ]]; then
+            key="${BASH_REMATCH[1]}"
+            description="${BASH_REMATCH[2]}"
+
+            OUTPUT+="${key} | ${description}\n"
+        fi
+
+    done < "$BIND_FILE"
+else
+    OUTPUT+="Error | Could not find $BIND_FILE\n"
+fi
+
+# ── 3. Pipe to Fuzzel ─────────────────────────────────────────────────────────
+echo -e "$OUTPUT" | column -t -s '|' | \
+    fuzzel --dmenu \
+           --lines 25 \
+           --width 100 \
+           --prompt " ⌨ Niri Keybinds ❯ "
