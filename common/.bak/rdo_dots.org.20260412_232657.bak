@@ -1,0 +1,2387 @@
+# -*- lexical-binding: t; buffer-read-only: t -*-
+#+TITLE: RDO System Dotfiles
+#+PROPERTY: header-args :mkdirp yes
+
+* common (wayland/x11)
+** .config/
+**** atuin (shell history)                                        :common:
+ui customized to show exit codes. executes commands immediately on enter
+
+#+begin_src sh :tangle no
+  atuin default-config > ~/.config/atuin/config.default.toml
+#+end_src
+
+#+begin_src toml :tangle ~/.config/atuin/config.toml
+enter_accept = true
+
+[sync]
+records = true
+
+[ui]
+style = "auto"
+inline_height = 0
+columns = ["exit", "duration", "command"]
+#+end_src
+
+**** bash (shell environment)                                     :common:
+login profile and interactive shell configuration
+***** .bash_profile
+
+#+begin_src sh :tangle ~/.bash_profile
+[[ -f ~/.bashrc ]] && . ~/.bashrc
+
+setfont ter-124n
+
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -t"
+export VISUAL="emacsclient -c -a emacs"
+export TERMINAL="kitty"
+export BROWSER="brave"
+export READER="zathura"
+export FILE="ranger"
+export NETCTL_DEBUG="yes"
+export XDG_CONFIG_HOME="$HOME/.config"
+export MPLAYER_HOME="$HOME/.config"
+
+alias sx="startx"
+#+end_src
+
+***** .bashrc
+#+begin_src sh :tangle ~/.bashrc
+# If not running interactively, don't do anything [[ $- != *i* ]] && return
+
+PS1='[ $USER ] \$ '
+
+alias fix='reset; stty sane; tput rs1; clear; echo -e "\033c"'
+alias ll='lsd -lAh --group-dirs first --hyperlink=auto'
+alias ls='ls -h --color=auto --group-directories-first --hyperlink=auto'
+alias le='bat'
+
+alias ra='ranger'
+alias cm='cmus'
+alias tl='tldr'
+alias m='emacsclient -c -a emacs'
+
+alias pu='pushd'
+alias po='popd'
+alias mv='mv -iv'
+alias cp='cp -iv'
+alias cpr='rsync -ah --progress'
+alias rm='rm -iv'
+alias frm='\rm -rfv'
+alias x='exit'
+
+alias se='script_editor.sh'
+alias fe='file_editor.sh'
+alias mm='rofi_man.sh '
+
+PATH=$PATH:~/.config
+PATH=$PATH:~/.scripts
+PATH=$PATH:~/.scripts/groff_helpers/helpers
+PATH=$PATH:~/.scripts/PCs/Legion5/kb_controls/
+PATH=$PATH:~/.themes
+PATH=$PATH:~/.icons
+
+complete -cf sudo
+
+HISTCONTROL=ignoreboth
+HISTSIZE=3000
+HISTFILESIZE=2000
+
+eval "$(mcfly init bash)"
+
+PATH="/home/rdo/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/rdo/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/rdo/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/rdo/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/rdo/perl5"; export PERL_MM_OPT;
+
+# BEGIN_KITTY_SHELL_INTEGRATION
+if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi
+# END_KITTY_SHELL_INTEGRATION
+#+end_src
+
+**** cmus (music player)                                          :common:
+custom manjaro green theme and core settings with xfk navigation
+***** rc
+#+begin_src conf :tangle ~/.config/cmus/rc
+cd ~/Musk/Metal
+
+unbind -f common h
+
+bind -f common i win-up
+bind -f common k win-down
+bind -f common i win-up
+bind -f common j win-toggle
+bind -f common o win-sel-cur
+bind -f common space player-pause
+
+bind -f browser i win-up
+bind -f browser j browser-up
+bind -f browser l win-activate
+bind -f browser u win-update
+bind -f library l win-next
+#+end_src
+
+***** RDO_manj_green.theme
+#+begin_src conf :tangle ~/.config/cmus/RDO_manj_green.theme
+set color_win_fg=default
+set color_win_bg=default
+set color_cmdline_bg=default
+set color_cmdline_fg=default
+set color_error=124
+set color_info=172
+set color_separator=246
+set color_statusline_bg=237
+set color_statusline_fg=72
+set color_titleline_bg=236
+set color_titleline_fg=142
+set color_win_title_bg=246
+set color_win_title_fg=235
+set color_win_cur=10
+set color_win_cur_sel_bg=30
+set color_win_cur_sel_fg=220
+set color_win_inactive_cur_sel_bg=236
+set color_win_inactive_cur_sel_fg=175
+set color_win_sel_bg=29
+set color_win_sel_fg=229
+set color_win_inactive_sel_bg=236
+set color_win_inactive_sel_fg=229
+set color_win_dir=229
+#+end_src
+
+**** firefox (web browser)                                        :common:
+
+#+begin_src javascript :tangle (expand-file-name "user.js" (car (file-expand-wildcards "~/.config/mozilla/firefox/*.default-release")))
+user_pref("ui.key.menuAccessKeyFocuses", false);
+#+end_src
+
+**** fuzzel (application launcher)                               :wayland:
+key bindings modified for xfk insert-mode navigation (mod1 + i/k)
+
+#+begin_src sh :tangle no
+  cp /etc/xdg/fuzzel/fuzzel.ini ~/.config/fuzzel/fuzzel.default.ini
+#+end_src
+
+#+begin_src conf :tangle ~/.config/fuzzel/fuzzel.ini
+[key-bindings]
+prev=Up Mod1+i
+next=Down Mod1+k
+#+end_src
+
+**** glow (markdown reader)                                       :common:
+terminal markdown renderer display settings
+
+#+begin_src yaml :tangle ~/.config/glow/glow.yml
+style: "auto"
+mouse: false
+pager: false
+width: 80
+all: false
+#+end_src
+
+**** inputrc (readline config BASH ONLY)                          :common:
+**** kitty (terminal emulator)                                    :common:
+terminal settings and window management
+
+#+begin_src conf :tangle ~/.config/kitty/kitty.conf
+  background_opacity 0.95
+  dynamic_background_opacity yes
+  shell_integration enabled
+  allow_remote_control yes
+  linux_display_server auto
+
+  kitty_mod ctrl+shift
+
+  map ctrl+f>1 set_font_size 16
+  map ctrl+f>2 set_font_size 18
+
+  map kitty_mod+c copy_to_clipboard
+  map kitty_mod+v paste_from_clipboard
+  map kitty_mod+o pass_selection_to_program
+
+  map kitty_mod+up        scroll_line_up
+  map kitty_mod+i         scroll_line_up
+  map kitty_mod+down      scroll_line_down
+  map kitty_mod+k         scroll_line_down
+  map kitty_mod+page_up   scroll_page_up
+  map kitty_mod+page_down scroll_page_down
+  map kitty_mod+home      scroll_home
+  map kitty_mod+end       scroll_end
+  map kitty_mod+h         show_scrollback
+
+  map kitty_mod+enter   new_window
+  map ctrl+alt+enter    launch --cwd=current
+  map kitty_mod+;       next_window
+
+  enable_audio_bell no
+  tab_bar_edge top
+  tab_bar_style powerline
+  tab_bar_min_tabs 1
+
+  map kitty_mod+right next_tab
+  map kitty_mod+l     next_tab
+  map kitty_mod+left  previous_tab
+  map kitty_mod+j     previous_tab
+  map kitty_mod+o     move_tab_forward
+  map kitty_mod+u     move_tab_backward
+
+  map kitty_mod+]      set_background_opacity +0.05
+  map kitty_mod+[      set_background_opacity -0.05
+  map kitty_mod+delete clear_terminal reset active
+
+  font_family      family='JetBrainsMono Nerd Font Mono' postscript_name=JetBrainsMonoNFM-Regular
+  bold_font        auto
+  italic_font      auto
+  bold_italic_font auto
+  disable_ligatures never
+  font_size         14
+
+  include current-theme.conf
+#+end_src
+
+**** mako (notifications)                                        :wayland:
+wayland notification daemon configuration
+
+#+begin_src conf :tangle ~/.config/mako/config
+sort=-time
+layer=overlay
+anchor=top-right
+margin=20
+padding=15
+width=350
+
+default-timeout=5000
+ignore-timeout=1
+
+font=JetBrains Mono 16
+background-color=#10152a
+text-color=#61afef
+border-color=#61afef
+progress-color=#38498c
+border-size=2
+border-radius=5
+
+[urgency=critical]
+border-color=#e06c75
+default-timeout=5000
+progress-color=over #98c379
+
+format=<b>%s</b>\n%b
+
+[grouped=1]
+format=<b>%a (%g)</b>\n%s\n%b
+#+end_src
+
+**** mpv (multimedia player)                                      :common:
+#+begin_src conf :tangle ~/.config/mpv/mpv.conf
+  # Configuration files are read system-wide from /etc/mpv or /usr/local/etc/mpv
+  # save-position-on-quit=yes
+  volume=40
+#+end_src
+
+**** niri                                                        :wayland:
+dynamic window manager
+***** autostart.kdl
+#+begin_src conf :tangle ~/.config/niri/autostart.kdl
+  // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
+
+  // AUTO START
+  // spawn-at-startup "pipewire"
+  // spawn-at-startup "wireplumber"
+  // spawn-at-startup "kitty"
+  // spawn-at-startup "swaybg" "-i" "path_to_wallpaper"
+  spawn-sh-at-startup "qs -c noctalia-shell"
+  spawn-at-startup "xwayland-satellite"
+  spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
+  spawn-at-startup "emacs" "--daemon"
+  spawn-at-startup "bash" "-c" "wl-paste --type text --watch cliphist store"
+  spawn-at-startup "bash" "-c" "wl-paste --type image --watch cliphist store"
+  spawn-at-startup "mako"
+  // spawn-at-startup "mpd" ()
+  spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
+  spawn-at-startup "systemctl" "--user" "import-environment" "WAYLAND_DISPLAY" "XDG_RUNTIME_DIR" "DISPLAY" "DBUS_SESSION_BUS_ADDRESS" "XDG_CURRENT_DESKTOP"
+  spawn-at-startup "udiskie" "--no-notify" "--tray"
+#+end_src
+
+***** binds.kdl
+#+begin_src conf :tangle ~/.config/niri/binds.kdl
+  binds  {
+
+      // ─────────────────────────────────────────────
+      // KEYS — brightness
+      // ─────────────────────────────────────────────
+      Mod+F6                    hotkey-overlay-title="Brightness +10%"         { spawn "brightnessctl" "set" "+10%"; }
+      Mod+F5                    hotkey-overlay-title="Brightness -10%"         { spawn "brightnessctl" "set" "10%-"; }
+      XF86MonBrightnessUp       allow-when-locked=true                         { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
+      XF86MonBrightnessDown     allow-when-locked=true                         { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+
+      // HARDWARE KEYS — volume  (-l 1.0 caps at 100%)
+      XF86AudioRaiseVolume      allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
+      XF86AudioLowerVolume      allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
+      XF86AudioMute             allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+      XF86AudioMicMute          allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+
+      // HARDWARE KEYS — media (playerctl / MPRIS)
+      XF86AudioPlay             allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+      XF86AudioStop             allow-when-locked=true { spawn-sh "playerctl stop"; }
+      XF86AudioPrev             allow-when-locked=true { spawn-sh "playerctl previous"; }
+      XF86AudioNext             allow-when-locked=true { spawn-sh "playerctl next"; }
+
+
+      // ─────────────────────────────────────────────
+      // LAUNCHERS / APPS
+      // ─────────────────────────────────────────────
+      Mod+Return                hotkey-overlay-title="Kitty"               { spawn "kitty"; }
+      Mod+1                     hotkey-overlay-title="Emacs"               { spawn "emacsclient" "-c" "-a" "emacs"; }
+      Mod+2                     hotkey-overlay-title="Firefox"             { spawn "firefox"; }
+      // Mod+Prior // (PageUp)     hotkey-overlay-title=null                { spawn "."; }
+      // Mod+Next  // (PageDown)   hotkey-overlay-title=null                { spawn "."; }
+      // Mod+4                     hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
+      // Mod+5                     hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
+      Mod+Insert                hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
+      Mod+Home                  hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
+      Mod+8                     hotkey-overlay-title="Launcher (Fuzzel)"   { spawn "fuzzel"; }
+      Mod+7                     hotkey-overlay-title="Clipboard (Fuzzel)"  { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
+      Mod+N                     hotkey-overlay-title="Toggle Noctalia Bar" { spawn-sh "qs -c noctalia-shell ipc call bar toggle"; }
+      Mod+P                     hotkey-overlay-title="Song Playing Info"   { spawn "emacsclient" "--eval" "(my-emms-now-playing-popup)"; }
+      Mod+F10                   hotkey-overlay-title="kde send sms"        { spawn "emacsclient" "--eval" "(my-mako-last-sms)"; }
+      Mod+M                     hotkey-overlay-title="Emacs Scratchpad"    { spawn "emacsclient" "-c" "-F" "((title . \"niri-scratchpad\") (width . 70) (height . 20))" "-e" "(my-spawn-scratchpad)"; }
+      // keypad numbers don't work, sub-functions only KP_END
+      // Mod+KP_1                  hotkey-overlay-title="Emacs"               { spawn "emacsclient" "-c" "-a" "emacs"; }
+
+
+      // ─────────────────────────────────────────────
+      // SESSION / SYSTEM
+      // ─────────────────────────────────────────────
+      Super+Alt+0               hotkey-overlay-title="Lock Screen"         { spawn "swaylock"; }
+      Mod+Shift+E               hotkey-overlay-title="Exit NIRI"           { quit; }
+      Mod+Alt+F4                hotkey-overlay-title="Exit NOCTALIA"       { spawn-sh "qs -c noctalia-shell ipc call sessionMenu toggle"; }
+      Ctrl+Shift+Mod+Alt+P      hotkey-overlay-title="Monitors OFF"        { power-off-monitors; }
+      Mod+Escape                allow-inhibiting=false                     { toggle-keyboard-shortcuts-inhibit; }
+      Mod+Shift+F12             hotkey-overlay-title="Reload Niri Config"  { spawn "bash" "-c" "niri msg action load-config-file && notify-send 'Niri' 'Config reloaded'"; }
+      Mod+Shift+F5              hotkey-overlay-title="Trackpad ON/OFF"     { spawn-sh "SH_trackpad_toggle.sh"; }
+      Mod+Shift+Slash                                                      { show-hotkey-overlay; }
+      Alt+Space                 hotkey-overlay-title="Keyboard Layout"     { switch-layout "next"; }  // keyboard US,BR
+
+
+      // ─────────────────────────────────────────────
+      // SCREENSHOT
+      // ─────────────────────────────────────────────
+      Print        hotkey-overlay-title="Screenshot EDIT"   { spawn-sh "grim -g \"$(slurp)\" - | satty --filename -"; }
+      Ctrl+Print   hotkey-overlay-title="Screenshot CLIP"   { spawn-sh "grim -g \"$(slurp)\" - | wl-copy"; }
+
+
+      // ─────────────────────────────────────────────
+      // WINDOW — close / float / tabbed
+      // ─────────────────────────────────────────────
+      Mod+Q                     repeat=false { close-window; }
+      Mod+Shift+V                              { toggle-window-floating; }
+      //Mod+Shift+V                            { switch-focus-between-floating-and-tiling; }
+      Mod+9                                  { toggle-column-tabbed-display; }
+      Mod+O                     repeat=false { toggle-overview; }
+
+
+      // ─────────────────────────────────────────────
+      // WINDOW — resize (width / height)
+      // ─────────────────────────────────────────────
+      Mod+R                                  { switch-preset-column-width; }
+      Mod+Shift+R                            { switch-preset-window-height; }
+      Mod+Ctrl+R                             { reset-window-height; }
+      Mod+0                                  { maximize-column; }
+      Mod+Shift+0                            { fullscreen-window; }
+      Mod+Minus                              { set-column-width "-10%"; }
+      Mod+Equal                              { set-column-width "+10%"; }
+      Mod+Shift+Minus                        { set-window-height "-10%"; }
+      Mod+Shift+Equal                        { set-window-height "+10%"; }
+      Mod+Ctrl+F                             { expand-column-to-available-width; }
+      Mod+Ctrl+C                             { center-visible-columns; }
+
+
+      // ─────────────────────────────────────────────
+      // WINDOW — consume / expel (column stacking)
+      // ─────────────────────────────────────────────
+      Mod+BracketLeft                        { consume-or-expel-window-left; }
+      Mod+BracketRight                       { consume-or-expel-window-right; }
+      Mod+Comma                              { consume-window-into-column; }
+      Mod+Period                             { expel-window-from-column; }
+
+
+      // ─────────────────────────────────────────────
+      // FOCUS — column / workspace  (i/k/j/l)
+      // ─────────────────────────────────────────────
+      Mod+J                                  { focus-column-left; }
+      Mod+L                                  { focus-column-right; }
+      Mod+K                                  { focus-workspace-down; }
+      Mod+I                                  { focus-workspace-up; }
+
+      // FOCUS — window within column
+      Mod+Ctrl+K                             { focus-window-down; }
+      Mod+Ctrl+I                             { focus-window-up; }
+
+      // FOCUS — monitor
+      Mod+Alt+J                              { focus-monitor-left; }
+      Mod+Alt+L                              { focus-monitor-right; }
+      Mod+Alt+I                              { focus-monitor-up; }
+      Mod+Alt+K                              { focus-monitor-down; }
+
+
+      // ─────────────────────────────────────────────
+      // MOVE — window within column / workspace
+      // ─────────────────────────────────────────────
+      Mod+Shift+K                            { move-window-down; }
+      Mod+Shift+I                            { move-window-up; }
+      Mod+Shift+Ctrl+K                       { move-window-down-or-to-workspace-down; }
+      Mod+Shift+Ctrl+I                       { move-window-up-or-to-workspace-up; }
+
+      // MOVE — column
+      Mod+Shift+J                            { move-column-left; }
+      Mod+Shift+L                            { move-column-right; }
+
+      // MOVE — column to monitor
+      Mod+Shift+Alt+J                        { move-column-to-monitor-left; }
+      Mod+Shift+Alt+L                        { move-column-to-monitor-right; }
+      Mod+Shift+Alt+I                        { move-column-to-monitor-up; }
+      Mod+Shift+Alt+K                        { move-column-to-monitor-down; }
+
+
+      // ─────────────────────────────────────────────
+      // WORKSPACES — direct jump / move column (1–7)
+      // ─────────────────────────────────────────────
+      // Mod+1 { focus-workspace 1; }
+      // Mod+2 { focus-workspace 2; }
+      // Mod+3 { focus-workspace 3; }
+      // Mod+4 { focus-workspace 4; }
+      // Mod+5 { focus-workspace 5; }
+      // Mod+6 { focus-workspace 6; }
+      // Mod+7 { focus-workspace 7; }
+
+      Mod+Ctrl+1 { move-column-to-workspace 1; }
+      Mod+Ctrl+2 { move-column-to-workspace 2; }
+      Mod+Ctrl+3 { move-column-to-workspace 3; }
+      Mod+Ctrl+4 { move-column-to-workspace 4; }
+      Mod+Ctrl+5 { move-column-to-workspace 5; }
+      Mod+Ctrl+6 { move-column-to-workspace 6; }
+      Mod+Ctrl+7 { move-column-to-workspace 7; }
+
+
+      // ─────────────────────────────────────────────
+      // SCROLL / WHEEL BINDS
+      // ─────────────────────────────────────────────
+
+      // Workspace scroll (cooldown prevents runaway)
+      Mod+WheelScrollDown       cooldown-ms=150 { focus-workspace-down; }
+      Mod+WheelScrollUp         cooldown-ms=150 { focus-workspace-up; }
+      Mod+Ctrl+WheelScrollDown  cooldown-ms=150 { move-column-to-workspace-down; }
+      Mod+Ctrl+WheelScrollUp    cooldown-ms=150 { move-column-to-workspace-up; }
+
+      // Column scroll
+      Mod+WheelScrollRight                   { focus-column-right; }
+      Mod+WheelScrollLeft                    { focus-column-left; }
+      Mod+Ctrl+WheelScrollRight              { move-column-right; }
+      Mod+Ctrl+WheelScrollLeft               { move-column-left; }
+
+      // Shift+scroll → horizontal (mirrors app behaviour)
+      Mod+Shift+WheelScrollDown              { focus-column-right; }
+      Mod+Shift+WheelScrollUp                { focus-column-left; }
+      Mod+Ctrl+Shift+WheelScrollDown         { move-column-right; }
+      Mod+Ctrl+Shift+WheelScrollUp           { move-column-left; }
+
+
+      // ─────────────────────────────────────────────
+      // NOT SURE / FUTURE USES
+      // ─────────────────────────────────────────────
+
+      // Touchpad scroll → volume (continuous scroll split into discrete ticks;
+      // inverted because natural-scroll is enabled for touchpad by default)
+      // Mod+TouchpadScrollDown { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02+"; }
+      // Mod+TouchpadScrollUp   { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02-"; }
+
+      // Jump to first/last column
+      //Mod+Home { focus-column-first; }
+      //Mod+End  { focus-column-last; }
+      //Mod+Ctrl+Home { move-column-to-first; }
+      //Mod+Ctrl+End  { move-column-to-last; }
+
+      // Move column to workspace (alternative to Mod+Ctrl+1-7)
+      //Mod+Ctrl+U         { move-column-to-workspace-down; }
+      //Mod+Ctrl+I         { move-column-to-workspace-up; }
+
+      // Move workspace itself up/down in the workspace list
+      //Mod+Shift+Page_Down { move-workspace-down; }
+      //Mod+Shift+Page_Up   { move-workspace-up; }
+      //mod+ctrl+k          { move-workspace-down; }
+      //mod+ctrl+i          { move-workspace-up; }
+
+      // Focus previous workspace (toggle)
+      // Mod+Tab { focus-workspace-previous; }
+
+      // Focus window wrapping across workspaces (alternative to Mod+Ctrl+I/K)
+      // Mod+J     { focus-window-or-workspace-down; }
+      // Mod+K     { focus-window-or-workspace-up; }
+
+      // Move single window to workspace (alternative to move-column-to-workspace)
+      // Mod+Ctrl+Page_Down { move-window-to-workspace-down; }
+      // shift+Mod+Ctrl+1 { move-window-to-workspace 1; }
+
+      // Move single window to monitor (alternative to move-column-to-monitor-*)
+      // Mod+Shift+Ctrl+Left  { move-window-to-monitor-left; }
+
+      // Move whole workspace to monitor
+      // Mod+Shift+Ctrl+Left  { move-workspace-to-monitor-left; }
+
+      // Layout switch via niri (only if NOT also bound in xkb options — doing both breaks it)
+      // Mod+Space       { switch-layout "next"; }
+      // Mod+Shift+Space { switch-layout "prev"; }
+
+      // Center single focused column (Mod+C is taken by clipboard)
+      //Mod+C { center-column; }
+
+  }
+#+end_src
+
+***** config.kdl
+#+begin_src conf :tangle ~/.config/niri/config.kdl
+// This config is in the KDL format: https://kdl.dev
+// "/-" comments out the following node.
+
+// Niri Wiki:     https://yalter.github.io/niri/Configuration:-Introduction
+// Input config.: https://yalter.github.io/niri/Configuration:-Input
+// Input config.: https://yalter.github.io/niri/Configuration:-Outputs
+// Body config.:  https://yalter.github.io/niri/Configuration:-Layout
+
+
+// input
+include "input.kdl"
+
+// output
+include "output.kdl"
+
+// load external window rules
+include "window-rules.kdl"
+
+// auto start
+include "autostart.kdl"
+
+cursor {
+    hide-after-inactive-ms 2000
+}
+
+// layout
+layout {
+    gaps 10
+    // column centering when changing focus: "never", "always", "on-overflow"
+    center-focused-column "never"
+
+    // column width preset "switch-preset-column-width" (Mod+R) toggles between
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+
+        // Fixed sets the width in logical pixels exactly.
+        // fixed 1920
+    }
+
+    // column height preset "switch-preset-window-height" (Mod+Shift+R) toggles between
+    // preset-window-heights { }
+
+    // You can change the default width of the new windows.
+       default-column-width { proportion 0.5; }
+    // default-column-width {}
+    // draw-border-with-background
+
+// focus-ring
+    focus-ring {
+        // focus ring/border/gradients
+        // https://niri-wm.github.io/niri/Configuration:-Layout#focus-ring-and-border
+        // off
+        width 0.5
+
+        // Colors can be set in a variety of ways:
+        // - CSS named colors: "red"
+        // - RGB hex: "#rgb", "#rgba", "#rrggbb", "#rrggbbaa"
+        // - CSS-like notation: "rgb(255, 127, 0)", rgba(), hsl() and a few others.
+
+        // active monitor ring color
+        active-color "gold"
+        // inactive monitor ring color
+        inactive-color "#505050"
+	
+        // gradients
+        // https://www.css-gradient.com/
+        // active-gradient from="#80c8ff" to="#c7ff7f" angle=45
+        active-gradient from="#AA840F" to="#4F8935"  angle=180
+ //       active-gradient from="#755905" to="#4F8935"  angle=180
+//        active-gradient from="" to=""  angle=180
+
+
+
+        // To do that, set relative-to="workspace-view".
+        // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+    }
+
+    border {
+        // same settings as the focus ring
+	off
+        width 4
+        active-color "#ffc87f"
+        inactive-color "#505050"
+
+        // Color of the border around windows that request your attention.
+        urgent-color "#9b0000"
+
+        // gradients with different interpolation color spaces
+        // pastel rainbow gradient via in="oklch longer hue".
+        //
+        // active-gradient from="#e5989b" to="#ffb4a2" angle=45 relative-to="workspace-view" in="oklch longer hue"
+
+        // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+    }
+
+    struts {
+        // left 64
+        // right 64
+        // top 64
+        // bottom 64
+    }
+}
+
+
+hotkey-overlay {
+    // skip-at-startup
+    hide-not-bound
+}
+
+     prefer-no-csd
+
+// screenshot path formatted with strftime(3)
+screenshot-path "~/Pix/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+// disable saving screenshots to disk
+// screenshot-path null
+
+// Animation settings
+// https://yalter.github.io/niri/Configuration:-Animations
+animations {
+    // Uncomment to turn off all animations.
+    // off
+
+    // Slow down all animations by factor, below 1 speed them up
+    // slowdown 3.0
+}
+
+// Window rules let you adjust behavior for individual windows.
+// https://yalter.github.io/niri/Configuration:-Window-Rules
+
+// Work around WezTerm's initial configure bug
+// by setting an empty default-column-width.
+window-rule {
+    match title="^$"
+    match app-id="^$"
+    open-floating true
+}
+
+window-rule {
+    // This regular expression is intentionally made as specific as possible,
+    // since this is the default config, and we want no false positives.
+    // You can get away with just app-id="wezterm" if you want.
+    match app-id=r#"^org\.wezfurlong\.wezterm$"#
+    default-column-width {}
+}
+
+// Open the Firefox picture-in-picture player as floating by default.
+window-rule {
+    // This app-id regular expression will work for both:
+    // - host Firefox (app-id is "firefox")
+    // - Flatpak Firefox (app-id is "org.mozilla.firefox")
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    open-floating true
+}
+
+// Example: block out two password managers from screen capture.
+// (This example rule is commented out with a "/-" in front.)
+/-window-rule {
+    match app-id=r#"^org\.keepassxc\.KeePassXC$"#
+    match app-id=r#"^org\.gnome\.World\.Secrets$"#
+
+    block-out-from "screen-capture"
+
+    // Use this instead if you want them visible on third-party screenshot tools.
+    // block-out-from "screencast"
+}
+
+// Example: enable rounded corners for all windows.
+// (This example rule is commented out with a "/-" in front.)
+window-rule {
+    geometry-corner-radius 12
+    clip-to-geometry true
+}
+
+// binds
+include "binds.kdl"
+
+
+debug {
+    wait-for-frame-completion-before-queueing
+}
+#+end_src
+
+***** input.kdl
+#+begin_src conf :tangle ~/.config/niri/input.kdl
+input {
+    keyboard {
+               repeat-delay 200
+               repeat-rate 100
+        xkb {
+            layout "us,br"
+            variant ",abnt2"
+            model "pc105"
+        }
+
+        // Enable numlock on startup, omitting this setting disables it.
+        numlock
+    }
+
+    touchpad {
+        // off # trackpad-toggle off
+        tap
+        // dwt
+        // dwtp
+        // drag false
+        // drag-lock
+        natural-scroll
+        // accel-speed 0.2
+        // accel-profile "flat"
+        // scroll-method "two-finger"
+        // disabled-on-external-mouse
+    }
+
+    mouse {
+        // off
+        // natural-scroll
+        // accel-speed 0.2
+        // accel-profile "flat"
+        // scroll-method "no-scroll"
+    }
+
+    trackpoint {
+        // off
+        // natural-scroll
+        // accel-speed 0.2
+        // accel-profile "flat"
+        // scroll-method "on-button-down"
+        // scroll-button 273
+        // scroll-button-lock
+        // middle-emulation
+    }
+
+    // Uncomment this to make the mouse warp to the center of newly focused windows.
+    warp-mouse-to-focus
+
+    // Focus windows and outputs automatically when moving the mouse into them.
+    // Setting max-scroll-amount="0%" makes it work only on windows already fully on screen.
+    focus-follows-mouse max-scroll-amount="0%"
+}
+#+end_src
+
+***** output.kdl
+#+begin_src conf :tangle ~/.config/niri/output.kdl
+// --- Legion 5 Dual Monitor Layout ---
+
+output "HDMI-A-1" {
+    mode "2560x1440@60.00"
+    position x=0 y=0
+}
+
+output "DP-1" {
+   mode "2560x1440@60.00"
+// mode "1920x1080@144.000"
+    position x=2560 y=0
+    variable-refresh-rate
+}
+
+output "eDP-2" {
+    mode "1920x1080@144.002"
+    position x=1500 y=1440
+    variable-refresh-rate
+    // scale 1.25
+}
+
+// only DP-1 supports VRR
+// variable refresh rate
+#+end_src
+
+***** window-rules.kdl
+#+begin_src conf :tangle ~/.config/niri/window-rules.kdl
+// Rule 1: ONLY float swayimg when it is called by Emacs
+window-rule {
+    match app-id="emms-art"
+    open-floating true
+
+    // Optional: Give it a nice default size so it doesn't spawn tiny
+    default-column-width { proportion 0.4; }
+    default-window-height { proportion 0.5; }
+}
+
+// Rule 2: Float the Emacs Org-mode EMMS popup
+// window-rule {
+    // Match the exact title we gave this frame
+    // match app-id=r#"^emacs$"# title=r#"^emms-popup$"#
+    // open-floating true
+// }
+
+
+// Rule 2: Float the Kitty EMMS dashboard
+window-rule {
+    match app-id="emms-popup"
+    open-floating true
+
+    // Force the exact massive size you want for the dashboard
+    default-column-width { fixed 1200; }
+    default-window-height { fixed 1200; }
+}
+
+
+// Emacs scratchpad float in the center
+    // window-rule {
+        // match title="niri-scratchpad"
+        // open-floating true
+        // Optional: Force a specific starting size
+        // default-column-width { proportion 0.4; }
+    // }
+
+// Emacs scratchpad in tiled (column mode)
+window-rule {
+        match title="niri-scratchpad"
+        // Force the column to take up exactly 35% of the screen
+        default-column-width { proportion 0.35; }
+    }
+#+end_src
+
+**** ranger (terminal file manager)                               :common:
+core configuration, keybindings, file routing, and image preview scripts
+
+***** rc.conf (core configuration)
+core configuration, keybindings, and UI settings
+
+#+begin_src conf :tangle ~/.config/ranger/rc.conf
+  # ===================================================================
+  # CORE UI & BEHAVIOR
+  # ===================================================================
+  set column_ratios 1,3,4
+  set hidden_filter ^\.|\.(?:pyc|pyo|bak|swp)$|^lost\+found$|^__(py)?cache__$
+  set show_hidden false
+  set confirm_on_delete always
+  set use_preview_script true
+  set automatically_count_files true
+  set open_all_images true
+  set vcs_aware false
+  set vcs_backend_git enabled
+  set preview_images true
+  set preview_images_method kitty
+  set w3m_delay 0.02
+  set colorscheme solarized
+  set preview_files true
+  set preview_directories true
+  set collapse_preview true
+  set save_console_history true
+  set draw_progress_bar_in_status_bar true
+  set draw_borders none
+  set mouse_enabled true
+  set display_size_in_main_column true
+  set display_size_in_status_bar true
+  set display_free_space_in_status_bar true
+  set display_tags_in_all_columns true
+  set update_tmux_title true
+  set shorten_title 3
+  set hostname_in_titlebar true
+  set max_history_size 20
+  set max_console_history_size 50
+  set scroll_offset 8
+  set flushinput true
+  set padding_right true
+  set autosave_bookmarks true
+  set save_backtick_bookmark true
+  set autoupdate_cumulative_size false
+  set show_cursor false
+  set sort natural
+  set sort_case_insensitive true
+  set sort_directories_first true
+  set cd_bookmarks true
+  set cd_tab_case sensitive
+  set show_selection_in_titlebar true
+  set idle_delay 2000
+  set nested_ranger_warning true
+
+  # ===================================================================
+  # CONSOLE ALIASES
+  # ===================================================================
+  alias e     edit
+  alias q     quit
+  alias q!    quit!
+  alias qa    quitall
+  alias qa!   quitall!
+  alias qall  quitall
+  alias qall! quitall!
+  alias setl  setlocal
+  alias filter     scout -prts
+  alias find       scout -aets
+  alias mark       scout -mr
+  alias unmark     scout -Mr
+  alias search     scout -rs
+  alias search_inc scout -rts
+  alias travel     scout -aefklst
+
+  # ===================================================================
+  # BASIC KEYBINDINGS
+  # ===================================================================
+  map     Q quitall
+  map     q quit
+  copymap q ZZ ZQ
+  map R     reload_cwd
+  map F     set freeze_files!
+  map <C-r> reset
+  map <C-l> redraw_window
+  map <C-c> abort
+  map <esc> change_mode normal
+  map ~ set viewmode!
+  map h display_file
+  map <A-j> scroll_preview 1
+  map <A-k> scroll_preview -1
+  map ? help
+  map W display_log
+  map w taskview_open
+  map S shell $SHELL
+  map \  console filter -s%space
+  map :  console
+  map ;  console
+  map !  console shell%space
+  map @  console -p6 shell  %%s
+  map #  console shell -p%space
+  map s  console shell%space
+  map r  chain draw_possible_programs; console open_with%space
+  map f  console find%space
+  map cd console cd%space
+  map <C-p> chain console; eva fm.ui.console.history_move(-1)
+
+  # ===================================================================
+  # LINEMODES & TAGGING
+  # ===================================================================
+  map Mf linemode filename
+  map Mi linemode fileinfo
+  map Mm linemode mtime
+  map Mh linemode humanreadablemtime
+  map Mp linemode permissions
+  map Ms linemode sizemtime
+  map MH linemode sizehumanreadablemtime
+  map Mt linemode metatitle
+  default_linemode devicons
+
+  map t       tag_toggle
+  map ut      tag_remove
+  map "<any>  tag_toggle tag=%any
+  map <Space> mark_files toggle=True
+  map v       mark_files all=True toggle=True
+  map uv      mark_files all=True val=False
+  map V       toggle_visual_mode
+  map uV      toggle_visual_mode reverse=True
+
+  # ===================================================================
+  # VIM-LIKE MOVEMENT & JUMPS
+  # ===================================================================
+  copymap <UP>       i
+  copymap <DOWN>     k
+  copymap <LEFT>     j
+  copymap <RIGHT>    l
+  copymap <HOME>     gg
+  copymap <END>      G
+  copymap <PAGEDOWN> <C-F>
+  copymap <PAGEUP>   <C-B>
+
+  map H     history_go -1
+  map L     history_go 1
+  map ]     move_parent 1
+  map [     move_parent -1
+  map }     traverse
+  map {     traverse_backwards
+  map )     jump_non
+
+  # ===================================================================
+  # XDG FOLDER SHORTCUTS
+  # ===================================================================
+  map gh cd ~
+  map gl cd ~/Desk
+  map gp cd ~/Pix
+  map gm cd ~/Musk
+  map gd cd ~/Docs
+  map gw cd ~/DLs
+  map gv cd ~/Vidz
+  map gt cd ~/tmp
+  map gs cd ~/.scripts
+  map gc cd ~/.config
+  map gf cd ~/.dotfiles
+  map gT ~/.local/share/Trash/files
+  map gi eval fm.cd('/run/media/' + os.getenv('USER'))
+  map g/ cd /
+  map gr cd /root
+  map gR eval fm.cd(ranger.RANGERDIR)
+  map g? cd /usr/share/doc/ranger
+
+  # ===================================================================
+  # FILE OPERATIONS (YANK, CUT, PASTE, RENAME)
+  # ===================================================================
+  map E  edit
+  map du shell -p du --max-depth=1 -h --apparent-size
+  map dU shell -p du --max-depth=1 -h --apparent-size | sort -rh
+  map yp yank path
+  map yd yank dir
+  map yn yank name
+  map y. yank name_without_extension
+  map =  chmod
+
+  map a  rename_append
+  map A  eval fm.open_console('rename ' + fm.thisfile.relative_path.replace("%", "%%"))
+  map I  eval fm.open_console('rename ' + fm.thisfile.relative_path.replace("%", "%%"), position=7)
+  map cw eval fm.execute_console('bulkrename') if fm.thisdir.marked_items else fm.open_console('rename ')
+  map cr eval fm.open_console('rename .' + fm.thisfile.extension, position=7) if fm.thisfile.extension else fm.open_console('rename ')
+  map ce bulkrename
+
+  map pp paste
+  map po paste overwrite=True
+  map pP paste append=True
+  map pO paste overwrite=True append=True
+  map pl paste_symlink relative=False
+  map pL paste_symlink relative=True
+  map phl paste_hardlink
+  map pht paste_hardlinked_subtree
+  map pd console paste dest=
+  map p`<any> paste dest=%any_path
+  map p'<any> paste dest=%any_path
+
+  map dD console delete
+  map dT shell mv %s /home/${USER}/.Trash
+  map dd cut
+  map ud uncut
+  map da cut mode=add
+  map dr cut mode=remove
+  map dt cut mode=toggle
+  map yy copy
+  map uy uncut
+  map ya copy mode=add
+  map yr copy mode=remove
+  map yt copy mode=toggle
+
+  # Temporary workarounds
+  map dgg eval fm.cut(dirarg=dict(to=0), narg=quantifier)
+  map dG  eval fm.cut(dirarg=dict(to=-1), narg=quantifier)
+  map dj  eval fm.cut(dirarg=dict(down=1), narg=quantifier)
+  map dk  eval fm.cut(dirarg=dict(up=1), narg=quantifier)
+  map ygg eval fm.copy(dirarg=dict(to=0), narg=quantifier)
+  map yG  eval fm.copy(dirarg=dict(to=-1), narg=quantifier)
+  map yj  eval fm.copy(dirarg=dict(down=1), narg=quantifier)
+  map yk  eval fm.copy(dirarg=dict(up=1), narg=quantifier)
+
+  # ===================================================================
+  # SEARCHING & SORTING
+  # ===================================================================
+  map /  console search%space
+  map n  search_next
+  map N  search_next forward=False
+  map ct search_next order=tag
+  map cs search_next order=size
+  map ci search_next order=mimetype
+  map cc search_next order=ctime
+  map cm search_next order=mtime
+  map ca search_next order=atime
+
+  map or set sort_reverse!
+  map oz set sort=random
+  map os chain set sort=size;      set sort_reverse=False
+  map ob chain set sort=basename;  set sort_reverse=False
+  map on chain set sort=natural;   set sort_reverse=False
+  map om chain set sort=mtime;     set sort_reverse=False
+  map oc chain set sort=ctime;     set sort_reverse=False
+  map oa chain set sort=atime;     set sort_reverse=False
+  map ot chain set sort=type;      set sort_reverse=False
+  map oe chain set sort=extension; set sort_reverse=False
+  map oS chain set sort=size;      set sort_reverse=True
+  map oB chain set sort=basename;  set sort_reverse=True
+  map oN chain set sort=natural;   set sort_reverse=True
+  map oM chain set sort=mtime;     set sort_reverse=True
+  map oC chain set sort=ctime;     set sort_reverse=True
+  map oA chain set sort=atime;     set sort_reverse=True
+  map oT chain set sort=type;      set sort_reverse=True
+  map oE chain set sort=extension; set sort_reverse=True
+  map dc get_cumulative_size
+
+  # ===================================================================
+  # TABS & VIEW TOGGLES
+  # ===================================================================
+  map <C-n>     tab_new
+  map <TAB>     tab_move 1
+  map <S-TAB>   tab_move -1
+  map gn        tab_new
+  map uq        tab_restore
+
+  map zc    set collapse_preview!
+  map zd    set sort_directories_first!
+  map zh    set show_hidden!
+  map <C-h> set show_hidden!
+  copymap <C-h> <backspace>
+  copymap <backspace> <backspace2>
+  map zI    set flushinput!
+  map zi    set preview_images!
+  map zm    set mouse_enabled!
+  map zp    set preview_files!
+  map zP    set preview_directories!
+  map zs    set sort_case_insensitive!
+  map zu    set autoupdate_cumulative_size!
+  map zv    set use_preview_script!
+  map zf    console filter%space
+  copymap zf zz
+
+  # ===================================================================
+  # BOOKMARKS & CHMOD
+  # ===================================================================
+  map `<any>  enter_bookmark %any
+  map '<any>  enter_bookmark %any
+  map m<any>  set_bookmark %any
+  map um<any> unset_bookmark %any
+  map m<bg>   draw_bookmarks
+  copymap m<bg>  um<bg> `<bg> '<bg>
+
+  eval for arg in "rwxXst": cmd("map +u{0} shell -f chmod u+{0} %s".format(arg))
+  eval for arg in "rwxXst": cmd("map +g{0} shell -f chmod g+{0} %s".format(arg))
+  eval for arg in "rwxXst": cmd("map +o{0} shell -f chmod o+{0} %s".format(arg))
+  eval for arg in "rwxXst": cmd("map +a{0} shell -f chmod a+{0} %s".format(arg))
+  eval for arg in "rwxXst": cmd("map +{0}  shell -f chmod u+{0} %s".format(arg))
+  eval for arg in "rwxXst": cmd("map -u{0} shell -f chmod u-{0} %s".format(arg))
+  eval for arg in "rwxXst": cmd("map -g{0} shell -f chmod g-{0} %s".format(arg))
+  eval for arg in "rwxXst": cmd("map -o{0} shell -f chmod o-{0} %s".format(arg))
+  eval for arg in "rwxXst": cmd("map -a{0} shell -f chmod a-{0} %s".format(arg))
+  eval for arg in "rwxXst": cmd("map -{0}  shell -f chmod u-{0} %s".format(arg))
+
+  # ===================================================================
+  # RDO CUSTOM INTEGRATIONS
+  # ===================================================================
+  map bp shell -f SH_kde-connect_send2phone.sh
+  map bz shell zip -r a.zip %s
+  map bd shell dragon-drop -a -x %s
+#+end_src
+
+***** rifle.conf (file associations)
+custom file routing and application bindings
+
+#+begin_src conf :tangle ~/.config/ranger/rifle.conf
+  # ===================================================================
+  # WEBSITES & BROWSERS
+  # ===================================================================
+  ext x?html?, has surf,             X, flag f = surf -- file://"$1"
+  ext x?html?, has qutebrowser,      X, flag f = qutebrowser -- "$@"
+  ext x?html?, has firefox,          X, flag f = firefox -- "$@"
+  ext x?html?, has chromium,         X, flag f = chromium -- "$@"
+  ext x?html?, has w3m,               terminal = w3m "$@"
+
+  # ===================================================================
+  # TEXT EDITORS (Emacs daemon routing)
+  # ===================================================================
+  ext md, has mdfried = kitty --class "md_floating" -e mdfried "$@" &
+  ext md, has mdfried = kitty --class "md_floating" -e glow "$@" &
+  mime ^text,  label editor = emacsclient -c -a -- "$1"
+  mime ^text,  label editor = emacsclient -nw -- "$1"
+  mime ^text,  label pager  = "$PAGER" -- "$@"
+  mime ^text, label editor, ext xml|json|csv|tex|py|pl|rb|js|sh|php|org|txt|conf|org = emacsclient -c -a -- "$1"
+  mime ^text, label editor, ext xml|json|csv|tex|py|pl|rb|js|sh|php|org|txt|conf|org = emacsclient -nw -- "$1"
+  mime ^text, label pager,  ext xml|json|csv|tex|py|pl|rb|js|sh|php|org = "$PAGER" -- "$@"
+
+  ext 1                         = man "$1"
+  name ^[mM]akefile$            = make
+
+  # ===================================================================
+  # SCRIPTS
+  # ===================================================================
+  ext py  = python -- "$1"
+  ext pl  = perl -- "$1"
+  ext rb  = ruby -- "$1"
+  ext js  = node -- "$1"
+  ext sh  = sh -- "$1"
+  ext php = php -- "$1"
+
+  # ===================================================================
+  # AUDIO / VIDEO
+  # ===================================================================
+  mime ^audio|ogg$, terminal, has mpv      = mpv -- "$@"
+  mime ^video,       has mpv,      X, flag f = mpv --fs -- "$@"
+  mime ^video,       has mpv,      X, flag f = mpv -- "$@"
+  mime ^video|audio, has vlc,      X, flag f = vlc -- "$@"
+  mime ^video, terminal, !X, has mpv       = mpv -- "$@"
+
+  # ===================================================================
+  # DOCUMENTS (PDF, Office, Comics)
+  # ===================================================================
+  ext pdf, has zathura,  X, flag f = zathura -- "$@"
+  ext pdf, has okular,   X, flag f = okular -- "$@"
+  ext docx?, has catdoc, terminal = catdoc -- "$@" | "$PAGER"
+  ext pptx?|od[dfgpst]|docx?|sxc|xlsx?|xlt|xlw|gnm|gnumeric, has libreoffice, X, flag f = libreoffice "$@"
+
+  ext epub, has zathura,      X, flag f = zathura -- "$@"
+  ext cbr,  has zathura,      X, flag f = zathura -- "$@"
+  ext cbz,  has zathura,      X, flag f = zathura -- "$@"
+
+  ext sh = emacsclient -nw -- "$1"
+  ext sh = emacsclient -c -a -- "$1"
+
+  # ===================================================================
+  # IMAGES
+  # ===================================================================
+  mime ^image/svg, has inkscape, X, flag f = inkscape -- "$@"
+  mime ^image, has sxiv,      X, flag f = sxiv -af "$@"
+  mime ^image, has feh,       X, flag f = feh -- "$@"
+  mime ^image, has gimp,      X, flag f = gimp -- "$@"
+
+  # ===================================================================
+  # ARCHIVES
+  # ===================================================================
+  ext 7z, has 7z = 7z -p l "$@" | "$PAGER"
+  ext ace|ar|arc|bz2?|cab|cpio|cpt|deb|dgc|dmg|gz,     has atool = atool --list --each -- "$@" | "$PAGER"
+  ext iso|jar|msi|pkg|rar|shar|tar|tgz|xar|xpi|xz|zip, has atool = atool --list --each -- "$@" | "$PAGER"
+  ext 7z|ace|ar|arc|bz2?|cab|cpio|cpt|deb|dgc|dmg|gz,  has atool = atool --extract --each -- "$@"
+  ext iso|jar|msi|pkg|rar|shar|tar|tgz|xar|xpi|xz|zip, has atool = atool --extract --each -- "$@"
+  ext tar|gz|bz2|xz, has tar = tar vvtf "$1" | "$PAGER"
+  ext tar|gz|bz2|xz, has tar = for file in "$@"; do tar vvxf "$file"; done
+  ext zip, has unzip = unzip -l "$1" | less
+  ext zip, has unzip = for file in "$@"; do unzip -d "${file%.*}" "$file"; done
+
+  # ===================================================================
+  # TERMINALS & WALLPAPER
+  # ===================================================================
+  mime ^ranger/x-terminal-emulator, has kitty = kitty -- "$@"
+  mime ^ranger/x-terminal-emulator, has alacritty = alacritty -e "$@"
+
+  label wallpaper, number 11, mime ^image, has feh, X = feh --bg-scale "$1"
+  label wallpaper, number 12, mime ^image, has feh, X = feh --bg-tile "$1"
+  label wallpaper, number 13, mime ^image, has feh, X = feh --bg-center "$1"
+  label wallpaper, number 14, mime ^image, has feh, X = feh --bg-fill "$1"
+
+  # ===================================================================
+  # FALLBACK OPENERS
+  # ===================================================================
+  label open, has xdg-open = xdg-open -- "$@"
+
+                !mime ^text, !ext xml|json|csv|tex|py|pl|rb|js|sh|php  = ask
+  label editor, !mime ^text, !ext xml|json|csv|tex|py|pl|rb|js|sh|php|org  = emacsclient -c -a -- "$1"
+  label editor, !mime ^text, !ext xml|json|csv|tex|py|pl|rb|js|sh|php|org  = emacsclient -nw -- "$1"
+  label pager,  !mime ^text, !ext xml|json|csv|tex|py|pl|rb|js|sh|php|org  = "$PAGER" -- "$@"
+  mime application/x-executable = "$@"
+  label trash, has trash-put = trash-put -- "$@"
+#+end_src
+
+***** scope.sh (file previews)
+image and text preview generation script
+
+#+begin_src sh :tangle ~/.config/ranger/scope.sh
+  #!/usr/bin/env bash
+
+  set -o noclobber -o noglob -o nounset -o pipefail
+  IFS=$'\n'
+
+  ## Arguments injected by ranger
+  FILE_PATH="${1}"
+  PV_WIDTH="${2}"
+  PV_HEIGHT="${3}"
+  IMAGE_CACHE_PATH="${4}"
+  PV_IMAGE_ENABLED="${5}"
+
+  FILE_EXTENSION="${FILE_PATH##*.}"
+  FILE_EXTENSION_LOWER="$(printf "%s" "${FILE_EXTENSION}" | tr '[:upper:]' '[:lower:]')"
+
+  ## Core Settings
+  HIGHLIGHT_SIZE_MAX=262143
+  HIGHLIGHT_TABWIDTH=${HIGHLIGHT_TABWIDTH:-8}
+  HIGHLIGHT_STYLE=${HIGHLIGHT_STYLE:-pablo}
+  HIGHLIGHT_OPTIONS="--replace-tabs=${HIGHLIGHT_TABWIDTH} --style=${HIGHLIGHT_STYLE} ${HIGHLIGHT_OPTIONS:-}"
+  PYGMENTIZE_STYLE=${PYGMENTIZE_STYLE:-autumn}
+  OPENSCAD_IMGSIZE=${RNGR_OPENSCAD_IMGSIZE:-1000,1000}
+  OPENSCAD_COLORSCHEME=${RNGR_OPENSCAD_COLORSCHEME:-Tomorrow Night}
+
+  handle_extension() {
+      case "${FILE_EXTENSION_LOWER}" in
+          ## Archives
+          a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|\
+          rpm|rz|t7z|tar|tbz|tbz2|tgz|tlz|txz|tZ|tzo|war|xpi|xz|Z|zip)
+              atool --list -- "${FILE_PATH}" && exit 5
+              bsdtar --list --file "${FILE_PATH}" && exit 5
+              exit 1;;
+          rar)
+              unrar lt -p- -- "${FILE_PATH}" && exit 5
+              exit 1;;
+          7z)
+              7z l -p -- "${FILE_PATH}" && exit 5
+              exit 1;;
+
+          ## Documents
+          pdf)
+              pdftotext -l 10 -nopgbrk -q -- "${FILE_PATH}" - | fmt -w "${PV_WIDTH}" && exit 5
+              mutool draw -F txt -i -- "${FILE_PATH}" 1-10 | fmt -w "${PV_WIDTH}" && exit 5
+              exiftool "${FILE_PATH}" && exit 5
+              exit 1;;
+          torrent)
+              transmission-show -- "${FILE_PATH}" && exit 5
+              exit 1;;
+          odt|ods|odp|sxw)
+              odt2txt "${FILE_PATH}" && exit 5
+              pandoc -s -t markdown -- "${FILE_PATH}" && exit 5
+              exit 1;;
+          xlsx)
+              xlsx2csv -- "${FILE_PATH}" && exit 5
+              exit 1;;
+          htm|html|xhtml)
+              w3m -dump "${FILE_PATH}" && exit 5
+              lynx -dump -- "${FILE_PATH}" && exit 5
+              elinks -dump "${FILE_PATH}" && exit 5
+              pandoc -s -t markdown -- "${FILE_PATH}" && exit 5
+              ;;
+          json)
+              jq --color-output . "${FILE_PATH}" && exit 5
+              python -m json.tool -- "${FILE_PATH}" && exit 5
+              ;;
+          dff|dsf|wv|wvc)
+              mediainfo "${FILE_PATH}" && exit 5
+              exiftool "${FILE_PATH}" && exit 5
+              ;;
+      esac
+  }
+
+  handle_image() {
+      local DEFAULT_SIZE="1920x1080"
+      local mimetype="${1}"
+      
+      case "${mimetype}" in
+          image/*)
+              local orientation
+              orientation="$( identify -format '%[EXIF:Orientation]\n' -- "${FILE_PATH}" )"
+              if [[ -n "$orientation" && "$orientation" != 1 ]]; then
+                  convert -- "${FILE_PATH}" -auto-orient "${IMAGE_CACHE_PATH}" && exit 6
+              fi
+              exit 7;;
+          
+          application/font*|application/*opentype)
+              preview_png="/tmp/$(basename "${IMAGE_CACHE_PATH%.*}").png"
+              if fontimage -o "${preview_png}" \
+                           --pixelsize "120" \
+                           --fontname \
+                           --pixelsize "80" \
+                           --text "  ABCDEFGHIJKLMNOPQRSTUVWXYZ  " \
+                           --text "  abcdefghijklmnopqrstuvwxyz  " \
+                           --text "  0123456789.:,;(*!?') ff fl fi ffi ffl  " \
+                           --text "  The quick brown fox jumps over the lazy dog.  " \
+                           "${FILE_PATH}";
+              then
+                  convert -- "${preview_png}" "${IMAGE_CACHE_PATH}" \
+                      && rm "${preview_png}" \
+                      && exit 6
+              else
+                  exit 1
+              fi
+              ;;
+      esac
+  }
+
+  handle_mime() {
+      local mimetype="${1}"
+      case "${mimetype}" in
+          text/rtf|*msword)
+              catdoc -- "${FILE_PATH}" && exit 5
+              exit 1;;
+          ,*wordprocessingml.document|*/epub+zip|*/x-fictionbook+xml)
+              pandoc -s -t markdown -- "${FILE_PATH}" && exit 5
+              exit 1;;
+          ,*ms-excel)
+              xls2csv -- "${FILE_PATH}" && exit 5
+              exit 1;;
+          
+          ## Text & Syntax Highlighting
+          text/* | */xml)
+              if [[ "$( stat --printf='%s' -- "${FILE_PATH}" )" -gt "${HIGHLIGHT_SIZE_MAX}" ]]; then
+                  exit 2
+              fi
+              if [[ "$( tput colors )" -ge 256 ]]; then
+                  local pygmentize_format='terminal256'
+                  local highlight_format='xterm256'
+              else
+                  local pygmentize_format='terminal'
+                  local highlight_format='ansi'
+              fi
+              env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
+                  --out-format="${highlight_format}" \
+                  --force -- "${FILE_PATH}" && exit 5
+              env COLORTERM=8bit bat --color=always --style="plain" \
+                  -- "${FILE_PATH}" && exit 5
+              pygmentize -f "${pygmentize_format}" -O "style=${PYGMENTIZE_STYLE}"\
+                  -- "${FILE_PATH}" && exit 5
+              exit 2;;
+              
+          image/vnd.djvu)
+              djvutxt "${FILE_PATH}" | fmt -w "${PV_WIDTH}" && exit 5
+              exiftool "${FILE_PATH}" && exit 5
+              exit 1;;
+          image/*)
+              exiftool "${FILE_PATH}" && exit 5
+              exit 1;;
+          video/* | audio/*)
+              mediainfo "${FILE_PATH}" && exit 5
+              exiftool "${FILE_PATH}" && exit 5
+              exit 1;;
+      esac
+  }
+
+  handle_fallback() {
+      echo '----- File Type Classification -----' && file --dereference --brief -- "${FILE_PATH}" && exit 5
+      exit 1
+  }
+
+  MIMETYPE="$( file --dereference --brief --mime-type -- "${FILE_PATH}" )"
+  if [[ "${PV_IMAGE_ENABLED}" == 'True' ]]; then
+      handle_image "${MIMETYPE}"
+  fi
+  handle_extension
+  handle_mime "${MIMETYPE}"
+  handle_fallback
+
+  exit 1
+#+end_src
+
+**** starship (shell prompt)                                      :common:
+gruvbox dark powerline prompt configuration
+
+#+begin_src toml :tangle ~/.config/starship.toml
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](color_orange)\
+$os\
+$hostname\
+[](bg:color_yellow fg:color_orange)\
+$directory\
+[](fg:color_yellow bg:color_aqua)\
+$git_branch\
+$git_status\
+[](fg:color_aqua bg:color_blue)\
+$c\
+$cpp\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+[](fg:color_blue bg:color_bg3)\
+$docker_context\
+$conda\
+$pixi\
+[](fg:color_bg3 bg:color_bg1)\
+$time\
+[ ](fg:color_bg1)\
+$line_break$character"""
+
+palette = 'gruvbox_dark'
+
+[palettes.gruvbox_dark]
+color_fg0 = '#fbf1c7'
+color_bg1 = '#3c3836'
+color_bg3 = '#665c54'
+color_blue = '#458588'
+color_aqua = '#689d6a'
+color_green = '#98971a'
+color_orange = '#d65d0e'
+color_purple = '#b16286'
+color_red = '#cc241d'
+color_yellow = '#d79921'
+
+[os]
+disabled = false
+style = "bg:color_orange fg:color_fg0"
+
+[hostname]
+ssh_only = false
+format = "[ $hostname ]($style)"
+style = "bg:color_orange fg:black"
+
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+AOSC = ""
+Arch = "󰣇"
+Artix = "󰣇"
+EndeavourOS = ""
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+Pop = ""
+
+[username]
+show_always = true
+style_user = "bg:color_orange fg:color_fg0"
+style_root = "bg:color_orange fg:color_fg0"
+format = '[ $user ]($style)'
+
+[directory]
+style = "fg:color_fg0 bg:color_yellow"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+
+[git_branch]
+symbol = ""
+style = "bg:color_aqua"
+format = '[[ $symbol $branch ](fg:color_fg0 bg:color_aqua)]($style)'
+
+[git_status]
+style = "bg:color_aqua"
+format = '[[($all_status$ahead_behind )](fg:color_fg0 bg:color_aqua)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[c]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[cpp]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[php]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[java]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[haskell]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[python]
+symbol = ""
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[docker_context]
+symbol = ""
+style = "bg:color_bg3"
+format = '[[ $symbol( $context) ](fg:#83a598 bg:color_bg3)]($style)'
+
+[conda]
+style = "bg:color_bg3"
+format = '[[ $symbol( $environment) ](fg:#83a598 bg:color_bg3)]($style)'
+
+[pixi]
+style = "bg:color_bg3"
+format = '[[ $symbol( $version)( $environment) ](fg:color_fg0 bg:color_bg3)]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:color_bg1"
+format = '[[  $time ](fg:color_fg0 bg:color_bg1)]($style)'
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[➜](bold fg:color_green)'
+error_symbol = '[➜](bold fg:color_red)'
+vimcmd_symbol = '[←](bold fg:color_green)'
+vimcmd_replace_one_symbol = '[←](bold fg:color_purple)'
+vimcmd_replace_symbol = '[←](bold fg:color_purple)'
+vimcmd_visual_symbol = '[←](bold fg:color_yellow)'
+#+end_src
+
+**** swayimg (image viewer)                                      :wayland:
+wayland image viewer configuration with custom vim-like binds and api dumps
+
+#+begin_src lua :tangle ~/.config/swayimg/init.lua
+swayimg.viewer.on_key("F12", function()
+  print("\n--- SWAYIMG VIEWER API ---")
+  for k, v in pairs(swayimg.viewer) do
+    if type(v) == "function" then print("swayimg.viewer." .. k) end
+  end
+  print("\n--- SWAYIMG CORE API ---")
+  for k, v in pairs(swayimg) do
+    if type(v) == "function" then print("swayimg." .. k) end
+  end
+end)
+
+swayimg.set_mode("viewer")
+swayimg.enable_antialiasing(true)
+swayimg.enable_decoration(true)
+swayimg.enable_overlay(false)
+swayimg.enable_exif_orientation(true)
+swayimg.set_dnd_button("MouseRight")
+
+swayimg.imagelist.set_order("numeric")
+swayimg.imagelist.enable_reverse(false)
+swayimg.imagelist.enable_recursive(false)
+swayimg.imagelist.enable_adjacent(true)
+swayimg.imagelist.enable_fsmon(true)
+
+swayimg.text.set_font("monospace")
+swayimg.text.set_size(24)
+swayimg.text.set_spacing(0)
+swayimg.text.set_padding(10)
+swayimg.text.set_foreground(0xffcccccc)
+swayimg.text.set_background(0x00000000)
+swayimg.text.set_shadow(0x0d000000)
+swayimg.text.set_timeout(0)
+swayimg.text.set_status_timeout(0)
+
+swayimg.viewer.set_default_scale("optimal")
+swayimg.viewer.set_default_position("center")
+swayimg.viewer.set_drag_button("MouseLeft")
+swayimg.viewer.set_window_background(0xff000000)
+swayimg.viewer.set_image_chessboard(20, 0xff333333, 0xff4c4c4c)
+swayimg.viewer.enable_centering(true)
+swayimg.viewer.enable_loop(true)
+swayimg.viewer.limit_preload(1)
+swayimg.viewer.limit_history(1)
+swayimg.viewer.set_mark_color(0xff808080)
+swayimg.viewer.set_text("topleft", {})
+swayimg.viewer.set_text("topright", {})
+swayimg.viewer.set_text("bottomleft", {})
+
+local info_is_on = true
+local full_topleft = {
+  "File: {name}", "Format: {format}", "File size: {sizehr}",
+  "File time: {time}", "EXIF date: {meta.Exif.Photo.DateTimeOriginal}",
+  "EXIF camera: {meta.Exif.Image.Model}"
+}
+local full_topright = {
+  "Image: {list.index} of {list.total}", "Frame: {frame.index} of {frame.total}",
+  "Size: {frame.width}x{frame.height}"
+}
+local full_bottomleft = { "Scale: {scale}" }
+
+swayimg.viewer.on_key("Tab", function()
+  info_is_on = not info_is_on
+  if info_is_on then
+    swayimg.viewer.set_text("topleft", full_topleft)
+    swayimg.viewer.set_text("topright", full_topright)
+    swayimg.viewer.set_text("bottomleft", full_bottomleft)
+  else
+    swayimg.viewer.set_text("topleft", {})
+    swayimg.viewer.set_text("topright", {})
+    swayimg.viewer.set_text("bottomleft", {})
+  end
+  swayimg.text.set_status("")
+end)
+
+swayimg.viewer.on_key("Escape", function() swayimg.exit() end)
+swayimg.viewer.on_key("q",      function() swayimg.exit() end)
+
+local pan_step = 10
+swayimg.viewer.on_key("i", function()
+  local wnd, pos = swayimg.get_window_size(), swayimg.viewer.get_position()
+  swayimg.viewer.set_abs_position(pos.x, math.floor(pos.y + wnd.height / pan_step))
+end)
+swayimg.viewer.on_key("k", function()
+  local wnd, pos = swayimg.get_window_size(), swayimg.viewer.get_position()
+  swayimg.viewer.set_abs_position(pos.x, math.floor(pos.y - wnd.height / pan_step))
+end)
+swayimg.viewer.on_key("j", function()
+  local wnd, pos = swayimg.get_window_size(), swayimg.viewer.get_position()
+  swayimg.viewer.set_abs_position(math.floor(pos.x + wnd.width / pan_step), pos.y)
+end)
+swayimg.viewer.on_key("l", function()
+  local wnd, pos = swayimg.get_window_size(), swayimg.viewer.get_position()
+  swayimg.viewer.set_abs_position(math.floor(pos.x - wnd.width / pan_step), pos.y)
+end)
+
+swayimg.viewer.on_key("o", function() swayimg.viewer.switch_image("next") end)
+swayimg.viewer.on_key("u", function() swayimg.viewer.switch_image("prev") end)
+swayimg.viewer.on_key("n", function() swayimg.viewer.flip_horizontal() end)
+
+swayimg.viewer.on_key("Left", function()
+  local wnd = swayimg.get_window_size()
+  local pos = swayimg.viewer.get_position()
+  swayimg.viewer.set_abs_position(math.floor(pos.x + wnd.width / 10), pos.y);
+end)
+
+swayimg.viewer.on_mouse("Ctrl-ScrollUp", function()
+  local pos = swayimg.get_mouse_pos()
+  local scale = swayimg.viewer.get_scale()
+  scale = scale + scale / 10
+  swayimg.viewer.set_abs_scale(scale, pos.x, pos.y);
+end)
+
+swayimg.viewer.on_key("d", function()
+  local image = swayimg.viewer.get_image()
+  os.execute(string.format("ripdrag %q 2>/dev/null &", image.path))
+end)
+
+swayimg.slideshow.set_timeout(5)
+swayimg.slideshow.set_default_scale("fit")
+swayimg.slideshow.set_window_background("auto")
+swayimg.slideshow.limit_history(0)
+swayimg.slideshow.set_text("topleft", { "{name}" })
+
+swayimg.gallery.set_aspect("fill")
+swayimg.gallery.set_thumb_size(200)
+swayimg.gallery.set_padding_size(5)
+swayimg.gallery.set_border_size(5)
+swayimg.gallery.set_border_color(0xffaaaaaa)
+swayimg.gallery.set_selected_scale(1.15)
+swayimg.gallery.set_selected_color(0xff404040)
+swayimg.gallery.set_unselected_color(0xff202020)
+swayimg.gallery.set_window_color(0xff000000)
+swayimg.gallery.limit_cache(100)
+swayimg.gallery.enable_preload(false)
+swayimg.gallery.enable_pstore(false)
+swayimg.gallery.set_text("topleft", { "File: {name}" })
+swayimg.gallery.set_text("topright", { "{list.index} of {list.total}" })
+
+swayimg.gallery.on_key("Return", function() swayimg.set_mode("viewer") end)
+swayimg.gallery.on_key("Left", function() swayimg.gallery.switch_image("left") end)
+
+swayimg.on_window_resize(function() swayimg.viewer.set_fix_scale("optimal") end)
+
+swayimg.slideshow.on_key("Delete", function()
+  local image = swayimg.slideshow.get_image()
+  os.remove(image.path)
+  swayimg.text.set_status("File "..image.path.." removed")
+end)
+
+swayimg.gallery.on_image_change(function()
+  local image = swayimg.gallery.get_image()
+  swayimg.set_title("Gallery: "..image.path)
+end)
+
+swayimg.gallery.on_key("Ctrl-p", function()
+  local entries = swayimg.imagelist.get()
+  for _, entry in ipairs(entries) do
+    if entry.mark then print(entry.path) end
+  end
+end)
+#+end_src
+
+**** tealdeer (tldr client)                                       :common:
+custom styles and display settings for tldr
+
+#+begin_src toml :tangle ~/.config/tealdeer/config.toml
+[style.description]
+underline = false
+bold = false
+italic = false
+
+[style.command_name]
+foreground = "cyan"
+underline = false
+bold = false
+italic = false
+
+[style.example_text]
+foreground = "green"
+underline = false
+bold = false
+italic = false
+
+[style.example_code]
+foreground = "cyan"
+underline = false
+bold = false
+italic = false
+
+[style.example_variable]
+foreground = "cyan"
+underline = true
+bold = false
+italic = false
+
+[display]
+compact = false
+use_pager = false
+show_title = false
+
+[updates]
+auto_update = false
+auto_update_interval_hours = 720
+archive_source = "https://github.com/tldr-pages/tldr/releases/latest/download/"
+tls_backend = "rustls-with-webpki-roots"
+
+[directories]
+
+[search]
+#+end_src
+
+**** XDG (user directories)                                       :common:
+Generates default system folders, applies custom xdg paths,
+and safely renames the physical directories natively via Emacs
+
+#+begin_src conf :tangle ~/.config/user-dirs.dirs
+  (defun my-setup-xdg-dirs ()
+    "Generates defaults, writes config, and renames XDG folders."
+    (interactive)
+
+    ;; 1. Force the system to generate the default folders first
+    (shell-command "xdg-user-dirs-update")
+
+    ;; 2. Write your custom user-dirs.dirs config
+    (with-temp-file (expand-file-name ".config/user-dirs.dirs" (getenv "HOME"))
+      (insert "XDG_DESKTOP_DIR=\"$HOME/Desk\"\n"
+              "XDG_DOCUMENTS_DIR=\"$HOME/Docs\"\n"
+              "XDG_DOWNLOAD_DIR=\"$HOME/DLs\"\n"
+              "XDG_MUSIC_DIR=\"$HOME/Musk\"\n"
+              "XDG_PICTURES_DIR=\"$HOME/Pix\"\n"
+              "XDG_PUBLICSHARE_DIR=\"$HOME/\"\n"
+              "XDG_TEMPLATES_DIR=\"$HOME/tmp\"\n"
+              "XDG_TEMP_DIR=\"$HOME/tmp\"\n"
+              "XDG_VIDEOS_DIR=\"$HOME/Vidz\"\n"))
+
+    ;; 3. Safely rename the physical directories
+    (let ((dir-map '(("Desktop"   . "Desk")
+                     ("Documents" . "Docs")
+                     ("Downloads" . "DLs")
+                     ("Music"     . "Musk")
+                     ("Pictures"  . "Pix")
+                     ("Videos"    . "Vidz"))))
+      (dolist (mapping dir-map)
+        (let ((old-path (expand-file-name (car mapping) (getenv "HOME")))
+              (new-path (expand-file-name (cdr mapping) (getenv "HOME"))))
+          ;; If the old default exists and the new custom one DOESN'T, move it.
+          (when (and (file-exists-p old-path)
+                     (not (file-exists-p new-path)))
+            (rename-file old-path new-path))))))
+
+  ;; Execute it automatically when you deploy this config block
+  (my-setup-xdg-dirs)
+#+end_src
+
+**** Xmodmap                                                        :x11:
+keyboard mapping for x11
+#+begin_src conf :tangle ~/.Xmodmap
+clear Lock
+keycode 66 = Home NoSymbol Home
+#+end_src
+
+**** Xresources                                                     :x11:
+color overrides
+#+begin_src conf :tangle ~/.Xresources
+*.WINDOW_FOREGROUND: white
+#+end_src
+
+**** yazi (terminal file manager)                                 :common:
+file manager configuration and custom keymaps
+***** yazi.toml
+#+begin_src toml :tangle ~/.config/yazi/yazi.toml
+[mgr]
+ratio          = [1, 3, 4]
+sort_by        = "natural"
+sort_sensitive = false
+sort_reverse   = false
+sort_dir_first = true
+show_hidden    = true
+show_symlink   = true
+scrolloff      = 8
+linemode       = "size"
+
+[preview]
+image_filter = "triangle"
+image_quality = 75
+sixel_fraction = 15
+
+[opener]
+bulk-rename = [
+  { run = 'emacsclient -c "$@"', block = true },
+]
+editor = [
+  { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (GUI)", orphan = true },
+]
+edit_sh = [
+  { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (GUI)",      orphan = true },
+  { run = 'emacsclient -nw "$@"',      desc = "Emacs (Terminal)", block = true  },
+  { run = 'nano "$@"',                 desc = "Nano",             block = true  },
+]
+edit = [
+  { run = 'emacsclient -c -a -- "$@"', desc = "Emacs (gui)",      orphan = true },
+  { run = 'emacsclient -nw "$@"',      desc = "Emacs (terminal)", block = true  },
+  { run = 'nano "$@"',                 desc = "Nano",             block = true  },
+]
+open_md = [
+  { run = 'kitty --class md_floating -e glow -t "$@"', desc = "glow", orphan = true },
+]
+open_pdf = [
+  { run = 'zathura "$@"', desc = "Zathura", orphan = true },
+]
+open_video = [
+  { run = 'mpv "$@"', desc = "mpv", orphan = true },
+]
+open_audio = [
+  { run = 'mpv "$@"', desc = "mpv", orphan = true },
+]
+open_image = [
+  { run = 'swayimg "$@"', desc = "swayimg", orphan = true }
+]
+extract = [
+  { run = 'atool --extract --each -- "$@"', desc = "Extract (atool)" },
+]
+list_archive = [
+  { run = 'atool --list --each -- "$@" | "$PAGER"', desc = "List (atool)", block = true },
+]
+
+[open]
+prepend_rules = [
+  { url  = "bulk-rename.txt",              use = "bulk-rename"},
+  { url  = "*.sh",                         use = "edit_sh" },
+  { url  = "*.md",                         use = ["open_md", "edit"] },
+  { url  = "*.py",                         use = "edit" },
+  { url  = "*.org",                        use = "edit" },
+  { mime = "application/pdf",              use = "open_pdf" },
+  { mime = "video/*",                      use = "open_video" },
+  { mime = "audio/*",                      use = "open_audio" },
+  { mime = "image/*",                      use = "open_image" },
+  { mime = "application/zip",              use = ["extract", "list_archive"] },
+  { mime = "application/x-tar",            use = ["extract", "list_archive"] },
+  { mime = "application/x-rar",            use = ["extract", "list_archive"] },
+  { mime = "application/x-7z-compressed",  use = ["extract", "list_archive"] },
+]
+
+[tasks]
+micro_workers    = 10
+macro_workers    = 25
+bizarre_retry    = 5
+image_alloc      = 536870912
+image_bound      = [0, 0]
+suppress_preload = false
+
+[log]
+enabled = false
+#+end_src
+
+***** keymap.toml
+#+begin_src toml :tangle ~/.config/yazi/keymap.toml
+[[pick.prepend_keymap]]
+on = "i"
+run = "arrow prev"
+
+[[select.prepend_keymap]]
+on = "i"
+run = "arrow -1"
+
+[[mgr.prepend_keymap]]
+on = "i"
+run = "arrow prev"
+
+[[pick.prepend_keymap]]
+on = "k"
+run = "arrow next"
+
+[[select.prepend_keymap]]
+on = "k"
+run = "arrow 1"
+
+[[mgr.prepend_keymap]]
+on = "k"
+run = "arrow next"
+
+[[mgr.prepend_keymap]]
+on = "l"
+run = "enter"
+
+[[mgr.prepend_keymap]]
+on = ["g", "h"]
+run = "cd ~"
+
+[[mgr.prepend_keymap]]
+on = ["g", "l"]
+run = "cd ~/Desk"
+
+[[mgr.prepend_keymap]]
+on = ["g", "w"]
+run = "cd ~/DLs"
+
+[[mgr.prepend_keymap]]
+on = ["g", "d"]
+run = "cd ~/Docs"
+
+[[mgr.prepend_keymap]]
+on = ["g", "m"]
+run = "cd ~/Musk"
+
+[[mgr.prepend_keymap]]
+on = ["g", "p"]
+run = "cd ~/Pix"
+
+[[mgr.prepend_keymap]]
+on = ["g", "v"]
+run = "cd ~/Vidz"
+
+[[mgr.prepend_keymap]]
+on = ["g", "t"]
+run = "cd ~/tmp"
+
+[[mgr.prepend_keymap]]
+on = ["g", "T"]
+run = "cd ~/.local/share/Trash/files"
+
+[[mgr.prepend_keymap]]
+on = ["g", "f"]
+run = "cd ~/.dotfiles"
+
+[[mgr.prepend_keymap]]
+on = ["g", "e"]
+run = "cd ~/.emacs.d"
+
+[[mgr.prepend_keymap]]
+on = ["g", "c"]
+run = "cd ~/.config"
+
+[[mgr.prepend_keymap]]
+on = ["g", "s"]
+run = "cd ~/.scripts"
+
+[[mgr.prepend_keymap]]
+on = ["g", "r"]
+run = "cd ~/Docs/11.git_docs"
+
+[[mgr.prepend_keymap]]
+on = ["g", "i"]
+run = "cd /run/media/$USER"
+
+[[mgr.prepend_keymap]]
+on = ["g", "/"]
+run = "cd /"
+
+[[mgr.prepend_keymap]]
+on = "j"
+run = "leave"
+
+[[mgr.prepend_keymap]]
+on = "A"
+run = "rename --cursor=end"
+
+[[mgr.prepend_keymap]]
+on = "I"
+run = "rename --cursor=start"
+
+[[mgr.prepend_keymap]]
+on = "a"
+run = "rename --cursor=before_ext"
+
+[[mgr.prepend_keymap]]
+on = "h"
+run = "shell 'bat \"$1\"' --block --confirm"
+
+[[mgr.prepend_keymap]]
+on = ["b", "p"]
+run = "shell 'RANGER_send2phone $@' --confirm=always"
+
+[[mgr.prepend_keymap]]
+on = ["b", "z"]
+run = "shell 'zip -r a.zip $@' --confirm=always"
+
+[[mgr.prepend_keymap]]
+on = ["b", "d"]
+run = "shell 'ripdrag -a -x $@'"
+#+end_src
+
+**** zathura (document viewer)                                    :common:
+pdf reader configuration with custom colors and xfk navigation
+
+#+begin_src conf :tangle ~/.config/zathura/zathurarc
+  set sandbox none
+  set guioptions ""
+  set adjust-open "best-fit"
+  set pages-per-row 1
+  set scroll-page-aware "true"
+  set scroll-full-overlap 0.01
+  set scroll-step 15
+  set scroll-hstep 15
+
+  set font "inconsolata 15"
+  set default-bg "#5B575C"
+  set default-fg "#F7F7F6"
+  set statusbar-fg "#B0B0B0"
+  set statusbar-bg "#202020"
+  set inputbar-bg "#151515"
+  set inputbar-fg "#FFFFFF"
+  set notification-error-bg "#AC4142"
+  set notification-error-fg "#151515"
+  set notification-warning-bg "#AC4142"
+  set notification-warning-fg "#151515"
+  set highlight-color "#F4BF75"
+  set highlight-active-color "#6A9FB5"
+  set completion-highlight-fg "#151515"
+  set completion-highlight-bg "#90A959"
+  set completion-bg "#303030"
+  set completion-fg "#E0E0E0"
+  set notification-bg "#90A959"
+  set notification-fg "#151515"
+
+  set recolor "true"
+  set recolor-lightcolor "#3D3D3D"
+  set recolor-darkcolor "#9C9C9C"
+  set recolor-reverse-video "true"
+  set recolor-keephue "true"
+
+  set selection-clipboard clipboard
+  set statusbar-h-padding 0
+  set statusbar-v-padding 0
+  set page-padding 2
+
+  map p print
+  map [fullscreen] p print
+
+  map u recolor
+  map [fullscreen] u recolor
+  map [presentation] u recolor
+
+  map j scroll left
+  map [fullscreen] j scroll left
+  map [presentation] j scroll left
+  map [index] j navigate_index collapse
+
+  map k scroll down
+  map [fullscreen] k scroll down
+  map [presentation] k scroll down
+  map [index] k scroll down
+  map [index] k navigate_index down
+
+  map l scroll right
+  map [fullscreen] l scroll right
+  map [presentation] l scroll right
+  map [index] l scroll right
+  map [index] l navigate_index expand
+
+  map i scroll up
+  map [fullscreen] i scroll up
+  map [presentation] i scroll up
+  map [index] i scroll up
+  map [index] i navigate_index up
+#+end_src
+
+**** zsh (shell environment)                                      :common:
+login profile and interactive shell configuration for zsh
+***** .zshenv
+#+begin_src sh :tangle ~/.zshenv
+export PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
+export WAYLAND_DISPLAY=wayland-1
+#+end_src
+
+***** .zprofile
+#+begin_src sh :tangle ~/.zprofile
+# SOURCE LEGION-SPECIFIC TWEAKS FOR HARDWARE
+if [[ "$CURRENT_HOSTNAME" == "legion" ]]; then
+    [[ -f ~/.zsh_legion ]] && source ~/.zsh_legion
+fi
+
+# ─── VISUAL ─────────────────────
+setfont /usr/share/kbd/consolefonts/latarcyrheb-sun32
+
+# ─── ENVIRONMENT ─────────────────────
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin/vendor_perl
+export PATH="/usr/bin/vendor_perl:$PATH"
+export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/.config
+export PATH=$PATH:$HOME/.scripts
+export PATH=$PATH:$HOME/.scripts/groff_helpers/helpers
+export PATH=$PATH:$HOME/.scripts/PCs/Legion5/kb_controls/
+export PATH=$PATH:$HOME/.themes
+export PATH=$PATH:$HOME/.icons
+
+export EDITOR="emacsclient -c"
+export VISUAL="emacsclient -c"
+
+export MOZ_ENABLE_WAYLAND=1 firefox
+export XDG_CURRENT_DESKTOP=niri
+export XDG_SESSION_TYPE=wayland
+export XDG_MENU_PREFIX=gnome-
+
+# ─── WAYLAND AUTOSTART ─────────────────────
+if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+     export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+     export XDG_SESSION_TYPE=wayland
+     export XDG_SESSION_DESKTOP=niri
+     export MOZ_ENABLE_WAYLAND=1
+     export QT_QPA_PLATFORM=wayland
+     export ELECTRON_OZONE_PLATFORM_HINT=wayland
+     exec dbus-run-session niri
+fi
+#+end_src
+
+***** .zshrc
+#+begin_src sh :tangle ~/.zshrc
+  # --- SSH AGENT MANAGEMENT ---
+  () {
+      local keys=()
+      [[ -f ~/.ssh/id_legion ]] && keys+=(id_legion)
+      [[ -f ~/.ssh/id_templar ]] && keys+=(id_templar)
+
+      if command -v keychain >/dev/null 2>&1; then
+          eval $(keychain --eval --quiet "${keys[@]}")
+      else
+          if [[ -z "$SSH_AUTH_SOCK" ]]; then
+              eval "$(ssh-agent -s)" > /dev/null 2>&1
+              local current_host=$(cat /etc/hostname 2>/dev/null)
+              case "$current_host" in
+                  legion)  ssh-add ~/.ssh/id_legion  2>/dev/null ;;
+                  templar) ssh-add ~/.ssh/id_templar 2>/dev/null ;;
+              esac
+          fi
+      fi
+  }
+
+  # ─── OS & HOSTNAME DETECTION ─────────
+  CURRENT_HOSTNAME=$(< /etc/hostname)
+  if [[ -f /etc/os-release ]]; then
+      source /etc/os-release
+      CURRENT_OS="$ID"
+  fi
+
+  # ─── HARDWARE & OS SPECIFIC TWEAKS ───
+  if [[ "$CURRENT_HOSTNAME" == "legion" ]]; then
+      if [[ "$CURRENT_OS" == "void" && -f ~/.zsh_legion_VOID ]]; then
+          source ~/.zsh_legion_VOID
+      elif [[ "$CURRENT_OS" == "arch" && -f ~/.zsh_legion_ARCH ]]; then
+          source ~/.zsh_legion_ARCH
+      fi
+  fi
+
+  # ─── HISTORY ─────────────────────
+  HISTFILE=~/.histfile
+  HISTSIZE=10000
+  SAVEHIST=10000
+  setopt APPEND_HISTORY
+  setopt HIST_IGNORE_DUPS
+  setopt HIST_IGNORE_SPACE
+
+  # ─── KEYBINDINGS ─────────────────────
+  unsetopt beep
+  bindkey -e
+  bindkey "^[[H" beginning-of-line
+  bindkey "^[k" up-line-or-search
+  bindkey "^[j" down-line-or-search
+
+  # ─── COMPLETION ──────────────────────
+  zstyle :compinstall filename '/home/rdo/.zshrc'
+  autoload -Uz compinit
+  compinit
+
+  # ─── ENVIRONMENT ─────────────────────
+  PATH=$PATH:~/.local/bin
+  PATH=$PATH:~/.config
+  PATH=$PATH:~/.scripts
+  PATH=$PATH:~/.scripts/groff_helpers/helpers
+  PATH=$PATH:~/.scripts/PCs/Legion5/kb_controls/
+  PATH=$PATH:~/.themes
+  PATH=$PATH:~/.icons
+
+  EDITOR="emacsclient -c"
+  VISUAL="emacsclient -c"
+
+  export MOZ_ENABLE_WAYLAND=1 firefox
+
+  # ─── ALIASES ───────────────
+  alias ra='ranger'
+  alias zi='yazi'
+  alias cm='cmus'
+  alias mk='musikcube'
+  alias tl='tldr'
+  alias m='emacsclient -c -a emacs'
+  alias ll='lsd -lAh --group-dirs first --hyperlink=auto'
+  alias ls='ls -h --color=auto --group-directories-first --hyperlink=auto'
+  alias le='bat'
+  alias df='duf -hide special'
+  alias ggu='git add . && git commit && git push'
+  alias ggs='git status'
+  alias ggp='git pull'
+
+  alias pu='pushd'
+  alias po='popd'
+  alias mv='mv -iv'
+  alias cp='cp -iv'
+  alias cpr='rsync -ah --progress'
+  alias rm='rm -iv'
+  alias frm='\rm -rfv'
+  alias yys='yay -S'
+  alias yyr='yay -Rns'
+  alias pac='pacseek'
+  alias x='exit'
+
+  color() {
+      local hex=${1#\#}
+      local r=$((16#${hex:0:2}))
+      local g=$((16#${hex:2:2}))
+      local b=$((16#${hex:4:2}))
+      printf "\n  \e[48;2;%s;%s;%sm        \e[0m  #%s\n\n" "$r" "$g" "$b" "$hex"
+  }
+
+  ff-book() {
+    local profile=$(ls -d ~/.config/mozilla/firefox/*.default-release 2>/dev/null | head -n 1)
+    if [[ -z "$profile" ]]; then
+      echo "Error: Profile not found in ~/.config/mozilla/firefox/"
+      return 1
+    fi
+    \cp -f "$profile/places.sqlite" /tmp/ff_places.sqlite
+    sqlite3 /tmp/ff_places.sqlite \
+      "SELECT b.title, h.url FROM moz_bookmarks b JOIN moz_places h ON b.fk = h.id WHERE b.title IS NOT NULL;" | rg -i "$1"
+  }
+
+  if [[ -n "$WAYLAND_DISPLAY" ]]; then
+      alias cl='wl-copy'
+  elif [[ -n "$DISPLAY" ]]; then
+      alias cl='xclip -selection clipboard'
+  fi
+
+  alias fz='SH_fzf_search_editor.sh'
+
+  # ─── EVAL ────────────────────────────
+  eval "$(atuin init zsh --disable-up-arrow)"
+  eval "$(starship init zsh)"
+  eval "$(zoxide init zsh --cmd cd)"
+#+end_src
