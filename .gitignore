@@ -52,4 +52,5 @@ common/emacs/.emacs.d/tree-sitter/
 legion/gemini_howto.org
 legion/gemini_install.org
 wm/niri/niri_conf/.config/niri/unused_binds.txt
-/common/emacs/.emacs.d/___early-init.el
+common/emacs/.emacs.d/bookmarks
+common/emacs/.emacs.d/org-roam.db
