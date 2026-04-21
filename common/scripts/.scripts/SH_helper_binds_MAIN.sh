@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 # ── Define Options ────────────────────────────────────────────────────────────
-OPTIONS="1. Niri\n2. SwayIMG\n3. MPV"
+OPTIONS="1. Niri\n2. SwayIMG\n3. MPV\n4. Kitty"
 
 # ── Pipe to Fuzzel ────────────────────────────────────────────────────────────
 CHOICE=$(echo -e "$OPTIONS" | fuzzel --dmenu \
-                                     --lines 3 \
+                                     --lines 4 \
                                      --width 30 \
                                      --prompt " . Helper Menu ❯ ")
 
@@ -19,6 +19,9 @@ case "$CHOICE" in
         ;;
     "3. MPV")
         "$HOME/.scripts/SH_helper_binds-mpv.sh" &
+        ;;
+    "4. Kitty")
+        "$HOME/.scripts/SH_helper_binds-kitty.sh" &
         ;;
     *)
         # Exit gracefully if you press Escape or click away

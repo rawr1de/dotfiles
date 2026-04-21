@@ -8,7 +8,7 @@ input {
             model "pc105"
 
             // Optional: Specify a variant (e.g., "dvorak", "colemak_dh_ortho")
-            // layout "us"
+            // layout "us,br"
             // variant "colemak_dh_ortho"
 
         }

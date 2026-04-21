@@ -36,7 +36,7 @@
 (require 'musk)
 (require 'tools)
 (require 'my-scratchpad)
-(require 'my-kde-sms)
+(require 'my-termux-sms)
 (require 'my-force-fullscreen-toggle)
 #+end_src
 
@@ -69,17 +69,22 @@
   (use-package savehist)
 
 (provide 'tools)
+  (use-package org)
+  (use-package org-bullets)
+  (use-package org-modern)
+  (use-package org-roam)
+  (use-package which-key)
+  (use-package embrace)
   (use-package magit)
   (use-package vterm)
   (use-package iedit)
   (use-package avy)
-  (use-package which-key)
-  (use-package sudo-edit)
   (use-package lua-mode)
   (use-package kdl-mode)
   (use-package keyfreq)
-  (use-package embrace)
-  (use-package org-roam)
+  (use-package sudo-edit)
+  (use-package ultra-scroll)
+  (use-package whisper)
 
 (provide 'ui)
   (use-package doom-themes)
@@ -291,7 +296,7 @@
 
   ;; EMMS PLAYLIST MAP NUKE!
   (with-eval-after-load 'emms-playlist-mode
-    ;; (setq emms-playlist-mode-map (make-sparse-keymap)))
+    ;; (setq emms-playlist-mode-map (make-sparse-keymap))
     (define-key emms-playlist-mode-map (kbd "a") nil)
     ;; insert single track (emms)
     (define-key emms-playlist-mode-map (kbd "i") nil)
@@ -314,6 +319,10 @@
 
   ;; Explicitly bind the GUI <f11> key to the native toggle command
   ;; (global-set-key (kbd "<f11>") #'toggle-frame-fullscreen)
+
+  ;; custom functions skel template, auto save in:
+  ;; "~/.dotfiles/common/emacs/.emacs.d/snippets/"
+  (global-set-key (kbd "C-c e") #'my-generate-elisp-file)
 #+end_src
 
 **** VERT/HORIZ SPLIT CONTROL
@@ -537,14 +546,14 @@
 #+end_src
 
 *** REGISTERS
-
 #+begin_src emacs-lisp
   (set-register ?a (cons 'file "~/Desk/Dropbox/orgriz/[PERSO]_agenda_2026.org"))
   (set-register ?h (cons 'file "~/Desk/Dropbox/orgriz/health.org"))
-  (set-register ?s (cons 'file "~/Docs/09.notes/trading-study-tracker.org"))
-  (set-register ?t (cons 'file "~/Docs/Org/trade_kbase.org"))
-  (set-register ?p (cons 'file "~/Docs/Org/perso_search.org"))
-  (set-register ?f (cons 'file "~/Docs/10.Org/roam/system-tickets.org"))
+  (set-register ?s (cons 'file "~/Docs/10.Org/trading-study-tracker.org"))
+  (set-register ?t (cons 'file "~/Docs/10.Org/trading-log.org"))
+  (set-register ?p (cons 'file "~/Docs/10.Org/personal-searches.org"))
+  (set-register ?f (cons 'file "~/Docs/10.Org/system-tickets.org"))
+  (set-register ?l (cons 'file "~/Docs/10.Org/roam/20260417193707-linux_commands_index.org"))
 #+end_src
 
 *** BOOKMARKS
@@ -698,6 +707,19 @@
          ("C-<"         . mc/mark-previous-like-this)
          ("C-c C-<"     . mc/mark-all-like-this))
   :config (setq mc/always-run-for-all t))
+#+end_src
+
+*** spell checker (hunspell)
+#+begin_src emacs-lisp
+  ;; toggle US/BR dictionaries
+  (global-set-key (kbd "C-c <f11>") 'my-toggle-spell-language)
+  ;; toggle on-the-fly spell checking
+  (global-set-key (kbd "C-c <f12>") 'flyspell-mode)
+#+end_src
+
+*** whisper
+#+begin_src emacs-lisp
+  (global-set-key (kbd  "C-c u") 'whisper-run)
 #+end_src
 
 ** COMPLETION

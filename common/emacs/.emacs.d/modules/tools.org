@@ -52,24 +52,30 @@
 
   (setq org-capture-templates
     '(
-       ;; Day Trading Log (Datetree)
-       ("t" "Trade Log" entry
-       (file+olp+datetree "~/Docs/09.notes/trading-log.org")
-       "* Trade: %?\n  - Entry: \n  - Exit: \n  - Notes: "
-       :empty-lines 1)
+       ;; Stuff I wanna learn/implement
+       ("p" "Personal Searches" entry
+        (file+headline "~/Docs/10.Org/personal-searches.org" "OPEN SEARCHS")
+        "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%a\n"
+        :empty-lines 1)
 
        ;; Study Tracker (Backlog Inbox)
        ("s" "Study Backlog (Trading)" entry
-        (file+headline "~/Docs/09.notes/trading-study-tracker.org" "MASTER BACKLOG")
+        (file+headline "~/Docs/10.Org/trading-study-tracker.org" "MASTER BACKLOG")
         "** BACKLOG %?\n  %i\n  Context: %a\n"
         :empty-lines 1)
 
-        ;; System Ticketing template
-        ("x" "System Ticket" entry
-         (file+headline "~/Docs/10.Org/roam/system-tickets.org" "OPEN TICKETS")
-         "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%a\n"
-         :empty-lines 1)
-    ))
+       ;; Day Trading Log (Datetree)
+       ("t" "Trade Log" entry
+       (file+olp+datetree "~/Docs/10.Org/trading-log.org")
+       "* Trade: %?\n  - Entry: \n  - Exit: \n  - Notes: "
+       :empty-lines 1)
+
+       ;; System Ticketing template
+       ("x" "System Ticket" entry
+        (file+headline "~/Docs/10.Org/system-tickets.org" "OPEN TICKETS")
+        "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%a\n"
+        :empty-lines 1)
+  ))
 #+end_src
 
 *** org-bullets
@@ -122,26 +128,68 @@
 #+end_src
 
 ** roam
+roam package configs - [[file:~/.dotfiles/common/emacs/.emacs.d/base_cfg.org::*roam][keybinds]]
 #+begin_src emacs-lisp
-  ;; Dedicated Org-roam capture templates (Logseq Compatible)
+  (use-package org-roam
+    :ensure t
+    :custom
+    (org-roam-directory (file-truename "~/Docs/10.Org/roam/"))
+    :config
+    ;; 1. Initialize Database Autosync
+    (org-roam-db-autosync-mode)
+
+    ;; 2. Global Tag Dictionary
+    ;; Pressing C-c C-q on a heading will open a menu.
+    ;; Pressing the assigned letter (e.g., 'l') applies the tag.
+    (setq org-tag-alist '(("linux" . ?l)
+                          ("emacs" . ?e)
+                          ("audio" . ?a)
+                          ("video" . ?v)
+                          ("image" . ?i)
+                          ("network" . ?n)
+                          ("hardware" . ?h)
+                          ("terminal" . ?t)
+                          ("scripting" . ?s)
+                          ("pacman" . ?p)
+                          ("arch_linux" . ?A)
+                          ("void_linux" . ?V)
+                          ("cli" . ?c)
+                          ("tui" . ?u)
+                          ("gui" . ?G)
+                          ("pdf" . ?f)
+                          ("wm_de" . ?w)
+                          ("git" . ?g)
+                          ("troubleshoot" . ?r)
+                          ("regex" . ?x)
+                          ("compression" . ?C)
+                          ("mount" . ?m)))
+
+    ;; 3. Clean Org-roam Capture Templates (Logseq Compatible)
     (setq org-roam-capture-templates
           '(("c" "Cheat Sheet / Hub" plain
              "%?"
-  :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                     ":PROPERTIES:\n:ID:       %(org-id-uuid)\n:END:\n#+title: ${title}\n#+filetags: :%(mapconcat #'identity (completing-read-multiple \"Tags (comma separated): \" '(\"linux\" \"emacs\" \"audio\" \"video\" \"image\" \"network\" \"hardware\" \"terminal\" \"scripting\" \"pacman\" \"arch linux\" \"void linux\")) \":\"):\n\n* QUICK REFERENCE\n\n* COMMANDS\n")
-  :unnarrowed t)
+             :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                                ":PROPERTIES:\n:ID:       %(org-id-uuid)\n:END:\n#+title: ${title}\n#+filetags: :cheat_sheet:hub:\n\n* QUICK REFERENCE\n\n# if editing files, source describe path\n# *Config Path:* =~/.config/zathura/zathurarc=\n\n# *Problem*\n# describe scenario in case of troubleshooting resolution\n\n# *Solution*\n# describe sequential steps taken to resolve problem\n# make sure to use ordered lists \"1.\"\n\n# use tables for multiple inline commands\n| Action | Command                   |\n|--------+---------------------------|\n| act_1  | ~inline command/code here!~ |\n|        |                           |\n|        |                           |\n\n* heading_1\n# detailed description of event - SCRIPTS & TROUBLESHOOTING\n# detailed description of event - COMMANDS & CODING\n\n* heading_2\n# depeer detailed description of event\n\ngeneral code block description\n#+begin_src bash\nblock code here!\n#+end_src\n\ngeneral inline code description (use tables if too many inline codes >=3)\n~inline code here!~\n\n* heading_3\n# depeer detailed description of event\n")
+             :unnarrowed t)
+
+            ("h" "Hub & Spoke / Cheat Sheet Add-on" plain
+             "%?"
+             :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                                ":PROPERTIES:\n:ID:       %(org-id-uuid)\n:END:\n#+title: ${title}\n#+filetags: :cheat_sheet:hub:\n\n* QUICK REFERENCE\n\n# if editing files, source describe path\n# *Config Path:* =~/.config/zathura/zathurarc=\n\n# *Problem*\n# describe scenario in case of troubleshooting resolution\n\n# *Solution*\n# describe sequential steps taken to resolve problem\n# make sure to use ordered lists \"1.\"\n\n# use tables for multiple inline commands\n| Action | Command                   |\n|--------+---------------------------|\n| act_1  | ~inline command/code here!~ |\n|        |                           |\n|        |                           |\n\n* heading_1\n# detailed description of event - SCRIPTS & TROUBLESHOOTING\n# detailed description of event - COMMANDS & CODING\n\n* heading_2\n# depeer detailed description of event\n\ngeneral code block description\n#+begin_src bash\nblock code here!\n#+end_src\n\ngeneral inline code description (use tables if too many inline codes >=3)\n~inline code here!~\n\n* heading_3\n# depeer detailed description of event\n")
+             :unnarrowed t)
 
             ("e" "Emacs Custom Function" plain
              "%?"
              :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                                 ":PROPERTIES:\n:ID:       %(org-id-uuid)\n:END:\n#+title: ${title}\n#+filetags: :emacs:elisp:\n\n* DESCRIPTION\n\n* CODE\n#+begin_src elisp\n\n#+end_src\n")
-             :unnarrowed t)
-
-            ("t" "Troubleshooting Fix" plain
-             "%?"
-             :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                                ":PROPERTIES:\n:ID:       %(org-id-uuid)\n:END:\n#+title: ${title}\n#+filetags: :fix:linux:\n\n* THE PROBLEM\n\n* THE SOLUTION\n#+begin_src bash\n\n#+end_src\n")
              :unnarrowed t)))
+
+    ;; allow searches on TAGS, reserves 30 chars space
+    ;; on minibuffer and applies org-tag color to it.
+    (setq org-roam-node-display-template
+          (concat "${title:*} "
+                  (propertize "${tags:30}" 'face 'org-tag)))
+  )
 #+end_src
 
 ** which-key
@@ -256,9 +304,28 @@
            (new-dict (if (string= current-dict "en_US") "pt_BR" "en_US")))
       (ispell-change-dictionary new-dict)
       (message "Dictionary switched to: %s" new-dict)))
+#+end_src
 
-  ;; Bind the toggle to a convenient key, like Ctrl-c d
-  (global-set-key (kbd "s-<F3>") 'my-toggle-spell-language)
+** whisper
+#+begin_src emacs-lisp
+(use-package whisper
+  :vc (:url "https://github.com/natrys/whisper.el" :branch "master")
+  :config
+  ;; Use the optimized Arch binary
+  (setq whisper-command "whisper-cpp")
+
+  ;; Use sox for reliable microphone capture
+  (setq whisper-recording-engine "sox")
+
+  ;; Use the multilingual "small" model (approx. 466MB)
+  (setq whisper-model "small")
+
+  ;; Auto-detect language so it switches between English and Portuguese seamlessly
+  (setq whisper-language "auto"
+        whisper-translate nil)
+
+  ;; Use half your CPU cores to process it blazingly fast
+  (setq whisper-use-threads (/ (num-processors) 2)))
 #+end_src
 
 * END-OF-FILE

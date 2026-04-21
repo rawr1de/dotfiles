@@ -54,7 +54,8 @@ binds  {
     Mod+Escape                allow-inhibiting=false                     { toggle-keyboard-shortcuts-inhibit; }
     Mod+Shift+F12             hotkey-overlay-title="Reload Niri Config"  { spawn "bash" "-c" "niri msg action load-config-file && notify-send 'Niri' 'Config reloaded'"; }
     Mod+Shift+F5              hotkey-overlay-title="Trackpad ON/OFF"     { spawn-sh "SH_trackpad_toggle.sh"; }
-    Alt+Space                 hotkey-overlay-title="Keyboard Layout"     { switch-layout "next"; }  // keyboard US,BR
+    Alt+Space                 hotkey-overlay-title="Keyboard Language"   { spawn-sh "/home/rdo/.scripts/SH_kbd-language-change.sh"; }
+    Mod+Alt+Space             hotkey-overlay-title="Keyboard Layout"     { spawn-sh "/home/rdo/.scripts/SH_kbd-layout-change.sh"; }
     Mod+h                                                                { spawn "~/.scripts/SH_helper_binds_MAIN.sh"; }
 
 

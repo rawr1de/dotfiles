@@ -36,6 +36,8 @@ duf
 wev
 parallel
 wdisplays
+jq
+
 
 # --- Archive tools ---
 atool

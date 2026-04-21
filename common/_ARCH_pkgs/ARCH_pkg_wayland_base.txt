@@ -37,7 +37,7 @@ wdisplays
 wlsunset
 ddcutil
 pacseek
-
+jq
 
 # --- Archive tools ---
 atool

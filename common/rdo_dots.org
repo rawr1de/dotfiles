@@ -395,6 +395,15 @@ terminal settings and window management
   map kitty_mod+[      set_background_opacity -0.05
   map kitty_mod+delete clear_terminal reset active
 
+  map kitty_mod+n    kitten unicode_input
+
+  map kitty_mod+p>f kitten hints --type path --program default
+  map kitty_mod+p>u kitten hints --type url --program default
+  map kitty_mod+p>w kitten hints --type word --program @
+  map kitty_mod+p>h kitten hints --type hash --program @
+  map kitty_mod+p>l kitten hints --type line --program @
+  map kitty_mod+p>y kitten hints --type path --program @
+
   font_family      family='JetBrainsMono Nerd Font Mono' postscript_name=JetBrainsMonoNFM-Regular
   bold_font        auto
   italic_font      auto
@@ -409,33 +418,80 @@ terminal settings and window management
 wayland notification daemon configuration
 
 #+begin_src conf :tangle ~/.config/mako/config
-sort=-time
-layer=overlay
-anchor=top-right
-margin=20
-padding=15
-width=350
+  # MAKO DOES NOT support inline comments e.g:
+  # command here # comment alongside, it will break the config!
 
-default-timeout=5000
-ignore-timeout=1
+  # ==========================================
+  # GLOBAL SETTINGS (Applies to everything)
+  # ==========================================
+  sort=-time
+  layer=overlay
+  anchor=top-right
+  margin=20
+  padding=15
+  width=350
 
-font=JetBrains Mono 16
-background-color=#10152a
-text-color=#61afef
-border-color=#61afef
-progress-color=#38498c
-border-size=2
-border-radius=5
+  default-timeout=5000
+  ignore-timeout=0
 
-[urgency=critical]
-border-color=#e06c75
-default-timeout=5000
-progress-color=over #98c379
+  font=JetBrains Mono 16
+  background-color=#10152a
+  text-color=#61afef
+  border-color=#61afef
+  progress-color=#38498c
+  border-size=2
+  border-radius=5
 
-format=<b>%s</b>\n%b
 
-[grouped=1]
-format=<b>%a (%g)</b>\n%s\n%b
+  # ==========================================
+  # RULE: HIGH URGENCY (System Warnings/Errors)
+  # ==========================================
+  [urgency=critical]
+  border-color=#e06c75
+  # 0 = stays on screen until clicked
+  default-timeout=5000
+  progress-color=over #98c379
+  format=<b>%s</b>\n%b
+
+
+  # ==========================================
+  # GROUP STYLING OF NOTIFICATION
+  # ==========================================
+  [grouped=1]
+  format=<b>%a (%g)</b>\n%s\n%b
+
+
+  # ==========================================
+  # RULE: Keyboard Layout Change (Qwerty/Colemak DH)
+  # ==========================================
+  [app-name=KeyboardLayout]
+  default-timeout=1000
+  width=160
+  height=150
+  format=%b
+  text-alignment=center
+
+  # --- SIZE AND COLOR OVERRIDES ---
+  # Set your preferred font and size here (bypasses global font)
+  font=JetBrains Mono 20
+
+  # Colors (Hex format: #RRGGBB or #RRGGBBAA for transparency)
+  # background-color=#282c34
+  # text-color=#98c379
+  # border-color=#98c379
+  # border-size=2
+
+
+  # ==========================================
+  # RULE: Keyboard Language Change (EN_US/PT_BR)
+  # ==========================================
+  [app-name=KeyboardLanguage]
+  default-timeout=800
+  width=150
+  height=150
+  # Lowercase %b is the correct specifier to only show the body (the flag)
+  format=%b
+  text-alignment=center
 #+end_src
 
 **** mpv (multimedia player)                                      :common:
@@ -509,9 +565,9 @@ dynamic window manager
       Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn "emacsclient" "-c" "-F" "((title . \"niri-scratchpad\") (width . 70) (height . 20))" "-e" "(my-spawn-scratchpad)"; }
       Mod+N        hotkey-overlay-title="Noctalia Bar Toggle" { spawn-sh "qs -c noctalia-shell ipc call bar toggle"; }
       Mod+P        hotkey-overlay-title="Song Playing Info"   { spawn "emacsclient" "--eval" "(my-emms-now-playing-popup)"; }
-      Mod+Insert   hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
-      Mod+Home     hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
-      // keypad numbers don't work, sub-functions only KP_END
+      Mod+3        hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
+      Mod+4        hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
+      // "keypad numbers don't work, sub-functions only KP_END"
       // Mod+KP_1                  hotkey-overlay-title="Emacs"            { spawn "emacsclient" "-c" "-a" "emacs"; }
       // Mod+Prior // (PageUp)     hotkey-overlay-title=null               { spawn "."; }
       // Mod+Next  // (PageDown)   hotkey-overlay-title=null               { spawn "."; }
@@ -528,8 +584,9 @@ dynamic window manager
       Mod+Escape                allow-inhibiting=false                     { toggle-keyboard-shortcuts-inhibit; }
       Mod+Shift+F12             hotkey-overlay-title="Reload Niri Config"  { spawn "bash" "-c" "niri msg action load-config-file && notify-send 'Niri' 'Config reloaded'"; }
       Mod+Shift+F5              hotkey-overlay-title="Trackpad ON/OFF"     { spawn-sh "SH_trackpad_toggle.sh"; }
-      Alt+Space                 hotkey-overlay-title="Keyboard Layout"     { switch-layout "next"; }  // keyboard US,BR
-      Mod+Shift+Slash                                                      { spawn "~/.scripts/SH_helper_binds_MAIN.sh"; }
+      Alt+Space                 hotkey-overlay-title="Keyboard Language"   { spawn-sh "/home/rdo/.scripts/SH_kbd-language-change.sh"; }
+      Mod+Alt+Space             hotkey-overlay-title="Keyboard Layout"     { spawn-sh "/home/rdo/.scripts/SH_kbd-layout-change.sh"; }
+      Mod+h                                                                { spawn "~/.scripts/SH_helper_binds_MAIN.sh"; }
 
 
       // SCREENSHOT

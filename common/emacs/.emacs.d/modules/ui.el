@@ -46,7 +46,7 @@
     ;; 'latte (light) 'frappe (dark) 'macchiato (darker) 'mocha (darkest)
     ;; (setq catppuccin-flavor 'mocha)
     ;; (load-theme 'catppuccin t) ;;
-  (set-face-attribute 'default nil :height 220)
+  (set-face-attribute 'default nil :height 160)
 
   ;; Apply Org faces ONLY after Org is loaded to prevent "Invalid Face" error
   (with-eval-after-load 'org
