@@ -15,6 +15,7 @@
 	org-ctrl-c-ctrl-c
 	org-cycle
 	org-delete-char
+	org-force-self-insert
 	org-kill-line
 	org-metadown
 	org-metaleft
