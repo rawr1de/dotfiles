@@ -54,3 +54,5 @@ legion/gemini_install.org
 wm/niri/niri_conf/.config/niri/unused_binds.txt
 common/emacs/.emacs.d/bookmarks
 common/emacs/.emacs.d/org-roam.db
+common/emacs/.emacs.d/bookmarks
+common/emacs/.emacs.d/org-roam.db
