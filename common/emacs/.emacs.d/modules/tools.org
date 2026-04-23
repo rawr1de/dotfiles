@@ -78,11 +78,31 @@
   ))
 #+end_src
 
-*** org-bullets
+*** org-superstar
 #+begin_src emacs-lisp
-(use-package org-bullets
-  :ensure t
-  :hook (org-mode . org-bullets-mode))
+  (use-package org-superstar
+    :ensure t
+    :hook (org-mode . org-superstar-mode)  ;; This replaces your add-hook and require!
+    :config
+    ;; 1. Customize your heading bullets
+    (setq org-superstar-headline-bullets-list '("◉" "○" "◈" "◇"))
+
+    ;; 2. Customize your standard item lists
+    (setq org-superstar-item-bullet-alist
+          '((?- . ?•)
+            (?+ . ?○)
+            (?* . ?▪)))
+
+    ;; 3. Hide leading stars
+    (setq org-hide-leading-stars t
+          org-superstar-remove-leading-stars t))
+#+end_src
+
+**** +org-bullets+ (DEPRECATED)
+#+begin_src emacs-lisp
+  ;; (use-package org-bullets
+    ;; :ensure t
+    ;; :hook (org-mode . org-bullets-mode))
 #+end_src
 
 *** org-modern
@@ -166,22 +186,22 @@ roam package configs - [[file:~/.dotfiles/common/emacs/.emacs.d/base_cfg.org::*r
 
     ;; 3. Clean Org-roam Capture Templates (Logseq Compatible)
     (setq org-roam-capture-templates
-          '(("c" "Cheat Sheet / Hub" plain
+          '(("h" "[TECH] Hub & Spoke / In-Depth / Add-on" plain
              "%?"
-             :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                                ":PROPERTIES:\n:ID:       %(org-id-uuid)\n:END:\n#+title: ${title}\n#+filetags: :cheat_sheet:hub:\n\n* QUICK REFERENCE\n\n# if editing files, source describe path\n# *Config Path:* =~/.config/zathura/zathurarc=\n\n# *Problem*\n# describe scenario in case of troubleshooting resolution\n\n# *Solution*\n# describe sequential steps taken to resolve problem\n# make sure to use ordered lists \"1.\"\n\n# use tables for multiple inline commands\n| Action | Command                   |\n|--------+---------------------------|\n| act_1  | ~inline command/code here!~ |\n|        |                           |\n|        |                           |\n\n* heading_1\n# detailed description of event - SCRIPTS & TROUBLESHOOTING\n# detailed description of event - COMMANDS & CODING\n\n* heading_2\n# depeer detailed description of event\n\ngeneral code block description\n#+begin_src bash\nblock code here!\n#+end_src\n\ngeneral inline code description (use tables if too many inline codes >=3)\n~inline code here!~\n\n* heading_3\n# depeer detailed description of event\n")
+             :if-new (file+head "tech/%<%Y%m%d%H%M%S>-${slug}.org"
+                                "#+TITLE: ${title}\n#+DATE: %T\n#+AUTHOR: Renato O.\n#+FILETAGS: :TECH:\n\n* QUICK REFERENCE\n\n# if editing files, source describe path\n# *Config Path:* =~/.config/zathura/zathurarc=\n\n# *Problem*\n# describe scenario in case of troubleshooting resolution\n\n# *Solution*\n# describe sequential steps taken to resolve problem\n# make sure to use ordered lists \"1.\"\n\n# use tables for multiple inline commands\n| Action | Command                    |\n|--------+---------------------------|\n| act_1  | ~inline command/code here!~ |\n|        |                           |\n|        |                           |\n\n** heading_1\n# detailed description of event - SCRIPTS & TROUBLESHOOTING\n# detailed description of event - COMMANDS & CODING\n\n** heading_2\n# depeer detailed description of event\n\ngeneral code block description\n#+begin_src bash\nblock code here!\n#+end_src\n\ngeneral inline code description (use tables if too many inline codes >=3)\n~inline code here!~\n\n* TROUBLESHOOT\n** [CATEGORY]: [Title]\n*** Summary\n*Problem:*\n*Solution:*\n/Tools involved:/\n- list tools...\n*** Background / Context\n# Background / Context\n*** Investigation\n# Investigation\n# **** Summary (quick)\n# **** Packages required\n# **** Tests\n*** Root Cause / Fix\n# Fix / Implementation (step-by-step)\n*** Notes / Caveats\n# Notes / Caveats\n\n* IN-DEPTH\n** Header 2: Title Casing\n*** Header 3: Title Casing\n\n# table description (if any)\n|--------+--------+--------|\n| item 1 | item 2 | item 3 |\n|--------+--------+--------|\n| asdf   |        |        |\n| asdf   |        |        |\n|--------+--------+--------|\n\n**** Header 4: Title Casing\n\n- dashed/bullet list, may contain line breaks for good visuals, depending or paragraph size?\n\n- dashed/bullet list, may contain line breaks for good visuals, depending or paragraph size?\n\n- or keep it together if lean\n- or keep it together if lean\n- or keep it together if lean\n\n1. numbered CAN be broken..\n2. just align right under\n\n")
              :unnarrowed t)
 
-            ("h" "Hub & Spoke / Cheat Sheet Add-on" plain
+            ("f" "[LIFE] Hub & Spoke / In-Depth / Add-on" plain
              "%?"
-             :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                                ":PROPERTIES:\n:ID:       %(org-id-uuid)\n:END:\n#+title: ${title}\n#+filetags: :cheat_sheet:hub:\n\n* QUICK REFERENCE\n\n# if editing files, source describe path\n# *Config Path:* =~/.config/zathura/zathurarc=\n\n# *Problem*\n# describe scenario in case of troubleshooting resolution\n\n# *Solution*\n# describe sequential steps taken to resolve problem\n# make sure to use ordered lists \"1.\"\n\n# use tables for multiple inline commands\n| Action | Command                   |\n|--------+---------------------------|\n| act_1  | ~inline command/code here!~ |\n|        |                           |\n|        |                           |\n\n* heading_1\n# detailed description of event - SCRIPTS & TROUBLESHOOTING\n# detailed description of event - COMMANDS & CODING\n\n* heading_2\n# depeer detailed description of event\n\ngeneral code block description\n#+begin_src bash\nblock code here!\n#+end_src\n\ngeneral inline code description (use tables if too many inline codes >=3)\n~inline code here!~\n\n* heading_3\n# depeer detailed description of event\n")
+             :if-new (file+head "life/%<%Y%m%d%H%M%S>-${slug}.org"
+                                "#+TITLE: ${title}\n#+DATE: %T\n#+AUTHOR: Renato O.\n#+FILETAGS: :LIFE:\n\n* QUICK REFERENCE\n\n# if editing files, source describe path\n# *Config Path:* =~/.config/zathura/zathurarc=\n\n# *Problem*\n# describe scenario in case of troubleshooting resolution\n\n# *Solution*\n# describe sequential steps taken to resolve problem\n# make sure to use ordered lists \"1.\"\n\n# use tables for multiple inline commands\n| Action | Command                    |\n|--------+---------------------------|\n| act_1  | ~inline command/code here!~ |\n|        |                           |\n|        |                           |\n\n** heading_1\n# detailed description of event - SCRIPTS & TROUBLESHOOTING\n# detailed description of event - COMMANDS & CODING\n\n** heading_2\n# depeer detailed description of event\n\ngeneral code block description\n#+begin_src bash\nblock code here!\n#+end_src\n\ngeneral inline code description (use tables if too many inline codes >=3)\n~inline code here!~\n\n* TROUBLESHOOT\n** [CATEGORY]: [Title]\n*** Summary\n*Problem:*\n*Solution:*\n/Tools involved:/\n- list tools...\n*** Background / Context\n# Background / Context\n*** Investigation\n# Investigation\n# **** Summary (quick)\n# **** Packages required\n# **** Tests\n*** Root Cause / Fix\n# Fix / Implementation (step-by-step)\n*** Notes / Caveats\n# Notes / Caveats\n\n* IN-DEPTH\n** Header 2: Title Casing\n*** Header 3: Title Casing\n\n# table description (if any)\n|--------+--------+--------|\n| item 1 | item 2 | item 3 |\n|--------+--------+--------|\n| asdf   |        |        |\n| asdf   |        |        |\n|--------+--------+--------|\n\n**** Header 4: Title Casing\n\n- dashed/bullet list, may contain line breaks for good visuals, depending or paragraph size?\n\n- dashed/bullet list, may contain line breaks for good visuals, depending or paragraph size?\n\n- or keep it together if lean\n- or keep it together if lean\n- or keep it together if lean\n\n1. numbered CAN be broken..\n2. just align right under\n\n")
              :unnarrowed t)
 
-            ("e" "Emacs Custom Function" plain
+            ("a" "[AI ANSWERS] Spokes ONLY" plain
              "%?"
-             :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                                ":PROPERTIES:\n:ID:       %(org-id-uuid)\n:END:\n#+title: ${title}\n#+filetags: :emacs:elisp:\n\n* DESCRIPTION\n\n* CODE\n#+begin_src elisp\n\n#+end_src\n")
+             :if-new (file+head "AI_general/%<%Y%m%d%H%M%S>-${slug}.org"
+                                "#+TITLE: ${title}\n#+DATE: %T\n#+AUTHOR: Renato O.\n#+FILETAGS: :AI:ANSWERS:\n\n* Header 1\n** Quick Reference\n\n|------+------|\n| asdf | asdf |\n|------+------|\n|      |      |\n|      |      |\n|      |      |\n|      |      |\n|------+------|\n\n** Explanation\n")
              :unnarrowed t)))
 
     ;; allow searches on TAGS, reserves 30 chars space
@@ -189,7 +209,7 @@ roam package configs - [[file:~/.dotfiles/common/emacs/.emacs.d/base_cfg.org::*r
     (setq org-roam-node-display-template
           (concat "${title:*} "
                   (propertize "${tags:30}" 'face 'org-tag)))
-  )
+    )
 #+end_src
 
 ** which-key
@@ -327,6 +347,16 @@ roam package configs - [[file:~/.dotfiles/common/emacs/.emacs.d/base_cfg.org::*r
   ;; Use half your CPU cores to process it blazingly fast
   (setq whisper-use-threads (/ (num-processors) 2)))
 #+end_src
+
+* DEPRECATED
+
+Packages replacements:
+|---------------+-------------|
+| NEW PKG       | OLD PKG     |
+|---------------+-------------|
+| org-superstar | org-bullets |
+| tempel        | org-tempo   |
+|---------------+-------------|
 
 * END-OF-FILE
 #+begin_src emacs-lisp

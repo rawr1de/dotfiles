@@ -1,3 +1,5 @@
+;; Kill all buffers except the current one and those with unsaved changes
+
 (defun my-clean-unused-buffers ()
   "Kill all buffers except the current one and those with unsaved changes"
   (interactive)
@@ -15,3 +17,4 @@
     (message "Janitor: %d buffers swept." count)))
 
 (provide 'my-clean-unused-buffers)
+;; my-clean-unused-buffers.el --> END OF FILE

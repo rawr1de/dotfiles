@@ -1,9 +1,7 @@
-;; -*- lexical-binding: t -*-
-;;;; --- XFK MINIBUFFER ESCAPE
+;; XFK minibuffer smart escape
 
-;; --- XFK Minibuffer Setup (SMART ESCAPE) ---
 (defun my-xfk-minibuffer-setup ()
-  "Force Xah Fly Keys into insert mode when entering the minibuffer."
+  "Force xah-fly-keys insert-mode when entering the minibuffer"
   (when (bound-and-true-p xah-fly-keys)
     (xah-fly-insert-mode-activate)))
 
@@ -11,7 +9,7 @@
 
 ;; The Smart Escape Function
 (defun my-xfk-smart-escape ()
-  "If in minibuffer, abort. Otherwise, go to XFK command mode."
+  "If in minibuffer, abort. Otherwise, go to XFK command mode"
   (interactive)
   (if (minibufferp)
       (abort-recursive-edit)
@@ -24,3 +22,4 @@
 
 
 (provide 'my-tab-or-frame-close)
+;; my-xfk-esc-minibuffer.el --> END OF FILE

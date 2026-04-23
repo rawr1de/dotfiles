@@ -1,7 +1,7 @@
 ;;;; --- GLOBAL XFK UNIVERSAL SNAP (my-xfk-universal-snap.el)
 
 (defun my-xfk-universal-snap (&optional _)
-  "Globally force XFK states based on the major-mode we land in."
+  "Globally force XFK states based on the major-mode we land in"
   (run-at-time 0.01 nil
                (lambda ()
                  (cond
@@ -24,3 +24,4 @@
 (add-hook 'buffer-list-update-hook #'my-xfk-universal-snap)
 
 (provide 'my-xfk-universal-snap)
+;; my-xfk-universal-snap.el --> END OF FILE

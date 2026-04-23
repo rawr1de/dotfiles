@@ -6,6 +6,7 @@
 	avy-goto-char-2
 	beginning-of-buffer
 	embark-act
+	embrace-add
 	emms-tag-editor-submit
 	indent-for-tab-command
 	magit-stage
@@ -22,6 +23,7 @@
 	org-metaright
 	org-open-line
 	org-self-insert-command
+	org-shifttab
 	replace-string
 	wdired--self-insert
 	wdired-capitalize-word

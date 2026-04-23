@@ -1,4 +1,5 @@
 ;; combined close-tab to delete-frame
+
 (defun my-tab-or-frame-close ()
  "Close tab if multiple tabs exist, otherwise close frame"
  (interactive)
@@ -8,3 +9,4 @@
 
 
 (provide 'my-tab-or-frame-close)
+;; my-tab-or-frame-close.el --> END OF FILE

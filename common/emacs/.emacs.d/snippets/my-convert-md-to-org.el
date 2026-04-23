@@ -3,7 +3,7 @@
 ;;; it also automatically triggers 'org-tables-align' to fix table formatting
 
 (defun my-convert-md-to-org ()
-  "Convert MD to Org. Works on current buffer or Dired/Dirvish marked files."
+  "Convert MD to Org. Works on current buffer or Dired marked files"
   (interactive)
   ;; Store whether we started in Dired to control behavior later
   (let* ((in-dired-p (derived-mode-p 'dired-mode))

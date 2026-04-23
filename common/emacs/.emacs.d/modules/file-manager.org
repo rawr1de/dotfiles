@@ -227,6 +227,7 @@
     (require 'my-dired-copy-paste)
     (require 'my-ranger-renaming))
     (require 'my-dired-copy-file-contents)
+    (require 'my-dired-zip-and-share)
   (provide 'file-manager)
 #+end_src
 

@@ -3,7 +3,7 @@
 
 ;; --- XFK Minibuffer Setup (SMART ESCAPE) ---
 (defun my-xfk-minibuffer-setup ()
-  "Force Xah Fly Keys into insert mode when entering the minibuffer."
+  "Force xah-fly-keys insert-mode when entering the minibuffer"
   (when (bound-and-true-p xah-fly-keys)
     (xah-fly-insert-mode-activate)))
 
@@ -11,7 +11,7 @@
 
 ;; The Smart Escape Function
 (defun my-xfk-smart-escape ()
-  "If in minibuffer, abort. Otherwise, go to XFK command mode."
+  "If in minibuffer, abort. Otherwise, go to XFK command-mode"
   (interactive)
   (if (minibufferp)
       (abort-recursive-edit)
@@ -28,7 +28,7 @@
 
 ;; 1. Standard (r): Erase base name, keep .extension, point before dot
 (defun my-ranger-rename-standard ()
-  "Erase base name, keep path and .extension. C-u to duplicate."
+  "Erase base name, keep path and .extension. C-u to duplicate"
   (interactive)
   (let* ((file (dired-get-filename t t))
          (ext (and file (file-name-extension file))))
@@ -52,7 +52,7 @@
 
 ;; 2. Append (a): Keep name, move point right before the dot
 (defun my-ranger-rename-append ()
-  "Keep name, move point right before the dot. C-u to duplicate."
+  "Keep name, move point right before the dot. C-u to duplicate"
   (interactive)
   (let* ((file (dired-get-filename nil t)) ; nil forces Absolute Path
          (ext  (and file (file-name-extension file))))
@@ -70,7 +70,7 @@
 
 ;; 3. Append Absolute End (A): Point at the very end (after extension)
 (defun my-ranger-rename-append-end ()
-  "Point at the very end (after extension). C-u to duplicate."
+  "Point at the very end (after extension). C-u to duplicate"
   (interactive)
   (let ((file (dired-get-filename nil t)))
     (minibuffer-with-setup-hook
@@ -102,7 +102,7 @@
 
 ;; 5. Change Extension (e): Erase extension, leave the dot
 (defun my-ranger-rename-extension ()
-  "Erase extension, leave the dot. C-u to duplicate."
+  "Erase extension, leave the dot. C-u to duplicate"
   (interactive)
   (let* ((file (dired-get-filename nil t))
          (ext  (and file (file-name-extension file)))

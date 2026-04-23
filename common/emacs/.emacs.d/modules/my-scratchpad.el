@@ -4,7 +4,7 @@
 ;; and safely destroys the frame.
 
 (defun my-scratchpad-commit ()
-  "Copy text to Wayland clipboard, append to log, and close safely."
+  "Copy text to Wayland clipboard, append to log with timestamp, and close safely."
   (interactive)
   ;; 1. Jump past the visual separator
   (goto-char (point-min))
@@ -17,8 +17,9 @@
          (log-file (expand-file-name ".scratch_copy" user-emacs-directory)))
 
     (when (> (length text) 0)
-      ;; 3. Write text to the hidden log file (appends to the bottom)
-      (write-region (concat text "\n") nil log-file 'append)
+      ;; 3. Write text to the hidden log file with timestamp header (appends to the bottom)
+      (let ((timestamp (format-time-string "[%Y-%m-%d] --- [%H:%M:%S]")))
+        (write-region (concat timestamp "\n" text "\n\n") nil log-file 'append))
 
       ;; 4. The Magic: Pipe to wl-copy asynchronously and force EOF
       (let* ((process-connection-type nil)
@@ -76,7 +77,9 @@
   (goto-char (point-max))
 
   ;; Force Insert Mode with a micro-delay to beat the Emacs frame-creation hook
-  (run-at-time 0.05 nil #'xah-fly-insert-mode-activate))
+  (run-at-time 0.05 nil (lambda ()
+                          (when (fboundp 'xah-fly-insert-mode-activate)
+                            (xah-fly-insert-mode-activate)))))
 
 (provide 'my-scratchpad)
 ;;; my-scratchpad.el ends here

@@ -6,8 +6,7 @@
 
   ;; mark/point at files and call keybind to ripdrag popup window
   (defun my-dired-ripdrag ()
-    "Drag marked files (or file under point) using ripdrag.
-  Only works if the current buffer is a Dired or Dirvish buffer."
+    "Drag marked/pointer files using ripdrag in Dired buffer"
     (interactive)
     (if (derived-mode-p 'dired-mode)
         (let ((files (dired-get-marked-files)))
@@ -28,7 +27,7 @@
 
   ;; copy file to clipboard
   (defun my-dired-copy-file-to-clipboard ()
-    "Copy marked files (or file at point) to Wayland clipboard as actual files."
+    "Copy marked/pointer files to clipboard as actual files"
     (interactive)
     (let* ((files (dired-get-marked-files))
            ;; Format files as file:// URIs

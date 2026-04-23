@@ -2,14 +2,17 @@
 ;; Sums a specific column in highlighted Org table rows, ignoring h-lines.
 ;; Extracts numbers, builds an equation, and evals via calc to the clipboard.
 ;; Use prefix argument (C-u C-x s) to insert the result instead of copying.
+;;
+;; in other words:
+;;
+;; 1. Asks for COLUMN NUMBER
+;; 2. Iterates through the highlighted region
+;; 3. Extracts the value from that specific column in every row
+;; 4. Pre-fills the calculator with the sum
+
 
 (defun my-org-column-sum (col-num &optional arg)
-  "Sum values in a specific column within highlighted rows.
-
-1. Asks for COLUMN NUMBER.
-2. Iterates through the highlighted region.
-3. Extracts the value from that specific column in every row.
-4. Pre-fills the calculator with the sum."
+  "Sum values in a specific column within highlighted rows"
   (interactive "nColumn Number to Sum: \nP")
   (require 'org)
   (require 'org-table)

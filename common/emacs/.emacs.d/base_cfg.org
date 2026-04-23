@@ -45,10 +45,12 @@
   (require 'my-dired-copy-paste)
   (require 'my-ranger-renaming)
   (require 'my-dired-copy-file-contents)
+  (require 'my-dired-zip-and-share)
   (use-package dired)
   (use-package dired-open)
   (use-package dirvish)
   (use-package async)
+
 
 (provide 'completion)
   (use-package vertico)
@@ -364,6 +366,7 @@
   (define-key xah-fly-leader-key-map (kbd ", s") 'save-buffer)
   (define-key xah-fly-leader-key-map (kbd "u") 'consult-buffer)
   (define-key xah-fly-leader-key-map (kbd "s") 'consult-line)
+  (define-key xah-fly-leader-key-map (kbd "S") 'isearch-forward-word)
   (define-key xah-fly-leader-key-map (kbd "r") 'replace-string)
   (define-key xah-fly-leader-key-map (kbd "R") 'query-replace)
   (define-key xah-fly-leader-key-map (kbd "f") 'ibuffer)
@@ -474,6 +477,7 @@
   (define-key my-dired-spc-map (kbd ";") '("consult-ripgrep" . consult-ripgrep))
   (define-key my-dired-spc-map (kbd "f") '("iBuffer"         . ibuffer))
   (define-key my-dired-spc-map (kbd "r") '("ranger-rename"   . my-ranger-renaming))
+  (define-key my-dired-spc-map (kbd "z") '("zip/share > phone" . my-dired-zip-and-share))
   (define-key my-dired-spc-map (kbd "b") '("backup files"    . my-backup-file))
 #+end_src
 
@@ -553,7 +557,9 @@
   (set-register ?t (cons 'file "~/Docs/10.Org/trading-log.org"))
   (set-register ?p (cons 'file "~/Docs/10.Org/personal-searches.org"))
   (set-register ?f (cons 'file "~/Docs/10.Org/system-tickets.org"))
-  (set-register ?l (cons 'file "~/Docs/10.Org/roam/20260417193707-linux_commands_index.org"))
+  (set-register ?i (cons 'file "~/Docs/10.Org/roam/life/20260421170118-life_hub_index.org"))
+  (set-register ?l (cons 'file "~/Docs/10.Org/roam/tech/20260417193707-tech_hub_index.org"))
+  (set-register ?e (cons 'file "~/Docs/10.Org/roam/tech/20260421144405-emacs_journey.org"))
 #+end_src
 
 *** BOOKMARKS

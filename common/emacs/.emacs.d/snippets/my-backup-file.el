@@ -10,9 +10,7 @@
 ;; Output Format: .bak/filename.ext.YYYYMMDD_HHMMSS.bak
 
 (defun my-backup-file ()
-  "Create a timestamped backup of the current file(s) in a `.bak' folder.
-Creates the `.bak' folder if it doesn't exist, and moves any existing
-`.bak' files from the parent directory into it."
+  "Create a timestamped .bak file(s) at file root dir .bak/"
   (interactive)
   (let ((timestamp (format-time-string "%Y%m%d_%H%M%S"))
         (files (cond
@@ -46,3 +44,4 @@ Creates the `.bak' folder if it doesn't exist, and moves any existing
             (message "File does not exist: %s" file)))))))
 
 (provide 'my-backup-file)
+;; my-backup-file.el --> END OF FILE

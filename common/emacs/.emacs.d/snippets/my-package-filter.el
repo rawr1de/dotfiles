@@ -4,12 +4,12 @@
 ;; Quickly find all packages currently marked for install/delete/upgrade.
 
 (defun my-package-menu-find-marks ()
-  "Find packages marked for action in *Packages*."
+  "Find packages marked for action in Packages"
   (interactive)
   (occur "^[A-Z]"))
 
 (defun my-package-menu-filter-by-status (status)
-  "Filter the *Packages* buffer by status."
+  "Filter the Packages buffer by status"
   (interactive
    (list (completing-read
           "Status: " '("new" "installed" "dependency" "obsolete"))))

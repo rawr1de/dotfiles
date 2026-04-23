@@ -1,5 +1,7 @@
+;; Toggle Lenovo Legion battery conservation mode
+
 (defun my-batt-conserv-change (state)
-  "Toggle Lenovo Legion battery conservation mode without writing local files."
+  "Toggle Legion5 battery conservation mode without writing local files"
   (interactive "nConservation mode (0=off 1=on): ")
   (let ((path "/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode"))
     ;; We use a pipe to send the number directly to sudo tee
@@ -9,3 +11,4 @@
     (message "Battery conservation mode set to %d" state)))
 
 (provide 'my-batt-conserv-change)
+;; my-batt-conserv-change.el --> END OF FILE

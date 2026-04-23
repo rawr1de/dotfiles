@@ -1,5 +1,7 @@
+;; Copy the contents of marked Dired files to the clipboard
+
 (defun my-dired-copy-file-contents ()
-  "Copy the contents of marked Dired/Dirvish files to the clipboard"
+  "Copy the contents of marked Dired files to the clipboard"
   (interactive)
   (let ((files (dired-get-marked-files))
         (contents ""))

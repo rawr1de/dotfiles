@@ -68,7 +68,7 @@ It uses fuzzy matching so even if the country code is missing, it still matches.
 ;; =====================================================================
 
 (defun my-termux-sms-abort ()
-  "Safely kill the temporary SMS buffer and close the isolated frame."
+  "Safely kill the temporary SMS buffer and close the isolated frame"
   (interactive)
   (let ((frame (selected-frame)))
     (when (get-buffer "*Last SMS*")
@@ -76,7 +76,7 @@ It uses fuzzy matching so even if the country code is missing, it still matches.
     (delete-frame frame)))
 
 (define-minor-mode my-termux-sms-mode
-  "Minor mode for the isolated Termux SMS buffer to handle clean exits."
+  "Minor mode for the isolated Termux SMS buffer to handle clean exits"
   :init-value nil
   :lighter " TermuxSMS"
   :keymap (let ((map (make-sparse-keymap)))
@@ -93,7 +93,7 @@ It uses fuzzy matching so even if the country code is missing, it still matches.
 ;; =====================================================================
 
 (defun my-termux-send-sms ()
-  "Prompt for a contact (or raw number) and send an SMS via Termux SSH."
+  "Prompt for a contact (or raw number) and send an SMS via Termux SSH"
   (interactive)
   (let* ((name (completing-read "Text who? (Choose or type number): "
                                 (mapcar #'car my-termux-contacts)))
@@ -131,7 +131,7 @@ It uses fuzzy matching so even if the country code is missing, it still matches.
 ;; =====================================================================
 
 (defun my-termux-last-sms ()
-  "Fetch SMS via Termux API, display up to 3 threads (3 msgs each), and prompt."
+  "Fetch SMS via Termux API, display up to 3 threads (3 msgs each), and prompt"
   (interactive)
   (message "Fetching latest SMS threads from phone...")
 

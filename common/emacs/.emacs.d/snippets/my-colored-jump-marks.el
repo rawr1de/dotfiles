@@ -8,7 +8,7 @@
 (defvar-local my-cycle-index 0 "Current position in the cycle")
 
 (defun my-set-cycle-mark ()
-  "Set a persistent colored mark at point. Replaces oldest if over 3"
+  "Set a persistent colored mark at point"
   (interactive)
   (let* ((max-marks 3)
          (colors '("green" "yellow" "hot pink"))
@@ -41,7 +41,7 @@
   "Jump to the next mark in the cycle"
   (interactive)
   (if (not my-cycle-marks)
-      (message "No marks set in this buffer.")
+      (message "No marks set in this buffer")
     (let ((target (nth my-cycle-index my-cycle-marks)))
       (goto-char (marker-position target))
       (message "Jumped to mark %d" (1+ my-cycle-index))
@@ -60,4 +60,4 @@
   (message "Buffer marks cleared"))
 
 (provide 'my-colored-jump-marks)
-;;; colored-jump-marks.el <-- ENDS HERE
+;; my-colored-jump-marks.el --> END OF FILE
