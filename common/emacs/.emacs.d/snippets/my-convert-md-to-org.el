@@ -42,5 +42,5 @@
     (when in-dired-p
       (revert-buffer))))
 
-(provide 'convert-md-to-org)
-;;; convert-md-to-org.el <-- ENDS HERE
+(provide 'my-convert-md-to-org)
+;;; my-convert-md-to-org.el <-- ENDS HERE

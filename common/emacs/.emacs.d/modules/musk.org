@@ -21,7 +21,11 @@
     ;; --- 2. BACKEND PLAYER (MPV) ---
     (setq emms-player-list '(emms-player-mpv))
     (setq emms-player-mpv-parameters
-          '("--quiet" "--no-video" "--gapless-audio=yes" "--keep-open=no"))
+          '("--quiet" "--no-video" "--gapless-audio=yes" "--idle"))
+
+    ;; Explicitly tell EMMS to reuse the same MPV instance rather than restarting it
+    (setq emms-player-mpv-ipc-method 'ipc-server)
+
 
     ;; --- 3. METADATA ENGINE (MPD) ---
     (setq emms-player-mpd-server-name "localhost")

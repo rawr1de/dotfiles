@@ -11,5 +11,5 @@
   (message "EMMS + MPD refresh completed."))
 
 
-(provide 'emms-mpd-refresh)
-;;; emms-mpd-refresh.el <-- ENDS HERE
+(provide 'my-emms-mpd-refresh)
+;;; my-emms-mpd-refresh.el <-- ENDS HERE

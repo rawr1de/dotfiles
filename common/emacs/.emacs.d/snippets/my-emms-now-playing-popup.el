@@ -1,7 +1,7 @@
 ;;; --- EMMS NOW PLAYING POPUP (Pixel-Perfect Kitty Dashboard with MPV IPC) ---
 
 (defun my-emms-now-playing-popup ()
-  "Spawn a floating Kitty terminal displaying EMMS track info, high-res album art, and live MPV progress."
+  "EMMS Kitty window: track info, album art, and live MPV progress"
   (interactive)
   (let* ((track (emms-playlist-current-selected-track))
          (path (when track (emms-track-get track 'name)))
@@ -21,6 +21,13 @@
                        (expand-file-name emms-player-mpv-ipc-socket)
                      ""))
 
+         ;; SAFE STRINGS: Escape all metadata to prevent Bash syntax crashes
+         (safe-title (shell-quote-argument title))
+         (safe-artist (shell-quote-argument artist))
+         (safe-album (shell-quote-argument album))
+         (safe-cover (shell-quote-argument (or cover "")))
+         (safe-sock (shell-quote-argument mpv-sock))
+
          ;; Assemble the Bash script that Kitty will execute
          (bash-script
           (format "
@@ -31,19 +38,26 @@
             LINES=$(tput lines)
             IMG_LINES=$((LINES - 6))
 
-            # Draw the image
-            %s
-
-            # Print static metadata
-            tput cup $IMG_LINES 0
-            echo -e '  \\e[1;37m Title:\\e[0m  \\e[1;32m%s\\e[0m'
-            echo -e '  \\e[1;37mArtist:\\e[0m  \\e[1;36m%s\\e[0m'
-            echo -e '  \\e[1;37m Album:\\e[0m  \\e[1;33m%s\\e[0m'
-
-            # Variables
+            # Safely ingest Emacs variables
+            TITLE=%s
+            ARTIST=%s
+            ALBUM=%s
+            COVER=%s
+            MPV_SOCK=%s
             CUR_SEC=%d
             TOT_SEC=%d
-            MPV_SOCK='%s'
+
+            # Draw the image cleanly if it exists
+            if [ -n \"$COVER\" ]; then
+              kitty +kitten icat --align center --place ${COLS}x${IMG_LINES}@0x0 \"$COVER\"
+            fi
+
+            # Print static metadata (Safely splicing Bash variables into the ANSI strings)
+            tput cup $IMG_LINES 0
+            echo -e '  \\e[1;37m Title:\\e[0m  \\e[1;32m'\"${TITLE}\"'\\e[0m'
+            echo -e '  \\e[1;37mArtist:\\e[0m  \\e[1;36m'\"${ARTIST}\"'\\e[0m'
+            echo -e '  \\e[1;37m Album:\\e[0m  \\e[1;33m'\"${ALBUM}\"'\\e[0m'
+
             PROG_LINE=$((LINES - 2))
 
             while true; do
@@ -101,9 +115,7 @@
 
             echo -ne '\\e[?25h' # Restore cursor
             exit"
-            (if cover (format "kitty +kitten icat --align center --place ${COLS}x${IMG_LINES}@0x0 '%s'" cover) "")
-            title artist album
-            current-sec total-sec mpv-sock)))
+          safe-title safe-artist safe-album safe-cover safe-sock current-sec total-sec)))
 
     ;; Spawn Kitty
     (start-process "emms-kitty-popup" nil "kitty"
@@ -113,5 +125,5 @@
                    "-o" "hide_window_decorations=yes"
                    "bash" "-c" bash-script)))
 
-
 (provide 'my-emms-now-playing-popup)
+;; my-emms-now-playing-popup.el --> END OF FILE

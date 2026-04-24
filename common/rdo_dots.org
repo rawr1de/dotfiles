@@ -567,6 +567,8 @@ dynamic window manager
       Mod+P        hotkey-overlay-title="Song Playing Info"   { spawn "emacsclient" "--eval" "(my-emms-now-playing-popup)"; }
       Mod+3        hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
       Mod+4        hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
+      XF86Calculator hotkey-overlay-title="calculator (CLI)"  { spawn-sh "kitty -e calculator_cli"; }
+
       // "keypad numbers don't work, sub-functions only KP_END"
       // Mod+KP_1                  hotkey-overlay-title="Emacs"            { spawn "emacsclient" "-c" "-a" "emacs"; }
       // Mod+Prior // (PageUp)     hotkey-overlay-title=null               { spawn "."; }

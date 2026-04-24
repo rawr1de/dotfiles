@@ -27,17 +27,41 @@
     (custom-set-faces '(default ((t (:background unspecified))))))
 #+end_src
 
-* LOAD MODULES
+* LOAD MODULES & SNIPPETS
 #+begin_src emacs-lisp
-(require 'system)
-(require 'ui)
-(require 'completion)
-(require 'file-manager)
-(require 'musk)
-(require 'tools)
-(require 'my-scratchpad)
-(require 'my-termux-sms)
-(require 'my-force-fullscreen-toggle)
+   ;; modules
+  (require 'system)
+  (require 'ui)
+  (require 'file-manager)
+  (require 'musk)
+  (require 'tools)
+
+  ;; functions (snippets)
+  (require 'my-scratchpad)
+  (require 'my-termux-sms)
+  (require 'my-force-fullscreen-toggle)
+  (require 'my-colored-jump-marks)
+  (require 'my-ripdrag)
+  (require 'my-dired-copy-file-to-clipboard)
+  (require 'my-mini-calc)
+  (require 'my-org-column-sum)
+  (require 'my-increment-number-decimal)
+  (require 'my-eval-replace)
+  (require 'my-package-filter)
+  (require 'my-lyrics-formatter)
+  (require 'my-emms-mpd-refresh)
+  (require 'my-convert-md-to-org)
+  (require 'my-org-tables-align)
+  (require 'my-emms-now-playing-popup)
+  (require 'my-musk-show-album-art)
+  (require 'my-dired-kdeconnect-share)
+  (require 'my-dired-wormhole-send)
+  (require 'my-dired-syncthing-transfer)
+  (require 'my-backup-file)
+  (require 'my-batt-conserv-change)
+  (require 'my-browse-url-and-focus)
+  (require 'my-tab-or-frame-close)
+  (require 'my-screen-scrolling)
 #+end_src
 
 #+begin_comment
@@ -50,19 +74,6 @@
   (use-package dired-open)
   (use-package dirvish)
   (use-package async)
-
-
-(provide 'completion)
-  (use-package vertico)
-  (use-package consult)
-  (use-package consult-dir)
-  (use-package orderless)
-  (use-package marginalia)
-  (use-package embark)
-  (use-package embark-consult)
-  (use-package zoxide)
-  (use-package corfu)
-  (use-package cape)
 
 (provide 'system)
   (require 'my-clean-unused-buffers)
@@ -87,16 +98,20 @@
   (use-package sudo-edit)
   (use-package ultra-scroll)
   (use-package whisper)
+  (use-package vertico)
+  (use-package consult)
+  (use-package consult-dir)
+  (use-package orderless)
+  (use-package marginalia)
+  (use-package embark)
+  (use-package embark-consult)
+  (use-package zoxide)
+  (use-package corfu)
+  (use-package cape)
 
 (provide 'ui)
   (use-package doom-themes)
   (use-package doom-modeline)
-
-(provide 'org-config)
-  (use-package org)
-  (use-package org-capture)
-  (use-package org-bullets)
-  (use-package org-modern)
 
 (provide 'musk)
   (use-package emms)
@@ -108,7 +123,7 @@
 (provide 'my-kde-sms)
 #+end_comment
 
-* AUTOLOADS (LAZY LOADING)
+* COMMENT AUTOLOADS (LAZY LOADING) [TO BE DEPRECATED]
 
 ** drag/drop & copy to clipboard files in dired/dirvish
 #+begin_src emacs-lisp
@@ -124,7 +139,6 @@
 (autoload 'my-clear-all-cycle-marks "my-colored-jump-marks" nil t)
 ;; screen scrolling
 (autoload 'my-scroll-one-line-down "my-screen-scrolling" nil t)
-(autoload 'my-scroll-one-line-up "my-screen-scrolling" nil t)
 #+end_src
 
 ** math & logic
@@ -253,14 +267,15 @@
 |-----------------+-------------------------------|
 #+end_comment
 
-
 #+begin_src emacs-lisp
   ;; ORG-MODE
-    ;; org-mode  kill-line
-    (define-key org-mode-map (kbd "C-k") nil)
-    ;; org-mode  org-cycle ;; org-mode  org-cycle
-    (define-key org-mode-map (kbd "C-i") nil)
+  (with-eval-after-load 'org
+    ;; Force C-k to be a dead-end (does absolutely nothing)
+    (define-key org-mode-map (kbd "C-k") #'ignore)
 
+    ;; Force C-i to be a dead-end
+    (define-key org-mode-map (kbd "C-i") #'ignore)
+  )
 
   ;; ==============================================
   ;; TERMINAL COLLISION (DAEMON & STANDALONE SAFE)
@@ -302,8 +317,12 @@
     (define-key emms-playlist-mode-map (kbd "a") nil)
     ;; insert single track (emms)
     (define-key emms-playlist-mode-map (kbd "i") nil)
-    (define-key emms-playlist-mode-map (kbd "S-i") nil)
-    (define-key emms-playlist-mode-map (kbd "S-k") nil))
+    (define-key emms-playlist-mode-map (kbd "p") nil)
+    (define-key emms-playlist-mode-map (kbd "g") nil)
+    (define-key emms-playlist-mode-map (kbd "w") nil)
+    ;; (define-key emms-playlist-mode-map (kbd "S-i") nil)
+    ;; (define-key emms-playlist-mode-map (kbd "S-k") nil)
+  )
 #+end_src
 
 *** GLOBAL KEYS
@@ -356,13 +375,14 @@
 
 *** xah-fly-keys (XFK)
 **** leader-key-map
+
 #+begin_src emacs-lisp
   (define-key xah-fly-leader-key-map (kbd "0") 'my-set-cycle-mark)
   (define-key xah-fly-command-map    (kbd "0") 'my-jump-cycle-mark)
   (define-key xah-fly-leader-key-map (kbd "9") 'my-clear-all-cycle-marks)
   (define-key xah-fly-leader-key-map (kbd "c") 'my-mini-calc)
   (define-key xah-fly-leader-key-map (kbd ", b") 'my-backup-file)
-  (define-key xah-fly-leader-key-map (kbd "+") 'my-kde-send-sms)
+  (define-key xah-fly-leader-key-map (kbd "+") 'my-termux-send-sms)
   (define-key xah-fly-leader-key-map (kbd ", s") 'save-buffer)
   (define-key xah-fly-leader-key-map (kbd "u") 'consult-buffer)
   (define-key xah-fly-leader-key-map (kbd "s") 'consult-line)
@@ -376,6 +396,7 @@
 #+end_src
 
 **** numbers row
+
 #+begin_src emacs-lisp
   (define-key xah-fly-key-map (kbd "5") 'delete-char)
   (define-key xah-fly-key-map (kbd "6") 'xah-select-block)
@@ -384,6 +405,7 @@
 #+end_src
 
 **** system/function keys
+
 #+begin_src emacs-lisp
   ;; close help/info/apropos/man 'mode' windows
   ;; while in XFK command-mode with 'q'
@@ -426,7 +448,7 @@
 *** re-binds (org-mode)
 #+begin_src emacs-lisp
   ;; org-mode  org-cycle | restore TAB explicitly
-  (define-key org-mode-map (kbd "TAB") #'org-cycle)
+  (define-key org-mode-map (kbd "<tab>") #'org-cycle)
 #+end_src
 
 ** FILE-MANAGER
@@ -615,6 +637,8 @@
   ;; my 'blank slate' keybinds
   (define-key emms-playlist-mode-map (kbd "i")   'previous-line)
   (define-key emms-playlist-mode-map (kbd "k")   'next-line)
+  (define-key emms-playlist-mode-map (kbd "K")   'end-of-buffer)
+  (define-key emms-playlist-mode-map (kbd "I")   'beginning-of-buffer)
   (define-key emms-playlist-mode-map (kbd "RET") 'emms-playlist-mode-play-current-track)
   (define-key emms-playlist-mode-map (kbd "SPC") 'emms-pause)
   (define-key emms-playlist-mode-map (kbd "v")   'emms-stop)
@@ -628,11 +652,11 @@
   (define-key emms-playlist-mode-map (kbd "D")   'emms-playlist-mode-kill-track)
   (define-key emms-playlist-mode-map (kbd "C")   'emms-playlist-clear)
   (define-key emms-playlist-mode-map (kbd "'")   'delete-other-windows)
-  (define-key emms-playlist-mode-map (kbd "S-k")   'end-of-buffer)
-  (define-key emms-playlist-mode-map (kbd "S-i")   'beginning-of-buffer)
-  (define-key emms-playlist-mode-map (kbd "y") 'emms-playlist-mode-center-current)
-  ;; disable 'p' ASDF
-  (define-key emms-playlist-mode-map (kbd "p")    nil)
+  (define-key emms-playlist-mode-map (kbd "y")   'emms-playlist-mode-center-current)
+
+  ;; shift tracks
+  (define-key emms-playlist-mode-map (kbd "<C-i>") 'emms-playlist-mode-shift-track-up)
+  (define-key emms-playlist-mode-map (kbd "C-k")   'emms-playlist-mode-shift-track-down)
 
   ;; volume (MPV internal)
   (define-key emms-playlist-mode-map (kbd "u") (lambda () (interactive) (musk-volume-change -5)))
@@ -643,11 +667,6 @@
   ;; seek 5sec
   (define-key emms-playlist-mode-map (kbd "j") (lambda () (interactive) (emms-seek -5)))
   (define-key emms-playlist-mode-map (kbd "l") (lambda () (interactive) (emms-seek  5)))
-
-  ;; shift tracks
-  (define-key emms-playlist-mode-map (kbd "w") 'emms-playlist-mode-shift-track-up)
-  (define-key emms-playlist-mode-map (kbd "s") 'emms-playlist-mode-shift-track-down)
-
 
   ;; set this AFTER the keybinds
   ;; (set-face-attribute 'emms-playlist-selected-face nil
@@ -755,6 +774,9 @@
                         (expand-file-name "modules/system.org"   user-emacs-directory)
                         (expand-file-name "modules/musk.org"     user-emacs-directory)
                         (expand-file-name "modules/tools.org"    user-emacs-directory)))
+
+  ;; >>> ADD THIS LINE TO TEST <<<
+        (message "SUCCESS! Auto-tangling %s..." (buffer-name))
 
       ;; Dynamic scoping to the rescue
       (let ((org-confirm-babel-evaluate nil))

@@ -41,6 +41,33 @@
         ("\\.jpg\\'" . system))))
 #+end_src
 
+#+begin_src emacs-lisp
+  ;; FORCING Org to use the OLDER folding  engine that uses 'overlays' doing this
+  ;; to prevent the ellipsis (...) stuck bug of the current engine folding that
+  ;; uses "text properties"
+
+  (with-eval-after-load 'org
+    (if (version< (org-version) "9.8")
+        (progn
+          ;; 1. Revert to the classic engine
+          (setq org-fold-core-style 'overlays)
+
+          ;; 2. Prevent accidental typing inside hidden text
+          (setq org-catch-invisible-edits 'smart)
+
+          ;; 3. Stop vertical movement from clinging to the ends of lines
+          (setq track-eol nil)
+
+          ;; 4. THE FIX: Force strict logical movement (newline to newline)
+          ;; This is added as a hook so it only affects Org-mode and doesn't
+          ;; break visual word-wrapping in your other text files!
+          (add-hook 'org-mode-hook (lambda () (setq line-move-visual nil))))
+
+      (display-warning 'my-config
+                       "Org updated! Check bug, delete hack from tools.org !!!"
+                       :warning)))
+#+end_src
+
 *** org-capture
 #+begin_src emacs-lisp
    ;; CAPTURE TEMPLATE
@@ -214,20 +241,22 @@ roam package configs - [[file:~/.dotfiles/common/emacs/.emacs.d/base_cfg.org::*r
 
 ** which-key
 #+begin_src emacs-lisp
-    ;;  emacs command helper
-    (use-package which-key
-      :ensure t
-      :init (which-key-mode)
-      :config
-      (setq which-key-max-description-length nil)     ;; no truncation
-      ;; (setq which-key-max-description-length 100)     ;; set truncation limit 80, 120...
-      (setq which-key-add-column-padding 1)           ;; nicer spacing
-      (setq which-key-idle-delay 0.8)                 ;; adjust to your taste
-      (which-key-setup-minibuffer)                    ;; show in minibuffer instead of side popup
-      (setq which-key-show-prefix 'echo)           ;; show the prefix you typed at the top
-      (setq which-key-popup-type 'minibuffer)      ;; force minibuffer (same as setup-minibuffer)
-      (setq which-key-side-window-max-height 0.4) ;; if you still prefer side window
-      (which-key-mode 1))
+  ;;  emacs command helper
+  (use-package which-key
+    :ensure t
+    :init (which-key-mode)
+    :config
+    (setq which-key-max-description-length nil)     ;; no truncation
+    ;; (setq which-key-max-description-length 100)     ;; set truncation limit 80, 120...
+    (setq which-key-add-column-padding 1)           ;; nicer spacing
+    (setq which-key-idle-delay 0.3)                 ;; adjust to your taste
+    (which-key-setup-minibuffer)                    ;; show in minibuffer instead of side popup
+    (setq which-key-show-prefix 'echo)           ;; show the prefix you typed at the top
+    (setq which-key-popup-type 'minibuffer)      ;; force minibuffer (same as setup-minibuffer)
+    (setq which-key-side-window-max-height 0.5) ;; if you still prefer side window
+    :custom
+    (which-key-side-window-max-lines 20)
+    (which-key-mode 1))
 #+end_src
 
 ** embrace
@@ -346,6 +375,150 @@ roam package configs - [[file:~/.dotfiles/common/emacs/.emacs.d/base_cfg.org::*r
 
   ;; Use half your CPU cores to process it blazingly fast
   (setq whisper-use-threads (/ (num-processors) 2)))
+#+end_src
+
+** COMPLETION STACK
+*** vertico
+
+#+begin_src emacs-lisp
+  ;; Enable vertical minibuffer completion
+  (use-package vertico
+    :ensure t
+    :init
+    (vertico-mode)
+
+    ;; Optional: Grow and shrink the minibuffer automatically
+    :custom
+    (vertico-resize t)
+
+    ;; Optional: Enable cycling so C-n loops back to the top at the end
+    (vertico-cycle t))
+#+end_src
+
+*** embark
+
+#+begin_src emacs-lisp
+  ;; embark main package
+  (use-package embark
+    :ensure t
+    :bind (("C-." . embark-act)
+  	 ("M-." . embark-dwim)
+           ;; Press C-h B anywhere to see a searchable Vertico list of EVERY active keybinding
+           ("C-h B" . embark-bindings)))
+
+    ;; C-h after a prefix (like C-c C-h), pipe the results into Vertico
+    (setq prefix-help-command #'embark-prefix-help-command)
+
+
+  ;; embark-consult
+  (use-package embark-consult
+    :ensure t
+    :after (embark consult)
+    :hook (embark-collect-mode . consult-preview-at-point-mode))
+#+end_src
+
+*** consult
+
+#+begin_src emacs-lisp
+  ;;  consult main package
+  (use-package consult
+    :ensure t
+    :config
+    ;; Increase history so you don't lose search strings
+    (setq history-length 1000)
+    (setq consult-history-max 1000))
+
+  ;; consult-dir
+  (use-package consult-dir
+    :ensure t
+    :bind (("C-x C-d" . consult-dir)
+           :map minibuffer-local-map
+           ("C-x C-d" . consult-dir)
+           ("C-x C-j" . consult-dir-jump-file))
+    :config
+    (defun consult-dir--zoxide-dirs ()
+      (split-string (shell-command-to-string "zoxide query --list") "\n" t))
+
+  ;; consult within zoxide
+    (defvar consult-dir--source-zoxide
+      `(:name "Zoxide"
+        :narrow ?z
+        :category file
+        :face consult-file
+        :history file-name-history
+        :items ,#'consult-dir--zoxide-dirs)
+      "Zoxide source for consult-dir.")
+    (add-to-list 'consult-dir-sources 'consult-dir--source-zoxide t))
+#+end_src
+
+*** orderless
+#+begin_src emacs-lisp
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+
+*** marginalia
+
+#+begin_src emacs-lisp
+(use-package marginalia :ensure t :init (marginalia-mode))
+#+end_src
+
+*** zoxide
+
+#+begin_src emacs-lisp
+(use-package zoxide
+  :ensure t
+  :hook (dired-after-readin . (lambda () (zoxide-add default-directory))))
+#+end_src
+
+*** corfu
+
+#+begin_src emacs-lisp
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-auto-prefix 3)          ;; Trigger popup after 3 chars
+  (corfu-auto-delay .8)          ;; popup wait time (0 for instant)
+  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  (corfu-quit-no-match t)        ;; Auto-quit if there are no matches
+  (corfu-preview-current nil)    ;; Disable inline preview (keeps buffer clean)
+  (corfu-preselect 'prompt)      ;; Preselect the prompt, not the first candidate
+
+  :bind
+  (:map corfu-map
+        ;; use standard modal keys for navigating the popup
+        ("C-i"      . corfu-next)
+        ("C-k"      . corfu-previous)
+        ("C-g"      . corfu-quit)
+        ("RET"      . corfu-insert)
+        ;; Allows you to type "foo bar" to filter fuzzy matches via Orderless
+        ("SPC"      . corfu-insert-separator)))
+#+end_src
+
+*** cape
+
+#+begin_src emacs-lisp
+;; Add extensions for better Elisp/Code completion
+(use-package cape
+  :ensure t
+  :init
+  ;; Add these to the global completion list. Order matters!
+  ;; The top of the list is prioritized.
+  (add-to-list 'completion-at-point-functions #'cape-keyword) ;; Programming keywords
+  (add-to-list 'completion-at-point-functions #'cape-file)    ;; File paths
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev) ;; Words in current buffer
+
+  :bind
+  ;; Optional: Dedicated keys to FORCE a specific completion menu
+  ;; (e.g., "I only want to see file paths right now")
+  (("C-c p f" . cape-file)
+   ("C-c p w" . cape-dict)))
 #+end_src
 
 * DEPRECATED
