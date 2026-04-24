@@ -1,0 +1,98 @@
+[2026-04-23] --- [05:07:40]
+you have to do better... right now [C-c C-h] calls:
+  `flyspell-mode' Minor Mode Bindings Starting With C-c:...'
+  on my maybe it would be necessary to improve the minor mode heavily like,
+
+[2026-04-23] --- [05:18:11]
+you have to do better... right now [C-c C-h] calls the help buffer on my machine.. for this project to turn into a public package it needs to address issues like this, having an actual strong minor-mode that enforces behaviors while it is on.
+
+[2026-04-23] --- [05:22:48]
+trying to get this working
+
+[2026-04-23] --- [05:26:25]
+C-c C-v opens another submenu on my emacs that shows actions for the org-babel that I didn't even knew I had, looks like my minbuffer is not showing ALL the entries I have available, plus theres no way I can navigate around it, like hitting C-n ...
+
+[2026-04-23] --- [05:49:03]
+;; Enable Vertico
+(use-package vertico
+  :ensure t
+  :custom
+  (vertico-scroll-margin 0) ;; How many lines to keep visible at the top/bottom
+  (vertico-count 20)        ;; Show up to 20 candidates at once
+  (vertico-resize t)        ;; Grow and shrink the minibuffer
+  (vertico-cycle t)         ;; Enable cycling back to the top
+  :init
+  (vertico-mode 1))         ;; Force it on globally
+
+;; Optional but highly recommended: Persist history over Emacs restarts.
+;; Vertico sorts by history position, so this makes it much smarter.
+(use-package savehist
+  :init
+  (savehist-mode))
+
+I havent tried this code yet but I must tell you, vertico is ON and working perfectly on M-x vertically, but not on any other bindings like C-c or C-x ... so im not sure if we are talking the same thing.
+
+
+Ivy - i dont have it
+Helm - i dont have it
+Icomplete/Fido - both are off already..
+
+[2026-04-23] --- [05:58:30]
+;; Embark: Gives you Vertico-style menus for keybindings and actions
+(use-package embark
+  :ensure t
+  :init
+  ;; THE MAGIC LINE: 
+  ;; When you press C-h after a prefix (like C-c C-h), pipe the results into Vertico!
+  (setq prefix-help-command #'embark-prefix-help-command)
+  
+  :bind
+  ;; Optional: Press C-h B anywhere to see a searchable Vertico list of EVERY active keybinding
+  (("C-h B" . embark-bindings)))
+
+[2026-04-24] --- [14:03:18]
+whats happening with this that some albums it flashes (open/close) kitty window in a sec
+
+[2026-04-24] --- [17:56:43]
+guess I caught another bug...
+
+if I move to the end of a folded header, cycle it with tab the close it back, once I move one line down to the next folded header, the pointer is now placed AFTER the ellipsis
+
+...|    <-- cursor there, so now I'm stuck again. the only way to clear this out, is by moving up to an empty line, so that it 'resets' the stuck
+
+[2026-04-24] --- [18:07:24]
+my base_cfg.org have This configuration on the first 2 lines
+# -*- lexical-binding: t; buffer-read-only: t -*-
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+
+and also this block at the very end:
+* AUTO-TANGLE CONFIGURATION
+#+begin_src emacs-lisp
+  ;; tangle multiple org files, why this?
+  ;; main config (base_cfg.org) is read-only
+  ;; experimental changes will be tested out in a sandbox called 'test_new.el'
+  ;; after approval, changes will migrate to main config
+  ;; the idea is protect the core config file from breakage
+
+  (defun my-org-babel-tangle-config ()
+    "Automatically tangle our Org config files when we save them"
+    (when (member (buffer-file-name)
+                  (list (expand-file-name "base_cfg.org"     user-emacs-directory)
+                        (expand-file-name "modules/completion.org"   user-emacs-directory)
+                        (expand-file-name "modules/file-manager.org" user-emacs-directory)
+                        (expand-file-name "modules/system.org"   user-emacs-directory)
+                        (expand-file-name "modules/musk.org"     user-emacs-directory)
+                        (expand-file-name "modules/tools.org"    user-emacs-directory)))
+
+      ;; Dynamic scoping to the rescue
+      (let ((org-confirm-babel-evaluate nil))
+        (org-babel-tangle))))
+
+  (add-hook 'org-mode-hook
+          (lambda ()
+            (add-hook 'after-save-hook #'my-org-babel-tangle-config nil 'make-it-local)))
+#+end_src
+
+
+so when I edit one of the modules files, like tools.org, it supposedly should auto tangle?
+
