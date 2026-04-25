@@ -27,18 +27,20 @@ binds  {
     // APPLICATIONS
     // ──────────────────────
     Mod+Return   hotkey-overlay-title="Kitty"               { spawn "kitty"; }
-    Mod+1        hotkey-overlay-title="Emacs"               { spawn "emacsclient" "-c" "-a" "emacs"; }
+    Mod+1        hotkey-overlay-title="Emacs"               { spawn-sh "emacsclient -c -a 'emacs --init-directory=/home/rdo/.dotfiles/common/emacs.d/'"; }
     Mod+2        hotkey-overlay-title="Firefox"             { spawn "firefox"; }
     Mod+7        hotkey-overlay-title="Fuzzel Clipboard"    { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
     Mod+8        hotkey-overlay-title="Fuzzel Launcher"     { spawn "fuzzel"; }
-    Mod+F10      hotkey-overlay-title="SMS Send (KDE)"      { spawn "emacsclient" "--eval" "(my-mako-last-sms)"; }
-    Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn "emacsclient" "-c" "-F" "((title . \"niri-scratchpad\") (width . 70) (height . 20))" "-e" "(my-spawn-scratchpad)"; }
+    Mod+F10      hotkey-overlay-title="SMS Send (KDE)"      { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-termux-last-sms)'"; }
+    // Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn-sh "emacsclient -c -F ((title . \"niri-scratchpad\") (width . 70) (height . 20)) -e '(my-spawn-scratchpad)'"; }
+    Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' -c -F '((title . \"niri-scratchpad\") (width . 70) (height . 20))' -e '(my-spawn-scratchpad)'"; }
     Mod+N        hotkey-overlay-title="Noctalia Bar Toggle" { spawn-sh "qs -c noctalia-shell ipc call bar toggle"; }
-    Mod+P        hotkey-overlay-title="Song Playing Info"   { spawn "emacsclient" "--eval" "(my-emms-now-playing-popup)"; }
+    Mod+P        hotkey-overlay-title="Song Playing Info"   { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/ --eval '(my-emms-now-playing-popup)'"; }
     Mod+3        hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
     Mod+4        hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
     XF86Calculator hotkey-overlay-title="calculator (CLI)"  { spawn-sh "kitty -e calculator_cli"; }
-    // keypad numbers don't work, sub-functions only KP_END
+
+    // "keypad numbers don't work, sub-functions only KP_END"
     // Mod+KP_1                  hotkey-overlay-title="Emacs"            { spawn "emacsclient" "-c" "-a" "emacs"; }
     // Mod+Prior // (PageUp)     hotkey-overlay-title=null               { spawn "."; }
     // Mod+Next  // (PageDown)   hotkey-overlay-title=null               { spawn "."; }

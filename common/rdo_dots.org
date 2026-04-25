@@ -74,6 +74,39 @@ Type=Application
 Categories=Network;FileTransfer;P2P;
 #+end_src
 
+***** emacs (client)
+#+begin_src conf :tangle ~/.local/share/applications/emacsclient.desktop :mkdirp yes
+[Desktop Entry]
+Name=Emacs (Client)
+GenericName=Text Editor
+Comment=Edit text
+MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;x-scheme-handler/org-protocol;
+Exec=/usr/bin/emacsclient -c -a "emacs --init-directory=/home/rdo/.dotfiles/common/emacs.d/" %F
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Development;TextEditor;
+StartupNotify=true
+StartupWMClass=Emacs
+Keywords=emacsclient;
+Actions=new-window;new-instance;
+#+end_src
+
+***** emacs
+#+begin_src conf :tangle ~/.local/share/applications/emacs.desktop :mkdirp yes
+[Desktop Entry]
+Name=Emacs
+GenericName=Text Editor
+Comment=Edit text
+MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+Exec=/usr/bin/emacs --init-directory=/home/rdo/.dotfiles/common/emacs.d/ %F
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Development;TextEditor;
+StartupNotify=true
+StartupWMClass=Emacs
+#+end_src
 **** atuin (shell history)                                        :common:
 ui customized to show exit codes. executes commands immediately on enter
 
@@ -513,7 +546,7 @@ dynamic window manager
   // spawn-at-startup "mpd" ()
   spawn-at-startup "xwayland-satellite"
   spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
-  spawn-at-startup "emacs" "--daemon"
+  spawn-sh-at-startup "emacs --daemon --init-directory=~/.dotfiles/common/emacs.d/"
   spawn-at-startup "bash" "-c" "wl-paste --type text --watch cliphist store"
   spawn-at-startup "bash" "-c" "wl-paste --type image --watch cliphist store"
   spawn-at-startup "mako"
@@ -557,14 +590,14 @@ dynamic window manager
       // APPLICATIONS
       // ──────────────────────
       Mod+Return   hotkey-overlay-title="Kitty"               { spawn "kitty"; }
-      Mod+1        hotkey-overlay-title="Emacs"               { spawn "emacsclient" "-c" "-a" "emacs"; }
+      Mod+1        hotkey-overlay-title="Emacs"               { spawn-sh "emacsclient -c -a 'emacs --init-directory=/home/rdo/.dotfiles/common/emacs.d/'"; }
       Mod+2        hotkey-overlay-title="Firefox"             { spawn "firefox"; }
       Mod+7        hotkey-overlay-title="Fuzzel Clipboard"    { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
       Mod+8        hotkey-overlay-title="Fuzzel Launcher"     { spawn "fuzzel"; }
-      Mod+F10      hotkey-overlay-title="SMS Send (KDE)"      { spawn "emacsclient" "--eval" "(my-mako-last-sms)"; }
-      Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn "emacsclient" "-c" "-F" "((title . \"niri-scratchpad\") (width . 70) (height . 20))" "-e" "(my-spawn-scratchpad)"; }
+      Mod+F10      hotkey-overlay-title="Reply Last SMS"      { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-termux-last-sms)'"; }
+      Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' -c -F '((title . \"niri-scratchpad\") (width . 70) (height . 20))' -e '(my-spawn-scratchpad)'"; }
       Mod+N        hotkey-overlay-title="Noctalia Bar Toggle" { spawn-sh "qs -c noctalia-shell ipc call bar toggle"; }
-      Mod+P        hotkey-overlay-title="Song Playing Info"   { spawn "emacsclient" "--eval" "(my-emms-now-playing-popup)"; }
+      Mod+P        hotkey-overlay-title="Song Playing Info"   { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/ --eval '(my-emms-now-playing-popup)'"; }
       Mod+3        hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
       Mod+4        hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
       XF86Calculator hotkey-overlay-title="calculator (CLI)"  { spawn-sh "kitty -e calculator_cli"; }
@@ -1684,6 +1717,15 @@ image and text preview generation script
   exit 1
 #+end_src
 
+***** ranger_devicons (git)
+#+begin_src emacs-lisp
+  (let ((target-dir (expand-file-name "~/.config/ranger/plugins/ranger_devicons")))
+    (make-directory (file-name-directory target-dir) t)
+    (call-process "git" nil "*git-clone-ranger*" t
+                  "clone" "https://github.com/alexanderjeurissen/ranger_devicons" target-dir)
+    (message "Ranger devicons cloned successfully!"))
+#+end_src
+
 **** starship (shell prompt)                                      :common:
 gruvbox dark powerline prompt configuration
 
@@ -2630,6 +2672,8 @@ export WAYLAND_DISPLAY=wayland-1
   alias ggu='git add . && git commit && git push'
   alias ggs='git status'
   alias ggp='git pull'
+  alias emacs='emacs --init-directory="~/.dotfiles/common/emacs.d/"'
+  alias emacs-daemon='emacs --daemon --init-directory="~/.dotfiles/common/emacs.d/"'
 
   alias pu='pushd'
   alias po='popd'
@@ -2674,4 +2718,543 @@ export WAYLAND_DISPLAY=wayland-1
   eval "$(atuin init zsh --disable-up-arrow)"
   eval "$(starship init zsh)"
   eval "$(zoxide init zsh --cmd cd)"
+#+end_src
+
+* Repos PKGs Files
+** Arch Linux - PGKs Install
+*** Arch (Wayland BASE)
+
+#+begin_src text :tangle ~/.dotfiles/common/_ARCH_pkgs/ARCH_pkg_wayland_base.txt :mkdirp yes :padline no
+# ARCH/MANJARO — Wayland Base
+# Minimal comfortable system: media, editing, file management, terminal tools
+# Install: pacman -S $(grep -v '^#' ARCH_pkg_wayland_base.txt | tr '\n' ' ')
+# AUR packages handled automatically by SH_install_packages.sh via yay fallback
+#
+# NOTE: multilib repo must be enabled in /etc/pacman.conf before installing
+# Uncomment the [multilib] section and run: sudo pacman -Sy
+
+# --- Core editors & terminal ---
+emacs-wayland
+nano
+kitty
+zsh
+
+
+# --- Shell tools ---
+atuin
+starship
+zoxide
+fzf
+bat
+lsd
+ripgrep
+fastfetch
+glow
+tealdeer
+man-db
+wget
+rsync
+socat
+stow
+git
+duf
+wev
+parallel
+wdisplays
+wlsunset
+ddcutil
+pacseek
+jq
+
+# --- Archive tools ---
+atool
+unzip
+unrar
+zip
+p7zip
+
+
+# --- Filesystem ---
+ntfs-3g
+dosfstools
+exfat-utils
+mtools
+plocate
+
+
+# --- System & power ---
+htop
+btop
+acpi
+tlp
+brightnessctl
+dbus
+dmidecode
+power-profiles-daemon
+
+
+# --- Wayland compositor stack ---
+niri
+keyd
+fuzzel
+dunst
+cliphist
+wl-clipboard
+xwayland-satellite
+swaylock
+swww
+
+gammastep
+kanshi
+libnotify
+xdg-utils
+xdg-user-dirs
+xdg-desktop-portal
+xdg-desktop-portal-gnome
+ripdrag
+xorg-server
+xorg-xeyes
+xorg-xinit
+xorg-xwayland
+
+
+# --- Audio ---
+pipewire
+wireplumber
+alsa-utils
+pulsemixer
+libinput-tools
+
+
+# --- Networking ---
+networkmanager
+network-manager-applet
+wireless-tools
+dhcpcd
+bluez
+bluez-utils
+bluetui
+iwd
+keychain
+
+
+# --- File management ---
+pcmanfm
+yazi
+ranger
+gvfs
+gvfs-mtp
+android-udev
+udiskie
+zathura
+zathura-pdf-poppler
+zathura-djvu
+zathura-cb
+pacman-contrib
+
+
+# --- Media viewers ---
+mpv
+mpv-mpris
+emms
+mpd
+mpc
+imv
+swayimg
+mp3info
+vorbis-tools
+fbreader  #epub reader
+
+
+# --- Screenshot & image ---
+imagemagick
+img2pdf
+pdftk
+grim
+slurp
+satty
+
+# --- Web & transfer ---
+firefox
+yt-dlp
+transmission-cli
+kdeconnect
+wormhole-rs
+quickserve
+syncthing
+
+
+# --- Documents & office ---
+# newsboat
+# lnav
+pandoc
+
+
+# --- Fonts ---
+#ttf-jetbrains-mono-nerd
+#otf-font-awesome
+#otf-commit-mono-nerd
+#noto-fonts-emoji
+#ttf-nerd-fonts-symbols
+adobe-source-han-sans-jp-fonts
+
+
+# --- Misc ---
+gtypist
+mediainfo
+ffmpeg
+highlight
+libvips
+ffmpegthumbnailer
+#+end_src
+
+*** Arch (Wayland FULL)
+
+#+begin_src text :tangle ~/.dotfiles/common/_ARCH_pkgs/ARCH_pkg_wayland_full.txt :mkdirp yes :padline no
+# ARCH/MANJARO — Wayland Full
+# Everything in base plus: heavy audio/video, gaming, torrents, production tools
+# Install base first, then: pacman -S $(grep -v '^#' ARCH_pkg_wayland_full.txt | tr '\n' ' ')
+# AUR packages handled automatically by SH_install_packages.sh via yay fallback
+
+# --- Heavy audio tools ---
+audacity
+lame
+shntool
+cuetools
+flacon
+wavpack
+musepack-tools
+taglib
+puddletag
+freac-bin
+fatsort
+
+# --- Libs ---
+qt5-wayland
+# Qt Rendering
+qt6-svg
+qt5-svg
+kimageformats
+
+# Tray Support
+libappindicator-gtk3
+libayatana-appindicator
+libdbusmenu-gtk3
+
+# GTK Rendering
+librsvg
+gdk-pixbuf2
+
+# Theming
+qt6ct
+papirus-icon-theme
+#adwaita-icon-theme
+
+
+# --- Image & graphics ---
+gimp
+gimp-plugin-gmic
+gpick
+ocrmypdf
+
+# --- Video production ---
+obs-studio
+handbrake
+
+# --- Gaming ---
+steam
+wine-staging
+winetricks
+gamemode
+mangohud
+
+# --- Torrents ---
+qbittorrent
+
+# --- Dev & scripting ---
+ctags
+task-spooler
+exiv2
+perl-image-exiftool
+
+# --- Documents ---
+#libreoffice-fresh
+#texlive-latexextra
+#irssi
+# spell checking in emacs
+hunspell
+hunspell-en_us
+hunspell-pt_br
+
+# --- File sharing ---
+#vsftpd
+#filezilla
+#+end_src
+
+** Void Linux - PGKs Install
+*** Void (Wayland BASE)
+
+#+begin_src text :tangle ~/.dotfiles/common/_ARCH_pkgs/VOID_pkg_wayland_base.txt :mkdirp yes :padline no
+# VOID — Wayland Base
+# Minimal comfortable system: media, editing, file management, terminal tools
+# Install: xbps-install -S $(grep -v '^#' VOID_pkg_wayland_base.txt | tr '\n' ' ')
+
+# --- Void repos (enable first, then sync) ---
+void-repo-nonfree
+void-repo-multilib
+void-repo-multilib-nonfree
+
+# --- Core editors & terminal ---
+emacs-pgtk
+nano
+kitty
+zsh
+
+
+# --- Shell tools ---
+atuin
+starship
+zoxide
+fzf
+bat
+lsd
+ripgrep
+fastfetch
+glow
+tealdeer
+man-db
+wget
+rsync
+bc
+socat
+stow
+git
+duf
+wev
+parallel
+wdisplays
+jq
+
+
+# --- Archive tools ---
+atool
+unzip
+unrar
+zip
+p7zip
+
+
+# --- Filesystem ---
+ntfs-3g
+dosfstools
+exfat-utils
+mtools
+plocate
+
+
+# --- System & power ---
+htop
+acpi
+tlp
+brightnessctl
+cronie
+chrony
+dbus
+elogind
+polkit
+dmidecode
+xmirror
+xtools
+
+
+# --- Wayland compositor stack ---
+niri
+keyd
+fuzzel
+dunst
+cliphist
+wl-clipboard
+xwayland-satellite
+swaylock
+swww
+grim
+slurp
+gammastep
+kanshi
+libnotify
+xdg-utils
+xdg-user-dirs
+xdg-desktop-portal
+xdg-desktop-portal-gnome
+
+
+# --- Audio ---
+pipewire
+wireplumber
+wireplumber-elogind
+alsa-utils
+alsa-pipewire
+libpulseaudio
+pulsemixer
+libinput-tools
+
+
+# --- Networking ---
+NetworkManager
+network-manager-applet
+wpa_supplicant
+dhcpcd
+bluez
+iwd
+keychain
+
+
+# --- File management ---
+yazi
+ranger
+Thunar
+thunar-volman
+gvfs
+gvfs-mtp
+android-udev-rules
+udiskie
+dragon
+zathura
+zathura-pdf-poppler
+zathura-djvu
+zathura-cb
+
+
+# --- Media viewers ---
+mpv
+mpv-mpris
+emms
+mpd
+mpc
+imv
+swayimg
+mp3info
+vorbis-tools
+
+
+# --- Screenshot & image ---
+ImageMagick
+img2pdf
+pdftk
+grim
+slurp
+satty
+
+# --- Web & transfer ---
+firefox
+yt-dlp
+stig  #transmission-cli
+kdeconnect
+magic-wormhole  #magic-wormhole-rs
+#miniserve  #quickserve
+
+
+# --- Documents & office ---
+#newsboat
+#lnav
+pandoc
+
+
+# --- Fonts ---
+#font-jetbrains-mono-nerd-fonts
+font-awesome6
+noto-fonts-emoji
+nerd-fonts
+adobe-source-han-sans-jp-fonts
+
+
+# --- Misc ---
+gtypist
+mediainfo
+ffmpeg
+highlight
+libvips
+ffmpegthumbnailer
+#+end_src
+
+*** Void (Wayland FULL)
+
+#+begin_src text :tangle ~/.dotfiles/common/_ARCH_pkgs/VOID_pkg_wayland_full.txt :mkdirp yes :padline no
+# VOID — Wayland Full
+# Everything in base plus: heavy audio/video, gaming, torrents, production tools
+# Install base first, then: xbps-install -S $(grep -v '^#' VOID_pkg_wayland_full.txt | tr '\n' ' ')
+
+# --- Heavy audio tools ---
+audacity
+lame
+shntool
+cuetools
+flacon
+wavpack
+musepack-tools
+taglib
+puddletag
+freac
+fatsort
+
+
+# --- Libs ---
+qt5-wayland
+# Qt Rendering
+qt6-svg
+qt5-svg
+kimageformats
+
+# Tray Support
+libappindicator-gtk3
+libayatana-appindicator
+libdbusmenu-gtk3
+
+# GTK Rendering
+librsvg
+gdk-pixbuf2
+
+# Theming
+qt6ct
+papirus-icon-theme
+#adwaita-icon-theme
+
+
+# --- Image & graphics ---
+gimp
+gimp-plugin-gmic
+gpick
+ocrmypdf
+
+# --- Video production ---
+obs-studio
+handbrake
+
+# --- Gaming ---
+steam
+wine
+winetricks
+gamemode
+mangohud
+
+# --- Torrents ---
+qbittorrent
+
+# --- Dev & scripting ---
+ctags
+task-spooler
+exiv2
+perl-Image-ExifTool
+
+# --- Documents ---
+#texlive-latexextra
+#irssi
+# spell checking in emacs
+hunspell
+hunspell-en_us
+hunspell-pt_br
+
+# --- File sharing ---
+#vsftpd
+#filezilla
 #+end_src

@@ -1,8 +1,2 @@
-# ranger devicons
-https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
-
-# xah-fly-keys
-https://github.com/xahlee/xah-fly-keys ~/.emacs.d/lisp
-
 # some other repo
 # https://github.com/user/repo ~/projects/repo
