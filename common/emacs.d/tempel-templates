@@ -1,0 +1,70 @@
+;; -*- mode: lisp-data -*-
+
+org-mode
+
+(<s
+ n> "#+begin_src " (p "language: ") n>
+ n> "#+end_src" n>)
+
+(<e
+ n> "#+begin_example" n>
+ n> "#+end_example" n>)
+
+(<q
+ n> "#+begin_quote" n>
+ n> "#+end_quote" n>)
+
+(<c
+ n> "#+begin_center" n>
+ n> "#+end_center" n>)
+
+(<v
+ n> "#+begin_verse" n>
+ n> "#+end_verse" n>)
+
+(<l
+ n> "#+begin_export latex" n>
+ n> "#+end_export" n>)
+
+(<h
+ n> "#+begin_export html" n>
+ n> "#+end_export" n>)
+
+(<src
+ n> "#+begin_src " (p "language: ") " :results " (p "results: ") n>
+ n> (p "body") n>
+ n> "#+end_src" n>)
+
+fundamental-mode
+
+(<fix
+ n> "You are an expert in " (p "Language") ". I am encountering this error:"
+ n> (p "Paste error text")
+ n> "Before giving me the solution, explain the *why* behind the failure."
+ n> "Use a bulleted list for the fix steps.")
+
+(<eli5
+ n> "Explain " (p "Topic") " using an analogy from "
+ (p "Physical Object (e.g., plumbing)") "."
+ n> "Focus on the trade-offs (Speed vs Cost vs Complexity) rather than just the textbook definition.")
+
+(<edge
+ n> "Analyze the following price action context: " (p "Timeframe/Description") "."
+ n> "You are a market structure purist. Identify:"
+ n> "1. The most recent liquidity sweep."
+ n> "2. The nearest unfilled imbalance/FVG."
+ n> "3. What *confirmation* would you need to see in the next 2 candles to take action?"
+ n> "Keep it under 150 words.")
+
+(<aiprompt
+ n> "Role:   Act as " (p "Expert Persona") "." n>
+ n> "Task:   " (p "Action: Analyze/Generate/Critique") "." n>
+ n> "Context: " (p "Background AI can't see") "." n>
+ n> "Constraints: " (p "Length/format/avoid") "." n>
+ n> "Output:  " (p "Table/Paragraph/Code") "." n>)
+
+(<solu
+ "*Problem:*" n>
+ (p "insert problem") n>
+ n> "*Solution:*" n>
+ (p "insert solution") >)

@@ -67,3 +67,4 @@ common/emacs.d/transient/
 common/emacs.d/tramp
 common/emacs.d/tree-sitter/
 /home/rdo/.dotfiles/wm/niri
+common/emacs.d/emms-volume-cache

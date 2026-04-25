@@ -1,0 +1,143 @@
+# -*- lexical-binding: t; buffer-read-only: t -*-
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+#
+* SYSTEM WIDE CONFIGS
+** performance engine
+#+begin_src emacs-lisp
+  (setq gc-cons-threshold 100000000)
+  (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
+#+end_src
+
+** system improvements
+*** built-in
+#+begin_src emacs-lisp
+  (setq use-short-answers t)
+  (setq inhibit-startup-message t
+        ring-bell-function 'ignore
+        scroll-preserve-screen-position t
+        scroll-step 1
+        create-lockfiles nil
+        case-fold-search t
+        read-quoted-char-radix 10)
+  ;; controls number system (base) numerical code
+  ;; Default (8): Octal (0-7) type C-q 141, get "a"
+  ;; Value (10): Decimal type C-q 97 get "a"
+  ;; Value (16): Hexadecimal type C-q 61 get "a"
+  ;; enable recent files tracking
+        (recentf-mode 1)
+  ;; maximum number of saved items
+        (setq recentf-max-saved-items 50)
+#+end_src
+
+*** external snippets
+#+begin_src emacs-lisp
+  ;; FORCE kill-buffer to quit without saving
+  (require 'my-kill-buffer-no-confirm)
+
+  ;; clean unused buffers in iBuffer
+  (require 'my-clean-unused-buffers)
+
+  ;; Globally force XFK states based on the major-mode we land in
+  (require 'my-xfk-universal-snap)
+
+  ;; prevents XFK snap back to command-mode while typing on
+  ;; top of a source_code other than emacs-elisp
+  (with-eval-after-load 'xah-fly-keys
+    (require 'my-xfk-ignore-org-src-fontification))
+#+end_src
+
+* iBuffer
+#+begin_src emacs-lisp
+(use-package ibuffer
+  :ensure nil
+  :bind (:map ibuffer-mode-map
+         ("z" . (lambda () (interactive) (ibuffer-switch-to-saved-filter-groups "default"))))
+  :config
+  (setq ibuffer-saved-filter-groups
+        '(("default"
+           ("Musk" (filename . "Musk/"))
+           ("Config" (or (filename . ".emacs.d")
+                         (filename . ".config")
+                         (filename . ".dotfiles")))
+           ("Org" (mode . org-mode))
+           ("Dired" (mode . dired-mode))
+           ("Internal" (name . "^\\*")))))
+
+  (add-hook 'ibuffer-mode-hook
+            (lambda ()
+              (ibuffer-auto-mode 1)
+              (ibuffer-switch-to-saved-filter-groups "default")
+              (xah-fly-insert-mode-activate))))
+  ;; To "Smart Clean" the list:
+  ;; Press 'z' in ibuffer to filter, or 'S' to save
+  ;; Press 'D' on a group to kill all buffers in that group
+
+  ;; kill all "non-file" buffers & unused in a while
+#+end_src
+
+* backup/auto-save
+#+begin_src emacs-lisp
+  (setq make-backup-files t)
+  (setq auto-save-default t)
+  ;; Create quarantine folders for backups and auto-saves
+  (make-directory "~/.emacs.d/backups/" t)
+  (make-directory "~/.emacs.d/auto-saves/" t)
+
+  ;; Route all backup (~) and auto-save (#) files to the quarantine
+  (setq backup-directory-alist '(("." . "~/.emacs.d/backups/")))
+  (setq auto-save-file-name-transforms
+        '((".*" "~/.emacs.d/auto-saves/" t)))
+#+end_src
+
+* system language/coding environment
+#+begin_src emacs-lisp
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
+#+end_src
+
+* XDG-OPEN
+#+begin_src emacs-lisp
+  ;; set Firefox as default web browser
+  (setq browse-url-browser-function 'browse-url-firefox)
+#+end_src
+
+* file types
+#+begin_src emacs-lisp
+    (add-to-list 'auto-mode-alist '("\\.m3u\\'"  . text-mode))
+    (add-to-list 'auto-mode-alist '("\\.m3u8\\'" . text-mode))
+    (add-to-list 'auto-mode-alist '("\\.pls\\'"  . text-mode))
+    (add-to-list 'auto-mode-alist '("\\.log\\'"  . text-mode))
+#+end_src
+
+* save history
+#+begin_src emacs-lisp
+  (use-package savehist
+    :init
+    (setq savehist-file "~/.emacs.d/history"
+          history-length 1000
+          history-delete-duplicates t)
+    (savehist-mode 1)
+    :config
+    (add-to-list 'savehist-additional-variables 'query-replace-history))
+#+end_src
+
+* COMMENT open/reload config file  [C-c 9 / C-c 0]
+#+begin_src emacs-lisp
+  (defun config-visit ()
+    (interactive)
+    (find-file "~/.emacs.d/base_cfg.org"))
+  (global-set-key (kbd "C-c 9") 'config-visit)
+
+  (defun config-reload ()
+    (interactive)
+    (org-babel-load-file (expand-file-name "~/.emacs.d/base_cfg.el")))
+  (global-set-key (kbd "C-c 0") 'config-reload)
+#+end_src
+
+* END-OF-FILE
+#+begin_src emacs-lisp
+(provide 'system)
+#+end_src
+
+# M-x package-delete (delete installed files)
+# M-x package-autoremove (remove package dependencies)
