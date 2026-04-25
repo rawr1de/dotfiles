@@ -68,3 +68,9 @@ common/emacs.d/tramp
 common/emacs.d/tree-sitter/
 /home/rdo/.dotfiles/wm/niri
 common/emacs.d/emms-volume-cache
+/common/emacs.d/.cache/
+/common/emacs.d/auto-saves/
+/common/emacs.d/org-roam.db
+/common/emacs.d/persist/
+/common/emacs.d/places
+/common/emacs.d/projects
