@@ -44,6 +44,25 @@
   ;; top of a source_code other than emacs-elisp
   (with-eval-after-load 'xah-fly-keys
     (require 'my-xfk-ignore-org-src-fontification))
+
+  ;; Tell electric-pair-mode to ignore angled brackets for Tempel triggers
+  (defun my-inhibit-angle-brackets (char)
+    "Prevent electric-pair from automatically closing `<'."
+    (if (eq char ?<)
+        t ;; Return true (yes, inhibit pairing for this character)
+      (electric-pair-default-inhibit char))) ;; Otherwise, behave normally
+
+  (setq electric-pair-inhibit-predicate #'my-inhibit-angle-brackets)
+
+  ;; Stop Emacs from crashing completion by looking for a missing OS dictionary
+    (with-eval-after-load 'text-mode
+      ;; For modern Emacs versions
+      (setq text-mode-ispell-word-completion nil))
+
+    ;; Force-remove it from the local completion list in text-based modes
+    (add-hook 'text-mode-hook
+              (lambda ()
+                (remove-hook 'completion-at-point-functions #'ispell-completion-at-point t)))
 #+end_src
 
 * iBuffer

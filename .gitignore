@@ -74,3 +74,5 @@ common/emacs.d/emms-volume-cache
 /common/emacs.d/persist/
 /common/emacs.d/places
 /common/emacs.d/projects
+/common/emacs.d/base_cfg.el
+/common/scripts/.scripts/.bak/NIRI_cycle-tabs.sh.20260428_150605.bak

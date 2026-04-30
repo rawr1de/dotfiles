@@ -22,6 +22,7 @@ binds  {
     XF86AudioStop             allow-when-locked=true { spawn-sh "playerctl stop"; }
     XF86AudioPrev             allow-when-locked=true { spawn-sh "playerctl previous"; }
     XF86AudioNext             allow-when-locked=true { spawn-sh "playerctl next"; }
+    Scroll_Lock               { spawn-sh "playerctl play-pause"; }
 
 
     // APPLICATIONS

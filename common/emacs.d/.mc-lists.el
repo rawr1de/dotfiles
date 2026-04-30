@@ -51,6 +51,8 @@
 
 (setq mc/cmds-to-run-once
       '(
+	end-of-buffer
 	iedit-switch-to-mc-mode
 	my-force-fullscreen-toggle
+	xah-next-window-or-frame
 	))

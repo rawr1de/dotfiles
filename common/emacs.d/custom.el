@@ -6,7 +6,8 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(doom-city-lights))
  '(custom-safe-themes
-   '("22a0d47fe2e6159e2f15449fcb90bbf2fe1940b185ff143995cc604ead1ea171"
+   '("b7a09eb77a1e9b98cafba8ef1bd58871f91958538f6671b22976ea38c2580755"
+     "22a0d47fe2e6159e2f15449fcb90bbf2fe1940b185ff143995cc604ead1ea171"
      "456697e914823ee45365b843c89fbc79191fdbaff471b29aad9dcbe0ee1d5641"
      "7de64ff2bb2f94d7679a7e9019e23c3bf1a6a04ba54341c36e7cf2d2e56e2bcc"
      "ba98102679e7ed71a0b79c9a490328370b6b20537e04730bf0028bdd8a2418a9"
@@ -49,7 +50,7 @@
 			multiple-cursors orderless org-modern org-roam
 			org-superstar persist sublime-themes sudo-edit
 			taxy-magit-section tempel ultra-scroll vertico vterm
-			whisper zoxide))
+			zoxide))
  '(package-vc-selected-packages
    '((whisper :url "https://github.com/natrys/whisper.el" :branch "master")))
  '(safe-local-variable-values '((read-only . t))))

@@ -361,7 +361,7 @@ width: 80
 all: false
 #+end_src
 
-**** GTK & icon theming (settings.ini)
+**** GTK & icon theming (settings.ini)                            :common:
 #+begin_src conf :tangle ~/.config/gtk-3.0/settings.ini :mkdirp yes
 [Settings]
 gtk-icon-theme-name=Papirus-Dark
@@ -545,13 +545,20 @@ dynamic window manager
   // spawn-at-startup "swaybg" "-i" "path_to_wallpaper"
   // spawn-at-startup "mpd" ()
   // spawn-sh-at-startup "emacs --daemon --init-directory=~/.dotfiles/common/emacs.d/"
+
   spawn-at-startup "xwayland-satellite"
   spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
   spawn-at-startup "bash" "-c" "wl-paste --type text --watch cliphist store"
   spawn-at-startup "bash" "-c" "wl-paste --type image --watch cliphist store"
   spawn-at-startup "mako"
-  spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
-  spawn-at-startup "systemctl" "--user" "import-environment" "WAYLAND_DISPLAY" "XDG_RUNTIME_DIR" "DISPLAY" "DBUS_SESSION_BUS_ADDRESS" "XDG_CURRENT_DESKTOP"
+
+  // spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
+  // spawn-at-startup "sh" "-c" "systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP && systemctl --user start emacs.service"
+  // spawn-at-startup "systemctl" "--user" "import-environment" "WAYLAND_DISPLAY" "XDG_RUNTIME_DIR" "DISPLAY" "DBUS_SESSION_BUS_ADDRESS" "XDG_CURRENT_DESKTOP"
+
+  // new FIXER line that starts 3 services at once, preventing race condition failure
+  spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_RUNTIME_DIR DISPLAY DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP && systemctl --user start emacs.service"
+
   spawn-at-startup "udiskie" "--no-notify" "--tray" "--appindicator"
   spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "icon-theme" "Papirus-Dark"
   spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "gtk-theme" "Nordic"
@@ -565,8 +572,8 @@ dynamic window manager
 
       // BRIGHTNESS
       // ──────────────────────
-      Mod+F6                    hotkey-overlay-title="Brightness +10%"         { spawn "brightnessctl" "set" "+10%"; }
-      Mod+F5                    hotkey-overlay-title="Brightness -10%"         { spawn "brightnessctl" "set" "10%-"; }
+      // Mod+F6                    hotkey-overlay-title="Brightness +10%"         { spawn "brightnessctl" "set" "+10%"; }
+      // Mod+F5                    hotkey-overlay-title="Brightness -10%"         { spawn "brightnessctl" "set" "10%-"; }
       XF86MonBrightnessUp       allow-when-locked=true                         { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
       XF86MonBrightnessDown     allow-when-locked=true                         { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
 
@@ -597,7 +604,7 @@ dynamic window manager
       Mod+F10      hotkey-overlay-title="Reply Last SMS"      { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-termux-last-sms)'"; }
       Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' -c -F '((title . \"niri-scratchpad\") (width . 70) (height . 20))' -e '(my-spawn-scratchpad)'"; }
       Mod+N        hotkey-overlay-title="Noctalia Bar Toggle" { spawn-sh "qs -c noctalia-shell ipc call bar toggle"; }
-      Mod+P        hotkey-overlay-title="Song Playing Info"   { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/ --eval '(my-emms-now-playing-popup)'"; }
+      Mod+P hotkey-overlay-title="Song Playing Info" { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-emms-now-playing-popup)'"; }
       Mod+3        hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
       Mod+4        hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
       XF86Calculator hotkey-overlay-title="calculator (CLI)"  { spawn-sh "kitty -e calculator_cli"; }
@@ -621,8 +628,8 @@ dynamic window manager
       Mod+Shift+F5              hotkey-overlay-title="Trackpad ON/OFF"     { spawn-sh "SH_trackpad_toggle.sh"; }
       Alt+Space                 hotkey-overlay-title="Keyboard Language"   { spawn-sh "/home/rdo/.scripts/SH_kbd-language-change.sh"; }
       Mod+Alt+Space             hotkey-overlay-title="Keyboard Layout"     { spawn-sh "/home/rdo/.scripts/SH_kbd-layout-change.sh"; }
-      Mod+h                                                                { spawn "~/.scripts/SH_helper_binds_MAIN.sh"; }
-
+      Mod+h                     hotkey-overlay-title="Helper SYS Keybinds" { spawn "~/.scripts/SH_helper_binds_MAIN.sh"; }
+      Mod+F5                     hotkey-overlay-title="Speech-to-Text"      { spawn "~/.scripts/wayland-dictation.sh"; }
 
       // SCREENSHOT
       // ──────────────────────
@@ -666,15 +673,18 @@ dynamic window manager
       // ──────────────────────
       Mod+J  hotkey-overlay-title="Focus Column Left"  { focus-column-left; }
       Mod+L  hotkey-overlay-title="Focus Column Right" { focus-column-right; }
-      Mod+I  hotkey-overlay-title="Focus Window Column Up"    { focus-window-up; }
-      Mod+K  hotkey-overlay-title="Focus Window Column Down"  { focus-window-down; }
+      // Ctrl+Mod+I  hotkey-overlay-title="Focus Window Column Up"    { focus-window-up; }
+      // Ctrl+Mod+K  hotkey-overlay-title="Focus Window Column Down"  { focus-window-down; }
+      // Single-key tab cycling (Wraps to top when reaching the bottom)
+      Ctrl+Mod+K { spawn-sh "~/.scripts/NIRI_cycle-tabs.sh"; }
 
 
       // NIRI - FOCUS | (workspace)
       // ──────────────────────
-      Mod+Ctrl+I  hotkey-overlay-title="Focus Workspace Up"   { focus-workspace-up; }
-      Mod+Ctrl+K  hotkey-overlay-title="Focus Workspace Down" { focus-workspace-down; }
-
+      // Mod+Ctrl+I  hotkey-overlay-title="Focus Workspace Up"   { focus-workspace-up; }
+      // Mod+Ctrl+K  hotkey-overlay-title="Focus Workspace Down" { focus-workspace-down; }
+      Mod+I  hotkey-overlay-title="Focus Workspace Up"   { focus-workspace-up; }
+      Mod+K  hotkey-overlay-title="Focus Workspace Down" { focus-workspace-down; }
 
       // NIRI - FOCUS | (monitor)
       // ──────────────────────
@@ -715,6 +725,11 @@ dynamic window manager
       Mod+Ctrl+5  hotkey-overlay-title="Move Column to Workspace 5"  { move-column-to-workspace 5; }
       Mod+Ctrl+6  hotkey-overlay-title="Move Column to Workspace 6"  { move-column-to-workspace 6; }
       Mod+Ctrl+7  hotkey-overlay-title="Move Column to Workspace 7"  { move-column-to-workspace 7; }
+
+
+      // NIRI — LAYOUT #1 | (Monitor Left)
+      // ──────────────────────
+      Mod+F12   { spawn "~/.scripts/NIRI_FUZZEL_layout_selector.sh"; }
 
   }
 #+end_src
@@ -1079,49 +1094,86 @@ output "eDP-2" {
 
 ***** window-rules.kdl
 #+begin_src conf :tangle ~/.config/niri/window-rules.kdl
-// Rule 1: ONLY float swayimg when it is called by Emacs
-window-rule {
-    match app-id="emms-art"
-    open-floating true
+  // Rule 1: ONLY float swayimg when it is called by Emacs
+  window-rule {
+      match app-id="emms-art"
+      open-floating true
 
-    // Optional: Give it a nice default size so it doesn't spawn tiny
-    default-column-width { proportion 0.4; }
-    default-window-height { proportion 0.5; }
-}
+      // Optional: Give it a nice default size so it doesn't spawn tiny
+      default-column-width { proportion 0.4; }
+      default-window-height { proportion 0.5; }
+  }
 
-// Rule 2: Float the Emacs Org-mode EMMS popup
-// window-rule {
-    // Match the exact title we gave this frame
-    // match app-id=r#"^emacs$"# title=r#"^emms-popup$"#
-    // open-floating true
-// }
-
-
-// Rule 2: Float the Kitty EMMS dashboard
-window-rule {
-    match app-id="emms-popup"
-    open-floating true
-
-    // Force the exact massive size you want for the dashboard
-    default-column-width { fixed 1200; }
-    default-window-height { fixed 1200; }
-}
+  // Rule 2: Float the Emacs Org-mode EMMS popup
+  // window-rule {
+      // Match the exact title we gave this frame
+      // match app-id=r#"^emacs$"# title=r#"^emms-popup$"#
+      // open-floating true
+  // }
 
 
-// Emacs scratchpad float in the center
-    // window-rule {
-        // match title="niri-scratchpad"
-        // open-floating true
-        // Optional: Force a specific starting size
-        // default-column-width { proportion 0.4; }
-    // }
+  // Rule 2: Float the Kitty EMMS dashboard
+  window-rule {
+      match app-id="emms-popup"
+      open-floating true
 
-// Emacs scratchpad in tiled (column mode)
-window-rule {
-        match title="niri-scratchpad"
-        // Force the column to take up exactly 35% of the screen
-        default-column-width { proportion 0.35; }
-    }
+      // Force the exact massive size you want for the dashboard
+      default-column-width { fixed 1200; }
+      default-window-height { fixed 1200; }
+  }
+
+
+  // Emacs scratchpad float in the center
+      // window-rule {
+          // match title="niri-scratchpad"
+          // open-floating true
+          // Optional: Force a specific starting size
+          // default-column-width { proportion 0.4; }
+      // }
+
+  // Emacs scratchpad in tiled (column mode)
+  window-rule {
+          match title="niri-scratchpad"
+          // Force the column to take up exactly 35% of the screen
+          default-column-width { proportion 0.35; }
+      }
+
+
+
+  // HDMI-A-1 (Left Monitor)
+  // DP-1 (Right Monitor)
+
+  // Distinct names prevent Niri from overwriting the workspace tree
+  workspace "1-left"
+  workspace "1-right"
+
+  // --- LEFT MONITOR RULES (HDMI-A-1) ---
+  window-rule {
+      match app-id="kitty-left"
+      open-on-output "HDMI-A-1"
+      open-on-workspace "1-left"
+      default-column-width { proportion 1.0; }
+  }
+  window-rule {
+      match title="emacs-left"
+      open-on-output "HDMI-A-1"
+      open-on-workspace "1-left"
+      default-column-width { proportion 1.0; }
+  }
+
+  // --- RIGHT MONITOR RULES (DP-1) ---
+  window-rule {
+      match app-id="firefox-right"
+      open-on-output "DP-1"
+      open-on-workspace "1-right"
+      default-column-width { proportion 1.0; }
+  }
+  window-rule {
+      match title="emacs-right"
+      open-on-output "DP-1"
+      open-on-workspace "1-right"
+      default-column-width { proportion 1.0; }
+  }
 #+end_src
 
 **** ranger (terminal file manager)                               :common:

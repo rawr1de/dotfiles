@@ -1,6 +1,27 @@
 ;; -*- mode: lisp-data -*-
-
+;;
+;; QUICK REVIEW AT: ~/Docs/10.Org/roam/tech/20260425215736-emacs_completion_framework_stack.org
+;;
 org-mode
+;;
+;; =======================================================
+;; ORG-MODE -- NATIVE
+;; =======================================================
+;;
+;; |------------------------+---------|
+;; | OVERVIEW               | TRIGGER |
+;; |------------------------+---------|
+;; | src :language          | <s      |
+;; | example                | <e      |
+;; | quote                  | <q      |
+;; | center                 | <c      |
+;; | Comment                | <C      |
+;; | verse                  | <v      |
+;; | latex                  | <l      |
+;; | html                   | <h      |
+;; | src :language :results | <src    |
+;; |------------------------+---------|
+
 
 (<s
  n> "#+begin_src " (p "language: ") n>
@@ -17,6 +38,10 @@ org-mode
 (<c
  n> "#+begin_center" n>
  n> "#+end_center" n>)
+
+(<C
+ n> "#+begin_comment" n>
+ n> "#+end_comment" n>)
 
 (<v
  n> "#+begin_verse" n>
@@ -35,20 +60,384 @@ org-mode
  n> (p "body") n>
  n> "#+end_src" n>)
 
+
+;; =======================================================
+;; ORG-MODE -- PERSONAL
+;; =======================================================
+;;
+;; |------------------+----------|
+;; | OVERVIEW         | TRIGGER  |
+;; |------------------+----------|
+;; | Problem/Solution | <per-sol |
+;; | Troubleshoot     | <per-tro |
+;; | In-Depth         | <per-idp |
+;; |------------------+----------|
+
+
+(<per-sol
+ "*Problem:*" n>
+ (p "insert problem") n>
+ n> "*Solution:*" n>
+ (p "insert solution") >)
+
+
+(<per-tro
+ "* TROUBLESHOOT" n
+ "** " (p "CATEGORY") ": " (p "Title") n
+ "*** Summary" n
+ "*Problem:*" n
+ (p "insert problem") n
+ n
+ "*Solution:*" n
+ (p "insert solution") n
+ n
+ "/Tools involved:/" n
+ "- " (p "list tools...") n
+ n
+ "*** Background / Context" n
+ (p "insert background or context...") n
+ n
+ "*** Investigation" n
+ (p "insert investigation details...") n
+ "**** Summary (quick)" n
+ (p "insert quick summary...") n
+ "**** Packages required" n
+ (p "list packages...") n
+ "**** Tests" n
+ (p "list tests run...") n
+ n
+ "*** Root Cause / Fix" n
+ (p "insert step-by-step fix...") n
+ n
+ "*** Notes / Caveats" n
+ (p "insert notes or caveats...") n)
+
+
+(<per-idp
+ "* IN-DEPTH" n
+ "** Header 2: Title Casing" n
+ "*** Header 3: Title Casing" n
+ n
+ "Table Description:" n
+ "|--------+--------+--------|" n
+ "| item 1 | item 2 | item 3 |" n
+ "|--------+--------+--------|" n
+ "| asdf   |        |        |" n
+ "| asdf   |        |        |" n
+ "|--------+--------+--------|" n
+ n
+ "**** Header 4: Title Casing" n
+ n
+ "- dashed/bullet list, may contain line breaks" n
+ "- or keep it together if lean" n
+ n
+ "1. numbered CAN be broken.." n
+ "2. just align right under" n)
+
+
+(<agenda_month
+ "* " (p "month" month) n
+ "** FINANÇAS [" (s month) "]" n n
+ "*Jd. California*" n
+ "Água: 0880752-3 ([[https://agencia-virtual.saneago.com.br/segundaViaSimplificada][saneago]], [[https://www.go.gov.br/servicos/servico/emitir-segunda-via-da-fatura-de-agua-eou-esgoto][prefeitura]])" n
+ "Luz:: 11944833  ([[https://goias.equatorialenergia.com.br/LoginGO.aspx][equatorial]])" n
+ "Net:: zap_opyt" n
+ "IPTU: buscar por cpf ([[https://trindade.centi.com.br/servicos/extratoimoveis][prefeitura]]) /[CALIFORNIA]/ +2026+" n
+ "IPTU: 33214504460008 ([[https://tributos.goiania.go.gov.br/sistemas/scarr/asp/scarr50000f0.asp][prefeitura]]) /[FAIÇAL]/ +2026+" n
+ "CPF mama: 854.347.441-87" n
+ "IPVA Spacefox OOD-4651 (Janeiro) +2026+" n
+ "      Spacefox Renavam: 00994954689" n
+ "IPVA Uno PQX-3177 (Julho) 2026" n
+ "      Uno Renavam: 01097526124" n
+ "[[https://www.go.gov.br/servicos-digitais/detran/consulta-veiculos/consultar-dados][Consulta IPVA,Multas,CRV]]" n
+ "Nissan Versa CXK4091 (Plate)" n
+ "             3N1CN8BV8PL850304 (VIN)" n
+ "RDO DL/GA Nr 061559687" n n
+ "*CONTAS A CUMPRIR P/ VIAJAR BR:*" n
+ "|--------+------+------------|" n
+ "| conta  |   R$ | CONTA      |" n
+ "|--------+------+------------|" n
+ "| Comes  | 2500 | SoFi [CHK] |" n
+ "| BnB's  | 2000 | SoFi [CHK] |" n
+ "| Gas    | 1000 | SoFi [CHK] |" n
+ "|--------+------+------------|" n
+ "| total  | 5500 |            |" n
+ "|--------+------+------------|" n
+ "*Total USD: 1038* (USD = 5.30)" n n
+ "** DATAS CARTÕES [" (s month) "]" n n
+ "*CC STATEMENTS*" n
+ "|-----------+--------+--------+-------+--------+--------+------|" n
+ "| *CARD*    | Open   | Close  | Cycle | Due    | Best   | Min. |" n
+ "|-----------+--------+--------+-------+--------+--------+------|" n
+ "| +cSTR +   | Mar/28 | Apr/27 |    31 | 23/mês | 24/mês | $41  |" n
+ "| +TRST+    | Mar/22 | Apr/22 |    31 | 19/mês | 20/mês | $27  |" n
+ "| +DSVR+    | Mar/07 | Apr/06 |    31 | 03/mês | 07/mês | $35  |" n
+ "| +COnV+    | Mar/18 | Apr/18 |    31 | 15/mês | 16/mês | $25  |" n
+ "| +AMZ+     | Mar/26 | Apr/10 |    31 | 07/mês | 17/mês | $35  |" n
+ "| +PPal+    | Mar/21 | Apr/21 |    31 | 17/mês | 26/mês | $29  |" n
+ "| +COnQ+    | Mar/09 | Apr/09 |    31 | 03/mês | 10/mês | $25  |" n
+ "| +WFar+    | Mar/07 | Apr/07 |    31 | 02/mês | 09/mês | $25  |" n
+ "| +NuBk+    | Mar/01 | Apr/01 |    31 | 08/mês | 01/mês | R$   |" n
+ "| +MPgo+    | Mar/14 | Apr/14 |    31 | 14/mês | 09/mês | R$   |" n
+ "|---------+--------+--------+-------+--------+--------+------|" n n
+ "_NOTAS:_" n
+ "+COnV -- Dec/21/2025 Fim 15 meses 0% APR !!+" n
+ "+TRST -- Mar/22/2026 Fim 15 meses 0% APR !!+" n
+ "*DSVR -- Oct/05/2026 Fim 12 meses 0% APR !!*" n
+ "*cSTR -- Jan/18/2027 Fim xx meses 0% APR (Purchases)!!*" n
+ "*cSTR -- 0% APR transfers until Feb/04/2026 !!*" n n
+ "** FIXOS US/BR  [" (s month) "]" n n
+ "|---------------+---------+-----------+-------+------------+------|" n
+ "| *DESCR.*      | *$$$*   | *DATA*    |*US/BR*| *PG?*      |*BANK*|" n
+ "|---------------+---------+-----------+-------+------------+------|" n
+ "| carro         |  203.71 | 25/mês    | US    | +DLTA +    | DLTA |" n
+ "| insuran.      |  140.63 | 28/mês    | US    | +rich +    | SWAB |" n
+ "| USA Net       |   28.33 | 21/mês    | US    | +rich +    | SWAB |" n
+ "| USA Gas       |   41.90 | 1st week  | US    | +rich +    | SWAB |" n
+ "| USA Agua      |   15.00 | 1st week  | US    | +rich +    | SWAB |" n
+ "| USA Luz       |   55.30 | 1st week  | US    | +rich +    | SWAB |" n
+ "| combust.      |   00.00 | $45/2sem  | US    | +1-2-3-4 + | CITI |" n
+ "| comes         |   00.00 | $157/2sem | US    | +1-2-3-4 + | PPal |" n
+ "| /cSTR/ [CC]   |   41.00 | 23/mês    | US    | +OK +      | CITI |" n
+ "| /COnV/ [CC]   |   00.00 | 15/mês    | US    | +OK +      | COne |" n
+ "|---------------+---------+-----------+-------+------------+------|" n
+ "| *TOTAL*       |         |           |       |            |      |" n
+ "|---------------+---------+-----------+-------+------------+------|" n
+ "| net cali      |   99.90 | 21/mes    | BR    | +Nu/mes +  | Nu   |" n
+ "| agua cali     |   00.00 | 23/mes    | BR    | +Nu/mes +  | Nu   |" n
+ "| luz cali " (s month) " |   00.00 | 09/mes    | BR    | +Nu/mes +  | Nu   |" n
+ "| luz cali " (s month) "| 00.00     | 09/mes | BR    | +Nu/mes +  | Nu   |" n
+ "|---------------+---------+-----------+-------+------------+------|" n
+ "| *TOTAL*       |         |           |       |            |      |" n
+ "|---------------+---------+-----------+-------+------------+------|" n
+ "#+TBLFM: @12$2=vsum(@2..@11); f2" n
+ "#+TBLFM: @19$2=vsum(@13..@18); f2" n n
+ "*RISCAR AO PAGAR/TRANSF. DIN P/ PAGAMENTO!*" n
+ "*gastos mensal pra abandonar o trampo*" n
+ "200+151.27+25+60+90+50 = 576.27  (sem comes)" n
+ "                       = 650 (arredondado UP)" n
+ "/carro+seguro, net ksa, fuel, gymn tel, contas BR/" n n
+ "200+151.27+25+60+90+50+400 = 976.27 (+400 de comes)" n
+ "                           = 1k (arredondado UP)" n
+ "/carro+seguro, net ksa, fuel, gymn tel, contas BR, comes/" n n
+ "|---------------+------------+-------------|" n
+ "| Uso           | Card Gasto | Din Saved   |" n
+ "|---------------+------------+-------------|" n
+ "| Fuel Car      | DSVR [CC]  | COne [SAV2] |" n
+ "| Tel atv       | COnV [CC]  | TRST [SAV]  |" n
+ "| ins/ksa bills | zelle rich | SWAB [CHK]  |" n
+ "| Comes         | PPal [CHK] | PPal [CHK]  |" n
+ "|---------------+------------+-------------|" n
+ "ins/net (current month) = SWAB , zelle rich" n n
+ "_NOTAS:_" n
+ "+COnV -- Dec/21/2025 Fim 15 meses 0% APR !!+" n
+ "+TRST -- Mar/22/2026 Fim 15 meses 0% APR !!+" n
+ "*DSVR -- Oct/05/2026 Fim 12 meses 0% APR !!*" n
+ "*cSTR -- Jan/18/2027 Fim xx meses 0% APR (Purchases)!!*" n
+ "*cSTR -- 0% APR transfers until Feb/04/2026 !!*" n n
+ "** +Outras Contas (" (s month) ") +" n n
+ "|------+--------|" n
+ "| IN   |    545 |" n
+ "| OUT  | 391.65 |" n
+ "|------+--------|" n
+ "| REST | 153.35 |" n
+ "|------+--------|" n
+ "#+TBLFM: @3$2=@1$2-@2$2" n n
+ "|--------------+--------+-----------+------------|" n
+ "| +cSTR [CC] + |  41.00 | SNAP mama | CITI [CHK] |" n
+ "| +ksa bills + |  144.1 | SNAP mama | SWAB [CHK] |" n
+ "| +car insur + | 146.55 | SNAP mama | SWAB [CHK] |" n
+ "| +car gas +   |  60.00 | SNAP mama | COne [SV2] |" n
+ "|--------------+--------+-----------+------------|" n
+ "| TOTAL        | 391.65 |           |            |" n
+ "|--------------+--------+-----------+------------|" n n
+ "- [-] ready?" n
+ " *tranf's:*" n n
+ "  - [ ] *COne*" n
+ "  - [ ] /COne [CHK]/ > /NuBk [CHK]/ -- 391.65" n n
+ "  - [X] *PPal*" n
+ "  - [X] /COne [CHK]/ > /PPal [CHK]/ -- 153.35" n n
+ "** +mama snap scheme (" (s month) ") +" n n
+ "*current (mar/apr)*" n
+ "|------------+---+----------+------------|" n
+ "| +comes 1 + |   | 03.27.We | SWAB [CHK] |" n
+ "| +comes 2 + |   |          | SWAB [CHK] |" n
+ "| +comes 3 + |   |          | SWAB [CHK] |" n
+ "| +comes 4 + |   |          | SWAB [CHK] |" n
+ "|------------+---+----------+------------|" n
+ "| TOTAL      |   |          |            |" n
+ "|------------+---+----------+------------|" n
+ "#+TBLFM: @5$2=vsum(@1..@4); f2" n n
+ "*TARGET (TOTAL=Target-Current)*" n
+ "|-------------+--------+----------|" n
+ "| +target 2 + | 391.65 | 04.25.Sa |" n
+ "| +current +  |        |          |" n
+ "|-------------+--------+----------|" n
+ "| TOTAL       |        |          |" n
+ "|-------------+--------+----------|" n
+ "#+TBLFM: @3$2=@2-@1; f2" n
+ q)
+
+
 fundamental-mode
+;; =======================================================
+;; FUNDAMENTAL MODE -- OVERVIEW
+;; =======================================================
+;;
+;; |------------------+-------------------+---------------------------------|
+;; | OVERVIEW         | TRIGGER           |                                 |
+;; |------------------+-------------------+---------------------------------|
+;; | Emacs            | <em               | General Emacs questions         |
+;; | Trading          | <tr               | General Trading questions       |
+;; | Linux            | <lx               | General Linux questions         |
+;; | BASH/ZSH         | <sh               | General BASH/ZSH questions      |
+;; | Python           | <py               | General Python questions        |
+;; | Window Managers  | <wm               | General WM's questions          |
+;; | Academics        | <uni              | General Academics questions     |
+;; |------------------+-------------------+---------------------------------|
+;; | GEN. CONSTRAINTS | <rule-gen         | For ALL variations              |
+;; |------------------+-------------------+---------------------------------|
+;; |                  | <rule-gen-80      | Strict 80-char column limit     |
+;; |                  | <rule-gen-roam    | Output as .org for org-roam     |
+;; |                  | <rule-gen-10yo    | Explain for a 10-year-old       |
+;; |                  | <rule-gen-nofluff | Skip greetings, go to solution  |
+;; |                  | <rule-gen-fact    | No guessing, state uncertainty  |
+;; |                  | <rule-gen-short   | Short/Concise Clear Explanation |
+;; |------------------+-------------------+---------------------------------|
+;; | SPF. CONSTRAINTS | <rule-[..]        | Tailored to SPECIFICS           |
+;; |------------------+-------------------+---------------------------------|
 
-(<fix
- n> "You are an expert in " (p "Language") ". I am encountering this error:"
- n> (p "Paste error text")
- n> "Before giving me the solution, explain the *why* behind the failure."
- n> "Use a bulleted list for the fix steps.")
+(<rule-80
+"%+80 char column RULE+%" n
+ "Format the text to strictly fit an 80-character column limit. "
+ "Keep it short, concise, and technical, but simple to understand." n q)
 
-(<eli5
- n> "Explain " (p "Topic") " using an analogy from "
- (p "Physical Object (e.g., plumbing)") "."
- n> "Focus on the trade-offs (Speed vs Cost vs Complexity) rather than just the textbook definition.")
+(<rule-roam
+"%+Output answer as .org Emacs file+%" n
+ "Output the final answer as an .org file for org-roam archival." n q)
 
-(<edge
+(<rule-10yo
+"%+Explain for a 10y old+%" n
+ "Explain the concepts so clearly that a 10-year-old would "
+ "easily understand them." n q)
+
+(<rule-nofluff
+"%+No greetings and ego massage+%" n
+ "Cut the greetings and ego massage, jump to the solutions right away." n q)
+
+(<rule-fact
+"%+Anti-Hallucination RULE+%" n
+ "If you do not know the exact answer "
+ "or the data is ambiguous, state 'I do not have enough verifiable "
+ "information' instead of guessing." n q)
+
+(<rule-gen-short
+"%+Short/Concise Clear Explanation+%" n
+"As a technical writer who distills complex topics into short, "
+"dense explanations. Every sentence must carry weight. Cut filler, "
+"keep precision. Prefer concrete examples over abstract descriptions. "
+"keep it short and concise, so explain the last answer accordingly"
+n q)
+
+(<rule-gen-link_text
+"%+Summarize Chat Shortly Give Links+%" n
+"This conversation has been really useful and I would like to implement the majority (if not all) of your suggestions for this I would need you to do a short/concise summary of our discussed topic along with links for me to jump straight to every answer, because having to screen scrolling sucks.. I would need the points about: " n
+(p "- (copy/paste answer to summarize and link)") n
+(p "- (copy/paste answer to summarize and link)") n q)
+
+
+;; =======================================================
+;; FUNDAMENTAL MODE -- EMACS
+;; =======================================================
+;;
+;; |-------------------------+------------+----------------------------|
+;; | VARIATION – Emacs       | TRIGGER    | USE CASE                   |
+;; |-------------------------+------------+----------------------------|
+;; | Default expert          | <em        | General Emacs questions    |
+;; | Teaching mode           | <em-learn  | Learning w/ explanations   |
+;; | Production mode         | <em-dev    | Deploy Code, att to error  |
+;; | Quick script            | <em-quick  | Quick code, no boilerplate |
+;; | Code review             | <em-review | Code Review/bug finder     |
+;; |-------------------------+------------+----------------------------|
+;; | CONSTRAINTS – Emacs     | <rule-em-  |                            |
+;; |                         |            |                            |
+;; |-------------------------+------------+----------------------------|
+
+
+(<em
+ "%+EMACS: HQ Prompt Skel+%" n
+ "%+ROLE → TASK → CONTEXT → CONSTRAINTS → OUTPUT → EXAMPLE+%" n
+ "## ROLE ##" n
+(p (completing-read "Role: "
+                        '("<wm-niri-learn"
+                          "<wm-niri-prod"
+                          "<wm-niri-dev"
+                          "<wm-niri-quick"
+                          "<wm-niri-review")) role) n
+n "## TASK ##" n
+(p "Describe the specific task...") n
+n "## CONTEXT ##" n
+(p "Emacs version, relevant packages, configuration snippet") n
+n "## CONSTRAINTS ##" n
+(p "What to avoid? External deps, frameworks.. '<rule-nofluff '<rule-fact '<rule-wm-niri-") n
+n "## OUTPUT ##" n
+(p "Format: explanation, elisp snippet, config block, keybinding") n
+n "## EXAMPLE ##" n
+(p "Optional example here, or Delete") n q)
+
+
+(<em-dev
+"%+Developer Emacs/Lisp Expert+%" n
+"## ROLE ##" n
+"You are an expert Emacs Lisp developer and seasoned Emacs user with "
+"deep knowledge of: modern Emacs conventions (lexical binding, "
+"package.el, use-package), built-in libraries (pcase, seq, map, "
+"cl-lib), completion frameworks (vertico, corfu, orderless), "
+"tree-sitter integration, native compilation, and the Emacs "
+"client/server model. You understand the ecosystem's best practices, "
+"common pitfalls, and the philosophy of self-documenting, extensible "
+"editing." n)
+
+(<em-seq_fName
+ "%+EMACS: Sequential Filename+%" n
+ "Auto calculate/generate a sequential filename in the current directory (a_01.zip, a_02.zip)." n
+ "Do not prompt the user for a name; remind them that this will be hardcoded." n)
+
+(<em-bg_exec
+ "%+EMACS: Background Execution+%" n
+ "Execute the action on the files silently in the background using a system/external tool." n)
+
+(<em-ui_updt
+ "%+EMACS: UI Update (revert-buffer)+%" n
+ "Automatically refresh the dired/dirvish buffer (revert-buffer) immediately after the action so the new content is visible to the user right away." n)
+
+(<em-mbuff_compl
+ "%+EMACS: Minibuffer Dropdown Prompt+%" n
+ "Use completing-read to open a clean minibuffer prompt asking the user to select the action." n)
+
+(<em-ext
+ "%+EMACS: Absolute Path of a File+%" n
+ "Pass the absolute path of the newly created file to the chosen external CLI
+ script or terminal emulator for final delivery." n)
+
+
+;; =======================================================
+;; FUNDAMENTAL MODE -- TRADING
+;; =======================================================
+;;
+;; |-------------------------+------------+----------------------------|
+;; | VARIATION – Trading     | TRIGGER    | USE CASE                   |
+;; |-------------------------+------------+----------------------------|
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |-------------------------+------------+----------------------------|
+;; | CONSTRAINTS – Trading   | <rule-tr-  |                            |
+;; |                         |            |                            |
+;; |-------------------------+------------+----------------------------|
+
+(<tr-edge
  n> "Analyze the following price action context: " (p "Timeframe/Description") "."
  n> "You are a market structure purist. Identify:"
  n> "1. The most recent liquidity sweep."
@@ -56,15 +445,186 @@ fundamental-mode
  n> "3. What *confirmation* would you need to see in the next 2 candles to take action?"
  n> "Keep it under 150 words.")
 
-(<aiprompt
- n> "Role:   Act as " (p "Expert Persona") "." n>
- n> "Task:   " (p "Action: Analyze/Generate/Critique") "." n>
- n> "Context: " (p "Background AI can't see") "." n>
- n> "Constraints: " (p "Length/format/avoid") "." n>
- n> "Output:  " (p "Table/Paragraph/Code") "." n>)
 
-(<solu
- "*Problem:*" n>
- (p "insert problem") n>
- n> "*Solution:*" n>
- (p "insert solution") >)
+
+;; =======================================================
+;; FUNDAMENTAL MODE -- LINUX
+;; =======================================================
+;;
+;; |-------------------------+------------+----------------------------|
+;; | VARIATION – Linux       | TRIGGER    | USE CASE                   |
+;; |-------------------------+------------+----------------------------|
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |-------------------------+------------+----------------------------|
+;; | CONSTRAINTS – Linux     | <rule-lx-  |                            |
+;; |-------------------------+------------+----------------------------|
+;; |                         |            |                            |
+;; |-------------------------+------------+----------------------------|
+
+
+(<lx
+"%+LINUX: HQ Prompt Skel+%" n
+"%+ROLE → TASK → CONTEXT → CONSTRAINTS → OUTPUT → EXAMPLE+%" n
+"## ROLE ##" n
+(p (completing-read "Role: "
+                        '("<wm-niri-learn"
+                          "<wm-niri-prod"
+                          "<wm-niri-senior"
+                          "<wm-niri-quick"
+                          "<wm-niri-review")) role) n
+ n "## TASK ##" n
+(p "Command, integration problem, or system behavior to explain/resolve") n
+"## CONTEXT ##" n
+(p "Distro, init system, relevant hardware or kernel version") n
+"## CONSTRAINTS ##" n
+(p "What to avoid: deprecated tools, distro-specificism, unsafe practices") n
+"## OUTPUT ##" n
+(p "Format: explanation with command breakdown, relevant subsystem map, alternatives with trade-offs") n
+q)
+
+
+(<lx-senior
+"You are a senior Linux systems engineer with deep kernel and userspace "
+"knowledge. You understand not just individual commands, but how they "
+"interact with the kernel, the filesystem, systemd, cgroups, namespaces, "
+"and the broader OS architecture. You see the system as a whole: when "
+"asked about a command, you explain its subsystem context, relevant "
+"syscalls, signal flow, and integration points. You flag when a solution "
+"creates coupling or fragility elsewhere. You default to modern Linux "
+"(Arch, systemd, Wayland) unless told otherwise." n q)
+
+
+;; =======================================================
+;; FUNDAMENTAL MODE -- LINUX
+;; =======================================================
+;;
+;; |-------------------------+------------+----------------------------|
+;; | VARIATION – Linux       | TRIGGER    | USE CASE                   |
+;; |-------------------------+------------+----------------------------|
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |-------------------------+------------+----------------------------|
+;; | CONSTRAINTS – Linux     | <rule-lx-  |                            |
+;; |-------------------------+------------+----------------------------|
+;; |                         |            |                            |
+;; |-------------------------+------------+----------------------------|
+
+
+
+
+;; =======================================================
+;; FUNDAMENTAL MODE -- BASH/ZSH
+;; =======================================================
+;;
+;; |-------------------------+------------+----------------------------|
+;; | VARIATION – BASH/ZSH    | TRIGGER    | USE CASE                   |
+;; |-------------------------+------------+----------------------------|
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |-------------------------+------------+----------------------------|
+;; | CONSTRAINTS – BASH/ZSH  | <rule-sh-  |                            |
+;; |-------------------------+------------+----------------------------|
+
+
+
+
+
+
+
+
+;; =======================================================
+;; FUNDAMENTAL MODE -- PYTHON
+;; =======================================================
+;;
+;; |-------------------------+------------+----------------------------|
+;; | VARIATION – Python      | TRIGGER    | USE CASE                   |
+;; |-------------------------+------------+----------------------------|
+;; | Default expert          | <py        | General Python questions   |
+;; | Teaching mode           | <py-learn  | Learning w/ explanations   |
+;; | Production mode         | <py-prod   | Deploy Code, att to error  |
+;; | Quick script            | <py-quick  | Quick code, no boilerplate |
+;; | Code review             | <py-review | Code Review/bug finder     |
+;; |-------------------------+------------+----------------------------|
+;; | CONSTRAINTS – Python    | <rule-py-  |                            |
+;; |                         |            |                            |
+;; |-------------------------+------------+----------------------------|
+
+
+
+
+;; =======================================================
+;; FUNDAMENTAL MODE -- WM's
+;; =======================================================
+;;
+;; NIRI WM
+;; |--------------------+-----------------+----------------------------|
+;; | VARIATION – WM's   | TRIGGER         | USE CASE                   |
+;; |--------------------+-----------------+----------------------------|
+;; | Default expert     | <wm-niri        | General WM's questions     |
+;; | Teaching mode      | <wm-niri-learn  | Learning w/ explanations   |
+;; | Production mode    | <wm-niri-dev    | Deploy Code, att to error  |
+;; | Quick script       | <wm-niri-quick  | Quick code, no boilerplate |
+;; | Code review        | <wm-niri-review | Code Review/bug finder     |
+;; |--------------------+-----------------+----------------------------|
+;; | CONSTRAINTS – WM's | <rule-wm-niri-  |                            |
+;; |--------------------+-----------------+----------------------------|
+
+
+(<wm-niri
+ "%+NIRI HQ Prompt Skel+%" n
+ "%+ROLE → TASK → CONTEXT → CONSTRAINTS → OUTPUT → EXAMPLE+%" n
+ "## ROLE ##" n
+(p (completing-read "Role: "
+                        '("<wm-niri-learn"
+                          "<wm-niri-prod"
+                          "<wm-niri-dev"
+                          "<wm-niri-quick"
+                          "<wm-niri-review")) role) n
+ n "## TASK ##" n
+ (p "Describe the specific task...") n
+ n "## CONTEXT ##" n
+ (p "Background (version, config, relevant history)") n
+ n "## CONSTRAINTS ##" n
+ (p "Limitations, what to avoid? ('<rule-nofluff '<rule-fact '<rule-wm-niri-") n
+ n "## OUTPUT ##" n
+ (p "Desired format: explanation, KDL snippet, diff, step-by-step plan") n
+ n "## EXAMPLE ##" n
+ (p "Paste optional example here, or delete this section") n
+ q)
+
+(<wm-niri-dev
+"%+Developer/KDL Config. Specialist+%" n
+"You are a Niri scrollable-tiling Wayland compositor contributor "
+"specializing in new feature design and implementation. You know "
+"Niri's Rust codebase, its internal abstractions (layout tree, render "
+"loop, input handling, IPC layer), and the KDL configuration surface. "
+"When given a feature request, you: " n
+> "1) Identify which subsystems are affected, " n
+ "2) Propose implementation approaches ranked by upstream acceptability, " n
+ "3) Provide KDL config syntax the feature would require, " n
+ "4) Flag edge cases Niri's scrollable model creates that a traditional " n
+"WM wouldn't encounter. Prioritize pragmatic, patch-ready design over "
+"abstract architecture.")
+
+
+;; =======================================================
+;; FUNDAMENTAL MODE -- ACADEMICS
+;; =======================================================
+;;
+;;
+;; |-------------------------+------------+----------------------------|
+;; | VARIATION – Academics   | TRIGGER    | USE CASE                   |
+;; |-------------------------+------------+----------------------------|
+;; |                         |            |                            |
+;; |                         |            |                            |
+;; |-------------------------+------------+----------------------------|
+;; | CONSTRAINTS – Academics | <rule-uni- |                            |
+;; |-------------------------+------------+----------------------------|

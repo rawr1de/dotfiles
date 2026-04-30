@@ -1,5 +1,7 @@
-(defun my-generate-elisp-file (slug)
-  "Generate a brand new, standalone .el file for custom functions."
+;; custom functions skel file
+
+(defun my-function-template (slug)
+  "Generate a brand new, standalone .el file for custom functions"
   (interactive "sFunction Name (without 'my-'): ")
   (let* ((dir (file-truename "~/.dotfiles/common/emacs/.emacs.d/snippets/"))
          (filename (format "my-%s.el" slug))
@@ -27,3 +29,6 @@
       (goto-char (point-min))
       (search-forward ";; my-")
       (forward-line 2))))
+
+(provide 'my-function-template)
+;; my-function-template.el --> END OF FILE

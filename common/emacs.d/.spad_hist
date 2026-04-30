@@ -338,3 +338,670 @@ if I type <s TAB it leaves the < and starts the source block.. same for any othe
 
 works perfectly the insertion, but when I start typing on the fields of (p...) it only replaces ONE of the text blocks, when I jump to the second block (no matter the order) it does not replace it entirely, so I am forced to highlight the entire text before typing... or should I use a key to jump between these edit fields ?
 
+[2026-04-25] --- [22:02:52]
+yes! now we're talking! do this, create a 'namespace' table (or whatever good visual way you believe would be easy to read/scan/interpret) for my Quick Reference header, I usually like to quick peek into this file if I know I will need to do some big typing, right now it is holding lots of text for prompts inputs, but the idea is to migrate all (if possible) to tempel.
+
+I need this namespace technique for trading, emacs, linux, college.
+
+Also organize with headers (made out of comments) the sections of my tempel-template.
+
+I'm starting to believe that having a dedicated keymap in my xah-fly-keys under the leader key SPC for all things 'completion framework' will make my life easier. So for now build me a quick reference guide for the most useful commands that I can use to find/act on stuff based on my completion stack:
+- Vertico
+- Corfu
+- Cape
+- Embark
+- Consult
+- marginalia
+- orderless
+
+[2026-04-25] --- [22:26:31]
+1. the tempel-template you wrote is that short for visual purpose so that I can finish it right?
+
+2. I would like you to build a header cheat sheet and table just like you did for the namespace but now for the completion commands, so that I can also have that quick reference until I muscle memory all of those and implement the keymap, specially for:
+Consult, embark, Corfu/Cape, Orderless (!, ^, $) if theres more stuff like this worth knowing I need to know! like Consult's # manipulation..
+
+Also a short/concise explanation of :ann and :doc for insertion directly into tempel's file.
+
+By the way how can I prevent corfu from changing xfk's insert-mode to command-mode? I am typing and when I stop for a moment to think of what i'm going to type next it auto changes the mode and messes with my navigation, I noticed that I can't leave the pointer at the end of a word, if I put a blank space in between words it does not trigger the mode change, I understand that this is the behavior of it looking for suggestions, maybe I should just get use to type a blank space right after..
+
+[2026-04-25] --- [23:09:15]
+1. I liked option A, how do I do it?
+2. Also I have electric pair activate on my configs, is there a way to erase the closing angled bracket that auto inserts after I finish a known command like '<lx-' ??
+
+[2026-04-25] --- [23:33:17]
+I believe I might be running into a key collision, corfu doesnt get in the way after doing what you suggested, but, after typing corfu and hitting M-/ i get:
+ 
+M-/ runs the command completion-at-point (found in global-map)...
+
+and also this:
+ispell-lookup-words: ispell-lookup-words: No plain word-list found at systemdefault locations.  Customize ‘ispell-alternate-dictionary’ to set yours.
+
+looks like the dictionary is trying to correct the word? I should see that popup saying corfu-...
+
+[2026-04-25] --- [23:54:48]
+not sure if this is working how it was supposed to... now corfu doesnt show its popup at all? I mean if I'm in org-mode electric pair don't interfere with <  at all while also working with the other brackets which is nice! but calling in M-/ never summons corfu no matter if Im inside a code block dedicated with C-c ' it only acts as a <tab> key for complete sentences..
+
+[2026-04-26] --- [00:53:07]
+this does not make any sense, check this new file. I've just noticed that the only templates working are:
+
+- org-mode ones (includes <g.---)
+- <fix
+- <eli5
+- <edge
+- <aiprompt
+
+there must be something off with the syntax of the others!
+
+[2026-04-26] --- [11:28:24]
+: Proceed with installation? [Y/n] 
+:: Retrieving packages...
+ cuda-13.2.0-1-x86_64                                                       711.0   B  9.92 KiB/s 00:00 [#############################################################] 100%
+error: failed retrieving file 'cuda-13.2.0-1-x86_64.pkg.tar.zst' from us.mirrors.cicku.me : The requested URL returned error: 404
+(2/2) checking keys in keyring                                                                          [#############################################################] 100%
+(2/2) checking package integrity                                                                        [#############################################################] 100%
+error: cuda: signature from "Jakub Klinkovský <lahwaacz@archlinux.org>" is invalid
+:: File /var/cache/pacman/pkg/cuda-13.2.0-1-x86_64.pkg.tar.zst is corrupted (invalid or corrupted package (PGP signature)).
+Do you want to delete it? [Y/n] 
+
+help me fix this so that I can proceed
+
+[2026-04-26] --- [13:42:43]
+you never told me that it required compilation... how can i see a progress bar when compiling
+
+[2026-04-26] --- [16:19:33]
+I hear myself but the quality sounds horrible...
+
+zsh: command not found: whisper-cpp
+
+➜ whisper-
+whisper-bench                whisper-server
+whisper-cli                  whisper-stream
+whisper-command              whisper-talk-llama
+whisper-lsp                  whisper-vad-speech-segments
+whisper-quantize
+
+[2026-04-26] --- [16:35:34]
+how am I supposed to search with Sparse-Tree my Past Tickets from system_tickets.org if it is locked? Just tried searching and nothing shows up
+
+[2026-04-26] --- [16:41:17]
+fasdfasdfasdf
+
+[2026-04-26] --- [16:59:18]
+you as a professional programmer and AI engineer will guide me on the best methods to develop my AI prompts template, as of now I'm in arch linux on Niri Window Manager on a lenovo legion 5 laptop, I mainly use emacs for almost everything, so my templates modular building blocks are to be used in tempel, I do have a dedicated org file where I can my broad prompts, this file serves mainly as a place to hold these ideas to further migrate into building blocks.
+
+[2026-04-26] --- [17:20:54]
+;; In your tempel-path file
+(ai-niri-debug
+ "### ENVIRONMENT ###" n
+ "OS: Arch Linux" n
+ "WM: Niri" n
+ "File: " (q (buffer-file-name)) n ;; Injects current path automatically
+ "---" n
+ "### TASK ###" n
+ "I am working on " (s component) ". Please review the " (s component) n
+ "logic for any Wayland-specific bottlenecks." n
+ "---" n
+ "### SNIPPET ###" n
+ "```" (p "lang" lang-choice) n
+ r n ;; Pulls in your highlighted code
+ "```" n
+ q) ;; Ends the template here
+
+
+3 questions, in this example:
+1. (q (buffer-file-name)) will output the full file path+name (so I have to be INSIDE the file?)
+2. lang-choice does what?
+3. 'r' only pulls info if highlighted on file?
+
+[2026-04-26] --- [17:29:30]
+I need you to do the following with the previous answer:
+"1. How (s ...) Works: The "Sync" Field
+
+The (s NAME) tool creates a Named Field.
+
+    The Logic: When you trigger a template, Tempel looks for all (s ...) elements with the same NAME. As you type in...."
+
+Re-writte the text using the 80 character column rule. keep the text short and concise, do not include wasteful
+wording, keep it technical but simple to understand. Write your answer as an .org file for my roam notes for archival
+purposes.
+
+make sure to include this explanation too:
+The Power Move: You can replace the name with an actual Lisp list to create a dropdown menu:
+(p '("rust" "lua" "bash" "elisp") lang-choice)
+When you trigger the template, Emacs will let you pick from those four options using your completion engine (Vertico/Helm/Ivy).
+
+[2026-04-26] --- [17:45:52]
+how would you write a tempel block to re-use this regardless of prompt context:
+
+"Cut the greetigns and ego massage, jump to the solutions right away."
+
+[2026-04-26] --- [19:34:17]
+## role ##
+You are an Emacs/Elisper expert AND AI prompt expert, will help me formulate the perfect modular block for my tempel-template file.
+
+I need it to follow these rules:
+## TASK ##  <-- structural separation, is this useful for AI?
+- write an entry line that AI can understand as a [ROLE EXPERT] <-- respect the [block placeholder]
+  for my temp.ROLE according to whatever role is being used.
+- followed by line break ## TASK ## (if this truly works for AI) and another break for clean text entry
+  here I need a place holder that will describe [Specific action verb: Analyze, Generate, Critique]
+- followed by line break ## CONSTRAINTS ## introducing [Length, format, what to avoid]
+- followed by line break ## OUTPUT ##  introducing [Table, Paragraph, Code Block]
+- and finally an optional [EXAMPLE] that user will type/paste in.
+
+[2026-04-26] --- [19:49:06]
+all cool, but what if, I already have a emacs persona block, I need it HINTED where (p "Role...") is ? maybe AUTO inserterd? now I'm thinking about RE-USING the same basic template for lots of questions so that I can append an:
+"You can replace the name with an actual Lisp list to create a dropdown menu:
+(p '("rust" "lua" "bash" "elisp") lang-choice)
+When you trigger the template, Emacs will let you pick from those four options using your completion engine (Vertico/Helm/Ivy).
+" menu alike
+
+[2026-04-26] --- [20:02:59]
+Im using vertico right now, I have Avy installed that I don't remember what it is used for.. but other than that. 
+
+ARE YOUR SURE THAT THIS LINE IS CORRECT:
+(em.prompt "Dynamic AI Prompt Block"
+ "You are an expert "
+
+are you supposed to use ".." right after template declaration?
+
+if you are hallucinating STOP IT RIGHT NOW and ASK
+
+[2026-04-26] --- [20:13:00]
+lets DRAWN THE LINE RIGHT HERE! STOP WITH THE YASNIPPET SHIT!!!!!!!!!!!!!!!!!!!! if you do not know ASK
+
+[2026-04-26] --- [20:20:22]
+I said stop with the hallucinations but you still CANT STOP!!!!!!!!!!
+so explain this to me so that I can ask for the truth...
+does Tempel allow of any type, a dropdown menu that I can use ?? if not I'm moving to yasnippets
+
+[2026-04-27] --- [13:16:18]
+this is driving me insane! on every system reboot emacs daemon seems to lose the wayland 1 display property, which prevents firing up swayimg in dirvish while trying to browse pictures, so I have to killall emacs and restart the daemon, for this to work.
+
+WHy is this happening? emacs daemon is being initiated by systemd
+
+[2026-04-27] --- [14:15:08]
+Perfeito! Estarei aí as 13h no dia 19 de Maio então. Muito obrigado e tenha uma ótima tarde!
+
+[2026-04-28] --- [10:26:29]
+(<rule-80
+
+ "Constraint: Format the text to strictly fit an 80-character column limit. "
+
+ "Keep it short, concise, and technical, but simple to understand." n q)
+
+(<rule-roam
+
+ "Constraint: Output the final answer as an .org file for org-roam archival." n q)
+
+;; Tone and Audience
+
+(<rule-10yo
+
+ "Constraint: Explain the concepts so clearly that a 10-year-old would "
+
+ "easily understand them." n q)
+
+(<rule-nofluff "Cut the greetings and ego massage, jump to the solutions right away." n q)
+
+;; Accuracy Guardrail
+
+(<rule-fact
+
+ "Constraint: Anti-Hallucination. If you do not know the exact answer "
+
+ "or the data is ambiguous, state 'I do not have enough verifiable "
+
+ "information' instead of guessing." n q)
+
+
+
+I need you to re-write these constraint informations to fit in my org-table like this:
+
+| GEN. CONSTRAINTS | <rule-gen  | For ALL variations          |
+
+the new text will fall under "For ALL variations" and can't exceed 35 chars
+
+[2026-04-28] --- [10:37:46]
+In emacs org mode, how can I move multiple lines inside a table
+
+[2026-04-28] --- [12:40:02]
+I have these templates:
+"<wm-niri-learn"
+"<wm-niri-prod"
+...
+
+I want to have it pre-filled when called from inside this template <wm-niri, check what I have so far:
+
+(<wm-niri
+"%+NIRI HQ Prompt Skel+%" n
+ "## ROLE ##" n
+ (p (completing-read "Role: " '(
+				"wm-niri-learn"
+				"wm-niri-prod"
+				"wm-niri-quick"
+				"wm-niri-review"
+				)) action) " " (p "Describe the specific task...") n n
+
+[2026-04-28] --- [12:41:21]
+this is exactly what I want, the sub-roles to auto-expand into their full role descriptions (instead of just inserting the name)
+
+[2026-04-28] --- [12:53:13]
+("wm-niri-learn" tempel/niri-learn-role)
+
+is this trying to read a FILE from outside the tempel template? I just want that a selection picked off completing-read auto expand another <role..
+
+[2026-04-28] --- [12:56:07]
+I would like to have this variables INSIDE the tempel-template file
+
+[2026-04-28] --- [13:40:09]
+finally! I also need you to update the function to do the following:
+
+1. auto scan for lines that contain:
+   %+...+%
+2. Erased those lines
+
+[2026-04-28] --- [14:16:27]
+%+NIRI HQ Prompt Skel+%
+## ROLE ##
+
+[2026-04-28] --- [14:16:49]
+%+NIRI HQ Prompt Skel+%
+%+ROLE → TASK → CONTEXT → CONSTRAINTS → OUTPUT → EXAMPLE+%
+## ROLE ##
+
+[2026-04-28] --- [14:30:13]
+%+NIRI HQ Prompt Skel+%
+%+ROLE → TASK → CONTEXT → CONSTRAINTS → OUTPUT → EXAMPLE+%
+## ROLE ##
+<wm-niri-dev
+and also extremely versed in bash scripting language
+
+## TASK ##
+Cycle through tabbed columns with 1 key (Win+k)
+
+## CONTEXT ##
+Having two keys to cycling through tabs are wasteful (key down, key up)
+
+## OUTPUT ##
+give me a clean output code to be used in kdl or bash, give your best suggestion
+
+[2026-04-28] --- [14:31:35]
+## ROLE ##
+You are a Niri scrollable-tiling Wayland compositor contributor specializing in new feature design and implementation. You know Niri's Rust codebase, its internal abstractions (layout tree, render loop, input handling, IPC layer), and the KDL configuration surface. When given a feature request, you: 1) Identify which subsystems are affected, 2) Propose implementation approaches ranked by upstream acceptability, 3) Provide KDL config syntax the feature would require, 4) Flag edge cases Niri's scrollable model creates that a traditional WM wouldn't encounter. Prioritize pragmatic, patch-ready design over abstract architecture. You are also extremely versed in bash scripting language
+
+## TASK ##
+Cycle through tabbed columns with 1 key (Win+k)
+
+## CONTEXT ##
+Having two keys to cycling through tabs are wasteful (key down, key up)
+
+## OUTPUT ##
+give me a clean output code to be used in kdl or bash, give your best suggestion
+
+[2026-04-28] --- [14:47:03]
+Cut the greetings and ego massage, jump to the solutions right away. Also, If you do not know the exact answer or the data is ambiguous, state 'I do not have enough verifiable information' instead of guessing.
+
+[2026-04-28] --- [14:53:19]
+1. [{"id":14,"title":"niri msg -j windows | cl","app_id":"kitty","pid":9264,"workspace_id":3,"is_focused":true,"is_floating":false,"is_urgent":false,"layout":{"pos_in_scrolling_layout":[1,1],"tile_size":[2540.0,1420.0],"window_size":[2540,1420],"tile_pos_in_workspace_view":null,"window_offset_in_tile":[0.0,0.0]},"focus_timestamp":{"secs":14067,"nanos":401738018}},{"id":16,"title":"20260421151512-ai_prompting_framework_for_high_quality_answers.org","app_id":"emacs","pid":9653,"workspace_id":2,"is_focused":false,"is_floating":false,"is_urgent":false,"layout":{"pos_in_scrolling_layout":[1,2],"tile_size":[2540.0,1420.0],"window_size":[2540,1420],"tile_pos_in_workspace_view":null,"window_offset_in_tile":[0.0,0.0]},"focus_timestamp":{"secs":7849,"nanos":529426973}},{"id":15,"title":"binds.kdl","app_id":"emacs","pid":9653,"workspace_id":3,"is_focused":false,"is_floating":false,"is_urgent":false,"layout":{"pos_in_scrolling_layout":[1,2],"tile_size":[2540.0,1420.0],"window_size":[2540,1420],"tile_pos_in_workspace_view":null,"window_offset_in_tile":[0.0,0.0]},"focus_timestamp":{"secs":14065,"nanos":383791719}},{"id":7,"title":"Cycle Tabs With One Key - Google Gemini — Mozilla Firefox","app_id":"firefox","pid":5188,"workspace_id":2,"is_focused":false,"is_floating":false,"is_urgent":false,"layout":{"pos_in_scrolling_layout":[1,1],"tile_size":[2540.0,1420.0],"window_size":[2540,1420],"tile_pos_in_workspace_view":null,"window_offset_in_tile":[0.0,0.0]},"focus_timestamp":{"secs":13995,"nanos":187863717}},{"id":75,"title":"niri-scratchpad","app_id":"emacs","pid":9653,"workspace_id":2,"is_focused":false,"is_floating":false,"is_urgent":false,"layout":{"pos_in_scrolling_layout":[2,1],"tile_size":[882.0,1420.0],"window_size":[882,1420],"tile_pos_in_workspace_view":null,"window_offset_in_tile":[0.0,0.0]},"focus_timestamp":{"secs":13996,"nanos":720078615}}]
+
+2. nothing happens
+3. niri 26.04 (8ed0da4)
+
+[2026-04-28] --- [14:58:24]
+is it possible to have 2 actions for one key?
+- Win+k keeps cycling the tabbed columns, BUT, if I'm in one workspace ABOVE the current tab, hitting Win+k would move to workspace down
+
+[2026-04-28] --- [15:00:57]
+by workspace UP/DOWN I mean the numbered workspaces, Think of it as workspace 1 is up and workspace 2 is down.
+
+[2026-04-28] --- [15:07:29]
+1. this context aware does align with my future needs.
+2. As of now I'm not using multiple workspaces because I'm trying to solve this multiple hotkeys for basic navigation dilemma
+3. I usually have tabbed windows for the sole purpose of easily dragging contents with mouse
+
+[2026-04-28] --- [15:14:44]
+It happened exactly what you have described. Mod+k moved to workspace down. When there was no windows there. I do will start using multiple workspaces as soon as I solve this problem, so the script is ALSO cycling through windows that are align on top of each other with consume-or-expel-window-left, so it is treating this column as tabbed windows?
+
+[2026-04-28] --- [15:28:45]
+It does not align with my current workflow, so I decided to do a drastic change. for now I need you to re-write the script to alow the single key cycle through column ONLY not moving between workspaces
+
+[2026-04-28] --- [15:40:06]
+The intention is to trigger these layouts on demand where there are no windows open or in a totally blank workspace.
+
+[2026-04-28] --- [17:08:50]
+alright I decided to change it all drastically:
+1. left monitor HDMI-A-1 will hold:
+   workspace 1: kitty (on left) emacsclient (on right) both fully maximized
+2. right monitor DP-1 will hold:
+   workspace 1: firefox (on left) emacsclient (on right) both fully maximized
+
+DO NOT WORRY about safeguarding check for 'if window exists do nothing..' I don't care if it opens another instance, all I care is that it follows the layout, I will need more windows on this layout later possibly.
+
+[2026-04-28] --- [18:24:44]
+im unsure if this worked because im not connected to the external monitors now, but looks like it did, now I also need a script to use with fuzzel that would work as a 'layout selector' it should list a hardcoded script on its code that would allow me to one click activate it
+
+[2026-04-28] --- [18:46:49]
+## ROLE ##
+You are a Niri scrollable-tiling Wayland compositor contributor specializing in new feature design and implementation. You know Niri's Rust codebase, its internal abstractions (layout tree, render loop, input handling, IPC layer), and the KDL configuration surface. When given a feature request, you: 
+1) Identify which subsystems are affected, 
+   2) Propose implementation approaches ranked by upstream acceptability, 
+      3) Provide KDL config syntax the feature would require, 
+         4) Flag edge cases Niri's scrollable model creates that a traditional 
+WM wouldn't encounter. Prioritize pragmatic, patch-ready design over abstract architecture.
+
+## TASK ##
+Describe the specific task...
+
+## CONTEXT ##
+Background (version, config, relevant history)
+
+## CONSTRAINTS ##
+Cut the greetings and ego massage, jump to the solutions right away.
+If you do not know the exact answer or the data is ambiguous, state 'I do not have enough verifiable information' instead of guessing.
+ '<rule-wm-niri-
+
+## OUTPUT ##
+Desired format: explanation, KDL snippet, diff, step-by-step plan
+
+## EXAMPLE ##
+Paste optional example here, or delete this section
+
+[2026-04-28] --- [18:51:51]
+## ROLE ##
+You are a Niri scrollable-tiling Wayland compositor contributor specializing in new feature design and implementation. You know Niri's Rust codebase, its internal abstractions (layout tree, render loop, input handling, IPC layer), and the KDL configuration surface. When given a feature request, you: 
+1) Identify which subsystems are affected, 
+2) Propose implementation approaches ranked by upstream acceptability, 
+3) Provide KDL config syntax the feature would require, 
+4) Flag edge cases Niri's scrollable model creates that a traditional 
+WM wouldn't encounter. Prioritize pragmatic, patch-ready design over abstract architecture.
+
+## TASK ##
+Need help rebind scroll_lock in niri, couldnt get it working on my last attempt
+
+## CONTEXT ##
+Background (version, config, relevant history)
+
+## CONSTRAINTS ##
+Cut the greetings and ego massage, jump to the solutions right away. If you do not know the exact answer or the data is ambiguous, state 'I do not have enough verifiable information' instead of guessing.
+
+
+## OUTPUT ##
+step-by-step plan
+
+[2026-04-28] --- [19:15:22]
+## ROLE ##
+You are an expert Emacs Lisp developer and seasoned Emacs user with deep knowledge of: modern Emacs conventions (lexical binding, package.el, use-package), built-in libraries (pcase, seq, map, cl-lib), completion frameworks (vertico, corfu, orderless), tree-sitter integration, native compilation, and the Emacs client/server model. You understand the ecosystem's best practices, common pitfalls, and the philosophy of self-documenting, extensible editing.
+
+[2026-04-28] --- [19:16:29]
+## ROLE ##
+You are an expert Emacs Lisp developer and seasoned Emacs user with deep knowledge of: modern Emacs conventions (lexical binding, package.el, use-package), built-in libraries (pcase, seq, map, cl-lib), completion frameworks (vertico, corfu, orderless), tree-sitter integration, native compilation, and the Emacs client/server model. You understand the ecosystem's best practices, common pitfalls, and the philosophy of self-documenting, extensible editing.
+
+## question ##
+why can't I bind C-g to F1 to properly work? I understand it is hardcoded but when bound the minibuffer returns [Quit]
+
+[2026-04-28] --- [19:28:26]
+As a technical writer who distills complex topics into short, dense explanations. Every sentence must carry weight. Cut filler, keep precision. Prefer concrete examples over abstract descriptions. keep it short and concise.
+
+[2026-04-28] --- [19:30:08]
+As a technical writer who distills complex topics into short, dense explanations. Every sentence must carry weight. Cut filler, keep precision. Prefer concrete examples over abstract descriptions. keep it short and concise, so explain the last answer accordingly
+
+[2026-04-28] --- [19:36:35]
+If I change F1 to send a \x07 this key would then lose its properties to function as F1, so basically it would be dead to any other application other than emacs?
+
+[2026-04-28] --- [19:41:43]
+I mostly use emacs GUI, how can I get this script specific on Niri WM, I would like to trade F1 for window awareness if that's possible, because hitting C-g is a pain
+
+[2026-04-28] --- [19:46:38]
+I use capslock as Home right now, for it to work as a secondary key when Held I never though about it, but it sounds truly interesting, I use xah-fly-keys so a lot of C- keys are already covered with leader key space
+
+[2026-04-28] --- [20:02:40]
+This conversation has been really useful and I would like to implement the majority (if not all) of your suggestions for this I would need you to do a short/concise summary of our discussed topic along with links for me to jump straight to every answer, because having to screen scrolling sucks.. I would need the points about:
+- "I completely hear you—C-g is one of the worst offen.." from there on..
+
+[2026-04-28] --- [21:22:55]
+type text, COPY/CLOSE: [C-c C-c] | VIEW HISTORY: 
+
+[
+
+[2026-04-28] --- [21:24:26]
+2 problems so far:
+1. niri is keeping 3 blank workspaces at DP-1
+2. all of the spawned windows are placed in DP-1
+
+[2026-04-28] --- [21:28:52]
+two questions about emacs functions:
+1. is there a way to attach an alias to one?
+2. how can I keep a 'file' like a bookmarks of my favorite functions? something that I can browse with vertico and execute?
+
+[2026-04-28] --- [21:33:47]
+➜ niri msg outputs | grep "Output"
+Output "BOE 0x08DF Unknown" (eDP-2)
+Output "GIGA-BYTE TECHNOLOGY CO., LTD. G27Q 21372B005644" (DP-1)
+Output "GIGA-BYTE TECHNOLOGY CO., LTD. G27Q 21372B005646" (HDMI-A-1)
+
+not sure what I do with that script on step 3. I like the fuzzel menu with options...
+
+[2026-04-28] --- [21:54:33]
+You can now trigger layout-selector.sh via your Mod+Shift+L hotkey. Select option 1, and it will sequentially fire the applications, allowing Niri's config rules to catch them and route them to HDMI-A-1 and DP-1.
+
+
+how will this apply? isnt this supposed to be via script like options 2 and 3?
+
+you kept on spitting so much code that now I've got the problem, I mixed these two...
+
+[2026-04-28] --- [22:05:54]
+now that we're talking Niri...
+I need to fix some behaviors, before we continue whats your role?
+
+[2026-04-28] --- [22:08:07]
+this system behavior: when laptop lid is down, system hangs up many services like:
+- wifi disconnects
+- bluetooth disconnects
+- music stops
+- the autologin requires me to manually type the password after logout..
+
+[2026-04-29] --- [09:45:32]
+I need a way to program firefox to do the following 'on a click of a button':
+
+1. open 2 tabs
+2. each tab open my banking website
+3. login with saved credentials (it already on firefox form)
+
+I will expand this later on to more banking pages
+
+[2026-04-29] --- [09:49:00]
+*Problem:*
+when scrolling with Vertico after calling M-8 for tempel template selection, check 'C-h e' error code bellow:
+
+  apply((#<subr completing-read-default> "Template: " #f(compiled-function (str pred action) #<bytecode -0xa02266f22fb2e4d>) nil t nil tempel--history nil nil))
+  vertico--advice(#<subr completing-read-default> "Template: " #f(compiled-function (str pred action) #<bytecode -0xa02266f22fb2e4d>) nil t nil tempel--history nil nil)
+  apply(vertico--advice #<subr completing-read-default> ("Template: " #f(compiled-function (str pred action) #<bytecode -0xa02266f22fb2e4d>) nil t nil tempel--history nil nil))
+  completing-read-default("Template: " #f(compiled-function (str pred action) #<bytecode -0xa02266f22fb2e4d>) nil t nil tempel--history nil nil)
+  tempel-insert(nil)
+  funcall-interactively(tempel-insert nil)
+  command-execute(tempel-insert)
+
+*Solution:*
+ASK AI...
+
+[2026-04-29] --- [10:02:32]
+If you do not know the exact answer or the data is ambiguous, state 'I do not have enough verifiable information' instead of guessing.
+
+Cut the greetings and ego massage, jump to the solutions right away.
+
+[2026-04-29] --- [10:32:22]
+* month
+** FINANÇAS [month]
+
+*Jd. California*
+Água: 0880752-3 ([[https://agencia-virtual.saneago.com.br/segundaViaSimplificada][saneago]], [[https://www.go.gov.br/servicos/servico/emitir-segunda-via-da-fatura-de-agua-eou-esgoto][prefeitura]])
+Luz:: 11944833  ([[https://goias.equatorialenergia.com.br/LoginGO.aspx][equatorial]])
+Net:: zap_opyt
+IPTU: buscar por cpf ([[https://trindade.centi.com.br/servicos/extratoimoveis][prefeitura]]) /[CALIFORNIA]/ +2026+
+IPTU: 33214504460008 ([[https://tributos.goiania.go.gov.br/sistemas/scarr/asp/scarr50000f0.asp][prefeitura]]) /[FAIÇAL]/ +2026+
+CPF mama: 854.347.441-87
+IPVA Spacefox OOD-4651 (Janeiro) +2026+
+     Spacefox Renavam: 00994954689
+IPVA Uno PQX-3177 (Julho) 2026
+     Uno Renavam: 01097526124
+[[https://www.go.gov.br/servicos-digitais/detran/consulta-veiculos/consultar-dados][Consulta IPVA,Multas,CRV]]
+Nissan Versa CXK4091 (Plate)
+             3N1CN8BV8PL850304 (VIN)
+RDO DL/GA Nr 061559687
+
+
+*CONTAS A CUMPRIR P/ VIAJAR BR:*
+|--------+------+------------|
+| conta  |   R$ | CONTA      |
+|--------+------+------------|
+| Comes  | 2500 | SoFi [CHK] |
+| BnB's  | 2000 | SoFi [CHK] |
+| Gas    | 1000 | SoFi [CHK] |
+|--------+------+------------|
+| total  | 5500 |            |
+|--------+------+------------|
+*Total USD: 1038* (USD = 5.30)
+
+** DATAS CARTÕES [month]
+
+*CC STATEMENTS*
+|---------+--------+--------+-------+--------+--------+------|
+| *CARD*    | Open   | Close  | Cycle | Due    | Best   | Min. |
+|---------+--------+--------+-------+--------+--------+------|
+| +cSTR + | Mar/28 | Apr/27 |    31 | 23/mês | 24/mês | $41  |
+| +TRST+    | Mar/22 | Apr/22 |    31 | 19/mês | 20/mês | $27  |
+| +DSVR+    | Mar/07 | Apr/06 |    31 | 03/mês | 07/mês | $35  |
+| +COnV+    | Mar/18 | Apr/18 |    31 | 15/mês | 16/mês | $25  |
+| +AMZ+     | Mar/26 | Apr/10 |    31 | 07/mês | 17/mês | $35  |
+| +PPal+    | Mar/21 | Apr/21 |    31 | 17/mês | 26/mês | $29  |
+| +COnQ+    | Mar/09 | Apr/09 |    31 | 03/mês | 10/mês | $25  |
+| +WFar+    | Mar/07 | Apr/07 |    31 | 02/mês | 09/mês | $25  |
+| +NuBk+    | Mar/01 | Apr/01 |    31 | 08/mês | 01/mês | R$   |
+| +MPgo+    | Mar/14 | Apr/14 |    31 | 14/mês | 09/mês | R$   |
+|---------+--------+--------+-------+--------+--------+------|
+
+_NOTAS:_
++COnV -- Dec/21/2025 Fim 15 meses 0% APR !!+
++TRST -- Mar/22/2026 Fim 15 meses 0% APR !!+
+*DSVR -- Oct/05/2026 Fim 12 meses 0% APR !!*
+*cSTR -- Jan/18/2027 Fim xx meses 0% APR (Purchases)!!*
+*cSTR -- 0% APR transfers until Feb/04/2026 !!*
+
+** FIXOS US/BR  [month]
+
+|---------------+---------+-----------+-------+------------+------|
+| *DESCR.*        |     *$$$* | *DATA*      | *US/BR* | *PG?*        | *BANK* |
+|---------------+---------+-----------+-------+------------+------|
+| carro         |  203.71 | 25/mês    | US    | +DLTA +    | DLTA |
+| insuran.      |  140.63 | 28/mês    | US    | +rich +    | SWAB |
+| USA Net       |   28.33 | 21/mês    | US    | +rich +    | SWAB |
+| USA Gas       |   41.90 | 1st week  | US    | +rich +    | SWAB |
+| USA Agua      |   15.00 | 1st week  | US    | +rich +    | SWAB |
+| USA Luz       |   55.30 | 1st week  | US    | +rich +    | SWAB |
+| combust.      |   00.00 | $45/2sem  | US    | +1-2-3-4 + | CITI |
+| comes         |   00.00 | $157/2sem | US    | +1-2-3-4 + | PPal |
+| /cSTR/ [CC]     |   41.00 | 23/mês    | US    | +OK +      | CITI |
+| /COnV/ [CC]     | 1973.58 | 15/mês    | US    | +OK +      | COne |
+|---------------+---------+-----------+-------+------------+------|
+| *TOTAL*         |         |           |       |            |      |
+|---------------+---------+-----------+-------+------------+------|
+| net cali      |   99.90 | 21/mes    | BR    | +Nu/mes +  | Nu   |
+| agua cali     |   17.82 | 23/mes    | BR    | +Nu/mes +  | Nu   |
+| luz cali  apr |   00.00 | 09/mes    | BR    | +Nu/mes +  | Nu   |
+| luz cali '25  |   30.70 | 09/mes    | BR    | +Nu/mes +  | Nu   |
+| luz cali  mar |   33.04 | 09/mes    | BR    | +Nu/mes +  | Nu   |
+| MPago [CC]    |  117.00 | 09/mes    | BR    | +MPago +   | Nu   |
+|---------------+---------+-----------+-------+------------+------|
+| *TOTAL*         |         |           |       |            |      |
+|---------------+---------+-----------+-------+------------+------|
+#+TBLFM: @12$2=vsum(@2..@11); f2
+#+TBLFM: @19$2=vsum(@13..@18); f2
+
+
+*RISCAR AO PAGAR/TRANSF. DIN P/ PAGAMENTO!*
+*gastos mensal pra abandonar o trampo*
+200+151.27+25+60+90+50 = 576.27  (sem comes)
+                       = 650 (arredondado UP)
+/carro+seguro, net ksa, fuel, gymn tel, contas BR/
+
+200+151.27+25+60+90+50+400 = 976.27 (+400 de comes)
+                           = 1k (arredondado UP)
+/carro+seguro, net ksa, fuel, gymn tel, contas BR, comes/
+
+
+|---------------+------------+-------------|
+| Uso           | Card Gasto | Din Saved   |
+|---------------+------------+-------------|
+| Fuel Car      | DSVR [CC]  | COne [SAV2] |
+| Tel atv       | COnV [CC]  | TRST [SAV]  |
+| ins/ksa bills | zelle rich | SWAB [CHK]  |
+| Comes         | PPal [CHK] | PPal [CHK]  |
+|---------------+------------+-------------|
+ins/net (current month) = SWAB , zelle rich
+
+
+_NOTAS:_
++COnV -- Dec/21/2025 Fim 15 meses 0% APR !!+
++TRST -- Mar/22/2026 Fim 15 meses 0% APR !!+
+*DSVR -- Oct/05/2026 Fim 12 meses 0% APR !!*
+*cSTR -- Jan/18/2027 Fim xx meses 0% APR (Purchases)!!*
+*cSTR -- 0% APR transfers until Feb/04/2026 !!*
+
+
+** +Outras Contas (month) +
+
+|------+--------|
+| IN   |    545 |
+| OUT  | 391.65 |
+|------+--------|
+| REST | 153.35 |
+|------+--------|
+#+TBLFM: @3$2=@1$2-@2$2
+
+|--------------+--------+-----------+------------|
+| +cSTR [CC] + |  41.00 | SNAP mama | CITI [CHK] |
+| +ksa bills + |  144.1 | SNAP mama | SWAB [CHK] |
+| +car insur + | 146.55 | SNAP mama | SWAB [CHK] |
+| +car gas +   |  60.00 | SNAP mama | COne [SV2] |
+|--------------+--------+-----------+------------|
+| TOTAL        | 391.65 |           |            |
+|--------------+--------+-----------+------------|
+
+- [-] ready?
+ *tranf's:*
+
+  - [ ] *COne*
+  - [ ] /COne [CHK]/ > /NuBk [CHK]/ -- 391.65
+
+  - [X] *PPal*
+  - [X] /COne [CHK]/ > /PPal [CHK]/ -- 153.35
+
+
+** +mama snap scheme (month) +
+
+*current (mar/apr)*
+|------------+---+----------+------------|
+| +comes 1 + |   | 03.27.We | SWAB [CHK] |
+| +comes 2 + |   |          | SWAB [CHK] |
+| +comes 3 + |   |          | SWAB [CHK] |
+| +comes 4 + |   |          | SWAB [CHK] |
+|------------+---+----------+------------|
+| TOTAL      |   |          |            |
+|------------+---+----------+------------|
+#+TBLFM: @5$2=vsum(@1..@4); f2
+
+*TARGET (TOTAL=Target-Current)*
+|-------------+--------+----------|
+| +target 2 + | 391.65 | 04.25.Sa |
+| +current +  |        |          |
+|-------------+--------+----------|
+| TOTAL       | -54.65 |          |
+|-------------+--------+----------|
+#+TBLFM: @3$2=@2-@1; f2
+
+[2026-04-30] --- [10:11:04]
+I need an alias called 'pomo' for this command:
+
+C-c C-x ; org-timer-set-timer
+

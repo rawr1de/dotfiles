@@ -3,7 +3,6 @@
 
 #+begin_comment MODULES/SNIPPETS
 *MODULES*
-[[file:modules/completion.org][completion.org]]
 [[file:modules/file-manager.org][file-manager.org]]
 [[file:modules/musk.org][musk.org]]
 [[file:modules/system.org][system.org]]
@@ -41,6 +40,7 @@
   (require 'tools)
 
   ;; functions (snippets)
+  (require 'my-function-template)
   (require 'my-scratchpad)
   (require 'my-termux-sms)
   (require 'my-force-fullscreen-toggle)
@@ -88,7 +88,7 @@
 
 (provide 'tools)
   (use-package org)
-  (use-package org-bullets)
+  (use-package superstar) → +(use-package org-bullets)+
   (use-package org-modern)
   (use-package org-roam)
   (use-package which-key)
@@ -102,7 +102,6 @@
   (use-package keyfreq)
   (use-package sudo-edit)
   (use-package ultra-scroll)
-  (use-package whisper)
   (use-package vertico)
   (use-package consult)
   (use-package consult-dir)
@@ -346,10 +345,18 @@
     ;; (define-key emms-playlist-mode-map (kbd "S-i") nil)
     ;; (define-key emms-playlist-mode-map (kbd "S-k") nil)
   )
+
+  ;; Disable Scroll Lock key in Emacs
+  (global-set-key (kbd "<Scroll_Lock>") #'ignore)
+
+  ;; Flyspell
+  (with-eval-after-load 'flyspell
+    (define-key flyspell-mode-map (kbd "C-;") nil))
 #+end_src
 
 *** GLOBAL KEYS
 **** SYSTEM
+
 #+begin_src emacs-lisp
   ;; kill buffer with no confirmation (!)
   (global-set-key (kbd "C-w") 'my-kill-buffer-no-confirm)
@@ -366,10 +373,11 @@
 
   ;; custom functions skel template, auto save in:
   ;; "~/.dotfiles/common/emacs/.emacs.d/snippets/"
-  (global-set-key (kbd "C-c e") #'my-generate-elisp-file)
+  (global-set-key (kbd "C-c e") #'my-function-template)
 #+end_src
 
 **** VERT/HORIZ SPLIT CONTROL
+
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-S-i") 'enlarge-window)
   (global-set-key (kbd "C-S-k") 'shrink-window)
@@ -379,6 +387,7 @@
 #+end_src
 
 **** TAB NAVIGATION
+
 #+begin_src emacs-lisp
   ;; cycle through tabs
   (global-set-key (kbd "C-S-o") 'tab-next)
@@ -391,12 +400,14 @@
 #+end_src
 
 **** SCREEN SCROLLING
+
 #+begin_src emacs-lisp
   (global-set-key (kbd "M-i") 'my-scroll-one-line-down)
   (global-set-key (kbd "M-k") 'my-scroll-one-line-up)
 #+end_src
 
 **** OPEN CONFIG FILES  [C-c 9 / C-c 0]
+
 #+begin_src emacs-lisp
   (defun config-visit ()
     (interactive)
@@ -414,6 +425,13 @@
       (org-babel-tangle)
       (load-file (expand-file-name "~/.emacs.d/base_cfg.el"))))
   (add-hook 'after-save-hook #'my-tangle-and-load)
+#+end_src
+
+**** ALIAS
+
+#+begin_src emacs-lisp
+  ;; pomodoro timer (system wide)
+  (defalias 'pomo 'org-timer-set-timer)
 #+end_src
 
 *** xah-fly-keys (XFK)
@@ -801,11 +819,6 @@
   (global-set-key (kbd "C-c <f12>") 'flyspell-mode)
 #+end_src
 
-*** whisper
-#+begin_src emacs-lisp
-  (global-set-key (kbd  "C-c u") 'whisper-run)
-#+end_src
-
 ** COMPLETION
 *** vertico
 #+begin_src emacs-lisp
@@ -817,6 +830,7 @@
 ** MY-KDE-SMS
 
 * AUTO-TANGLE CONFIGURATION
+
 #+begin_src emacs-lisp
   ;; tangle multiple org files, why this?
   ;; main config (base_cfg.org) is read-only

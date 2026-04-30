@@ -168,38 +168,7 @@
 (setq org-startup-indented t)
 #+end_src
 
-*** tempel
-
-#+begin_src emacs-lisp
-  (use-package tempel
-    :ensure t
-    :custom
-    (tempel-path "~/.dotfiles/common/emacs.d/tempel-templates")
-
-    :bind
-    ("M-*" . tempel-insert)
-
-    :init
-    (defun tempel-setup-capf ()
-      (setq-local completion-at-point-functions
-                  (cons #'tempel-expand completion-at-point-functions)))
-    (add-hook 'conf-mode-hook 'tempel-setup-capf)
-    (add-hook 'prog-mode-hook 'tempel-setup-capf)
-    (add-hook 'text-mode-hook 'tempel-setup-capf)
-    (add-hook 'org-mode-hook 'tempel-setup-capf)
-
-    :config
-    ;; TAB triggers tempel expansion
-    (keymap-set tempel-map "TAB" #'tempel-complete)
-    ;; Jump to the next field with TAB
-    (keymap-set tempel-map "<tab>" #'tempel-next)
-    (keymap-set tempel-map "<backtab>" #'tempel-previous))
-    ;; Keep your Ctrl bindings if you still want them
-    ;; (keymap-set tempel-map "C-n" #'tempel-next)
-    ;; (keymap-set tempel-map "C-p" #'tempel-previous))
-#+end_src
-
-**** COMMENT +org-tempo+ (DEPRECATED)
+*** COMMENT +org-tempo+ (DEPRECATED)
 #+begin_src emacs-lisp
   ;; Enable quick template expansion in Org
   (require 'org-tempo)
@@ -392,28 +361,6 @@ roam package configs - [[file:~/.dotfiles/common/emacs/.emacs.d/base_cfg.org::*r
       (message "Dictionary switched to: %s" new-dict)))
 #+end_src
 
-** whisper
-#+begin_src emacs-lisp
-(use-package whisper
-  :vc (:url "https://github.com/natrys/whisper.el" :branch "master")
-  :config
-  ;; Use the optimized Arch binary
-  (setq whisper-command "whisper-cpp")
-
-  ;; Use sox for reliable microphone capture
-  (setq whisper-recording-engine "sox")
-
-  ;; Use the multilingual "small" model (approx. 466MB)
-  (setq whisper-model "small")
-
-  ;; Auto-detect language so it switches between English and Portuguese seamlessly
-  (setq whisper-language "auto"
-        whisper-translate nil)
-
-  ;; Use half your CPU cores to process it blazingly fast
-  (setq whisper-use-threads (/ (num-processors) 2)))
-#+end_src
-
 ** COMPLETION STACK
 *** vertico
 
@@ -512,14 +459,80 @@ roam package configs - [[file:~/.dotfiles/common/emacs/.emacs.d/base_cfg.org::*r
   :hook (dired-after-readin . (lambda () (zoxide-add default-directory))))
 #+end_src
 
+*** tempel
+
+#+begin_src emacs-lisp
+  (use-package tempel
+    :ensure t
+    :custom
+    (tempel-path "~/.dotfiles/common/emacs.d/tempel-templates")
+
+    :bind
+    ("M-*" . tempel-insert)
+
+    :init
+    (defun tempel-setup-capf ()
+      (setq-local completion-at-point-functions
+                  (cons #'tempel-complete completion-at-point-functions)))
+    (add-hook 'conf-mode-hook 'tempel-setup-capf)
+    (add-hook 'prog-mode-hook 'tempel-setup-capf)
+    (add-hook 'text-mode-hook 'tempel-setup-capf)
+    (add-hook 'org-mode-hook 'tempel-setup-capf)
+
+    :config
+    ;; TAB triggers tempel expansion
+    (keymap-set tempel-map "TAB" #'tempel-complete)
+    ;; Jump to the next field with TAB
+    (keymap-set tempel-map "<tab>" #'tempel-next)
+    (keymap-set tempel-map "<backtab>" #'tempel-previous))
+    ;; Keep your Ctrl bindings if you still want them
+    ;; (keymap-set tempel-map "C-n" #'tempel-next)
+    ;; (keymap-set tempel-map "C-p" #'tempel-previous))
+
+
+
+
+
+  ;; ==============================================================================
+  ;; TEMPEL: AUTO-EXPAND NESTED TRIGGERS & CLEANUP
+  ;; ==============================================================================
+
+  (defun my-tempel-expand-nested-triggers (&rest _)
+    "Erase %+...+\% marker lines, then expand nested Tempel triggers."
+    (interactive)
+    (save-excursion
+
+      ;; PASS 1: Nuke any line containing a %+...+\% marker
+      (goto-char (point-min))
+      (while (re-search-forward "%\\+.*?\\+%" nil t)
+        ;; delete from the start of the line to the start of the NEXT line (removes the gap)
+        (delete-region (line-beginning-position) (line-beginning-position 2)))
+
+      ;; PASS 2: Scan for raw Tempel triggers (e.g., <wm-niri-learn) and expand them
+      (goto-char (point-min))
+      (while (re-search-forward "<[a-zA-Z0-9-]+" nil t)
+        (let* ((trigger-string (match-string 0))
+               (trigger-symbol (intern trigger-string)))
+          ;; Check if it is a valid Tempel snippet
+          (when (assoc trigger-symbol (tempel--templates))
+            ;; Delete the raw string and expand it
+            (delete-region (match-beginning 0) (match-end 0))
+            (tempel-insert trigger-symbol))))))
+
+  ;; Attach directly to Tempel's internal cleanup function
+  (advice-add 'tempel--done :after #'my-tempel-expand-nested-triggers)
+#+end_src
+
 *** corfu
 
 #+begin_src emacs-lisp
   (use-package corfu
     :ensure t
+    :init
+    (global-corfu-mode)
     :custom
     (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-    (corfu-auto t)                 ;; Enable auto completion
+    (corfu-auto nil)               ;; Enable auto completion
     (corfu-auto-prefix 3)          ;; Trigger popup after 3 chars
     (corfu-auto-delay .8)          ;; popup wait time (0 for instant)
     (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
@@ -528,6 +541,8 @@ roam package configs - [[file:~/.dotfiles/common/emacs/.emacs.d/base_cfg.org::*r
     (corfu-preselect 'prompt)      ;; Preselect the prompt, not the first candidate
 
     :bind
+     ("M-/" . completion-at-point)
+
     (:map corfu-map
           ;; use standard modal keys for navigating the popup
           ("C-i"      . corfu-next)
@@ -536,10 +551,10 @@ roam package configs - [[file:~/.dotfiles/common/emacs/.emacs.d/base_cfg.org::*r
           ("RET"      . corfu-insert)
           ;; Allows you to type "foo bar" to filter fuzzy matches via Orderless
           ("SPC"      . corfu-insert-separator))
-    :config
-      ;; Jump to the next field with TAB
-      (keymap-set tempel-map "TAB" #'tempel-next)
-      (keymap-set tempel-map "<backtab>" #'tempel-previous))
+  :config
+      ;; Use TAB to trigger Corfu completion
+      (keymap-set corfu-map "TAB" #'corfu-complete)
+      (keymap-set corfu-map "<tab>" #'corfu-complete))
 #+end_src
 
 *** cape
@@ -578,4 +593,5 @@ Packages replacements:
 #+end_src
 
 # M-x package-delete (delete installed files)
-# M-x package-autoremove (remove package dependencies)
+# M-x package-autoremove
+(remove package dependencies)
