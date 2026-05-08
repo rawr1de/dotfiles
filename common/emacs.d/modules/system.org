@@ -3,6 +3,7 @@
 #
 * SYSTEM WIDE CONFIGS
 ** performance engine
+
 #+begin_src emacs-lisp
   (setq gc-cons-threshold 100000000)
   (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
@@ -10,6 +11,7 @@
 
 ** system improvements
 *** built-in
+
 #+begin_src emacs-lisp
   (setq use-short-answers t)
   (setq inhibit-startup-message t
@@ -30,6 +32,7 @@
 #+end_src
 
 *** external snippets
+
 #+begin_src emacs-lisp
   ;; FORCE kill-buffer to quit without saving
   (require 'my-kill-buffer-no-confirm)
@@ -66,6 +69,7 @@
 #+end_src
 
 * iBuffer
+
 #+begin_src emacs-lisp
 (use-package ibuffer
   :ensure nil
@@ -95,6 +99,7 @@
 #+end_src
 
 * backup/auto-save
+
 #+begin_src emacs-lisp
   (setq make-backup-files t)
   (setq auto-save-default t)
@@ -109,18 +114,21 @@
 #+end_src
 
 * system language/coding environment
+
 #+begin_src emacs-lisp
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
 #+end_src
 
 * XDG-OPEN
+
 #+begin_src emacs-lisp
   ;; set Firefox as default web browser
   (setq browse-url-browser-function 'browse-url-firefox)
 #+end_src
 
 * file types
+
 #+begin_src emacs-lisp
     (add-to-list 'auto-mode-alist '("\\.m3u\\'"  . text-mode))
     (add-to-list 'auto-mode-alist '("\\.m3u8\\'" . text-mode))
@@ -129,6 +137,7 @@
 #+end_src
 
 * save history
+
 #+begin_src emacs-lisp
   (use-package savehist
     :init
@@ -138,6 +147,17 @@
     (savehist-mode 1)
     :config
     (add-to-list 'savehist-additional-variables 'query-replace-history))
+#+end_src
+
+* org-babel
+
+#+begin_src emacs-lisp
+  ;; ENABLE & LOAD LANGUAGES
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (shell . t)))
 #+end_src
 
 * COMMENT open/reload config file  [C-c 9 / C-c 0]

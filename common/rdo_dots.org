@@ -205,8 +205,11 @@ if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integr
 #+end_src
 
 **** cmus (music player)                                          :common:
+
 custom manjaro green theme and core settings with xfk navigation
+
 ***** rc
+
 #+begin_src conf :tangle ~/.config/cmus/rc
 cd ~/Musk/Metal
 
@@ -227,6 +230,7 @@ bind -f library l win-next
 #+end_src
 
 ***** RDO_manj_green.theme
+
 #+begin_src conf :tangle ~/.config/cmus/RDO_manj_green.theme
 set color_win_fg=default
 set color_win_bg=default
@@ -251,6 +255,26 @@ set color_win_sel_fg=229
 set color_win_inactive_sel_bg=236
 set color_win_inactive_sel_fg=229
 set color_win_dir=229
+#+end_src
+
+**** emacs (THE ONE)                                      :wayland:common:
+
+*Override default ~/.emacs.d/ folder location to Git Repo:*
+#+begin_src conf :tangle ~/.config/systemd/user/emacs.service.d/override.conf
+[Unit]
+After=graphical-session.target
+
+[Service]
+ExecStart=
+ExecStart=/usr/bin/emacs --fg-daemon --init-directory=%h/.dotfiles/common/emacs.d/
+#+end_src
+
+
+1. Tell systemd to read the new files
+2. Tell systemd to auto recreate the =.wants/= folders:
+#+begin_src shell
+systemctl --user daemon-reload
+systemctl --user enable --now emacs.service
 #+end_src
 
 **** firefox (web browser)                                        :common:
@@ -379,6 +403,68 @@ gtk-application-prefer-dark-theme=1
 #+end_src
 
 **** inputrc (readline config BASH ONLY)                          :common:
+**** kanshi (dynamic display management)                         :wayland:
+
+*Config file for 3 cases:*
+- Docked with Dual Gigabyte External Monitors
+- Docked with Dual PNP External Monitors
+- Undocked 'fallback' on standard laptop screen
+
+#+begin_src conf :tangle ~/.config/kanshi/config
+  # --- Mobile Only (Fallback when undocked) ---
+  profile mobile {
+      output eDP-2 enable mode 1920x1080@144.002 position 0,0 scale 1.0 adaptive_sync on
+  }
+
+  # --- PNP Setup (On-the-go dual monitor) ---
+  profile pnp_setup {
+      output "*Welcome-L*" mode 1920x1080@60.000 position 0,0
+      output eDP-2 mode 1920x1080@144.002 position 1920,0 adaptive_sync on
+      output "*Welcome-R*" mode 1920x1080@60.000 position 3840,0 adaptive_sync on
+  # scale 1.25 may be used for eDP-2
+  }
+
+  # --- GIGABYTE Setup (Home dual monitor) ---
+  profile giga_setup {
+      # Gigabyte Monitor 1 (Serial: 21372B005646)
+      output "*21372B005646*" mode 2560x1440@60.000 position 0,0
+      
+      # Gigabyte Monitor 2 (Serial: 21372B005644)
+      output "*21372B005644*" mode 2560x1440@60.000 position 2560,0 adaptive_sync on
+      
+      # Laptop Screen
+      output eDP-2 mode 1920x1080@144.002 position 1550,1440 adaptive_sync on
+  # scale 1.25 may be used for eDP-2
+  }
+#+end_src
+
+
+*Systemd Service File:*
+#+begin_src conf :tangle ~/.config/systemd/user/kanshi.service
+[Unit]
+Description=Kanshi Dynamic Display Configuration
+# Ensure it only starts if a graphical session is active
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/kanshi
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=graphical-session.target
+#+end_src
+
+
+1. Tell systemd to read the new files
+2. Tell systemd to auto recreate the =.wants/= folders:
+#+begin_src shell
+systemctl --user enable kanshi.service
+systemctl --user enable --now kanshi.service
+#+end_src
+
 **** kitty (terminal emulator)                                    :common:
 terminal settings and window management
 
@@ -463,6 +549,7 @@ wayland notification daemon configuration
   margin=20
   padding=15
   width=350
+  max-history=20
 
   default-timeout=5000
   ignore-timeout=0
@@ -535,8 +622,8 @@ wayland notification daemon configuration
 #+end_src
 
 **** niri                                                        :wayland:
-dynamic window manager
 ***** autostart.kdl
+
 #+begin_src conf :tangle ~/.config/niri/autostart.kdl
   // AUTO START
   // spawn-at-startup "pipewire"
@@ -552,21 +639,19 @@ dynamic window manager
   spawn-at-startup "bash" "-c" "wl-paste --type image --watch cliphist store"
   spawn-at-startup "mako"
 
-  // spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
-  // spawn-at-startup "sh" "-c" "systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP && systemctl --user start emacs.service"
-  // spawn-at-startup "systemctl" "--user" "import-environment" "WAYLAND_DISPLAY" "XDG_RUNTIME_DIR" "DISPLAY" "DBUS_SESSION_BUS_ADDRESS" "XDG_CURRENT_DESKTOP"
-
   // new FIXER line that starts 3 services at once, preventing race condition failure
   spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_RUNTIME_DIR DISPLAY DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP && systemctl --user start emacs.service"
 
   spawn-at-startup "udiskie" "--no-notify" "--tray" "--appindicator"
   spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "icon-theme" "Papirus-Dark"
   spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "gtk-theme" "Nordic"
+  spawn-at-startup "systemctl" "--user" "start" "graphical-session.target"
   spawn-at-startup "dbus-update-activation-environment" "--all"
   spawn-sh-at-startup "env QT_QPA_PLATFORMTHEME=qt6ct QT_ICON_THEME=Papirus-Dark qs -c noctalia-shell"
 #+end_src
 
 ***** binds.kdl
+
 #+begin_src conf :tangle ~/.config/niri/binds.kdl
   binds  {
 
@@ -821,6 +906,7 @@ dynamic window manager
 #+end_comment
 
 ***** config.kdl
+
 #+begin_src conf :tangle ~/.config/niri/config.kdl
 // This config is in the KDL format: https://kdl.dev
 // "/-" comments out the following node.
@@ -1008,6 +1094,7 @@ debug {
 #+end_src
 
 ***** input.kdl
+
 #+begin_src conf :tangle ~/.config/niri/input.kdl
 input {
     keyboard {
@@ -1065,31 +1152,65 @@ input {
 }
 #+end_src
 
-***** output.kdl
+***** COMMENT output.kdl (DEPRECATED)
+
+*DISPLAYS ARE MANAGED BY KANSHI, SO THE CONFIG BELLOW IS IRRELEVANT*
+
 #+begin_src conf :tangle ~/.config/niri/output.kdl
-// --- Legion 5 Dual Monitor Layout ---
+  // GIGABYTE -- Legion5 Dual Monitor Layout
 
-output "HDMI-A-1" {
-    mode "2560x1440@60.00"
-    position x=0 y=0
-}
+  // GIGABYTE -- LEFT!
+  // output "HDMI-A-1" {
+      // mode "2560x1440@60.00"
+      // position x=0 y=0
+  // }
 
-output "DP-1" {
-   mode "2560x1440@60.00"
-// mode "1920x1080@144.000"
-    position x=2560 y=0
-    variable-refresh-rate
-}
+  // GIGABYTE -- RIGHT!
+  // output "DP-1" {
+     // mode "2560x1440@60.00"
+      // position x=2560 y=0
+      // variable-refresh-rate
+  // }
 
-output "eDP-2" {
-    mode "1920x1080@144.002"
-    position x=1500 y=1440
-    variable-refresh-rate
-    // scale 1.25
-}
+  // GIGABYTE -- CENTER!
+  // output "eDP-2" {
+      // mode "1920x1080@144.002"
+      // position x=1500 y=1440
+      // variable-refresh-rate
+  // }
 
-// only DP-1 supports VRR
-// variable refresh rate
+  // only DP-1 supports VRR
+  // variable refresh rate
+  // scale 1.25
+  // GIGABYTE -- END SECTION
+
+
+  // PNP -- Legion5 Dual Monitor Layout
+
+  // PNP -- LEFT
+  output "HDMI-A-1" {
+      mode "1920x1080@60.00"
+      position x=0 y=0
+  }
+
+  // PNP -- RIGHT
+  output "DP-1" {
+     mode "1920x1080@60.00"
+      position x=3840 y=0
+      variable-refresh-rate
+  }
+
+  // PNP -- CENTER
+  output "eDP-2" {
+      mode "1920x1080@144.002"
+      position x=1920 y=0
+      variable-refresh-rate
+      // scale 1.25
+  }
+
+  // only DP-1 supports VRR
+  // variable refresh rate
+  // PNP -- END SECTION
 #+end_src
 
 ***** window-rules.kdl
@@ -2112,6 +2233,15 @@ wayland image viewer configuration with custom vim-like binds and api dumps
   swayimg.viewer.on_key("c",               function() local image = swayimg.viewer.get_image(); os.execute(string.format("echo -n %q | wl-copy", image.path)); swayimg.text.set_status("Path copied!") end)
   swayimg.viewer.on_key("e",               function() local image = swayimg.viewer.get_image(); os.execute(string.format("echo %q", image.path)); swayimg.text.set_status("Path executed to stdout") end)
   swayimg.viewer.on_key("r",               function() swayimg.viewer.reload(); swayimg.text.set_status("Reloaded Image") end)
+  -- CUSTOM RENAMING FUNCTION
+  swayimg.viewer.on_key("Shift-r", function()
+    local image = swayimg.viewer.get_image()
+    if image and image.path then
+      os.execute(string.format("~/.scripts/SH_swayimg_rename.sh %q &", image.path))
+      swayimg.text.set_status("Renaming...")
+    end
+  end)
+  ---
   swayimg.viewer.on_key("b",               function() aa_is_on = not aa_is_on; swayimg.enable_antialiasing(aa_is_on); swayimg.text.set_status(aa_is_on and "AA: ON" or "AA: OFF") end)
   swayimg.viewer.on_key("v",               function() anim_is_on = not anim_is_on; swayimg.viewer.enable_animation(anim_is_on); swayimg.text.set_status(anim_is_on and "Animation: ON" or "Animation: OFF") end)
   swayimg.viewer.on_key("F1",              function() swayimg.viewer.show_help() end)
@@ -2288,6 +2418,31 @@ keyboard mapping for x11
 #+begin_src conf :tangle ~/.Xmodmap
 clear Lock
 keycode 66 = Home NoSymbol Home
+#+end_src
+
+**** udiskie (auto mount external media)                  :common:wayland:
+
+*Systemd Service File:*
+#+begin_src conf :tangle ~/.config/systemd/user/udiskie.service
+[Unit]
+Description=Udiskie Automount Daemon
+After=graphical-session.target
+
+[Service]
+# --smart-tray only shows the icon when a drive is actually plugged in
+ExecStart=/usr/bin/udiskie --smart-tray --notify
+Restart=always
+
+[Install]
+WantedBy=default.target
+#+end_src
+
+
+1. Tell systemd to read the new files
+2. Tell systemd to auto recreate the =.wants/= folders:
+#+begin_src shell
+systemctl --user daemon-reload
+systemctl --user enable --now udiskie.service
 #+end_src
 
 **** Xresources                                                     :x11:
@@ -2777,187 +2932,188 @@ export WAYLAND_DISPLAY=wayland-1
 *** Arch (Wayland BASE)
 
 #+begin_src text :tangle ~/.dotfiles/common/_ARCH_pkgs/ARCH_pkg_wayland_base.txt :mkdirp yes :padline no
-# ARCH/MANJARO — Wayland Base
-# Minimal comfortable system: media, editing, file management, terminal tools
-# Install: pacman -S $(grep -v '^#' ARCH_pkg_wayland_base.txt | tr '\n' ' ')
-# AUR packages handled automatically by SH_install_packages.sh via yay fallback
-#
-# NOTE: multilib repo must be enabled in /etc/pacman.conf before installing
-# Uncomment the [multilib] section and run: sudo pacman -Sy
+  # ARCH/MANJARO — Wayland Base
+  # Minimal comfortable system: media, editing, file management, terminal tools
+  # Install: pacman -S $(grep -v '^#' ARCH_pkg_wayland_base.txt | tr '\n' ' ')
+  # AUR packages handled automatically by SH_install_packages.sh via yay fallback
+  #
+  # NOTE: multilib repo must be enabled in /etc/pacman.conf before installing
+  # Uncomment the [multilib] section and run: sudo pacman -Sy
 
-# --- Core editors & terminal ---
-emacs-wayland
-nano
-kitty
-zsh
-
-
-# --- Shell tools ---
-atuin
-starship
-zoxide
-fzf
-bat
-lsd
-ripgrep
-fastfetch
-glow
-tealdeer
-man-db
-wget
-rsync
-socat
-stow
-git
-duf
-wev
-parallel
-wdisplays
-wlsunset
-ddcutil
-pacseek
-jq
-
-# --- Archive tools ---
-atool
-unzip
-unrar
-zip
-p7zip
+  # --- Core editors & terminal ---
+  emacs-wayland
+  nano
+  kitty
+  zsh
 
 
-# --- Filesystem ---
-ntfs-3g
-dosfstools
-exfat-utils
-mtools
-plocate
+  # --- Shell tools ---
+  atuin
+  starship
+  zoxide
+  fzf
+  bat
+  lsd
+  ripgrep
+  fastfetch
+  glow
+  tealdeer
+  man-db
+  wget
+  rsync
+  socat
+  stow
+  git
+  duf
+  wev
+  parallel
+  wdisplays
+  wlsunset
+  ddcutil
+  pacseek
+  jq
+  eza
+
+  # --- Archive tools ---
+  atool
+  unzip
+  unrar
+  zip
+  p7zip
 
 
-# --- System & power ---
-htop
-btop
-acpi
-tlp
-brightnessctl
-dbus
-dmidecode
-power-profiles-daemon
+  # --- Filesystem ---
+  ntfs-3g
+  dosfstools
+  exfat-utils
+  mtools
+  plocate
 
 
-# --- Wayland compositor stack ---
-niri
-keyd
-fuzzel
-dunst
-cliphist
-wl-clipboard
-xwayland-satellite
-swaylock
-swww
-
-gammastep
-kanshi
-libnotify
-xdg-utils
-xdg-user-dirs
-xdg-desktop-portal
-xdg-desktop-portal-gnome
-ripdrag
-xorg-server
-xorg-xeyes
-xorg-xinit
-xorg-xwayland
+  # --- System & power ---
+  htop
+  btop
+  acpi
+  tlp
+  brightnessctl
+  dbus
+  dmidecode
+  power-profiles-daemon
 
 
-# --- Audio ---
-pipewire
-wireplumber
-alsa-utils
-pulsemixer
-libinput-tools
+  # --- Wayland compositor stack ---
+  niri
+  keyd
+  fuzzel
+  dunst
+  cliphist
+  wl-clipboard
+  xwayland-satellite
+  swaylock
+  swww
+
+  gammastep
+  kanshi
+  libnotify
+  xdg-utils
+  xdg-user-dirs
+  xdg-desktop-portal
+  xdg-desktop-portal-gnome
+  ripdrag
+  xorg-server
+  xorg-xeyes
+  xorg-xinit
+  xorg-xwayland
 
 
-# --- Networking ---
-networkmanager
-network-manager-applet
-wireless-tools
-dhcpcd
-bluez
-bluez-utils
-bluetui
-iwd
-keychain
+  # --- Audio ---
+  pipewire
+  wireplumber
+  alsa-utils
+  pulsemixer
+  libinput-tools
 
 
-# --- File management ---
-pcmanfm
-yazi
-ranger
-gvfs
-gvfs-mtp
-android-udev
-udiskie
-zathura
-zathura-pdf-poppler
-zathura-djvu
-zathura-cb
-pacman-contrib
+  # --- Networking ---
+  networkmanager
+  network-manager-applet
+  wireless-tools
+  dhcpcd
+  bluez
+  bluez-utils
+  bluetui
+  iwd
+  keychain
 
 
-# --- Media viewers ---
-mpv
-mpv-mpris
-emms
-mpd
-mpc
-imv
-swayimg
-mp3info
-vorbis-tools
-fbreader  #epub reader
+  # --- File management ---
+  pcmanfm
+  yazi
+  ranger
+  gvfs
+  gvfs-mtp
+  android-udev
+  udiskie
+  zathura
+  zathura-pdf-poppler
+  zathura-djvu
+  zathura-cb
+  pacman-contrib
 
 
-# --- Screenshot & image ---
-imagemagick
-img2pdf
-pdftk
-grim
-slurp
-satty
-
-# --- Web & transfer ---
-firefox
-yt-dlp
-transmission-cli
-kdeconnect
-wormhole-rs
-quickserve
-syncthing
+  # --- Media viewers ---
+  mpv
+  mpv-mpris
+  emms
+  mpd
+  mpc
+  imv
+  swayimg
+  mp3info
+  vorbis-tools
+  fbreader  #epub reader
 
 
-# --- Documents & office ---
-# newsboat
-# lnav
-pandoc
+  # --- Screenshot & image ---
+  imagemagick
+  img2pdf
+  pdftk
+  grim
+  slurp
+  satty
+
+  # --- Web & transfer ---
+  firefox
+  yt-dlp
+  transmission-cli
+  kdeconnect
+  wormhole-rs
+  quickserve
+  syncthing
 
 
-# --- Fonts ---
-#ttf-jetbrains-mono-nerd
-#otf-font-awesome
-#otf-commit-mono-nerd
-#noto-fonts-emoji
-#ttf-nerd-fonts-symbols
-adobe-source-han-sans-jp-fonts
+  # --- Documents & office ---
+  # newsboat
+  # lnav
+  pandoc
 
 
-# --- Misc ---
-gtypist
-mediainfo
-ffmpeg
-highlight
-libvips
-ffmpegthumbnailer
+  # --- Fonts ---
+  #ttf-jetbrains-mono-nerd
+  #otf-font-awesome
+  #otf-commit-mono-nerd
+  #noto-fonts-emoji
+  #ttf-nerd-fonts-symbols
+  adobe-source-han-sans-jp-fonts
+
+
+  # --- Misc ---
+  gtypist
+  mediainfo
+  ffmpeg
+  highlight
+  libvips
+  ffmpegthumbnailer
 #+end_src
 
 *** Arch (Wayland FULL)
@@ -3086,6 +3242,7 @@ wev
 parallel
 wdisplays
 jq
+eza
 
 
 # --- Archive tools ---

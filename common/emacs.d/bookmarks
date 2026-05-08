@@ -4,8 +4,8 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
  (filename . "~/Docs/10.Org/system-tickets.org")
- (front-context-string . "** TODO emacs: t")
- (rear-context-string . "sion/Copy/Move\n\n")
- (position . 9970)
- (last-modified 27122 3188 542541 179000))
+ (front-context-string . "** DONE linux: e")
+ (rear-context-string . "does not work!\n\n")
+ (position . 10577)
+ (last-modified 27132 61974 525762 628000))
 )

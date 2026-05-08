@@ -4,9 +4,49 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(doom-city-lights))
+ '(custom-enabled-themes '(doom-bluloco-dark))
  '(custom-safe-themes
-   '("b7a09eb77a1e9b98cafba8ef1bd58871f91958538f6671b22976ea38c2580755"
+   '("0325a6b5eea7e5febae709dab35ec8648908af12cf2d2b569bedc8da0a3a81c1"
+     "166a2faa9dc5b5b3359f7a31a09127ebf7a7926562710367086fcc8fc72145da"
+     "2f8af2a3a2fae6b6ea254e7aab6f3a8b5c936428b67869cef647c5f8e7985877"
+     "f1e8339b04aef8f145dd4782d03499d9d716fdc0361319411ac2efc603249326"
+     "a9eeab09d61fef94084a95f82557e147d9630fbbb82a837f971f83e66e21e5ad"
+     "d97ac0baa0b67be4f7523795621ea5096939a47e8b46378f79e78846e0e4ad3d"
+     "21d2bf8d4d1df4859ff94422b5e41f6f2eeff14dd12f01428fa3cb4cb50ea0fb"
+     "2ab8cb6d21d3aa5b821fa638c118892049796d693d1e6cd88cb0d3d7c3ed07fc"
+     "2f7fa7a92119d9ed63703d12723937e8ba87b6f3876c33d237619ccbd60c96b9"
+     "b273cc6a1d492660fff886a3cae1f00d5fd2d53b55fb374a21a14afd74fdec92"
+     "e8ceeba381ba723b59a9abc4961f41583112fc7dc0e886d9fc36fa1dc37b4079"
+     "9e5e0ff3a81344c9b1e6bfc9b3dcf9b96d5ec6a60d8de6d4c762ee9e2121dfb2"
+     "9d5124bef86c2348d7d4774ca384ae7b6027ff7f6eb3c401378e298ce605f83a"
+     "e14289199861a5db890065fdc5f3d3c22c5bac607e0dbce7f35ce60e6b55fc52"
+     "921f165deb8030167d44eaa82e85fcef0254b212439b550a9b6c924f281b5695"
+     "c9d837f562685309358d8dc7fccb371ed507c0ae19cf3c9ae67875db0c038632"
+     "f6ea954a9544b0174a876d195387f444da441535ee88c7fb0fc346af08b0d228"
+     "c07f072a88bed384e51833e09948a8ab7ca88ad0e8b5352334de6d80e502da8c"
+     "19d62171e83f2d4d6f7c31fc0a6f437e8cec4543234f0548bad5d49be8e344cd"
+     "e622620e5f31216fd71e492fc1476e1fe7c21b8dc5811bf9e640c4b1fd6cfac1"
+     "42a6583a45e0f413e3197907aa5acca3293ef33b4d3b388f54fa44435a494739"
+     "a6920ee8b55c441ada9a19a44e9048be3bfb1338d06fc41bce3819ac22e4b5a1"
+     "f253a920e076213277eb4cbbdf3ef2062e018016018a941df6931b995c6ff6f6"
+     "96998f6f11ef9f551b427b8853d947a7857ea5a578c75aa9c4e7c73fe04d10b4"
+     "0c83e0b50946e39e237769ad368a08f2cd1c854ccbcd1a01d39fdce4d6f86478"
+     "0f1341c0096825b1e5d8f2ed90996025a0d013a0978677956a9e61408fcd2c77"
+     "5c8a1b64431e03387348270f50470f64e28dfae0084d33108c33a81c1e126ad6"
+     "b99ff6bfa13f0273ff8d0d0fd17cc44fab71dfdc293c7a8528280e690f084ef0"
+     "e4a702e262c3e3501dfe25091621fe12cd63c7845221687e36a79e17cf3a67e0"
+     "93011fe35859772a6766df8a4be817add8bfe105246173206478a0706f88b33d"
+     "c3c135e69890de6a85ebf791017d458d3deb3954f81dcb7ac8c430e1620bb0f1"
+     "dfb1c8b5bfa040b042b4ef660d0aab48ef2e89ee719a1f24a4629a0c5ed769e8"
+     "13096a9a6e75c7330c1bc500f30a8f4407bd618431c94aeab55c9855731a95e1"
+     "599f72b66933ea8ba6fce3ae9e5e0b4e00311c2cbf01a6f46ac789227803dd96"
+     "5244ba0273a952a536e07abaad1fdf7c90d7ebb3647f36269c23bfd1cf20b0b8"
+     "9b9d7a851a8e26f294e778e02c8df25c8a3b15170e6f9fd6965ac5f2544ef2a9"
+     "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0"
+     "70c88c01b0b5fde9ecf3bb23d542acba45bb4c5ae0c1330b965def2b6ce6fac3"
+     "aec7b55f2a13307a55517fdf08438863d694550565dee23181d2ebd973ebd6b8"
+     "be0d9f0e72a4ebc4a59c382168921b082b4dc15844bdaf1353c08157806b3321"
+     "b7a09eb77a1e9b98cafba8ef1bd58871f91958538f6671b22976ea38c2580755"
      "22a0d47fe2e6159e2f15449fcb90bbf2fe1940b185ff143995cc604ead1ea171"
      "456697e914823ee45365b843c89fbc79191fdbaff471b29aad9dcbe0ee1d5641"
      "7de64ff2bb2f94d7679a7e9019e23c3bf1a6a04ba54341c36e7cf2d2e56e2bcc"
@@ -41,16 +81,9 @@
      "d481904809c509641a1a1f1b1eb80b94c58c210145effc2631c1a7f2e4a2fdf4"
      "77fff78cc13a2ff41ad0a8ba2f09e8efd3c7e16be20725606c095f9a19c24d3d"
      "1d69e32e38ae49663f88063bd30d71a0f6970d958db0edbf15be3b7b93925bd9" default))
- '(package-selected-packages
-   '(anti-zenburn-theme async avy benchmark-init cape catppuccin-theme consult-dir
-			corfu dired-narrow dired-open dired-quick-sort dirvish
-			doom-modeline doom-themes embark-consult embrace emms
-			emms-mode-line-cycle exiftool fzf hydra iedit kdeconnect
-			kdl-mode keyfreq lua-mode magit marginalia
-			multiple-cursors orderless org-modern org-roam
-			org-superstar persist sublime-themes sudo-edit
-			taxy-magit-section tempel ultra-scroll vertico vterm
-			zoxide))
+ '(my-pomodoro-audio-file
+   "/home/rdo/Musk/arcade_sounds/SF2_101_soundboards/ryuken-kick-101soundboards.mp3")
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((whisper :url "https://github.com/natrys/whisper.el" :branch "master")))
  '(safe-local-variable-values '((read-only . t))))

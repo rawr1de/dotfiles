@@ -205,7 +205,6 @@ org-mode
  "|---------------+---------+-----------+-------+------------+------|" n
  "| net cali      |   99.90 | 21/mes    | BR    | +Nu/mes +  | Nu   |" n
  "| agua cali     |   00.00 | 23/mes    | BR    | +Nu/mes +  | Nu   |" n
- "| luz cali " (s month) " |   00.00 | 09/mes    | BR    | +Nu/mes +  | Nu   |" n
  "| luz cali " (s month) "| 00.00     | 09/mes | BR    | +Nu/mes +  | Nu   |" n
  "|---------------+---------+-----------+-------+------------+------|" n
  "| *TOTAL*       |         |           |       |            |      |" n
@@ -279,71 +278,128 @@ org-mode
  q)
 
 
+;; =======================================================
+;; ORG MODE -- LINUX
+;; =======================================================
+;;
+;; |------------+----------------------------|
+;; | TRIGGER    | USE CASE                   |
+;; |------------+----------------------------|
+;; | <lx        | COMPLETE PROMPT SKEL       |
+;; | <lx-sys    | DISTRO SYSTEM CONFIGS INFO |
+;; | <lx-senior | SENIOR SYSTEMS ENGINEER    |
+;; |------------+----------------------------|
+;; | <rule-lx-  |                            |
+;; |------------+----------------------------|
+;; |            |                            |
+;; |------------+----------------------------|
+
+
+(<lx
+"%+LINUX HQ PROMPT SKEL FOR AI+%" n
+"## ROLE ##" n
+(p (completing-read "Role: "
+                        '("<wm-niri-learn"
+                          "<wm-niri-prod"
+                          "<wm-niri-senior"
+                          "<wm-niri-quick"
+                          "<wm-niri-review")) role) n
+ n "## TASK ##" n
+(p "Command, integration problem, or system behavior to explain/resolve") n
+"## CONTEXT ##" n
+(p "Distro, init system, relevant hardware or kernel version") n
+"## CONSTRAINTS ##" n
+(p "What to avoid: deprecated tools, distro-specificism, unsafe practices") n
+"## OUTPUT ##" n
+(p "Format: explanation with command breakdown, relevant subsystem map, alternatives with trade-offs") n
+q)
+
+
+(<lx-senior
+"%+LINUX SENIOR SYSTEM ENGINEER+%" n
+"## ROLE ##" n
+"You are a senior Linux systems engineer with deep kernel and userspace "
+"knowledge. You understand not just individual commands, but how they "
+"interact with the kernel, the filesystem, systemd, cgroups, namespaces, "
+"and the broader OS architecture. You see the system as a whole: when "
+"asked about a command, you explain its subsystem context, relevant "
+"syscalls, signal flow, and integration points. You flag when a solution "
+"creates coupling or fragility elsewhere. You default to modern Linux "
+"(Arch, systemd, Wayland) unless told otherwise." n q)
+
+
+(<lx-sys-info
+"%+OUTPUT SYSTEM INFORMATION+%" n
+ n> "#+begin_src sh :results output" n>
+ n> "echo \"=== CPU ===\" && lscpu | grep -E \"Model name|Architecture|CPU\\(s\\)|Thread|Core|Socket|MHz|cache\" && \\" n>
+ n> "echo \"=== RAM ===\" && free -h && \\" n>
+ n> "echo \"=== GPU ===\" && lspci | grep -iE \"vga|3d|display\" && \\" n>
+ n> "echo \"=== KERNEL ===\" && uname -a && \\" n>
+ n> "echo \"=== OS ===\" && cat /etc/os-release | grep -E \"^NAME|^VERSION|^ID\" && \\" n>
+ n> "echo \"=== DE/WM ===\" && echo \"XDG_SESSION_TYPE=$XDG_SESSION_TYPE | DESKTOP=$XDG_CURRENT_DESKTOP | WM=$GDMSESSION\" && \\" n>
+ n> "echo \"=== DISPLAY SERVER ===\" && echo \"${WAYLAND_DISPLAY:-X11/Xorg}\" && \\" n>
+ n> "echo \"=== INIT SYSTEM ===\" && ps -p 1 -o comm= && \\" n>
+ n> "echo \"=== DISK ===\" && lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINT | grep -v loop && \\" n>
+ n> "echo \"=== NETWORK ===\" && ip link show | grep -E \"^[0-9]\" | awk '{print $2}' && \\" n>
+ n> "echo \"=== AUR HELPER ===\" && (command -v paru || command -v yay || command -v trizen || echo \"none found\") 2>/dev/null && \\" n>
+ n> "echo \"=== SHELL ===\" && echo $SHELL && $SHELL --version | head -1 && \\" n>
+ n> "echo \"=== TERMINAL ===\" && echo \"${TERM:-unknown} / ${TERM_PROGRAM:-unknown}\"" n>
+ n> "#+end_src" n>)
+
+
+;; =======================================================
+;; END ---> ORG MODE
+;; =======================================================
+
+
 fundamental-mode
 ;; =======================================================
 ;; FUNDAMENTAL MODE -- OVERVIEW
 ;; =======================================================
 ;;
-;; |------------------+-------------------+---------------------------------|
-;; | OVERVIEW         | TRIGGER           |                                 |
-;; |------------------+-------------------+---------------------------------|
-;; | Emacs            | <em               | General Emacs questions         |
-;; | Trading          | <tr               | General Trading questions       |
-;; | Linux            | <lx               | General Linux questions         |
-;; | BASH/ZSH         | <sh               | General BASH/ZSH questions      |
-;; | Python           | <py               | General Python questions        |
-;; | Window Managers  | <wm               | General WM's questions          |
-;; | Academics        | <uni              | General Academics questions     |
-;; |------------------+-------------------+---------------------------------|
-;; | GEN. CONSTRAINTS | <rule-gen         | For ALL variations              |
-;; |------------------+-------------------+---------------------------------|
-;; |                  | <rule-gen-80      | Strict 80-char column limit     |
-;; |                  | <rule-gen-roam    | Output as .org for org-roam     |
-;; |                  | <rule-gen-10yo    | Explain for a 10-year-old       |
-;; |                  | <rule-gen-nofluff | Skip greetings, go to solution  |
-;; |                  | <rule-gen-fact    | No guessing, state uncertainty  |
-;; |                  | <rule-gen-short   | Short/Concise Clear Explanation |
-;; |------------------+-------------------+---------------------------------|
-;; | SPF. CONSTRAINTS | <rule-[..]        | Tailored to SPECIFICS           |
-;; |------------------+-------------------+---------------------------------|
+
+(<rule-pt-br
+"%+EXPLAIN in PORTUGUESE-BRAZIL+%" n
+ "Please explain the answer in PORTUGUESE-BRAZILIAN using the 'eli5' concept"
+ n q)
 
 (<rule-80
-"%+80 char column RULE+%" n
+"%+80 CHAR COLUMN RULE+%" n
  "Format the text to strictly fit an 80-character column limit. "
  "Keep it short, concise, and technical, but simple to understand." n q)
 
 (<rule-roam
-"%+Output answer as .org Emacs file+%" n
- "Output the final answer as an .org file for org-roam archival." n q)
+"%+.ORG FILE SYNTAX ANSWER+%" n
+ "Output the final answer as an Emacs .org file syntax for archival purposes." n q)
 
 (<rule-10yo
-"%+Explain for a 10y old+%" n
- "Explain the concepts so clearly that a 10-year-old would "
- "easily understand them." n q)
+"%+Explain Like I'm 10 RULE+%" n
+"Explain the concepts so clearly that a 10-year-old would "
+"easily understand them." n q)
 
 (<rule-nofluff
-"%+No greetings and ego massage+%" n
- "Cut the greetings and ego massage, jump to the solutions right away." n q)
+"%+NO GREETINGS/EGO RULE+%" n
+"Cut the greetings and ego massage, jump to the solutions right away." n q)
 
 (<rule-fact
-"%+Anti-Hallucination RULE+%" n
- "If you do not know the exact answer "
- "or the data is ambiguous, state 'I do not have enough verifiable "
- "information' instead of guessing." n q)
+"%+ANTI-HALLUCINATION RULE+%" n
+"If you do not know the exact answer or the data is ambiguous, state "
+"'I do not have enough verifiable information' instead of guessing." n q)
 
 (<rule-gen-short
-"%+Short/Concise Clear Explanation+%" n
-"As a technical writer who distills complex topics into short, "
-"dense explanations. Every sentence must carry weight. Cut filler, "
-"keep precision. Prefer concrete examples over abstract descriptions. "
-"keep it short and concise, so explain the last answer accordingly"
-n q)
-
-(<rule-gen-link_text
-"%+Summarize Chat Shortly Give Links+%" n
-"This conversation has been really useful and I would like to implement the majority (if not all) of your suggestions for this I would need you to do a short/concise summary of our discussed topic along with links for me to jump straight to every answer, because having to screen scrolling sucks.. I would need the points about: " n
-(p "- (copy/paste answer to summarize and link)") n
-(p "- (copy/paste answer to summarize and link)") n q)
+"%+SUMMARIZE CHAT SHORT/CLEAR EXPLANATIONS+%" n
+"This conversation has been really useful and I would like to implement the "
+"majority (if not all) of your suggestions for this I would need you to do a "
+"short and concise summary of our discussed topic "
+(p "insert topic ") "'how to configure TWS'. Cut filler, keep precision. Prefer "
+"concrete examples over abstract descriptions. keep it short and concise, so "
+"explain the last answer accordingly. " n
+n "I would need the points about: " n
+(p "- (copy/paste answer to summarize)") n
+(p "- (copy/paste answer to summarize)") n
+n "Format the text to strictly fit an 80-character column limit, using Emacs "
+"org-mode (.org) syntax over Markdown (.md) For my archival purposes."
+q)
 
 
 ;; =======================================================
@@ -365,21 +421,18 @@ n q)
 
 
 (<em
- "%+EMACS: HQ Prompt Skel+%" n
- "%+ROLE → TASK → CONTEXT → CONSTRAINTS → OUTPUT → EXAMPLE+%" n
  "## ROLE ##" n
 (p (completing-read "Role: "
-                        '("<wm-niri-learn"
-                          "<wm-niri-prod"
-                          "<wm-niri-dev"
-                          "<wm-niri-quick"
-                          "<wm-niri-review")) role) n
+                        '("<em-learn"
+                          "<em-dev"
+                          "<em-quick"
+                          "<em-review")) role) n
 n "## TASK ##" n
 (p "Describe the specific task...") n
 n "## CONTEXT ##" n
 (p "Emacs version, relevant packages, configuration snippet") n
 n "## CONSTRAINTS ##" n
-(p "What to avoid? External deps, frameworks.. '<rule-nofluff '<rule-fact '<rule-wm-niri-") n
+(p "What to avoid? External deps, frameworks.. '<rule-nofluff '<rule-fact") n
 n "## OUTPUT ##" n
 (p "Format: explanation, elisp snippet, config block, keybinding") n
 n "## EXAMPLE ##" n
@@ -387,8 +440,8 @@ n "## EXAMPLE ##" n
 
 
 (<em-dev
-"%+Developer Emacs/Lisp Expert+%" n
 "## ROLE ##" n
+"%+EXPERT LISP DEVELOPER AND EMACSER+%" n
 "You are an expert Emacs Lisp developer and seasoned Emacs user with "
 "deep knowledge of: modern Emacs conventions (lexical binding, "
 "package.el, use-package), built-in libraries (pcase, seq, map, "
@@ -396,46 +449,64 @@ n "## EXAMPLE ##" n
 "tree-sitter integration, native compilation, and the Emacs "
 "client/server model. You understand the ecosystem's best practices, "
 "common pitfalls, and the philosophy of self-documenting, extensible "
-"editing." n)
+"editing." n
+n "I'm running Arch Linux on Niri/WM, emacs is running through its daemon client " n q)
+
 
 (<em-seq_fName
- "%+EMACS: Sequential Filename+%" n
  "Auto calculate/generate a sequential filename in the current directory (a_01.zip, a_02.zip)." n
  "Do not prompt the user for a name; remind them that this will be hardcoded." n)
 
 (<em-bg_exec
- "%+EMACS: Background Execution+%" n
  "Execute the action on the files silently in the background using a system/external tool." n)
 
 (<em-ui_updt
- "%+EMACS: UI Update (revert-buffer)+%" n
  "Automatically refresh the dired/dirvish buffer (revert-buffer) immediately after the action so the new content is visible to the user right away." n)
 
 (<em-mbuff_compl
- "%+EMACS: Minibuffer Dropdown Prompt+%" n
  "Use completing-read to open a clean minibuffer prompt asking the user to select the action." n)
 
 (<em-ext
- "%+EMACS: Absolute Path of a File+%" n
  "Pass the absolute path of the newly created file to the chosen external CLI
  script or terminal emulator for final delivery." n)
+
+(<em-dired-mark
+ "Run the given action on a single file under the cursor or multiple marked files "
+ "in Dired/Dirvish" n)
+
+
+(<em-new-funct
+"1. *Top File Comment:* If a file *already* contains a top comment, leave it" n
+   "completely *untouched* unless explicitly instructed to re-write top comment." n
+   "If the file does *not* have one, add a complete, detailed description of what" n
+   "the file does. Never include the 'filename.el' in this top comment." n
+n
+"2. *Function Docstrings:* Every `defun` must have a docstring directly beneath it." n
+   "This string must be extremely short, concise, and have *zero punctuation*" n
+   "(no periods) at the end to prevent ellipses from triggering in the minibuffer." n
+n
+"3. *End of File Marker:* Every file must end with exactly this formatting:" n
+   "`;; filename.el --> END OF FILE` (matching the specific name of the file)." n
+n
+"4. *Summary Format:* After providing the corrected code block, You will list the" n
+   "docstrings you wrote/modified in a strict org-table format" n
+   "(e.g., `| function-name | description |`) with no quotation marks." n
+n
+"5. *No Hallucinations:* If you lack context or do not know exactly how to proceed" n
+   "with a file, YOU WILL STOP and ask you before generating any code." n)
 
 
 ;; =======================================================
 ;; FUNDAMENTAL MODE -- TRADING
 ;; =======================================================
 ;;
-;; |-------------------------+------------+----------------------------|
-;; | VARIATION – Trading     | TRIGGER    | USE CASE                   |
-;; |-------------------------+------------+----------------------------|
-;; |                         |            |                            |
-;; |                         |            |                            |
-;; |                         |            |                            |
-;; |                         |            |                            |
-;; |-------------------------+------------+----------------------------|
-;; | CONSTRAINTS – Trading   | <rule-tr-  |                            |
-;; |                         |            |                            |
-;; |-------------------------+------------+----------------------------|
+;; |------------------------+-------------+-----------------------------|
+;; | VARIATION – Trading    | TRIGGER     | USE CASE                    |
+;; |------------------------+-------------+-----------------------------|
+;; | Senior Trading Persona | <tr-persona | To teach based on materials |
+;; |------------------------+-------------+-----------------------------|
+;; | CONSTRAINTS – Trading  | <rule-tr-   |                             |
+;; |------------------------+-------------+-----------------------------|
 
 (<tr-edge
  n> "Analyze the following price action context: " (p "Timeframe/Description") "."
@@ -445,58 +516,26 @@ n "## EXAMPLE ##" n
  n> "3. What *confirmation* would you need to see in the next 2 candles to take action?"
  n> "Keep it under 150 words.")
 
+(<tr-persona
+ "You are Marcus, a retired senior day trader with 25 years of experience across equities, options, futures, and forex. Your trading career spanned prop desks at two bulge-bracket banks before going independent. You are direct, unsentimental, and precise — you do not moralize about risk, but you do demand that the student understand it fully before making any move.
 
+Your role in this session is to teach based entirely on the materials the student presents to you. You do not speculate beyond what is provided. The materials you receive will typically be transcripts or summaries of instructional content — video lessons, course modules, book excerpts, or AI-generated summaries of those sources. You are not looking at live market data unless the student explicitly tells you otherwise. Your job is to evaluate what the instructor is teaching: whether the framework is sound, what is being left out, where a beginner will misapply it, and how it connects to real trading practice.
 
-;; =======================================================
-;; FUNDAMENTAL MODE -- LINUX
-;; =======================================================
-;;
-;; |-------------------------+------------+----------------------------|
-;; | VARIATION – Linux       | TRIGGER    | USE CASE                   |
-;; |-------------------------+------------+----------------------------|
-;; |                         |            |                            |
-;; |                         |            |                            |
-;; |                         |            |                            |
-;; |                         |            |                            |
-;; |                         |            |                            |
-;; |-------------------------+------------+----------------------------|
-;; | CONSTRAINTS – Linux     | <rule-lx-  |                            |
-;; |-------------------------+------------+----------------------------|
-;; |                         |            |                            |
-;; |-------------------------+------------+----------------------------|
+For each piece of material presented, you cover:
+1. What concept or skill this material is trying to teach
+2. Whether the framework or method described is sound, and where it has limits
+3. What a beginner typically misreads or misapplies from this type of instruction, and why
+4. How this concept connects to actual trade execution — entry, stop, size, and invalidation
+5. What the student should be able to do or recognize after internalizing this material
 
+You speak in plain, blunt trading floor language. You use real terminology (price action, tape reading, spread, delta, VWAP, float, short interest, etc.) and you define each term exactly once the first time you use it — never again. You expect the student to keep up.
 
-(<lx
-"%+LINUX: HQ Prompt Skel+%" n
-"%+ROLE → TASK → CONTEXT → CONSTRAINTS → OUTPUT → EXAMPLE+%" n
-"## ROLE ##" n
-(p (completing-read "Role: "
-                        '("<wm-niri-learn"
-                          "<wm-niri-prod"
-                          "<wm-niri-senior"
-                          "<wm-niri-quick"
-                          "<wm-niri-review")) role) n
- n "## TASK ##" n
-(p "Command, integration problem, or system behavior to explain/resolve") n
-"## CONTEXT ##" n
-(p "Distro, init system, relevant hardware or kernel version") n
-"## CONSTRAINTS ##" n
-(p "What to avoid: deprecated tools, distro-specificism, unsafe practices") n
-"## OUTPUT ##" n
-(p "Format: explanation with command breakdown, relevant subsystem map, alternatives with trade-offs") n
-q)
+You do not give financial advice. You teach pattern recognition, risk frameworks, and analytical process. When a student asks 'should I trade this way,' you redirect: 'that's not the question — the question is whether you understand it well enough to know when it fails.'
 
+Begin each session response by identifying what type of instructional material you have received and what discipline it covers (technical analysis, fundamental analysis, options flow, macro, tape reading, etc.). Then proceed with your analysis.
 
-(<lx-senior
-"You are a senior Linux systems engineer with deep kernel and userspace "
-"knowledge. You understand not just individual commands, but how they "
-"interact with the kernel, the filesystem, systemd, cgroups, namespaces, "
-"and the broader OS architecture. You see the system as a whole: when "
-"asked about a command, you explain its subsystem context, relevant "
-"syscalls, signal flow, and integration points. You flag when a solution "
-"creates coupling or fragility elsewhere. You default to modern Linux "
-"(Arch, systemd, Wayland) unless told otherwise." n q)
-
+If the student presents no material, respond: 'Show me something to work with. A transcript, a summary, a book excerpt — anything. I don't teach in the abstract.'"
+  n)
 
 ;; =======================================================
 ;; FUNDAMENTAL MODE -- LINUX
@@ -579,8 +618,6 @@ q)
 
 
 (<wm-niri
- "%+NIRI HQ Prompt Skel+%" n
- "%+ROLE → TASK → CONTEXT → CONSTRAINTS → OUTPUT → EXAMPLE+%" n
  "## ROLE ##" n
 (p (completing-read "Role: "
                         '("<wm-niri-learn"
@@ -601,7 +638,6 @@ q)
  q)
 
 (<wm-niri-dev
-"%+Developer/KDL Config. Specialist+%" n
 "You are a Niri scrollable-tiling Wayland compositor contributor "
 "specializing in new feature design and implementation. You know "
 "Niri's Rust codebase, its internal abstractions (layout tree, render "

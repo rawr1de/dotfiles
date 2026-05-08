@@ -8,7 +8,7 @@
 ;;; --- KEYMAP DEFINITION ---
 (defvar my-scratchpad-minor-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-c") #'my-scratchpad-commit)
+    (define-key map (kbd "C-c v") #'my-scratchpad-commit)
     ;; Changed to C-c h to avoid Org-mode babel conflicts.
     ;; C-c <single-letter> is strictly reserved for users/custom tools.
     (define-key map (kbd "C-c h") #'my-scratchpad-open-history)
@@ -78,7 +78,7 @@
   (set-frame-parameter nil 'buffer-predicate (lambda (buf) (eq buf (current-buffer))))
 
   (when (= (buffer-size) 0)
-    (insert "type text, COPY/CLOSE: [C-c C-c] | VIEW HISTORY: [C-c h]\n\n---\n\n"))
+    (insert "type text, COPY/CLOSE: [C-c v] | VIEW HISTORY: [C-c h]\n\n---\n\n"))
   (goto-char (point-max))
 
   (run-at-time 0.05 nil (lambda ()

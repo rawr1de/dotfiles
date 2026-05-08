@@ -10,7 +10,8 @@
 (visual-line-mode 1)
 (setq-local word-wrap t)
 (display-time)
-;; (setq scroll-margin 3) ;; Keeps a 3-line buffer from the edge  HAVE TO LEAVE AT 0 FOR ULTRA-SCROLL PKG TO WORK!!
+;; (setq scroll-margin 3) ;; Keeps a 3-line buffer from the edge
+;; HAVE TO LEAVE AT 0 FOR ULTRA-SCROLL PKG TO WORK!!
 (setq display-time-24hr-format t display-time-load-average nil)
 (when window-system (global-prettify-symbols-mode t))
 ;; PREVENT UI FLICKERING, DISABLE BARS BEFORE FRAME EVEN OPENS
@@ -25,6 +26,9 @@
   (add-hook 'prog-mode-hook #'display-line-numbers-mode)
   (add-hook 'text-mode-hook #'display-line-numbers-mode)
   (setq-default fill-column 80)
+  ;; Automatically enable auto-fill in text-based modes (Markdown, Org, etc.)
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+  ;; display column delimiter
   ;; (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
   ;; (add-hook 'text-mode-hook #'display-fill-column-indicator-mode)
   (require 'whitespace)

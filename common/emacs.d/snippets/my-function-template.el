@@ -1,9 +1,9 @@
-;; custom functions skel file
+;; CUSTOM FUNCTIONS SKEL FILE
 
 (defun my-function-template (slug)
   "Generate a brand new, standalone .el file for custom functions"
   (interactive "sFunction Name (without 'my-'): ")
-  (let* ((dir (file-truename "~/.dotfiles/common/emacs/.emacs.d/snippets/"))
+  (let* ((dir (file-truename "~/.dotfiles/common/emacs.d/snippets/"))
          (filename (format "my-%s.el" slug))
          (filepath (expand-file-name filename dir)))
 

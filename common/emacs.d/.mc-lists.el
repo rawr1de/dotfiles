@@ -25,6 +25,7 @@
 	org-self-insert-command
 	org-shifttab
 	replace-string
+	ultra-scroll
 	wdired--self-insert
 	wdired-capitalize-word
 	wdired-downcase-word
