@@ -195,9 +195,9 @@
   (setq auto-window-vscroll nil)
 
   ;; Fast scrolling optimizations
-  (setq fast-but-imprecise-scrolling t)
+  ;; (setq fast-but-imprecise-scrolling t)
 
-  (setq jit-lock-defer-time 0.05)
+  (setq jit-lock-defer-time 0.1)
 #+end_src
 
 ***** EXTERNAL SNIPPETS
@@ -377,6 +377,9 @@
     (advice-add 'dired-do-delete :after #'my-dired-revert-all-buffers)
     ;; Added for directory creation as well
     (advice-add 'dired-create-directory :after #'my-dired-revert-all-buffers)
+
+    ;; Disable Arabic/Hebrew text scanning for massive speedup in file lists
+    (add-hook 'dired-mode-hook (lambda () (setq bidi-paragraph-direction 'left-to-right)))
 
     (setq dired-kill-when-opening-new-dired-buffers t
           dired-dwim-target t
@@ -1172,6 +1175,53 @@
       (message "Dictionary switched to: %s" new-dict)))
 #+end_src
 
+*** pass
+
+#+begin_src emacs-lisp
+  ;; The GPG Daemon Fix: Force prompts into the minibuffer
+  (use-package epg
+    :ensure nil
+    :custom
+    (epg-pinentry-mode 'loopback))
+
+  ;; Core API for Pass
+  (use-package password-store
+    :ensure t
+    :custom
+    (password-store-password-length 20)
+    :bind
+    (("C-c C-p" . password-store-copy)     ; Copy a password
+    ("C-c C-i" . password-store-insert))) ; Add a new password
+
+  ;; Emacs Native Integration (Magit/Forge, Tramp, ERC)
+  (use-package auth-source-pass
+    :ensure nil
+    :config
+    (auth-source-pass-enable)
+    (setq auth-sources '(password-store "~/.authinfo.gpg")))
+
+  ;; Install Emacs support for pass-otp
+  (use-package password-store-otp
+    :ensure t)
+
+  ;; Defer the map creation until Embark is actually loaded
+  (with-eval-after-load 'embark
+    (defvar-keymap embark-password-store-map
+      :doc "Keymap for Embark password-store actions."
+      :parent embark-general-map
+      "u" #'password-store-copy-field       ; Prompts for which field to copy
+      "o" #'password-store-otp-token-copy   ; Generates and copies the 6-digit TOTP
+      "e" #'password-store-edit             ; Edit the file
+      "r" #'password-store-remove)          ; Delete the file
+
+    ;; Register the map with Embark
+    (add-to-list 'embark-keymap-alist '(password-store . embark-password-store-map)))
+
+  ;; Tell Marginalia to assign the 'password-store category
+  (with-eval-after-load 'marginalia
+    (add-to-list 'marginalia-prompt-categories '("Password entry" . password-store)))
+#+end_src
+
 *** COMPLETION STACK
 **** vertico
 
@@ -1369,21 +1419,21 @@
 **** cape
 
 #+begin_src emacs-lisp
-;; Add extensions for better Elisp/Code completion
-(use-package cape
-  :ensure t
-  :init
-  ;; Add these to the global completion list. Order matters!
-  ;; The top of the list is prioritized.
-  (add-to-list 'completion-at-point-functions #'cape-keyword) ;; Programming keywords
-  (add-to-list 'completion-at-point-functions #'cape-file)    ;; File paths
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev) ;; Words in current buffer
+  ;; Add extensions for better Elisp/Code completion
+  (use-package cape
+    :ensure t
+    :init
+    ;; Add these to the global completion list. Order matters!
+    ;; The top of the list is prioritized.
+    (add-to-list 'completion-at-point-functions #'cape-keyword) ;; Programming keywords
+    (add-to-list 'completion-at-point-functions #'cape-file)    ;; File paths
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev) ;; Words in current buffer
 
-  :bind
-  ;; Optional: Dedicated keys to FORCE a specific completion menu
-  ;; (e.g., "I only want to see file paths right now")
-  (("C-c p f" . cape-file)
-   ("C-c p w" . cape-dict)))
+    :bind
+    ;; Optional: Dedicated keys to FORCE a specific completion menu
+    ;; (e.g., "I only want to see file paths right now")
+    (("C-c p f" . cape-file)
+     ("C-c p w" . cape-dict)))
 #+end_src
 
 *** DEPRECATED

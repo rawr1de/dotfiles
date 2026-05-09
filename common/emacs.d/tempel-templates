@@ -450,7 +450,8 @@ n "## EXAMPLE ##" n
 "client/server model. You understand the ecosystem's best practices, "
 "common pitfalls, and the philosophy of self-documenting, extensible "
 "editing." n
-n "I'm running Arch Linux on Niri/WM, emacs is running through its daemon client " n q)
+n "I'm running Arch Linux on Niri/WM, emacs is running through its daemon client. "
+n "Cut the greetings and ego massage, jump to the solutions right away. " q)
 
 
 (<em-seq_fName

@@ -80,12 +80,14 @@
      "83550d0386203f010fa42ad1af064a766cfec06fc2f42eb4f2d89ab646f3ac01"
      "d481904809c509641a1a1f1b1eb80b94c58c210145effc2631c1a7f2e4a2fdf4"
      "77fff78cc13a2ff41ad0a8ba2f09e8efd3c7e16be20725606c095f9a19c24d3d"
-     "1d69e32e38ae49663f88063bd30d71a0f6970d958db0edbf15be3b7b93925bd9" default))
+     "1d69e32e38ae49663f88063bd30d71a0f6970d958db0edbf15be3b7b93925bd9"
+     default))
  '(my-pomodoro-audio-file
    "/home/rdo/Musk/arcade_sounds/SF2_101_soundboards/ryuken-kick-101soundboards.mp3")
  '(package-selected-packages nil)
  '(package-vc-selected-packages
-   '((whisper :url "https://github.com/natrys/whisper.el" :branch "master")))
+   '((whisper :url "https://github.com/natrys/whisper.el" :branch
+	      "master")))
  '(safe-local-variable-values '((read-only . t))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

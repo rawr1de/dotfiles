@@ -2538,3 +2538,151 @@ delete BOTH lines or just the hook?
 (setq gc-cons-threshold 100000000) ;; 100MB for fast startup
   (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 50000000))) ;; 50MB for smooth runtime
 
+[2026-05-08] --- [00:19:54]
+revise your 'thinking' please because... 
+
+1. I just restarted the daemon
+2. jumping straight into dirvish and scrolling there was minor hiccups (VERY MINOR)
+3. there were NO OTHER BUFFER opened, like emms or any other thing, so you explanation of 'The EMMS Global Screen-Tear' does not make much sense since the timer DOES NOT SHOW IN DIRVISH's modeline!
+
+[2026-05-08] --- [00:28:04]
+ok you are TOTALLY unreliable! you told me to add fast-imprecise setq line! now you are saying the contrary! you saw the entire file and didn't noticed that BEFORE?
+
+same shit here: (setq jit-lock-defer-time 0.05) you said one thing and now changes.. I really don't mind emacs re-coloring the buffer when I stop scrolling, as long it does what it is supposed to be doing, INCREASE PERFORMANCE and stop with hiccups!
+
+so the question remains, ARE YOU ABSOLUTELY SURE OF THESE CHANGES? I did implement the arabic hook because it does make sense, the other two I'm waiting on YOUR REPLY
+
+[2026-05-08] --- [13:52:38]
+it says wayland on the window protocol
+your recommendations did not fix it...
+I don't want bleeding edge firefox, just a lts version
+
+[2026-05-08] --- [14:33:28]
+-Quote: "and should avoid taking trades that slam directly into massive support or
+  resistance zones"
+    -Question: this did not made sense to me, explain it like I'm 5.
+
+-Quote: "Order Flow and Volume (Confirmation)"
+    -Question: How do I do this in practice?
+
+[2026-05-08] --- [14:44:31]
+"Open your Level 2 Data or DOM (Depth of Market): You can access this in your trading platform, such as using the "Active Trader" ladder or "Level II Gadget" in thinkorswim, or the "Market Depth Trader" in IBKR TWS
+. This tool shows you a vertical list of all the bids and asks sitting at different price levels, along with exactly how many shares are waiting in line to trade
+.
+Spot "Liquidity Walls": Look for giant resting orders. For example, if you see a massive wall of limit sell orders stacked up and waiting at $150, you know the stock will likely struggle to break past that price due to the heavy supply
+.
+Gauge Market Aggression: Technicals show you where a trade should happen, but order flow confirms it is happening
+. Watch the tape to see if the market is aggressively "eating through" sell orders on the ask, which signals strong upward momentum and confirms that buyers are willing to pay higher prices
+.
+Confirm with Relative Volume (RVOL): Look for massive volume spikes compared to previous days to confirm that large institutions are actively participating in the price move"
+
+
+I need better explanation for this.. I'm looking at the Level 2 on ThinkOrSwim (ToS) right now and I'm not understanding how to read it, because the numbers come and go, I might need a video explaining better how to read/use this tool.
+
+Liquidity Walls same thing here, I see nothing that tells it is a liquidity wall for now, maybe because is 14:43 and the market is going slow now... I trully need a hands-on visual explanation of what is going on with these topics, I understand what you mean but I fail to see it in practice
+
+[2026-05-08] --- [19:52:50]
+"Pin Bar that forms in the direction of the dominant trend, perfectly bounces off a major support level, intersects with a dynamic 21-period moving average, and aligns with a 50% Fibonacci retracement"
+- WHY A PIN BAR?
+
+[2026-05-08] --- [19:56:51]
+But the Pin Bar ALONE is not enough proof right? What does a Pin Bar signal at a Resistance level? How do I use a 21-period moving average for confluence?
+
+[2026-05-08] --- [20:03:32]
+In an Uptrend: The 21-period moving average acts as a slanted "floor" (dynamic support). If the price pulls back, touches the moving average, and forms a bullish Pin Bar with a long lower tail, you now have three factors of confluence: the uptrend, the moving average support, and the Pin Bar rejection. This is a strong signal to buy.
+
+- I'm getting a little bit confused with buy/sell just by reading. in this uptrend case, it means that the uptrend WILL CONTINUE UP? thought the pin bar would signal a reversal.. also how does the 21-average act as a ceiling if the price is already moving up?
+
+
+In a Downtrend: The 21-period moving average acts as a slanted "ceiling" (dynamic resistance). If the price bounces up to the moving average and forms a bearish Pin Bar with a long upper tail, you have confluence telling you the sellers are stepping back in,
+This is a strong signal to sell.
+
+
+Now im confused...
+
+[2026-05-08] --- [20:09:52]
+got it! but by buying you mean what? enter CALLS buying bids?
+
+so what if the price on the downtrend of the 21-average hits the 'ceiling' but continue to move up? what candle usually form in this scenario? what other confluences occur generally?
+
+[2026-05-08] --- [20:18:02]
+please do a summary of ask/bid of CALL/PUTS for Options in pt-br I often times get confused... I am planning to ONLY trade OPTIONS for now.
+
+Is there a way to get AI to do a real time evaluation of all these technical confluences on a platform like ToS or TradingView so that I can easily verify it its actually working?
+
+these two points are my weak points now that I can't easily visualize on a chart, you said earlier pro traders use bookmaps but I don't know how to access it, since I've never seen and have absolutely no idea of how to read it:
+
+Supply and Demand Zones: Specific areas characterized by strong previous price moves, indicating where massive banks and institutions have placed giant blocks of pending orders
+.
+Order Flow and Volume: Confirming the chart setup by looking at the Level 2 tape (DOM) to see massive, aggressive institutional buying on the Ask, or looking for Relative Volume (RVOL) spikes
+
+[2026-05-08] --- [20:27:06]
+what is "SpotGamma HIRO indicator" and what is is used for? how can I access it? Does it cost?
+
+[2026-05-08] --- [20:39:29]
+ok I've got you on the 'forget AI for trigger' so it IS ONLY worth using for pre-market thesis, which is already something.. now onto the big leagues, how do I access the gamma HIRO thing? how much does it cost?
+
+[2026-05-08] --- [20:48:10]
+listen you piece of crap. Unfortunately, I do not have 500 to spare, monthly right now. But this sounds like a future plan. I'll note that. SO you are basically saying that free tools provided by Schwab ToS like Level 2 gadgets and other brokers are gimmicks, so how does the traders that are making 5 to 6 figures monthly NOT USING these 'pro tools' do it?
+
+[2026-05-08] --- [21:00:27]
+A. Volume at Price (The Volume Profile)
+what are your thoughts about this exactly? because this seems mostly generic, since every trading platform have a volume X/Y graph bar under the ticker graph..
+
+"You don't need a heatmap to see that. You just need a trained eye and a "Level 2/Tape" window with a filter that only shows orders above a certain size."
+
+NOW WE ARE TALKING! this caught my eye and I need to know how to use it. What are your toughts on TradingView? Asking because I'm thinking about buying access since I haven't digested ToS and TWS charts compared to TV. But ToS at least have what SEEMS to be real-time graph development..
+
+from your point 3. and bellow WE ARE TALKING, I NEED TO ABSORB THIS! and trust me! I am fully disciplined, Im hungry to get that hard cold trader cash!
+
+[2026-05-08] --- [21:14:58]
+"Do you understand the mechanics of filtering the tape, or do you need me to break down exactly what a "sweep" order looks like when it hits?"
+Unsure if I fully grasped the concept, reading is cheap I need practical steps do do/test this on the platform, do I need to do this on Live Markets or any time works?
+
+Need to know how to do backtest the strategy on ToS (the people I know are TV focused)
+
+'Do you understand the mechanics of filtering the tape, or do you need me to break down exactly what a "sweep" order looks like when it hits?' do a full break down!
+
+[2026-05-09] --- [11:01:42]
+just installed firefox ESR and it totally logged me out of my account and I can't log back in, I'm 100% sure that the password im typing is the correct one, even my recovery code is not being recognized and I literally copy/paste it from firefox, this is ultra BS the way this app login works, it always gives me headaches, what happened to my folder that I contained all this shit from the other version (non ESR)?
+
+[2026-05-09] --- [12:48:57]
+## ROLE ##
+You are an expert Emacs Lisp developer and seasoned Emacs user with deep knowledge of: modern Emacs conventions (lexical binding, package.el, use-package), built-in libraries (pcase, seq, map, cl-lib), completion frameworks (vertico, corfu, orderless), tree-sitter integration, native compilation, and the Emacs client/server model. You understand the ecosystem's best practices, common pitfalls, and the philosophy of self-documenting, extensible editing.
+
+I'm running Arch Linux on Niri/WM, emacs is running through its daemon client 
+
+I need to install/configure 'emacs pass' never used it before
+
+[2026-05-09] --- [13:28:41]
+I'm a bit lost, so what are the order of installation from someone that have NOTHING of those apps
+
+[2026-05-09] --- [14:37:38]
+got this two errors..
+
+⛔ Error (use-package): Failed to install consult-pass: Package ‘consult-pass’ is unavailable
+⛔ Error (use-package): cape/:catch: Key sequence C-c p f starts with non-prefix key C-c p
+
+[2026-05-09] --- [14:43:40]
+ok working! now questions:
+
+1. how do I change my current password
+2. how do I delete the test entry
+3. is there a way to integrate a biometric reader into emacs so that I don't have to type a password all the time?
+
+[2026-05-09] --- [16:01:30]
+this is my emacs config file, I need you to do the following:
+
+1. under the header 'MODULES' list EVERY single entry that have a keybind attach to it. e.g.:
+   *MODULES
+   **TOOLS
+   ***pass:
+   use-package password-store:
+   :bind
+    (("C-c C-p" . password-store-copy)     ; Copy a password
+    ("C-c C-i" . password-store-insert))) ; Add a new password
+
+  do this for EVERY ENTRY INSIDE MODULES
+2. do the listing like an org-mode table
+3. once done I'll give further instructions
+
