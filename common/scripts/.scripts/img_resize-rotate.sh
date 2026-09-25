@@ -1,6 +1,6 @@
 #!/usr/bin/bash
-#   ____  ____   ___  _     
-#  |  _ \|  _ \ / _ \( )___ 
+#   ____  ____   ___  _
+#  |  _ \|  _ \ / _ \( )___
 #  | |_) | | | | | | |// __|
 #  |  _ <| |_| | |_| | \__ \  --->  Resize images from 3264x2448 to 800x600
 #  |_| \_\____/ \___/  |___/        (Shell Script)
@@ -30,7 +30,7 @@ do
       [yY]* )
 
 	  # Lista arquivos a serem convertidos
-	  ls | grep .. > abc.txt 
+	  ls | grep .. > abc.txt
 
 	  # Cria diretorio NEW para arquivos que serao convertidos
 	  mkdir NEW
@@ -40,7 +40,7 @@ do
 
     # Auto orienta (Rotaciona 90º) as imagens de acordo com a metadata (EXIF)
 	  mogrify -auto-orient NEW/*
-	  
+
 	  # Deleta arquivo com a lista de conversoes
 	  rm -rf abc.txt
 

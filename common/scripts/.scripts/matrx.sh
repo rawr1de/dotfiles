@@ -11,9 +11,9 @@ fi
 # ----------------------------------------------------------------------
 # --- WINDOW GEOMETRY CONFIGURATION (Confirmed 2560x1440) ---
 # ----------------------------------------------------------------------
-MONITOR_WIDTH=2560   
-MONITOR_HEIGHT=1440  
-HDMI_START_X_COORD=2560 
+MONITOR_WIDTH=2560
+MONITOR_HEIGHT=1440
+HDMI_START_X_COORD=2560
 # ----------------------------------------------------------------------
 
 
@@ -58,12 +58,12 @@ move_and_resize() {
     local H="$MONITOR_HEIGHT"
     local MAX_ATTEMPTS=10
     local ATTEMPT=0
-    
+
     echo "Attempting to locate and place window: $TITLE at ($X_COORD, $Y_COORD)..."
 
     while [[ $ATTEMPT -lt $MAX_ATTEMPTS ]]; do
         WID=$(xdotool search --name "$TITLE" 2>/dev/null)
-        
+
         if [[ -n "$WID" ]]; then
             echo "Window found (WID: $WID)."
 
@@ -76,17 +76,17 @@ move_and_resize() {
             # 1. First Pass: Move and Resize
             xdotool windowmove "$WID" "$X_COORD" "$Y_COORD"
             xdotool windowsize "$WID" "$W" "$H"
-            sleep 0.5 
-            
+            sleep 0.5
+
             # 2. Second Pass: Re-apply to enforce geometry
             xdotool windowmove "$WID" "$X_COORD" "$Y_COORD"
             xdotool windowsize "$WID" "$W" "$H"
-            
+
             xdotool windowactivate "$WID"
-            
+
             return 0
         fi
-        
+
         ATTEMPT=$((ATTEMPT + 1))
         sleep 0.5
     done

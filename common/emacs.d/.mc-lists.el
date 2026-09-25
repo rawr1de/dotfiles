@@ -9,6 +9,7 @@
 	embrace-add
 	emms-tag-editor-submit
 	indent-for-tab-command
+	kmacro-end-or-call-macro
 	magit-stage
 	my-scroll-one-line-down
 	my-scroll-one-line-up
@@ -26,6 +27,7 @@
 	org-shifttab
 	replace-string
 	ultra-scroll
+	undo-redo
 	wdired--self-insert
 	wdired-capitalize-word
 	wdired-downcase-word
@@ -37,11 +39,13 @@
 	xah-comment-dwim
 	xah-copy-line-or-region
 	xah-cut-line-or-region
+	xah-cycle-hyphen-lowline-space
 	xah-end-of-line-or-block
 	xah-extend-selection
 	xah-fly-command-mode-activate
 	xah-fly-insert-mode-activate
 	xah-forward-right-bracket
+	xah-goto-matching-bracket
 	xah-insert-space-before
 	xah-paste-or-paste-previous
 	xah-select-block
@@ -55,5 +59,6 @@
 	end-of-buffer
 	iedit-switch-to-mc-mode
 	my-force-fullscreen-toggle
+	my-jump-cycle-mark
 	xah-next-window-or-frame
 	))

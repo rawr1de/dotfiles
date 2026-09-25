@@ -1,4 +1,3 @@
-# ARCH/MANJARO — Wayland Base
 # Minimal comfortable system: media, editing, file management, terminal tools
 # Install: pacman -S $(grep -v '^#' ARCH_pkg_wayland_base.txt | tr '\n' ' ')
 # AUR packages handled automatically by SH_install_packages.sh via yay fallback
@@ -38,6 +37,12 @@ wlsunset
 ddcutil
 pacseek
 jq
+eza
+pass
+pass-otp
+passff-host
+gnupg
+
 
 # --- Archive tools ---
 atool
@@ -76,7 +81,8 @@ wl-clipboard
 xwayland-satellite
 swaylock
 swww
-
+grim
+slurp
 gammastep
 kanshi
 libnotify
@@ -89,6 +95,7 @@ xorg-server
 xorg-xeyes
 xorg-xinit
 xorg-xwayland
+pinentry
 
 
 # --- Audio ---

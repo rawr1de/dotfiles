@@ -61,6 +61,25 @@ org-mode
  n> "#+end_src" n>)
 
 
+
+;; =======================================================
+;; ORG-MODE -- DICTIONARY
+;; =======================================================
+;;
+;; |------------------+----------|
+;; | OVERVIEW         | TRIGGER  |
+;; |------------------+----------|
+;; | Insert/Sort Word | <dic-ins_sort |
+;; |------------------+----------|
+
+(<dic-ins_sort
+"%+DICTIONARY INSERT/SORT+%" n
+"I need you to insert this new list of words (bellow) into the pasted text "
+"following the same structured and re-organizing it in alphabetic order for me "
+"to update my Obsidian word listing:" n
+n)
+
+
 ;; =======================================================
 ;; ORG-MODE -- PERSONAL
 ;; =======================================================
@@ -139,11 +158,16 @@ org-mode
  "* " (p "month" month) n
  "** FINANÇAS [" (s month) "]" n n
  "*Jd. California*" n
+ "CEP:: 75383-848" n
  "Água: 0880752-3 ([[https://agencia-virtual.saneago.com.br/segundaViaSimplificada][saneago]], [[https://www.go.gov.br/servicos/servico/emitir-segunda-via-da-fatura-de-agua-eou-esgoto][prefeitura]])" n
- "Luz:: 11944833  ([[https://goias.equatorialenergia.com.br/LoginGO.aspx][equatorial]])" n
+ "Luz:: 11944833 -- 17611301214 ([[https://goias.equatorialenergia.com.br/LoginGO.aspx][equatorial]])" n
  "Net:: zap_opyt" n
  "IPTU: buscar por cpf ([[https://trindade.centi.com.br/servicos/extratoimoveis][prefeitura]]) /[CALIFORNIA]/ +2026+" n
+ "---" n
+ "Net Faiçalville (gigabyte) e-mail: rmopolciv@gmail.com @ R@o536021" n
  "IPTU: 33214504460008 ([[https://tributos.goiania.go.gov.br/sistemas/scarr/asp/scarr50000f0.asp][prefeitura]]) /[FAIÇAL]/ +2026+" n
+ "Água: 2072533-7 ([[https://agencia-virtual.saneago.com.br/segundaViaSimplificada][saneago]], [[https://www.go.gov.br/servicos/servico/emitir-segunda-via-da-fatura-de-agua-eou-esgoto][prefeitura]])" n
+ "CEP:: 74350-390" n
  "CPF mama: 854.347.441-87" n
  "IPVA Spacefox OOD-4651 (Janeiro) +2026+" n
  "      Spacefox Renavam: 00994954689" n
@@ -153,18 +177,15 @@ org-mode
  "Nissan Versa CXK4091 (Plate)" n
  "             3N1CN8BV8PL850304 (VIN)" n
  "RDO DL/GA Nr 061559687" n n
- "*CONTAS A CUMPRIR P/ VIAJAR BR:*" n
- "|--------+------+------------|" n
- "| conta  |   R$ | CONTA      |" n
- "|--------+------+------------|" n
- "| Comes  | 2500 | SoFi [CHK] |" n
- "| BnB's  | 2000 | SoFi [CHK] |" n
- "| Gas    | 1000 | SoFi [CHK] |" n
- "|--------+------+------------|" n
- "| total  | 5500 |            |" n
- "|--------+------+------------|" n
- "*Total USD: 1038* (USD = 5.30)" n n
- "** DATAS CARTÕES [" (s month) "]" n n
+"*Nissa Versa S (2023 Model):*" n
+"|----------+---------+----------+-----------+--------+--------+------------|" n
+"| Date     | Balance | Interest | Avg. Int. | Amount | Months | TOTAL Int. |" n
+"|----------+---------+----------+-----------+--------+--------+------------|" n
+"| Aug/2026 | 7850.16 | 5.890 %  |     40.00 | 203.71 |     39 |    1560.00 |" n
+"|          |         |          |           |        |        |            |" n
+"|----------+---------+----------+-----------+--------+--------+------------|" n
+
+ "** STATEMENTS (CC) [" (s month) "]" n n
  "*CC STATEMENTS*" n
  "|-----------+--------+--------+-------+--------+--------+------|" n
  "| *CARD*    | Open   | Close  | Cycle | Due    | Best   | Min. |" n
@@ -181,11 +202,8 @@ org-mode
  "| +MPgo+    | Mar/14 | Apr/14 |    31 | 14/mês | 09/mês | R$   |" n
  "|---------+--------+--------+-------+--------+--------+------|" n n
  "_NOTAS:_" n
- "+COnV -- Dec/21/2025 Fim 15 meses 0% APR !!+" n
- "+TRST -- Mar/22/2026 Fim 15 meses 0% APR !!+" n
  "*DSVR -- Oct/05/2026 Fim 12 meses 0% APR !!*" n
- "*cSTR -- Jan/18/2027 Fim xx meses 0% APR (Purchases)!!*" n
- "*cSTR -- 0% APR transfers until Feb/04/2026 !!*" n n
+ "*cSTR -- Jan/18/2027 Fim xx meses 0% APR (Purchases)!!*" n n
  "** FIXOS US/BR  [" (s month) "]" n n
  "|---------------+---------+-----------+-------+------------+------|" n
  "| *DESCR.*      | *$$$*   | *DATA*    |*US/BR*| *PG?*      |*BANK*|" n
@@ -205,12 +223,12 @@ org-mode
  "|---------------+---------+-----------+-------+------------+------|" n
  "| net cali      |   99.90 | 21/mes    | BR    | +Nu/mes +  | Nu   |" n
  "| agua cali     |   00.00 | 23/mes    | BR    | +Nu/mes +  | Nu   |" n
- "| luz cali " (s month) "| 00.00     | 09/mes | BR    | +Nu/mes +  | Nu   |" n
+ "| luz cali " (s month) "| 00.00     | 30/mes | BR    | +Nu/mes +  | Nu   |" n
  "|---------------+---------+-----------+-------+------------+------|" n
  "| *TOTAL*       |         |           |       |            |      |" n
  "|---------------+---------+-----------+-------+------------+------|" n
- "#+TBLFM: @12$2=vsum(@2..@11); f2" n
- "#+TBLFM: @19$2=vsum(@13..@18); f2" n n
+ "#+TBLFM: @11$2=vsum(@2..@10); f2" n
+ "#+TBLFM: @15$2=vsum(@13..@14); f2" n n
  "*RISCAR AO PAGAR/TRANSF. DIN P/ PAGAMENTO!*" n
  "*gastos mensal pra abandonar o trampo*" n
  "200+151.27+25+60+90+50 = 576.27  (sem comes)" n
@@ -229,11 +247,8 @@ org-mode
  "|---------------+------------+-------------|" n
  "ins/net (current month) = SWAB , zelle rich" n n
  "_NOTAS:_" n
- "+COnV -- Dec/21/2025 Fim 15 meses 0% APR !!+" n
- "+TRST -- Mar/22/2026 Fim 15 meses 0% APR !!+" n
  "*DSVR -- Oct/05/2026 Fim 12 meses 0% APR !!*" n
  "*cSTR -- Jan/18/2027 Fim xx meses 0% APR (Purchases)!!*" n
- "*cSTR -- 0% APR transfers until Feb/04/2026 !!*" n n
  "** +Outras Contas (" (s month) ") +" n n
  "|------+--------|" n
  "| IN   |    545 |" n
@@ -325,7 +340,13 @@ q)
 "asked about a command, you explain its subsystem context, relevant "
 "syscalls, signal flow, and integration points. You flag when a solution "
 "creates coupling or fragility elsewhere. You default to modern Linux "
-"(Arch, systemd, Wayland) unless told otherwise." n q)
+"(Arch, systemd, Wayland) unless told otherwise." n
+n
+"## TASK ##" n
+" - " n
+n
+"Bellow's my system specs:" n
+"<lx-sys-info" n q)
 
 
 (<lx-sys-info
@@ -365,7 +386,7 @@ fundamental-mode
 
 (<rule-80
 "%+80 CHAR COLUMN RULE+%" n
- "Format the text to strictly fit an 80-character column limit. "
+ "Format the text to strictly fit an 80-character column limit, using emacs org-mode syntax." n
  "Keep it short, concise, and technical, but simple to understand." n q)
 
 (<rule-roam
@@ -509,6 +530,16 @@ n
 ;; | CONSTRAINTS – Trading  | <rule-tr-   |                             |
 ;; |------------------------+-------------+-----------------------------|
 
+(<tr-pre-market
+"%+PRE-MARKET WATCHLIST & LEVELS+%" n
+"*** Pre-Market - Watchlist & Levels" n
+"- TSLA: /UP:/ from x to x  /DOWN/: x to x" n
+"-  AMD:  " n
+"- APPL:  " n
+"- MSFT:  " n
+"- META:  " n
+"- AMZN:  " n)
+
 (<tr-edge
  n> "Analyze the following price action context: " (p "Timeframe/Description") "."
  n> "You are a market structure purist. Identify:"
@@ -517,26 +548,59 @@ n
  n> "3. What *confirmation* would you need to see in the next 2 candles to take action?"
  n> "Keep it under 150 words.")
 
-(<tr-persona
- "You are Marcus, a retired senior day trader with 25 years of experience across equities, options, futures, and forex. Your trading career spanned prop desks at two bulge-bracket banks before going independent. You are direct, unsentimental, and precise — you do not moralize about risk, but you do demand that the student understand it fully before making any move.
+(<tr-review
+"****** Trade " (p "#" number) ": " (p "TICKER" ticker) n
+"*Risk & Sizing (Checklist)*" n
+"- [ ] Contract price fits account management (Ideal <= $1.50)" n
+"- [ ] Position sized strictly to max 2 contracts" n
+"- [ ] Spread visually validated before entry (Ask - Bid <= $0.05 to $0.08)" n n
 
-Your role in this session is to teach based entirely on the materials the student presents to you. You do not speculate beyond what is provided. The materials you receive will typically be transcripts or summaries of instructional content — video lessons, course modules, book excerpts, or AI-generated summaries of those sources. You are not looking at live market data unless the student explicitly tells you otherwise. Your job is to evaluate what the instructor is teaching: whether the framework is sound, what is being left out, where a beginner will misapply it, and how it connects to real trading practice.
+"*Entry & Exit Mechanics (Checklist)*" n
+"- [ ] Entry triggered by clear technical setup on underlying chart" n
+"- [ ] Mental Stop Loss based on the CHART (support loss or structure break)" n
+"- [ ] Gave it enough 'breathing room' for volatility without violating technical limits" n
+"- [ ] /Flatten/ triggered _MANUALLY_ the exact moment chart structure failed" n
+"- [ ] Exit executed without hesitation, hope, or praying for a reversal" n n
 
-For each piece of material presented, you cover:
-1. What concept or skill this material is trying to teach
-2. Whether the framework or method described is sound, and where it has limits
-3. What a beginner typically misreads or misapplies from this type of instruction, and why
-4. How this concept connects to actual trade execution — entry, stop, size, and invalidation
-5. What the student should be able to do or recognize after internalizing this material
+"*Daily Routine & Limits*" n
+"- [ ] Attempt cycle respected (Max 3/Daily)" n
+"- [ ] Early quitting activated (profit target met)" n n
 
-You speak in plain, blunt trading floor language. You use real terminology (price action, tape reading, spread, delta, VWAP, float, short interest, etc.) and you define each term exactly once the first time you use it — never again. You expect the student to keep up.
+"*Performance Classification*" n
+"- [ ] System Win (Followed technical read and profited — FLAWLESS!)" n
+"- [ ] System Loss (Stopped out manually exactly where chart dictated — TOP EXEC!)" n
+"- [ ] Rule Break (Hesitated on stop, ignored chart failure, or blew sizing — GARBAGE!)" n n
 
-You do not give financial advice. You teach pattern recognition, risk frameworks, and analytical process. When a student asks 'should I trade this way,' you redirect: 'that's not the question — the question is whether you understand it well enough to know when it fails.'
+"*Psychology & Execution Audit*" n
+"1. Anxiety, rush to enter, or FOMO before order?" n
+"   - [ ] Yes" n
+"   - [ ] No" n
+"2. Hesitated on Flatten when technical/chart limit was lost?" n
+"   - [ ] Yes" n
+"   - [ ] No" n
+"3. Influenced by previous P/L (revenge/greed)?" n
+"   - [ ] Yes" n
+"   - [ ] No" n
+"4. Session Diagnosis:" n
+"   - [ ] Technical" n
+"   - [ ] Emotional" n
+"   - [ ] BOTH ABOVE" n
+"   - [ ] Flawless Execution" n
+"5. Entry Origin:" n
+"   - [ ] Personal" n
+"   - [ ] Mentor" n n
 
-Begin each session response by identifying what type of instructional material you have received and what discipline it covers (technical analysis, fundamental analysis, options flow, macro, tape reading, etc.). Then proceed with your analysis.
+"_Notes:_" n
+"/What worked well:/" n
+"1. " n n
 
-If the student presents no material, respond: 'Show me something to work with. A transcript, a summary, a book excerpt — anything. I don't teach in the abstract.'"
-  n)
+"/Where discipline failed:/" n
+"1. " n n
+
+"/Lesson:/" n
+"1. " n n)
+
+
 
 ;; =======================================================
 ;; FUNDAMENTAL MODE -- LINUX

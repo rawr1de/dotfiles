@@ -56,7 +56,7 @@
   (require 'my-org-table-enclose)
   (require 'my-pomodoro-timer-edit)
   (require 'my-man-to-org)
-
+  (require 'my-dired-custom-delete)
 
   ;; --- MUSK ---
   ;; open playing track cover art
@@ -293,7 +293,8 @@
 
 #+begin_src emacs-lisp
   ;; set Firefox as default web browser
-  (setq browse-url-browser-function 'browse-url-firefox)
+  (setq browse-url-browser-function 'browse-url-generic
+        browse-url-generic-program "brave")
 #+end_src
 
 *** file types
@@ -355,239 +356,280 @@
 *** dired
 
 #+begin_src emacs-lisp
-  (use-package dired
-    :ensure nil
-    :config
+(use-package dired
+  :ensure nil
+  ;; 1. FUSED KEYBINDINGS (General keys + Window scrolling)
+  :bind (:map dired-mode-map
+         ("\\" . dired-narrow-fuzzy)
+         ("n"  . consult-line)
+         ("h"  . dired-maybe-insert-subdir)
+         ("'"  . delete-other-windows))
 
-    ;; 1. Global Auto-Revert (The "Watchdog")
-    (setq global-auto-revert-non-file-buffers t)
-    (setq auto-revert-verbose nil)
-    (add-hook 'dired-mode-hook 'auto-revert-mode)
-
-    ;; 2. The "Hard Kick" (Refresh immediately after Emacs commands)
-    (defun my-dired-revert-all-buffers (&rest _)
-      "Refresh all dired buffers after an operation."
-      (dolist (buf (buffer-list))
-        (with-current-buffer buf
-          (when (derived-mode-p 'dired-mode)
-            (revert-buffer nil t)))))
-
-    (advice-add 'dired-do-copy :after #'my-dired-revert-all-buffers)
-    (advice-add 'dired-do-rename :after #'my-dired-revert-all-buffers)
-    (advice-add 'dired-do-delete :after #'my-dired-revert-all-buffers)
-    ;; Added for directory creation as well
-    (advice-add 'dired-create-directory :after #'my-dired-revert-all-buffers)
-
-    ;; Disable Arabic/Hebrew text scanning for massive speedup in file lists
-    (add-hook 'dired-mode-hook (lambda () (setq bidi-paragraph-direction 'left-to-right)))
-
-    (setq dired-kill-when-opening-new-dired-buffers t
-          dired-dwim-target t
-          delete-by-moving-to-trash t
-          dired-recursive-deletes 'always
-  	dired-create-destination-dirs 'always
-          dired-recursive-copies 'always)
-
-    ;; ==========================================
-    ;; OPTION A: NATIVE GNU LS (SPEED & NUMBERS)
-    ;; ------------------------------------------
-    ;; PROS: Lightning fast on massive directories. Numbers (0, 1, 10) sort perfectly.
-    ;; CONS: Ignores punctuation; capital letters (A) and lowercase (a) are separated.
-    ;; ==========================================
-    ;; (setq ls-lisp-use-insert-directory-program t) ;; Ensure GNU ls is active
-    ;; (setq dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
-    ;; (setq dired-listing-switches "-AGFhlX --group-directories-first --time-style=long-iso")
-
-    ;; ==========================================
-    ;; OPTION B: LS-LISP (PERFECT VISUAL SORTING)
-    ;; ------------------------------------------
-    ;; PROS: Punctuation (!, +) floats to the top. Case-insensitive (A sits next to a).
-    ;; CONS: Emacs UI will freeze/lag when opening directories with thousands of files.
-    ;; ==========================================
-    (require 'ls-lisp)
-    (setq ls-lisp-use-insert-directory-program nil
-          ls-lisp-dirs-first t
-          ls-lisp-ignore-case t
-          ;; ls-lisp-UCA-like-collation nil
-          dired-listing-switches "-AGFhlv --time-style=long-iso")
-
-    (add-hook 'dired-mode-hook #'dired-hide-details-mode)
-
-    ;; AUTO-CREATE DIRECTORIES ON MOVE/COPY
-    (defun my-dired-auto-create-target-dir (orig-fun &rest args)
-      "Silently create target directories the moment the Dired prompt receives a path."
-      (let* ((target (apply orig-fun args))
-             ;; Check if the target is a directory path (ends in /) or a file path
-             (dir (if (string-suffix-p "/" target) target (file-name-directory target))))
-        ;; If it's a directory and doesn't exist, build the full path instantly
-        (when (and dir (not (file-exists-p dir)))
-          (make-directory dir t))
-        target))
-
-    ;; Attach this to the Dired destination prompt
-    (advice-add 'dired-mark-read-file-name :around #'my-dired-auto-create-target-dir)
-
-    ;; Moved from init.el as requested
-    (put 'dired-find-alternate-file 'disabled nil))
-#+end_src
-
-*** dirvish
-
-#+begin_src emacs-lisp
-  (use-package dirvish
-    :ensure t
-    :init
-    ;; Force creation of the cache dir to prevent silent thumbnail failures
-    (unless (file-exists-p (expand-file-name "~/.cache/dirvish/"))
-    (make-directory (expand-file-name "~/.cache/dirvish/") t))
-    (dirvish-override-dired-mode)
-    :custom
-    ;; Wait 150ms before triggering previews
-    (dirvish-preview-delay 0.15)
-    (dirvish-attributes '(nerd-icons file-size file-time))
-    (dirvish-layout '(0 45 55))
-    (dirvish-hilite-line t)
-    ;; (dirvish-hilite-line nil)
-    ;; Unified dispatchers here (removed the duplicate from :config)
-    (dirvish-preview-dispatchers '(font gif epub archive pdf video audio image))
-    :config
-    (require 'dirvish-rsync)
-    (require 'dirvish-extras)
-    (require 'dirvish-peek)
-
-    (dirvish-peek-mode 1)
-
-  (dirvish-define-preview eza-dir-preview (file)
-      "Use 'eza' for beautiful, icon-rich directory previews"
-      (when (file-directory-p file)
-        `(shell . ("eza" "-a" "-1" "--color=always" "--icons=always" "--group-directories-first" ,file))))
-
-    (add-to-list 'dirvish-preview-dispatchers 'eza-dir-preview)
-
-    ;; Map window scrolling
-    (define-key dirvish-mode-map (kbd "M-i")
-      (lambda () (interactive) (scroll-other-window-down 1)))
-    (define-key dirvish-mode-map (kbd "M-k")
-      (lambda () (interactive) (scroll-other-window 1)))
-    (define-key dired-mode-map (kbd "'") #'delete-other-windows)
-
-    ;; Define the XFK segment for dirvish
-    (dirvish-define-mode-line xfk-mode
-      "Show current XFK mode."
-      (if xah-fly-insert-state-p
-          (propertize " INSERT " 'face '(:foreground "#5faf5f"))
-        (propertize " COMMAND " 'face '(:foreground "#ff5f5f"))))
-
-    ;; Mode-line format
-    (setq dirvish-mode-line-format '(:left (sort symlink) :right (my-org-timer omit xfk-mode)))
-
-    ;; Quick access
-    (setq dirvish-quick-access-entries
-          '(("h" "~/"                          "Home")
-            ("l" "~/Desk/"                     "Desk")
-            ("w" "~/DLs/"                      "DLs")
-            ("d" "~/Docs/"                     "Docs")
-            ("r" "~/Docs/11.git_docs/"         "git-docs")
-            ("m" "~/Musk/"                     "Musk")
-            ("p" "~/Pix/"                      "Pix")
-            ("v" "~/Vidz/"                     "Vidz")
-            ("t" "~/tmp/"                      "tmp")
-            ("f" "~/.dotfiles/"                ".dotfiles")
-            ("c" "~/.config/"                  ".config")
-            ("e" "~/.dotfiles/common/emacs.d/" ".emacs.d")
-            ("s" "~/.scripts/"                 ".scripts")
-            ("T" "~/.local/share/Trash/files/" "Trash")
-            ("i" "/run/media/"                 "Media")))
-
-    ;; Transient menus
-    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-      '("t" "file contents to wl-copy" my-dired-copy-file-contents))
-    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-      '("x" "Cut"   my-dired-copy-paste-do-cut))
-    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-      '("c" "Copy"  my-dired-copy-paste-do-copy))
-    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-      '("v" "Paste" my-dired-copy-paste-do-paste))
-    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-      '("q" "Quit" transient-quit-one))
-
-    :bind
-    (("C-c f" . dirvish)
-     :map dirvish-mode-map
-     ("f"   . dirvish-file-info-menu)
-     ("g"   . dirvish-quick-access)
-     ("y"   . dirvish-yank-menu)
-     ("s"   . dirvish-quicksort)
-     ("j"   . dired-up-directory)
-     ("k"   . dired-next-line)
-     ("i"   . dired-previous-line)
-     ("l"   . dired-find-file)
-     ("TAB" . dirvish-subtree-toggle)
-     ("v"   . dirvish-layout-toggle)
-     ("r"   . revert-buffer)
-     ("I"   . beginning-of-buffer)
-     ("K"   . end-of-buffer)
-     (","   . xah-next-window-or-frame)
-     ("C-c r" . dirvish-rsync-transient)
-     ("q"   . dirvish-quit)))
-
-  ;; Global auto-revert config outside the package scope (good practice)
+  :config
+  ;; 1. Global Auto-Revert (The "Watchdog")
   (setq global-auto-revert-non-file-buffers t)
   (setq auto-revert-verbose nil)
   (global-auto-revert-mode 1)
+  (add-hook 'dired-mode-hook 'auto-revert-mode)
 
-  ;; Force immediate refresh after file operations
-  (advice-add 'dired-do-copy   :after (lambda (&rest _) (revert-buffer)))
-  (advice-add 'dired-do-rename :after (lambda (&rest _) (revert-buffer)))
-  (advice-add 'dired-do-delete :after (lambda (&rest _) (revert-buffer)))
+  ;; 2. The "Hard Kick" (Refresh immediately after Emacs commands)
+  (defun my-dired-revert-all-buffers (&rest _)
+    "Refresh all dired buffers after an operation."
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (derived-mode-p 'dired-mode)
+          (revert-buffer nil t)))))
+
+  (advice-add 'dired-do-copy :after #'my-dired-revert-all-buffers)
+  (advice-add 'dired-do-rename :after #'my-dired-revert-all-buffers)
+  (advice-add 'dired-do-delete :after #'my-dired-revert-all-buffers)
+  ;; Added for directory creation as well
+  (advice-add 'dired-create-directory :after #'my-dired-revert-all-buffers)
+
+  ;; Disable Arabic/Hebrew text scanning for massive speedup in file lists
+  (add-hook 'dired-mode-hook (lambda () (setq bidi-paragraph-direction 'left-to-right)))
+
+  (setq dired-kill-when-opening-new-dired-buffers t
+        dired-dwim-target t
+        dired-recursive-deletes 'always
+        dired-create-destination-dirs 'always
+        dired-recursive-copies 'always)
+
+  ;; ==========================================
+  ;; OPTION A: NATIVE GNU LS (SPEED & NUMBERS)
+  ;; ------------------------------------------
+  ;; PROS: Lightning fast on massive directories. Numbers (0, 1, 10) sort perfectly.
+  ;; CONS: Ignores punctuation; capital letters (A) and lowercase (a) are separated.
+  ;; ==========================================
+  ;; (setq ls-lisp-use-insert-directory-program t) ;; Ensure GNU ls is active
+  ;; (setq dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
+  ;; (setq dired-listing-switches "-AGFhlX --group-directories-first --time-style=long-iso")
+
+  ;; ==========================================
+  ;; OPTION B: LS-LISP (PERFECT VISUAL SORTING)
+  ;; ------------------------------------------
+  ;; PROS: Punctuation (!, +) floats to the top. Case-insensitive (A sits next to a).
+  ;; CONS: Emacs UI will freeze/lag when opening directories with thousands of files.
+  ;; ==========================================
+  (require 'ls-lisp)
+  (setq ls-lisp-use-insert-directory-program nil
+        ls-lisp-dirs-first t
+        ls-lisp-ignore-case t
+        ;; ls-lisp-UCA-like-collation nil
+        dired-listing-switches "-AGFhlv --time-style=long-iso")
+
+  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+
+  ;; AUTO-CREATE DIRECTORIES ON MOVE/COPY
+  (defun my-dired-auto-create-target-dir (orig-fun &rest args)
+    "Silently create target directories the moment the Dired prompt receives a path."
+    (let* ((target (apply orig-fun args))
+           ;; Check if the target is a directory path (ends in /) or a file path
+           (dir (if (string-suffix-p "/" target) target (file-name-directory target))))
+      ;; If it's a directory and doesn't exist, build the full path instantly
+      (when (and dir (not (file-exists-p dir)))
+        (make-directory dir t))
+      target))
+
+  ;; Attach this to the Dired destination prompt
+  (advice-add 'dired-mark-read-file-name :around #'my-dired-auto-create-target-dir)
+
+  ;; Moved from init.el as requested
+  (put 'dired-find-alternate-file 'disabled nil)
+
+  ;; --- Custom SPC Leader Menu for Insert Mode ---
+
+  ;; 1. create brand new keymaps
+  (defvar-keymap my-dired-rename-map
+    :doc "Ranger Renaming Map"
+    "r" '("rm standard" . my-ranger-rename-standard)
+    "a" '("append"      . my-ranger-rename-append)
+    "A" '("Appen/Absolute"  . my-ranger-rename-append-end)
+    "i" '("Insert"      . my-ranger-rename-prepend)
+    "e" '("Extension"   . my-ranger-rename-extension)
+    "u" '("spc → _"     . dirvish-rename-space-to-underscore)
+    "w" '("wDired"      . dired-toggle-read-only))
+
+  (defvar-keymap my-dired-share-map
+    :doc "Share to Phone Map"
+    "k" '("to phone > KDE"  . my-dired-kdeconnect-share)
+    "w" '("to phone > worm" . my-dired-wormhole-send)
+    "s" '("syncthing folder" . my-dired-syncthing-transfer))
+
+  (defvar-keymap my-dired-spc-map
+    :doc "Custom SPC leader map for Dired/Dirvish in Insert Mode"
+    "1" '("drag/drop"       . my-dired-ripdrag)
+    "2" '("wl-copy"         . my-dired-copy-file-to-clipboard)
+    "m" '("dired-jump"      . dired-jump)
+    "u" '("consult-buffer"  . consult-buffer)
+    ";" '("consult-ripgrep" . consult-ripgrep)
+    "f" '("iBuffer"         . ibuffer)
+    "r" `("ranger-rename"   . ,my-dired-rename-map)
+    "z" '("zip/share > phone" . my-dired-zip-and-share)
+    "b" '("backup files"    . my-backup-file)
+    "p" `("Share Menu"      . ,my-dired-share-map))
+
+  ;; 2. bind SPC to our new map (nuking old dired-next-line automatically)
+  (keymap-set dired-mode-map "SPC" my-dired-spc-map)
+
+  ;; 3. tell which-key what this menu is called
+  (with-eval-after-load 'which-key
+    (which-key-add-major-mode-key-based-replacements 'dired-mode "SPC" "Dirvish Menu")))
 #+end_src
 
 *** dired-open
 
 #+begin_src emacs-lisp
-  (use-package dired-open
-    :ensure t
-    :config
-    (setq dired-open-extensions
-          '(
-            ;; --- IMAGES (swayimg) ---
-            ("png"  . "swayimg")  ("jpg"  . "swayimg")  ("jpeg" . "swayimg")
-            ("gif"  . "swayimg")  ("bmp"  . "swayimg")  ("ico"  . "swayimg")
-            ("svg"  . "swayimg")  ("webp" . "swayimg")  ("avif" . "swayimg")
-            ("tiff" . "swayimg")  ("tif"  . "swayimg")  ("tga"  . "swayimg")
-            ("heic" . "swayimg")  ("heif" . "swayimg")  ("jxl"  . "swayimg")
+(use-package dired-open
+  :ensure t
+  :config
+  (setq dired-open-extensions
+        '(
+          ;; --- IMAGES (swayimg) ---
+          ("png"  . "swayimg")  ("jpg"  . "swayimg")  ("jpeg" . "swayimg")
+          ("gif"  . "swayimg")  ("bmp"  . "swayimg")  ("ico"  . "swayimg")
+          ("svg"  . "swayimg")  ("webp" . "swayimg")  ("avif" . "swayimg")
+          ("tiff" . "swayimg")  ("tif"  . "swayimg")  ("tga"  . "swayimg")
+          ("heic" . "swayimg")  ("heif" . "swayimg")  ("jxl"  . "swayimg")
 
-            ;; --- VIDEO (mpv windowed) ---
-            ("mkv"  . "mpv --force-window=yes --keep-open=no")
-            ("mp4"  . "mpv --force-window=yes --keep-open=no")
-            ("avi"  . "mpv --force-window=yes --keep-open=no")
-            ("mov"  . "mpv --force-window=yes --keep-open=no")
-            ("webm" . "mpv --force-window=yes --keep-open=no")
-            ("flv"  . "mpv --force-window=yes --keep-open=no")
-            ("wmv"  . "mpv --force-window=yes --keep-open=no")
-            ("m4v"  . "mpv --force-window=yes --keep-open=no")
-            ("mpg"  . "mpv --force-window=yes --keep-open=no")
-            ("mpeg" . "mpv --force-window=yes --keep-open=no")
-            ("ts"   . "mpv --force-window=yes --keep-open=no")
+          ;; --- VIDEO (mpv windowed) ---
+          ("mkv"  . "mpv --force-window=yes --keep-open=no")
+          ("mp4"  . "mpv --force-window=yes --keep-open=no")
+          ("avi"  . "mpv --force-window=yes --keep-open=no")
+          ("mov"  . "mpv --force-window=yes --keep-open=no")
+          ("webm" . "mpv --force-window=yes --keep-open=no")
+          ("flv"  . "mpv --force-window=yes --keep-open=no")
+          ("wmv"  . "mpv --force-window=yes --keep-open=no")
+          ("m4v"  . "mpv --force-window=yes --keep-open=no")
+          ("mpg"  . "mpv --force-window=yes --keep-open=no")
+          ("mpeg" . "mpv --force-window=yes --keep-open=no")
+          ("ts"   . "mpv --force-window=yes --keep-open=no")
 
-            ;; --- AUDIO (mpv windowed) ---
-            ("mp3"  . "mpv --force-window=yes --gapless-audio=yes")
-            ("flac" . "mpv --force-window=yes --gapless-audio=yes")
-            ("wav"  . "mpv --force-window=yes --gapless-audio=yes")
-            ("ogg"  . "mpv --force-window=yes --gapless-audio=yes")
-            ("opus" . "mpv --force-window=yes --gapless-audio=yes")
-            ("m4a"  . "mpv --force-window=yes --gapless-audio=yes")
-            ("aac"  . "mpv --force-window=yes --gapless-audio=yes")
-            ("alac" . "mpv --force-window=yes --gapless-audio=yes")
+          ;; --- AUDIO (mpv windowed) ---
+          ("mp3"  . "mpv --force-window=yes --gapless-audio=yes")
+          ("flac" . "mpv --force-window=yes --gapless-audio=yes")
+          ("wav"  . "mpv --force-window=yes --gapless-audio=yes")
+          ("ogg"  . "mpv --force-window=yes --gapless-audio=yes")
+          ("opus" . "mpv --force-window=yes --gapless-audio=yes")
+          ("m4a"  . "mpv --force-window=yes --gapless-audio=yes")
+          ("aac"  . "mpv --force-window=yes --gapless-audio=yes")
+          ("alac" . "mpv --force-window=yes --gapless-audio=yes")
 
-            ;; --- DOCUMENTS & COMICS (zathura) ---
-            ("pdf"  . "zathura")  ("djvu" . "zathura")  ("ps"   . "zathura")
-            ("eps"  . "zathura")  ("cbz"  . "zathura")  ("cbr"  . "zathura")
+          ;; --- DOCUMENTS & COMICS (zathura) ---
+          ("pdf"  . "zathura")  ("djvu" . "zathura")  ("ps"   . "zathura")
+          ("eps"  . "zathura")  ("cbz"  . "zathura")  ("cbr"  . "zathura")
 
-            ;; --- E-BOOKS (FBReader) ---
-            ("epub" . "FBReader") ("mobi" . "FBReader") ("fb2"  . "FBReader")
-            ("azw3" . "FBReader")
-            )))
+          ;; --- E-BOOKS (FBReader) ---
+          ("epub" . "FBReader") ("mobi" . "FBReader") ("fb2"  . "FBReader")
+          ("azw3" . "FBReader")
+          )))
+#+end_src
+
+*** dirvish
+
+#+begin_src emacs-lisp
+(use-package dirvish
+  :ensure t
+  :bind (("C-c f" . dirvish)
+         :map dirvish-mode-map
+         ("f"     . dirvish-file-info-menu)
+         ("g"     . dirvish-quick-access)
+         ("y"     . dirvish-yank-menu)
+         ("s"     . dirvish-quicksort)
+         ("j"     . dired-up-directory)
+         ("k"     . dired-next-line)
+         ("i"     . dired-previous-line)
+         ("l"     . dired-find-file)
+         ("TAB"   . dirvish-subtree-toggle)
+         ("v"     . dirvish-layout-toggle)
+         ("r"     . revert-buffer)
+         ("I"     . beginning-of-buffer)
+         ("K"     . end-of-buffer)
+         (","     . xah-next-window-or-frame)
+         ("C-c r" . dirvish-rsync-transient)
+         ("q"     . dirvish-quit)
+         ;; 1. This catches your physical Ctrl+I (because input-decode-map saved it)
+         ("<C-i>" . dired-prev-subdir)
+         ;; 2. Your other bindings
+         ("C-k"   . dired-next-subdir)
+         ("z"     . describe-mode)
+         ("b"     . xah-pop-local-mark-ring)
+         ;; Map window scrolling
+         ("M-i"   . (lambda () (interactive) (scroll-other-window-down 1)))
+         ("M-k"   . (lambda () (interactive) (scroll-other-window 1))))
+
+  :init
+  ;; Force creation of the cache dir to prevent silent thumbnail failures
+  (unless (file-exists-p (expand-file-name "~/.cache/dirvish/"))
+    (make-directory (expand-file-name "~/.cache/dirvish/") t))
+  (dirvish-override-dired-mode)
+
+  :custom
+  ;; Wait 150ms before triggering previews
+  (dirvish-preview-delay 0.15)
+  (dirvish-attributes '(nerd-icons file-size file-time))
+  (dirvish-layout '(0 45 55))
+  (dirvish-hilite-line t)
+  ;; (dirvish-hilite-line nil)
+  ;; Unified dispatchers here (removed the duplicate from :config)
+  (dirvish-preview-dispatchers '(font gif epub archive pdf video audio image eza-dir-preview))
+
+  :config
+  (require 'dirvish-rsync)
+  (require 'dirvish-extras)
+  (require 'dirvish-peek)
+
+  (dirvish-peek-mode 1)
+
+  (dirvish-define-preview eza-dir-preview (file)
+    "Use 'eza' for beautiful, icon-rich directory previews"
+    (when (file-directory-p file)
+      `(shell . ("eza" "-a" "-1" "--color=always" "--icons=always" "--group-directories-first" ,file))))
+
+  ;; Define the XFK segment for dirvish
+  (dirvish-define-mode-line xfk-mode
+    "Show current XFK mode."
+    (if xah-fly-insert-state-p
+        (propertize " INSERT " 'face '(:foreground "#5faf5f"))
+      (propertize " COMMAND " 'face '(:foreground "#ff5f5f"))))
+
+  ;; Mode-line format
+  (setq dirvish-mode-line-format '(:left (sort symlink) :right (my-org-timer omit xfk-mode)))
+
+  ;; Quick access
+  (setq dirvish-quick-access-entries
+        '(("h" "~/"                          "Home")
+          ("l" "~/Desk/"                     "Desk")
+          ("w" "~/DLs/"                      "DLs")
+          ("d" "~/Docs/"                     "Docs")
+          ("r" "~/Docs/11.git_docs/"         "git-docs")
+          ("m" "~/Musk/"                     "Musk")
+          ("p" "~/Pix/"                      "Pix")
+          ("v" "~/Vidz/"                     "Vidz")
+          ("t" "~/tmp/"                      "tmp")
+          ("f" "~/.dotfiles/"                ".dotfiles")
+          ("c" "~/.config/"                  ".config")
+          ("e" "~/.dotfiles/common/emacs.d/" ".emacs.d")
+          ("s" "~/.scripts/"                 ".scripts")
+          ("T" "~/.local/share/Trash/files/" "Trash")
+          ("i" "/run/media/"                 "Media")))
+
+  ;; Transient menus
+  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+    '("t" "file contents to wl-copy" my-dired-copy-file-contents))
+  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+    '("x" "Cut"   my-dired-copy-paste-do-cut))
+  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+    '("c" "Copy"  my-dired-copy-paste-do-copy))
+  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+    '("v" "Paste" my-dired-copy-paste-do-paste))
+  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+    '("q" "Quit" transient-quit-one))
+
+  ;; Note: The redundant global-auto-revert and (advice-add 'dired-do-copy ...)
+  ;; from the end of the original dirvish block were merged into the authoritative
+  ;; Dired block above to prevent duplicate execution.
+  )
 #+end_src
 
 ** MUSK
@@ -857,8 +899,13 @@
               ("\\.mm\\'" . default)
               ("\\.x?html?\\'" . default)
               ("\\.pdf\\'" . system)   ; Opens PDF in system default app
-              ("\\.png\\'" . system)   ; Opens images in system default app
-              ("\\.jpg\\'" . system)))
+              ("\\.png\\'"  . "swayimg %s")  ; Opens images directly in SwayIMG
+              ("\\.jpg\\'"  . "swayimg %s")
+              ("\\.jpeg\\'" . "swayimg %s")
+              ("\\.webp\\'" . "swayimg %s")
+              ("\\.gif\\'"  . "swayimg %s")))
+
+
 
       ;; 3. Dynamic/Async File Apps (Appended via add-to-list)
       (dolist (ext '("\\.mp4\\'" "\\.mkv\\'" "\\.webm\\'" "\\.avi\\'"))
@@ -920,15 +967,85 @@
 
        ;; Day Trading Log (Datetree)
        ("t" "Trade Log" entry
-       (file+olp+datetree "~/Docs/10.Org/trading-log.org")
-       "* Trade: %?\n  - Entry: \n  - Exit: \n  - Notes: "
-       :empty-lines 1)
+        (file+olp+datetree "~/Docs/10.Org/trading-log.org")
+        "**** %<%Y-%m-%d %A>
+  ,*Trades*
+  |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+  | # | Stock | Strike  | Cons | Time (In/Out) | Duration | Cost (Total)    | Sell (Total)    | P/L Final |     ROI |
+  |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+  _Summary:_
+  TOTAL P/L: 
+  TOTAL ROI: 
+  Average Duration: 
+  Max Duration: 
+  Min Duration: 
+  Highest Daily P/L: 
+  Lowest Daily P/L:
+
+  ,***** Review
+  ,****** Trade #: TICKER
+  ,*Risk & Sizing (Checklist)*
+  - [ ] Contract price fits account management (Ideal <= $1.50)
+  - [ ] Position sized strictly to max 2 contracts
+  - [ ] Spread visually validated before entry (Ask - Bid <= $0.05 to $0.08)
+
+  ,*Entry & Exit Mechanics (Checklist)*
+  - [ ] Entry triggered by clear technical setup on underlying chart
+  - [ ] Mental Stop Loss based on the CHART (support loss or structure break)
+  - [ ] Gave it enough \"breathing room\" for volatility without violating technical limits
+  - [ ] /Flatten/ triggered _MANUALLY_ the exact moment chart structure failed
+  - [ ] Exit executed without hesitation, hope, or praying for a reversal
+
+  ,*Daily Routine & Limits*
+  - [ ] Attempt cycle respected (Max 3/Daily)
+  - [ ] Early quitting activated (profit target met)
+
+  ,*Performance Classification*
+  - [ ] System Win (Followed technical read and profited — FLAWLESS!)
+  - [ ] System Loss (Stopped out manually exactly where chart dictated — TOP EXEC!)
+  - [ ] Rule Break (Hesitated on stop, ignored chart failure, or blew sizing — GARBAGE )
+
+  ,*Psychology & Execution Audit*
+  1. Anxiety, rush to enter, or FOMO before order?
+     - [ ] Yes
+     - [ ] No
+  2. Hesitated on Flatten when technical/chart limit was lost?
+     - [ ] Yes
+     - [ ] No
+  3. Influenced by previous P/L (revenge/greed)?
+     - [ ] Yes
+     - [ ] No
+  4. Session Diagnosis:
+     - [ ] Technical
+     - [ ] Emotional
+     - [ ] BOTH ABOVE
+     - [ ] Flawless Execution
+  5. Entry Origin:
+     - [ ] Personal
+     - [ ] Mentor
+
+  _Notes:_
+  /What worked well:/
+  1. 
+
+  /Where discipline failed:/
+  1. 
+
+  /Lesson:/
+  1. "
+         :empty-lines 1)
 
        ;; System Ticketing template
        ("x" "System Ticket" entry
         (file+headline "~/Docs/10.Org/system-tickets.org" "OPEN TICKETS")
         "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%a\n"
         :empty-lines 1)
+
+       ("r" "BuJo Daily Reflection" plain
+        (file "~/Docs/10.Org/bujo_reflection_2026.org")
+        "** %<%Y-%m-%d [%a]>\n:PROPERTIES:\n:HUMOR_MANHA: 1-5\n:HUMOR_NOITE: 1-5\n:END:\n\n*** Manhã\n**** Intenção do dia\n- %?\n\n**** Top 3 prioridades [%]\n- [ ] \n- [ ] \n- [ ] \n\n**** Energia ao despertar (1-5)\n- \n\n*** Noite\n**** O que funcionou bem hoje?\n- \n\n**** O que me drenou energia?\n- \n\n**** Que tarefa evitei e por quê?\n- \n\n**** APRENDI ou NOTEI algo sobre mim mesmo?\n- \n\n**** Frase-síntese do dia\n#+begin_quote\n\n#+end_quote\n"
+        :empty-lines 1)
+
   ))
 #+end_src
 
@@ -1852,97 +1969,6 @@ Packages replacements:
         (define-key org-mode-map (kbd "TAB") #'org-cycle))
 #+end_src
 
-** FILE-MANAGER
-*** general keys (dired/dirvish)
-
-#+begin_src emacs-lisp
-  ;; dired/dirvish keys
-  (with-eval-after-load 'dired
-    ;; Bind a key in all Dired/Dirvish buffers
-    (define-key dired-mode-map (kbd "\\")    #'dired-narrow-fuzzy)
-    (define-key dired-mode-map (kbd "n")     #'consult-line)
-    (define-key dired-mode-map (kbd "h")     #'dired-maybe-insert-subdir))
-
-  (with-eval-after-load 'dirvish
-    ;; 1. This catches your physical Ctrl+I (because input-decode-map saved it)
-    (define-key dirvish-mode-map (kbd "<C-i>") #'dired-prev-subdir)
-
-    ;; 2. This catches your physical Tab key (Emacs' fallback for <tab>)
-    (define-key dirvish-mode-map (kbd "TAB") #'dirvish-subtree-toggle)
-
-    ;; 3. Your other bindings
-    (define-key dirvish-mode-map (kbd "C-k") #'dired-next-subdir)
-    (define-key dirvish-mode-map (kbd "z")   #'describe-mode)
-    (define-key dirvish-mode-map (kbd "b")   #'xah-pop-local-mark-ring))
-#+end_src
-
-*** insert-mode (spc menu)
-
-#+begin_src emacs-lisp
-  ;; 1. create a brand new keymap
-  (defvar my-dired-spc-map (make-sparse-keymap)
-    "Custom SPC leader map for Dired/Dirvish in Insert Mode")
-
-  ;; 2. nuke the useless 'dired-next-line' binding
-  (define-key dired-mode-map (kbd "SPC") nil)
-
-  ;; 3. bind SPC to our new map
-  (define-key dired-mode-map (kbd "SPC") my-dired-spc-map)
-
-  ;; 4. tell which-key what this menu is called
-  (with-eval-after-load 'which-key
-    (which-key-add-major-mode-key-based-replacements 'dired-mode
-      "SPC" "Dirvish Menu"))
-
-  ;; 5. menus items
-  (define-key my-dired-spc-map (kbd "1") '("drag/drop"       . my-dired-ripdrag))
-  (define-key my-dired-spc-map (kbd "2") '("wl-copy"         . my-dired-copy-file-to-clipboard))
-  (define-key my-dired-spc-map (kbd "m") '("dired-jump"      . dired-jump))
-  (define-key my-dired-spc-map (kbd "u") '("consult-buffer"  . consult-buffer))
-  (define-key my-dired-spc-map (kbd ";") '("consult-ripgrep" . consult-ripgrep))
-  (define-key my-dired-spc-map (kbd "f") '("iBuffer"         . ibuffer))
-  (define-key my-dired-spc-map (kbd "r") '("ranger-rename"   . my-ranger-renaming))
-  (define-key my-dired-spc-map (kbd "z") '("zip/share > phone" . my-dired-zip-and-share))
-  (define-key my-dired-spc-map (kbd "b") '("backup files"    . my-backup-file))
-#+end_src
-
-*** sub-map 'r' (ranger rename menu)
-
-#+begin_src emacs-lisp
-  (defvar my-dired-rename-map (make-sparse-keymap) "Ranger Renaming Map")
-  (define-key my-dired-spc-map (kbd "r") my-dired-rename-map)
-  (with-eval-after-load 'which-key
-    (which-key-add-keymap-based-replacements my-dired-spc-map "r" "Rename Menu"))
-
-  ;; Bind the Ranger functions
-  (define-key my-dired-rename-map (kbd "r") '("rm standard" . my-ranger-rename-standard))
-  (define-key my-dired-rename-map (kbd "a") '("append" . my-ranger-rename-append))
-  (define-key my-dired-rename-map (kbd "A") '("Appen/Absolute" . my-ranger-rename-append-end))
-  (define-key my-dired-rename-map (kbd "i") '("Insert" . my-ranger-rename-prepend))
-  (define-key my-dired-rename-map (kbd "e") '("Extension" . my-ranger-rename-extension))
-  (define-key my-dired-rename-map (kbd "u") '("spc → _" . dirvish-rename-space-to-underscore))
-  (define-key my-dired-rename-map (kbd "w") '("wDired" . dired-toggle-read-only))
-#+end_src
-
-*** sub-map 'p' (share to phone/others)
-
-#+begin_src emacs-lisp
-  ;; 1. Create the new Share Sub-Map
-  (defvar my-dired-share-map (make-sparse-keymap) "Share to Phone Map")
-
-  ;; 2. Attach the Share map to 'p' INSIDE your main SPC map
-  (define-key my-dired-spc-map (kbd "p") my-dired-share-map)
-
-  ;; 3. Tell which-key what to call this menu
-  (with-eval-after-load 'which-key
-    (which-key-add-keymap-based-replacements my-dired-spc-map "p" "Share Menu"))
-
-  ;; 4. Bind the share functions INTO THE SHARE MAP (not the spc map!)
-  (define-key my-dired-share-map (kbd "k") '("to phone > KDE"   . my-dired-kdeconnect-share))
-  (define-key my-dired-share-map (kbd "w") '("to phone > worm"  . my-dired-wormhole-send))
-  (define-key my-dired-share-map (kbd "s") '("syncthing folder" . my-dired-syncthing-transfer))
-#+end_src
-
 ** SYSTEM
 *** IBUFFER INSERT-MODE
 
@@ -1980,12 +2006,14 @@ Packages replacements:
 *** REGISTERS
 
 #+begin_src emacs-lisp
-  (set-register ?a (cons 'file "~/Desk/Dropbox/orgriz/[PERSO]_agenda_2026.org"))
-  (set-register ?h (cons 'file "~/Desk/Dropbox/orgriz/health.org"))
+  (set-register ?a (cons 'file "~/DLs/0.syncthing_share/[PERSO]_agenda_2026.org"))
+  (set-register ?h (cons 'file "~/DLs/0.syncthing_share/health.org"))
   (set-register ?s (cons 'file "~/Docs/10.Org/trading-study-tracker.org"))
   (set-register ?t (cons 'file "~/Docs/10.Org/trading-log.org"))
   (set-register ?p (cons 'file "~/Docs/10.Org/personal-searches.org"))
   (set-register ?f (cons 'file "~/Docs/10.Org/system-tickets.org"))
+  (set-register ?r (cons 'file "~/Docs/10.Org/bujo_reflection_2026.org"))
+  (set-register ?x (cons 'file "~/Docs/10.Org/bujo_remember_index.org"))
   (set-register ?i (cons 'file "~/Docs/10.Org/roam/life/20260421170118-life_hub_index.org"))
   (set-register ?l (cons 'file "~/Docs/10.Org/roam/tech/20260417193707-tech_hub_index.org"))
   (set-register ?e (cons 'file "~/Docs/10.Org/roam/tech/20260421144405-emacs_journey.org"))

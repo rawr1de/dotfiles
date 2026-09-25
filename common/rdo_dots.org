@@ -2,12 +2,39 @@
 #+TITLE: RDO System Dotfiles
 #+PROPERTY: header-args :mkdirp yes
 
+#+begin_comment
+_HOW TO INSTALL:_
+1. DL github .dotfiles folder
+  ~git clone https://github.com/rawr1de/dotfiles.git ~/.dotfiles~
+2. install emacs
+3. set new default emacs dir ($USER/home/.dotfiles/emacs.d/)
+   a.) commands already set on /.zshrc/
+   b.) /if/ zsh config files in place skip this step
+   ~alias emacs='emacs --init-directory="~/.dotfiles/common/emacs.d/"'~
+   ~alias emacs-daemon='emacs --daemon --init-directory="~/.dotfiles/common/emacs.d/"'~
+4. start emacs and check if all good!
+
+_RECOVERING FILES:_
+.mc-lists.el
+.spad_hist
+base_cfg.el
+base_cfg.org
+custom.el
+early-init.el
+init.el
+test_new.el
+#+end_comment
+
 * common (wayland/x11)
 ** .config/
 **** application launchers (.desktop)
-generates local .desktop files, Fuzzel sees TUI apps and launch it inside Kitty
+
+generates local .desktop files, for application launchers (Fuzzel, Rofi..)
+execute GUI/TUI/DAEMON apps and launch it (TUI are exec inside Kitty)
+
 ***** pacseek                                                       :TUI:
-search pkg's on AUR
+
+*search pkg's on AUR*
 #+begin_src conf :tangle ~/.local/share/applications/pacseek.desktop :mkdirp yes
 [Desktop Entry]
 Name=Pacseek
@@ -21,6 +48,7 @@ Categories=System;
 #+end_src
 
 ***** network manager                                               :TUI:
+
 #+begin_src conf :tangle ~/.local/share/applications/nmtui.desktop :mkdirp yes
 [Desktop Entry]
 Name=Network Manager (NMTUI)
@@ -34,6 +62,7 @@ Categories=Settings;Network;
 #+end_src
 
 ***** bluetooth manager                                             :TUI:
+
 #+begin_src conf :tangle ~/.local/share/applications/bluetui.desktop :mkdirp yes
 [Desktop Entry]
 Name=Bluetooth (Blue TUI)
@@ -47,7 +76,8 @@ Categories=Settings;HardwareSettings;
 #+end_src
 
 ***** cmus                                                          :TUI:
-console music player
+
+*console music player*
 #+begin_src conf :tangle ~/.local/share/applications/cmus.desktop :mkdirp yes
   [Desktop Entry]
   Name=Cmus
@@ -61,7 +91,8 @@ console music player
 #+end_src
 
 ***** transmission-cli                                              :TUI:
-bittorrent CLI minimal
+
+*bittorrent CLI minimal*
 #+begin_src conf :tangle ~/.local/share/applications/tremc.desktop :mkdirp yes
 [Desktop Entry]
 Name=Transmission (Tremc)
@@ -74,7 +105,25 @@ Type=Application
 Categories=Network;FileTransfer;P2P;
 #+end_src
 
-***** emacs (client)
+***** emacs
+
+*REGULAR:*
+#+begin_src conf :tangle ~/.local/share/applications/emacs.desktop :mkdirp yes
+[Desktop Entry]
+Name=Emacs
+GenericName=Text Editor
+Comment=Edit text
+MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+Exec=/usr/bin/emacs --init-directory=/home/rdo/.dotfiles/common/emacs.d/ %F
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Development;TextEditor;
+StartupNotify=true
+StartupWMClass=Emacs
+#+end_src
+
+*CLIENT (under daemon):*
 #+begin_src conf :tangle ~/.local/share/applications/emacsclient.desktop :mkdirp yes
 [Desktop Entry]
 Name=Emacs (Client)
@@ -92,21 +141,47 @@ Keywords=emacsclient;
 Actions=new-window;new-instance;
 #+end_src
 
-***** emacs
-#+begin_src conf :tangle ~/.local/share/applications/emacs.desktop :mkdirp yes
-[Desktop Entry]
-Name=Emacs
-GenericName=Text Editor
-Comment=Edit text
-MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
-Exec=/usr/bin/emacs --init-directory=/home/rdo/.dotfiles/common/emacs.d/ %F
-Icon=emacs
-Type=Application
-Terminal=false
-Categories=Development;TextEditor;
-StartupNotify=true
-StartupWMClass=Emacs
+***** syncthing
+
+*initialize the daemon:*
+#+begin_src conf :tangle ~/.local/share/applications/syncthing.desktop :mkdirp yes
+  [Desktop Entry]
+  Version=1.0
+  Name=Syncthing Web UI (Daemon)
+  GenericName=File Synchronization
+  Exec=sh -c "systemctl --user start syncthing.service && sleep 1 && xdg-open http://127.0.0.1:8384/"
+  Icon=syncthing
+  Terminal=false
+  Type=Application
+  Categories=Network;FileTransfer;P2P;
+
+  # entry above runs the Syncthing Daemon
+  # three ways to terminate it:
+  # 1. systemctl --user stop syncthing.service
+  # 2. Web UI > Actions (top right) > Shutdown
+  # 3. Use custom syncthing Kill/Stop .desktop entry
 #+end_src
+
+/Note:/
+# entry above runs the Syncthing Daemon
+# three ways to terminate it:
+# 1. systemctl --user stop syncthing.service
+# 2. Web UI > Actions (top right) > Shutdown
+# 3. Use Custom Syncthing Kill/Stop Daemon .desktop entry
+
+*Custom Syncthing Kill/Stop Daemon .desktop entry*
+#+begin_src conf :tangle ~/.local/share/applications/syncthing.desktop :mkdirp yes
+[Desktop Entry]
+Version=1.0
+Name=Syncthing Stop
+Comment=Stop the Syncthing background daemon
+Exec=systemctl --user stop syncthing.service
+Icon=process-stop
+Terminal=false
+Type=Application
+Categories=Network;
+#+end_src
+
 **** atuin (shell history)                                        :common:
 ui customized to show exit codes. executes commands immediately on enter
 
@@ -204,6 +279,30 @@ if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integr
 # END_KITTY_SHELL_INTEGRATION
 #+end_src
 
+**** qbittorrent                                                  :common:
+
+#+begin_comment
+*Themes:*
+
+/Download:/
+Catppuccin - https://github.com/catppuccin/qbittorrent
+Dracula - https://github.com/dracula/qbittorrent
+Ayu Dark & Iceberg - https://github.com/maboroshin/qBittorrentDarktheme
+
+/Install:/
+1. Download the theme files (.qbtheme) from the latest GitHub release.
+2. Open qBittorrent and go to Tools > Preferences > Behaviour.
+3. Tick the "use custom UI theme" checkbox and select your chosen .qbt
+4. Click Apply and restart qBittorrent for the changes to take effect.
+
+
+*Change Font Size:*
+~qt6ct~
+
+*Location:*
+=~/.config/qBittorrent/themes/=
+#+end_comment
+
 **** cmus (music player)                                          :common:
 
 custom manjaro green theme and core settings with xfk navigation
@@ -255,6 +354,16 @@ set color_win_sel_fg=229
 set color_win_inactive_sel_bg=236
 set color_win_inactive_sel_fg=229
 set color_win_dir=229
+#+end_src
+
+**** pinentry
+
+#+begin_src conf :tangle ~/.gnupg/gpg-agent.conf
+allow-loopback-pinentry
+# (36000 seconds = 10 hours)
+default-cache-ttl 36000
+max-cache-ttl 36000
+pinentry-program /usr/bin/pinentry-qt
 #+end_src
 
 **** emacs (THE ONE)                                      :wayland:common:
@@ -648,7 +757,7 @@ wayland notification daemon configuration
   // spawn-sh-at-startup "emacs --daemon --init-directory=~/.dotfiles/common/emacs.d/"
 
   spawn-at-startup "xwayland-satellite"
-  spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
+  spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
   spawn-at-startup "bash" "-c" "wl-paste --type text --watch cliphist store"
   spawn-at-startup "bash" "-c" "wl-paste --type image --watch cliphist store"
   spawn-at-startup "mako"
@@ -697,7 +806,7 @@ wayland notification daemon configuration
       // ──────────────────────
       Mod+Return   hotkey-overlay-title="Kitty"               { spawn "kitty"; }
       Mod+1        hotkey-overlay-title="Emacs"               { spawn-sh "emacsclient -c -a 'emacs --init-directory=/home/rdo/.dotfiles/common/emacs.d/'"; }
-      Mod+2        hotkey-overlay-title="Firefox"             { spawn "firefox"; }
+      Mod+2        hotkey-overlay-title="Brave"               { spawn "Brave"; }
       Mod+7        hotkey-overlay-title="Fuzzel Clipboard"    { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
       Mod+8        hotkey-overlay-title="Fuzzel Launcher"     { spawn "fuzzel"; }
       Mod+F10      hotkey-overlay-title="Reply Last SMS"      { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-termux-last-sms)'"; }
@@ -719,6 +828,7 @@ wayland notification daemon configuration
       // SYSTEM
       // ──────────────────────
       Super+Alt+0               hotkey-overlay-title="Lock Screen"         { spawn "swaylock"; }
+      Super+Alt+9               hotkey-overlay-title="TMatrix Desk Setup"  { spawn-sh "SH_tmatrix_bg.sh"; }
       Mod+Shift+E               hotkey-overlay-title="Logout (NIRI)"       { quit; }
       Mod+Alt+F4                hotkey-overlay-title="Shutdown"            { spawn-sh "qs -c noctalia-shell ipc call sessionMenu toggle"; }
       Ctrl+Shift+Mod+Alt+P      hotkey-overlay-title="Monitors OFF"        { power-off-monitors; }
@@ -734,11 +844,13 @@ wayland notification daemon configuration
       // ──────────────────────
       Print        hotkey-overlay-title="Screenshot EDIT"   { spawn-sh "grim -g \"$(slurp)\" - | satty --filename -"; }
       Ctrl+Print   hotkey-overlay-title="Screenshot CLIP"   { spawn-sh "grim -g \"$(slurp)\" - | wl-copy"; }
-
+      Shift+Ctrl+Print   hotkey-overlay-title="Screenshot CLIP"   { spawn-sh "grim - | wl-copy"; }
+      Mod+Ctrl+Print   hotkey-overlay-title="Screenshot AUTO"   { spawn-sh "grim $HOME/Pix/Screenshots/$(date +'%Y-%m-%d-%H%M%S').png"; }
 
       // NIRI - WINDOW | (mgnt)
       // ──────────────────────
       Mod+O            hotkey-overlay-title="Overview" repeat=false { toggle-overview; }
+      Mod+MouseMiddle  hotkey-overlay-title="Overview" repeat=false { toggle-overview; }
       Mod+Q            hotkey-overlay-title="Close" repeat=false    { close-window; }
       Mod+Shift+V      hotkey-overlay-title="Float"                 { toggle-window-floating; }
       Mod+9            hotkey-overlay-title="Tabbed"                { toggle-column-tabbed-display; }
@@ -771,7 +883,9 @@ wayland notification daemon configuration
       // NIRI - FOCUS | (column/window)
       // ──────────────────────
       Mod+J  hotkey-overlay-title="Focus Column Left"  { focus-column-left; }
+      Mod+MouseBack  hotkey-overlay-title="Focus Column Left"  { focus-column-left; }
       Mod+L  hotkey-overlay-title="Focus Column Right" { focus-column-right; }
+      Mod+MouseForward  hotkey-overlay-title="Focus Column Right" { focus-column-right; }
       // Ctrl+Mod+I  hotkey-overlay-title="Focus Window Column Up"    { focus-window-up; }
       // Ctrl+Mod+K  hotkey-overlay-title="Focus Window Column Down"  { focus-window-down; }
       // Single-key tab cycling (Wraps to top when reaching the bottom)
@@ -783,7 +897,9 @@ wayland notification daemon configuration
       // Mod+Ctrl+I  hotkey-overlay-title="Focus Workspace Up"   { focus-workspace-up; }
       // Mod+Ctrl+K  hotkey-overlay-title="Focus Workspace Down" { focus-workspace-down; }
       Mod+I  hotkey-overlay-title="Focus Workspace Up"   { focus-workspace-up; }
+      Mod+WheelScrollUp  hotkey-overlay-title="Focus Workspace Up"   { focus-workspace-up; }
       Mod+K  hotkey-overlay-title="Focus Workspace Down" { focus-workspace-down; }
+      Mod+WheelScrollDown  hotkey-overlay-title="Focus Workspace Down" { focus-workspace-down; }
 
       // NIRI - FOCUS | (monitor)
       // ──────────────────────
@@ -2261,6 +2377,22 @@ wayland image viewer configuration with custom vim-like binds and api dumps
   swayimg.viewer.on_key("F1",              function() swayimg.viewer.show_help() end)
   swayimg.viewer.on_key("a",               function() swayimg.set_mode("gallery") end)
 
+  -- CUSTOM MOVE TO SYSTEM'S TRASH FOLDER (VIEWER MODE)
+  swayimg.viewer.on_key("Delete", function()
+      local image = swayimg.viewer.get_image()
+
+      if image then
+          -- Safely format the shell command (handles spaces in filenames)
+          local cmd = string.format("mv %q /home/rdo/.local/share/Trash/files/", image.path)
+
+          -- Execute the move command
+          os.execute(cmd)
+
+          -- Remove the moved file from the current viewing session
+          swayimg.imagelist.remove(image.path)
+      end
+  end)
+  --
 
   -- // GLOBAL UTILITIES
   -- // ──────────────────────
@@ -2295,11 +2427,28 @@ wayland image viewer configuration with custom vim-like binds and api dumps
 
   swayimg.gallery.on_key("Ctrl-p",         function() local entries = swayimg.imagelist.get(); for _, entry in ipairs(entries) do if entry.mark then print(entry.path) end end end)
 
+  -- CUSTOM MOVE TO SYSTEM'S TRASH FOLDER (GALLERY MODE)
+  swayimg.gallery.on_key("Delete", function()
+      -- Get the currently selected image in the gallery
+      local image = swayimg.gallery.get_image()
+
+      if image then
+          -- Safely format the shell command
+          local cmd = string.format("mv %q /home/rdo/.local/share/Trash/files/", image.path)
+
+          -- Execute the move command
+          os.execute(cmd)
+
+          -- Remove the moved file from the current session
+          swayimg.imagelist.remove(image.path)
+      end
+  end)
+  --
+
   -- // SLIDESHOW MODE
   -- // ──────────────────────
   swayimg.viewer.on_key   ("F5",           function() swayimg.set_mode("slideshow") end)
   swayimg.gallery.on_key  ("F5",           function() swayimg.set_mode("slideshow") end)
-  swayimg.slideshow.on_key("Delete",       function() local image = swayimg.slideshow.get_image(); os.remove(image.path); swayimg.text.set_status("File "..image.path.." removed") end)
 
   -- ==============================================================================
   -- MULTI-LINE UTILITIES
@@ -2759,8 +2908,9 @@ pdf reader configuration with custom colors and xfk navigation
 login profile and interactive shell configuration for zsh
 ***** .zshenv
 #+begin_src sh :tangle ~/.zshenv
-export PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
-export WAYLAND_DISPLAY=wayland-1
+  export PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
+  export WAYLAND_DISPLAY=wayland-1
+  export QT_QPA_PLATFORMTHEME=qt6ct
 #+end_src
 
 ***** .zprofile
@@ -2943,463 +3093,476 @@ export WAYLAND_DISPLAY=wayland-1
 
 * Repos PKGs Files
 ** Arch Linux - PGKs Install
+*** Arch (Wayland BASE)
 
-      # Minimal comfortable system: media, editing, file management, terminal tools
-      # Install: pacman -S $(grep -v '^#' ARCH_pkg_wayland_base.txt | tr '\n' ' ')
-      # AUR packages handled automatically by SH_install_packages.sh via yay fallback
-      #
-      # NOTE: multilib repo must be enabled in /etc/pacman.conf before installing
-      # Uncomment the [multilib] section and run: sudo pacman -Sy
+#+begin_src text :tangle ~/.dotfiles/common/_ARCH_pkgs/ARCH_pkg_wayland_base.txt :mkdirp yes :padline no
+  # Minimal comfortable system: media, editing, file management, terminal tools
+  # Install: pacman -S $(grep -v '^#' ARCH_pkg_wayland_base.txt | tr '\n' ' ')
+  # AUR packages handled automatically by SH_install_packages.sh via yay fallback
+  #
+  # NOTE: multilib repo must be enabled in /etc/pacman.conf before installing
+  # Uncomment the [multilib] section and run: sudo pacman -Sy
 
-      # --- Core editors & terminal ---
-      emacs-wayland
-      nano
-      kitty
-      zsh
-
-
-      # --- Shell tools ---
-      atuin
-      starship
-      zoxide
-      fzf
-      bat
-      lsd
-      ripgrep
-      fastfetch
-      glow
-      tealdeer
-      man-db
-      wget
-      rsync
-      socat
-      stow
-      git
-      duf
-      wev
-      parallel
-      wdisplays
-      wlsunset
-      ddcutil
-      pacseek
-      jq
-      eza
-      pass
-      gnupg
+  # --- Core editors & terminal ---
+  emacs-wayland
+  nano
+  kitty
+  zsh
 
 
-      # --- Archive tools ---
-      atool
-      unzip
-      unrar
-      zip
-      p7zip
+  # --- Shell tools ---
+  atuin
+  starship
+  zoxide
+  fzf
+  bat
+  lsd
+  ripgrep
+  fastfetch
+  glow
+  tealdeer
+  man-db
+  wget
+  rsync
+  socat
+  stow
+  git
+  duf
+  wev
+  parallel
+  wdisplays
+  wlsunset
+  ddcutil
+  pacseek
+  jq
+  eza
+  pass
+  pass-otp
+  passff-host
+  gnupg
+  fd
 
 
-      # --- Filesystem ---
-      ntfs-3g
-      dosfstools
-      exfat-utils
-      mtools
-      plocate
+  # --- Archive tools ---
+  atool
+  unzip
+  unrar
+  zip
+  p7zip
 
 
-      # --- System & power ---
-      htop
-      btop
-      acpi
-      tlp
-      brightnessctl
-      dbus
-      dmidecode
-      power-profiles-daemon
+  # --- Filesystem ---
+  ntfs-3g
+  dosfstools
+  exfatprogs
+  mtools
+  plocate
 
 
-      # --- Wayland compositor stack ---
-      niri
-      keyd
-      fuzzel
-      dunst
-      cliphist
-      wl-clipboard
-      xwayland-satellite
-      swaylock
-      swww
-
-      gammastep
-      kanshi
-      libnotify
-      xdg-utils
-      xdg-user-dirs
-      xdg-desktop-portal
-      xdg-desktop-portal-gnome
-      ripdrag
-      xorg-server
-      xorg-xeyes
-      xorg-xinit
-      xorg-xwayland
+  # --- System & power ---
+  htop
+  btop
+  acpi
+  tlp
+  brightnessctl
+  dbus
+  dmidecode
+  power-profiles-daemon
 
 
-      # --- Audio ---
-      pipewire
-      wireplumber
-      alsa-utils
-      pulsemixer
-      libinput-tools
+  # --- Wayland compositor stack ---
+  niri
+  keyd
+  fuzzel
+  dunst
+  cliphist
+  wl-clipboard
+  xwayland-satellite
+  swaylock
+  swww
+  grim
+  slurp
+  gammastep
+  kanshi
+  libnotify
+  xdg-utils
+  xdg-user-dirs
+  xdg-desktop-portal
+  xdg-desktop-portal-gnome
+  ripdrag
+  xorg-server
+  xorg-xeyes
+  xorg-xinit
+  xorg-xwayland
+  pinentry
 
 
-      # --- Networking ---
-      networkmanager
-      network-manager-applet
-      wireless-tools
-      dhcpcd
-      bluez
-      bluez-utils
-      bluetui
-      iwd
-      keychain
+  # --- Audio ---
+  pipewire
+  wireplumber
+  alsa-utils
+  pulsemixer
+  libinput-tools
 
 
-      # --- File management ---
-      pcmanfm
-      yazi
-      ranger
-      gvfs
-      gvfs-mtp
-      android-udev
-      udiskie
-      zathura
-      zathura-pdf-poppler
-      zathura-djvu
-      zathura-cb
-      pacman-contrib
+  # --- Networking ---
+  networkmanager
+  network-manager-applet
+  wireless-tools
+  dhcpcd
+  bluez
+  bluez-utils
+  bluetui
+  iwd
+  keychain
 
 
-      # --- Media viewers ---
-      mpv
-      mpv-mpris
-      emms
-      mpd
-      mpc
-      imv
-      swayimg
-      mp3info
-      vorbis-tools
-      fbreader  #epub reader
+  # --- File management ---
+  pcmanfm
+  yazi
+  ranger
+  gvfs
+  gvfs-mtp
+  android-udev
+  udiskie
+  zathura
+  zathura-pdf-poppler
+  zathura-djvu
+  zathura-cb
+  pacman-contrib
 
 
-      # --- Screenshot & image ---
-      imagemagick
-      img2pdf
-      pdftk
-      grim
-      slurp
-      satty
-
-      # --- Web & transfer ---
-      firefox
-      yt-dlp
-      transmission-cli
-      kdeconnect
-      wormhole-rs
-      quickserve
-      syncthing
+  # --- Media viewers ---
+  mpv
+  mpv-mpris
+  emms
+  mpd
+  mpc
+  imv
+  swayimg
+  mp3info
+  vorbis-tools
+  fbreader  #epub reader
 
 
-      # --- Documents & office ---
-      # newsboat
-      # lnav
-      pandoc
+  # --- Screenshot & image ---
+  imagemagick
+  img2pdf
+  pdftk
+  grim
+  slurp
+  satty
+
+  # --- Web & transfer ---
+  firefox
+  yt-dlp
+  transmission-cli
+  kdeconnect
+  wormhole-rs
+  quickserve
+  syncthing
 
 
-      # --- Fonts ---
-      #ttf-jetbrains-mono-nerd
-      #otf-font-awesome
-      #otf-commit-mono-nerd
-      #noto-fonts-emoji
-      #ttf-nerd-fonts-symbols
-      adobe-source-han-sans-jp-fonts
+  # --- Documents & office ---
+  # newsboat
+  # lnav
+  pandoc
 
 
-      # --- Misc ---
-      gtypist
-      mediainfo
-      ffmpeg
-      highlight
-      libvips
-      ffmpegthumbnailer
+  # --- Fonts ---
+  #ttf-jetbrains-mono-nerd
+  #otf-font-awesome
+  #otf-commit-mono-nerd
+  #noto-fonts-emoji
+  #ttf-nerd-fonts-symbols
+  adobe-source-han-sans-jp-fonts
+
+
+  # --- Misc ---
+  gtypist
+  mediainfo
+  ffmpeg
+  highlight
+  libvips
+  ffmpegthumbnailer
 #+end_src
 
 *** Arch (Wayland FULL)
 
 #+begin_src text :tangle ~/.dotfiles/common/_ARCH_pkgs/ARCH_pkg_wayland_full.txt :mkdirp yes :padline no
-# ARCH/MANJARO — Wayland Full
-# Everything in base plus: heavy audio/video, gaming, torrents, production tools
-# Install base first, then: pacman -S $(grep -v '^#' ARCH_pkg_wayland_full.txt | tr '\n' ' ')
-# AUR packages handled automatically by SH_install_packages.sh via yay fallback
+  # ARCH/MANJARO — Wayland Full
+  # Everything in base plus: heavy audio/video, gaming, torrents, production tools
+  # Install base first, then: pacman -S $(grep -v '^#' ARCH_pkg_wayland_full.txt | tr '\n' ' ')
+  # AUR packages handled automatically by SH_install_packages.sh via yay fallback
 
-# --- Heavy audio tools ---
-audacity
-lame
-shntool
-cuetools
-flacon
-wavpack
-musepack-tools
-taglib
-puddletag
-freac-bin
-fatsort
-
-# --- Libs ---
-qt5-wayland
-# Qt Rendering
-qt6-svg
-qt5-svg
-kimageformats
-
-# Tray Support
-libappindicator-gtk3
-libayatana-appindicator
-libdbusmenu-gtk3
-
-# GTK Rendering
-librsvg
-gdk-pixbuf2
-
-# Theming
-qt6ct
-papirus-icon-theme
-#adwaita-icon-theme
+  # --- Heavy audio tools ---
+  audacity
+  lame
+  shntool
+  cuetools
+  flacon
+  wavpack
+  musepack-tools
+  taglib
+  puddletag
+  freac-bin
+  fatsort
+  musikcube
 
 
-# --- Image & graphics ---
-gimp
-gimp-plugin-gmic
-gpick
-ocrmypdf
+  # --- Libs ---
+  qt5-wayland
+  # Qt Rendering
+  qt6-svg
+  qt5-svg
+  kimageformats
 
-# --- Video production ---
-obs-studio
-handbrake
+  # Tray Support
+  libappindicator-gtk3
+  libayatana-appindicator
+  libdbusmenu-gtk3
 
-# --- Gaming ---
-steam
-wine-staging
-winetricks
-gamemode
-mangohud
+  # GTK Rendering
+  librsvg
+  gdk-pixbuf2
 
-# --- Torrents ---
-qbittorrent
+  # Theming
+  qt6ct
+  papirus-icon-theme
+  #adwaita-icon-theme
 
-# --- Dev & scripting ---
-ctags
-task-spooler
-exiv2
-perl-image-exiftool
 
-# --- Documents ---
-#libreoffice-fresh
-#texlive-latexextra
-#irssi
-# spell checking in emacs
-hunspell
-hunspell-en_us
-hunspell-pt_br
+  # --- Image & graphics ---
+  gimp
+  gimp-plugin-gmic
+  gpick
+  ocrmypdf
 
-# --- File sharing ---
-#vsftpd
-#filezilla
+  # --- Video production ---
+  obs-studio
+  handbrake
+
+  # --- Gaming ---
+  steam
+  wine-staging
+  winetricks
+  gamemode
+  mangohud
+
+  # --- Torrents ---
+  qbittorrent
+
+  # --- Dev & scripting ---
+  ctags
+  task-spooler
+  exiv2
+  perl-image-exiftool
+
+  # --- Documents ---
+  #libreoffice-fresh
+  #texlive-latexextra
+  #irssi
+  # spell checking in emacs
+  hunspell
+  hunspell-en_us
+  hunspell-pt_br
+
+  # --- File sharing ---
+  #vsftpd
+  #filezilla
 #+end_src
 
 ** Void Linux - PGKs Install
 *** Void (Wayland BASE)
 
 #+begin_src text :tangle ~/.dotfiles/common/_ARCH_pkgs/VOID_pkg_wayland_base.txt :mkdirp yes :padline no
-# VOID — Wayland Base
-# Minimal comfortable system: media, editing, file management, terminal tools
-# Install: xbps-install -S $(grep -v '^#' VOID_pkg_wayland_base.txt | tr '\n' ' ')
+  # VOID — Wayland Base
+  # Minimal comfortable system: media, editing, file management, terminal tools
+  # Install: xbps-install -S $(grep -v '^#' VOID_pkg_wayland_base.txt | tr '\n' ' ')
 
-# --- Void repos (enable first, then sync) ---
-void-repo-nonfree
-void-repo-multilib
-void-repo-multilib-nonfree
+  # --- Void repos (enable first, then sync) ---
+  void-repo-nonfree
+  void-repo-multilib
+  void-repo-multilib-nonfree
 
-# --- Core editors & terminal ---
-emacs-pgtk
-nano
-kitty
-zsh
-
-
-# --- Shell tools ---
-atuin
-starship
-zoxide
-fzf
-bat
-lsd
-ripgrep
-fastfetch
-glow
-tealdeer
-man-db
-wget
-rsync
-bc
-socat
-stow
-git
-duf
-wev
-parallel
-wdisplays
-jq
-eza
-pass
-gnupg
+  # --- Core editors & terminal ---
+  emacs-pgtk
+  nano
+  kitty
+  zsh
 
 
-# --- Archive tools ---
-atool
-unzip
-unrar
-zip
-p7zip
+  # --- Shell tools ---
+  atuin
+  starship
+  zoxide
+  fzf
+  bat
+  lsd
+  ripgrep
+  fastfetch
+  glow
+  tealdeer
+  man-db
+  wget
+  rsync
+  bc
+  socat
+  stow
+  git
+  duf
+  wev
+  parallel
+  wdisplays
+  jq
+  eza
+  pass
+  pass-otp
+  passff-host
+  gnupg
+  fd
 
 
-# --- Filesystem ---
-ntfs-3g
-dosfstools
-exfat-utils
-mtools
-plocate
+  # --- Archive tools ---
+  atool
+  unzip
+  unrar
+  zip
+  p7zip
 
 
-# --- System & power ---
-htop
-acpi
-tlp
-brightnessctl
-cronie
-chrony
-dbus
-elogind
-polkit
-dmidecode
-xmirror
-xtools
+  # --- Filesystem ---
+  ntfs-3g
+  dosfstools
+  exfat-utils
+  mtools
+  plocate
 
 
-# --- Wayland compositor stack ---
-niri
-keyd
-fuzzel
-dunst
-cliphist
-wl-clipboard
-xwayland-satellite
-swaylock
-swww
-grim
-slurp
-gammastep
-kanshi
-libnotify
-xdg-utils
-xdg-user-dirs
-xdg-desktop-portal
-xdg-desktop-portal-gnome
+  # --- System & power ---
+  htop
+  acpi
+  tlp
+  brightnessctl
+  cronie
+  chrony
+  dbus
+  elogind
+  polkit
+  dmidecode
+  xmirror
+  xtools
 
 
-# --- Audio ---
-pipewire
-wireplumber
-wireplumber-elogind
-alsa-utils
-alsa-pipewire
-libpulseaudio
-pulsemixer
-libinput-tools
+  # --- Wayland compositor stack ---
+  niri
+  keyd
+  fuzzel
+  dunst
+  cliphist
+  wl-clipboard
+  xwayland-satellite
+  swaylock
+  swww
+  grim
+  slurp
+  gammastep
+  kanshi
+  libnotify
+  xdg-utils
+  xdg-user-dirs
+  xdg-desktop-portal
+  xdg-desktop-portal-gnome
+  pinentry
 
 
-# --- Networking ---
-NetworkManager
-network-manager-applet
-wpa_supplicant
-dhcpcd
-bluez
-iwd
-keychain
+  # --- Audio ---
+  pipewire
+  wireplumber
+  wireplumber-elogind
+  alsa-utils
+  alsa-pipewire
+  libpulseaudio
+  pulsemixer
+  libinput-tools
 
 
-# --- File management ---
-yazi
-ranger
-Thunar
-thunar-volman
-gvfs
-gvfs-mtp
-android-udev-rules
-udiskie
-dragon
-zathura
-zathura-pdf-poppler
-zathura-djvu
-zathura-cb
+  # --- Networking ---
+  NetworkManager
+  network-manager-applet
+  wpa_supplicant
+  dhcpcd
+  bluez
+  iwd
+  keychain
 
 
-# --- Media viewers ---
-mpv
-mpv-mpris
-emms
-mpd
-mpc
-imv
-swayimg
-mp3info
-vorbis-tools
+  # --- File management ---
+  yazi
+  ranger
+  Thunar
+  thunar-volman
+  gvfs
+  gvfs-mtp
+  android-udev-rules
+  udiskie
+  dragon
+  zathura
+  zathura-pdf-poppler
+  zathura-djvu
+  zathura-cb
 
 
-# --- Screenshot & image ---
-ImageMagick
-img2pdf
-pdftk
-grim
-slurp
-satty
-
-# --- Web & transfer ---
-firefox
-yt-dlp
-stig  #transmission-cli
-kdeconnect
-magic-wormhole  #magic-wormhole-rs
-#miniserve  #quickserve
+  # --- Media viewers ---
+  mpv
+  mpv-mpris
+  emms
+  mpd
+  mpc
+  imv
+  swayimg
+  mp3info
+  vorbis-tools
 
 
-# --- Documents & office ---
-#newsboat
-#lnav
-pandoc
+  # --- Screenshot & image ---
+  ImageMagick
+  img2pdf
+  pdftk
+  grim
+  slurp
+  satty
+
+  # --- Web & transfer ---
+  firefox
+  yt-dlp
+  stig  #transmission-cli
+  kdeconnect
+  magic-wormhole  #magic-wormhole-rs
+  #miniserve  #quickserve
 
 
-# --- Fonts ---
-#font-jetbrains-mono-nerd-fonts
-font-awesome6
-noto-fonts-emoji
-nerd-fonts
-adobe-source-han-sans-jp-fonts
+  # --- Documents & office ---
+  #newsboat
+  #lnav
+  pandoc
 
 
-# --- Misc ---
-gtypist
-mediainfo
-ffmpeg
-highlight
-libvips
-ffmpegthumbnailer
+  # --- Fonts ---
+  #font-jetbrains-mono-nerd-fonts
+  font-awesome6
+  noto-fonts-emoji
+  nerd-fonts
+  adobe-source-han-sans-jp-fonts
+
+
+  # --- Misc ---
+  gtypist
+  mediainfo
+  ffmpeg
+  highlight
+  libvips
+  ffmpegthumbnailer
 #+end_src
 
 *** Void (Wayland FULL)
@@ -3421,7 +3584,7 @@ taglib
 puddletag
 freac
 fatsort
-
+musikcube
 
 # --- Libs ---
 qt5-wayland
@@ -3430,14 +3593,17 @@ qt6-svg
 qt5-svg
 kimageformats
 
+
 # Tray Support
 libappindicator-gtk3
 libayatana-appindicator
 libdbusmenu-gtk3
 
+
 # GTK Rendering
 librsvg
 gdk-pixbuf2
+
 
 # Theming
 qt6ct
