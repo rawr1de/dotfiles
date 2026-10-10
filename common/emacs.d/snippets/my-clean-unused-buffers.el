@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; Kill all buffers except the current one and those with unsaved changes
 
 (defun my-clean-unused-buffers ()

@@ -1,4 +1,4 @@
-;;;;;;;;;;  NEW LIGHTWEIGHT INIT.EL  ;;;;;;;;;;
+;;;;;;;;;;  NEW LIGHTWEIGHT INIT.EL  ;;;;;;;;;;  -*- lexical-binding: t; -*-
 
 ;; Move customization variables outside of init.el
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

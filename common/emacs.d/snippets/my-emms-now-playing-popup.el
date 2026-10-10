@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; --- EMMS NOW PLAYING POPUP (Pixel-Perfect Kitty Dashboard with MPV IPC) ---
 
 (defun my-emms-now-playing-popup ()

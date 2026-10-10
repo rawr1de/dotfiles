@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; CUSTOM FUNCTIONS SKEL FILE
 
 (defun my-function-template (slug)

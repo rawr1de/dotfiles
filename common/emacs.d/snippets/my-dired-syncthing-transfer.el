@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; --- SYNCTHING NATIVE TRANSFER ---
 ;; Instantly copy marked files to the Syncthing folder natively (bypassing
 ;; Dired prompts) and automatically open the Web UI to monitor the transfer.

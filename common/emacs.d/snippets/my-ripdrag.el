@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; ~/.emacs.d/snippets/ripdrag.el
 ;; ripdrag integration for Dired/Dirvish
 ;; files marked (or with cursor at point) will be passed asynchronously to

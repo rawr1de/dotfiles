@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; This file defines two custom Dired deletion commands that override the
 ;; default trash behavior on a per-command basis. `D` is rebound to always
 ;; send files to the system trash regardless of the global

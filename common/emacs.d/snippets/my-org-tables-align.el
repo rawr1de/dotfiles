@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; ---- ORG TABLES ALIGN
 ;;; Scans the current buffer for Org tables (lines starting with '|')
 ;;; and triggers a visual realignment to ensure columns match Org-mode's spacing.

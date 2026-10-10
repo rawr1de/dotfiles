@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; --- CONVERT .MD TO .ORG
 ;;; Converts Markdown files to Org-mode using Pandoc. If in a buffer,
 ;;; it also automatically triggers 'org-tables-align' to fix table formatting

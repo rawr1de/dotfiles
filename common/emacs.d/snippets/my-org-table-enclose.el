@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; --- ENCLOSE ORG TABLE ---
 ;; Automatically adds a top and bottom horizontal rule to an open Org mode table.
 

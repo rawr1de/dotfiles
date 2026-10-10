@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; combined close-tab to delete-frame
 
 (defun my-tab-or-frame-close ()

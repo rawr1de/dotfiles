@@ -1,0 +1,187 @@
+# VOID — Wayland Base
+# Minimal comfortable system: media, editing, file management, terminal tools
+# Install: xbps-install -S $(grep -v '^#' VOID_pkg_wayland_base.txt | tr '\n' ' ')
+
+# --- Void repos (enable first, then sync) ---
+void-repo-nonfree
+void-repo-multilib
+void-repo-multilib-nonfree
+
+# --- Core editors & terminal ---
+emacs-pgtk
+nano
+kitty
+zsh
+
+
+# --- Shell tools ---
+atuin
+starship
+zoxide
+fzf
+bat
+lsd
+ripgrep
+fastfetch
+glow
+tealdeer
+man-db
+wget
+rsync
+bc
+socat
+stow
+git
+duf
+wev
+parallel
+wdisplays
+jq
+eza
+pass
+pass-otp
+passff-host
+gnupg
+fd
+
+
+# --- Archive tools ---
+atool
+unzip
+unrar
+zip
+p7zip
+
+
+# --- Filesystem ---
+ntfs-3g
+dosfstools
+exfat-utils
+mtools
+plocate
+
+
+# --- System & power ---
+htop
+acpi
+tlp
+brightnessctl
+cronie
+chrony
+dbus
+elogind
+polkit
+dmidecode
+xmirror
+xtools
+
+
+# --- Wayland compositor stack ---
+niri
+keyd
+fuzzel
+dunst
+cliphist
+wl-clipboard
+xwayland-satellite
+swaylock
+swww
+grim
+slurp
+gammastep
+kanshi
+libnotify
+xdg-utils
+xdg-user-dirs
+xdg-desktop-portal
+xdg-desktop-portal-gnome
+pinentry
+
+
+# --- Audio ---
+pipewire
+wireplumber
+wireplumber-elogind
+alsa-utils
+alsa-pipewire
+libpulseaudio
+pulsemixer
+libinput-tools
+
+
+# --- Networking ---
+NetworkManager
+network-manager-applet
+wpa_supplicant
+dhcpcd
+bluez
+iwd
+keychain
+
+
+# --- File management ---
+yazi
+ranger
+Thunar
+thunar-volman
+gvfs
+gvfs-mtp
+android-udev-rules
+udiskie
+dragon
+zathura
+zathura-pdf-poppler
+zathura-djvu
+zathura-cb
+
+
+# --- Media viewers ---
+mpv
+mpv-mpris
+emms
+mpd
+mpc
+imv
+swayimg
+mp3info
+vorbis-tools
+
+
+# --- Screenshot & image ---
+ImageMagick
+img2pdf
+pdftk
+grim
+slurp
+satty
+
+# --- Web & transfer ---
+firefox
+yt-dlp
+stig  #transmission-cli
+kdeconnect
+magic-wormhole  #magic-wormhole-rs
+#miniserve  #quickserve
+
+
+# --- Documents & office ---
+#newsboat
+#lnav
+pandoc
+
+
+# --- Fonts ---
+#font-jetbrains-mono-nerd-fonts
+font-awesome6
+noto-fonts-emoji
+nerd-fonts
+adobe-source-han-sans-jp-fonts
+
+
+# --- Misc ---
+gtypist
+mediainfo
+ffmpeg
+highlight
+libvips
+ffmpegthumbnailer

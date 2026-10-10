@@ -1,4 +1,4 @@
-;; strange bug on rdo_dots.org that won't let me type over the src_code block line
+;; strange bug on rdo_dots.org that won't let me type over the src_code block line  -*- lexical-binding: t; -*-
 ;; it kept snapping back to xfk command-mode after the first letter
 ;; Prevent XFK from resetting state ONLY during Org-mode native fontification
 

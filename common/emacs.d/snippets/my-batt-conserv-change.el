@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; Toggle Lenovo Legion battery conservation mode
 
 (defun my-batt-conserv-change (state)

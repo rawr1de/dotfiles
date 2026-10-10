@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; ---- ORG COLUMN SUM
 ;; Sums a specific column in highlighted Org table rows, ignoring h-lines.
 ;; Extracts numbers, builds an equation, and evals via calc to the clipboard.

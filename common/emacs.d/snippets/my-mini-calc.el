@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; --- MINI-CALCULATOR  [C-x a]
 ;; Extracts numbers from highlighted text or org-tables to build an equation.
 ;; Evaluates the math via calc and copies the final result to your clipboard.

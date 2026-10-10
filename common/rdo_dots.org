@@ -13,6 +13,10 @@ _HOW TO INSTALL:_
    ~alias emacs='emacs --init-directory="~/.dotfiles/common/emacs.d/"'~
    ~alias emacs-daemon='emacs --daemon --init-directory="~/.dotfiles/common/emacs.d/"'~
 4. start emacs and check if all good!
+5. to tangle config files:
+   - all code blocks: =M-x= ~org-babel-tangle~ (=C-c C-v t=)
+   - same destination code block : =C-u C-c C-v t=
+   - single code block: =C-u C-u C-c C-v t=
 
 _RECOVERING FILES:_
 .mc-lists.el
@@ -551,10 +555,10 @@ gtk-application-prefer-dark-theme=1
   profile giga_setup {
       # Gigabyte Monitor 1 (Serial: 21372B005646)
       output "*21372B005646*" mode 2560x1440@60.000 position 0,0
-      
+
       # Gigabyte Monitor 2 (Serial: 21372B005644)
       output "*21372B005644*" mode 2560x1440@60.000 position 2560,0 adaptive_sync on
-      
+
       # Laptop Screen
       output eDP-2 mode 1920x1080@144.002 position 1550,1440 adaptive_sync on
   # scale 1.25 may be used for eDP-2
@@ -751,9 +755,6 @@ wayland notification daemon configuration
   // AUTO START
   // spawn-at-startup "pipewire"
   // spawn-at-startup "wireplumber"
-  // spawn-at-startup "kitty"
-  // spawn-at-startup "swaybg" "-i" "path_to_wallpaper"
-  // spawn-at-startup "mpd" ()
   // spawn-sh-at-startup "emacs --daemon --init-directory=~/.dotfiles/common/emacs.d/"
 
   spawn-at-startup "xwayland-satellite"
@@ -765,12 +766,12 @@ wayland notification daemon configuration
   // new FIXER line that starts 3 services at once, preventing race condition failure
   spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_RUNTIME_DIR DISPLAY DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP && systemctl --user start emacs.service"
 
-  spawn-at-startup "udiskie" "--no-notify" "--tray" "--appindicator"
+  // spawn-at-startup "udiskie" "--no-notify" "--tray" "--appindicator"
   spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "icon-theme" "Papirus-Dark"
   spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "gtk-theme" "Nordic"
   spawn-at-startup "systemctl" "--user" "start" "graphical-session.target"
   spawn-at-startup "dbus-update-activation-environment" "--all"
-  spawn-sh-at-startup "env QT_QPA_PLATFORMTHEME=qt6ct QT_ICON_THEME=Papirus-Dark qs -c noctalia-shell"
+  spawn-sh-at-startup "env QT_QPA_PLATFORMTHEME=qt6ct QT_ICON_THEME=Papirus-Dark noctalia"
 #+end_src
 
 ***** binds.kdl
@@ -806,12 +807,12 @@ wayland notification daemon configuration
       // ──────────────────────
       Mod+Return   hotkey-overlay-title="Kitty"               { spawn "kitty"; }
       Mod+1        hotkey-overlay-title="Emacs"               { spawn-sh "emacsclient -c -a 'emacs --init-directory=/home/rdo/.dotfiles/common/emacs.d/'"; }
-      Mod+2        hotkey-overlay-title="Brave"               { spawn "Brave"; }
+      Mod+2        hotkey-overlay-title="Brave"               { spawn "brave"; }
       Mod+7        hotkey-overlay-title="Fuzzel Clipboard"    { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
       Mod+8        hotkey-overlay-title="Fuzzel Launcher"     { spawn "fuzzel"; }
       Mod+F10      hotkey-overlay-title="Reply Last SMS"      { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-termux-last-sms)'"; }
       Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' -c -F '((title . \"niri-scratchpad\") (width . 70) (height . 20))' -e '(my-spawn-scratchpad)'"; }
-      Mod+N        hotkey-overlay-title="Noctalia Bar Toggle" { spawn-sh "qs -c noctalia-shell ipc call bar toggle"; }
+      Mod+N        hotkey-overlay-title="Noctalia Bar Toggle" { spawn-sh "noctalia msg bar-toggle"; }
       Mod+P hotkey-overlay-title="Song Playing Info" { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-emms-now-playing-popup)'"; }
       Mod+3        hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
       Mod+4        hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
@@ -830,7 +831,7 @@ wayland notification daemon configuration
       Super+Alt+0               hotkey-overlay-title="Lock Screen"         { spawn "swaylock"; }
       Super+Alt+9               hotkey-overlay-title="TMatrix Desk Setup"  { spawn-sh "SH_tmatrix_bg.sh"; }
       Mod+Shift+E               hotkey-overlay-title="Logout (NIRI)"       { quit; }
-      Mod+Alt+F4                hotkey-overlay-title="Shutdown"            { spawn-sh "qs -c noctalia-shell ipc call sessionMenu toggle"; }
+      Mod+Alt+F4                hotkey-overlay-title="Shutdown"            { spawn-sh "noctalia msg panel-toggle session"; }
       Ctrl+Shift+Mod+Alt+P      hotkey-overlay-title="Monitors OFF"        { power-off-monitors; }
       Mod+Escape                allow-inhibiting=false                     { toggle-keyboard-shortcuts-inhibit; }
       Mod+Shift+F12             hotkey-overlay-title="Reload Niri Config"  { spawn "bash" "-c" "niri msg action load-config-file && notify-send 'Niri' 'Config reloaded'"; }
@@ -1038,189 +1039,206 @@ wayland notification daemon configuration
 ***** config.kdl
 
 #+begin_src conf :tangle ~/.config/niri/config.kdl
-// This config is in the KDL format: https://kdl.dev
-// "/-" comments out the following node.
+  // This config is in the KDL format: https://kdl.dev
+  // "/-" comments out the following node.
 
-// Niri Wiki:     https://yalter.github.io/niri/Configuration:-Introduction
-// Input config.: https://yalter.github.io/niri/Configuration:-Input
-// Input config.: https://yalter.github.io/niri/Configuration:-Outputs
-// Body config.:  https://yalter.github.io/niri/Configuration:-Layout
-
-
-// input
-include "input.kdl"
-
-// output
-include "output.kdl"
-
-// load external window rules
-include "window-rules.kdl"
-
-// auto start
-include "autostart.kdl"
-
-cursor {
-    hide-after-inactive-ms 2000
-}
-
-// layout
-layout {
-    gaps 10
-    // column centering when changing focus: "never", "always", "on-overflow"
-    center-focused-column "never"
-
-    // column width preset "switch-preset-column-width" (Mod+R) toggles between
-    preset-column-widths {
-        proportion 0.33333
-        proportion 0.5
-        proportion 0.66667
-
-        // Fixed sets the width in logical pixels exactly.
-        // fixed 1920
-    }
-
-    // column height preset "switch-preset-window-height" (Mod+Shift+R) toggles between
-    // preset-window-heights { }
-
-    // You can change the default width of the new windows.
-       default-column-width { proportion 0.5; }
-    // default-column-width {}
-    // draw-border-with-background
-
-// focus-ring
-    focus-ring {
-        // focus ring/border/gradients
-        // https://niri-wm.github.io/niri/Configuration:-Layout#focus-ring-and-border
-        // off
-        width 0.5
-
-        // Colors can be set in a variety of ways:
-        // - CSS named colors: "red"
-        // - RGB hex: "#rgb", "#rgba", "#rrggbb", "#rrggbbaa"
-        // - CSS-like notation: "rgb(255, 127, 0)", rgba(), hsl() and a few others.
-
-        // active monitor ring color
-        active-color "gold"
-        // inactive monitor ring color
-        inactive-color "#505050"
-	
-        // gradients
-        // https://www.css-gradient.com/
-        // active-gradient from="#80c8ff" to="#c7ff7f" angle=45
-        active-gradient from="#AA840F" to="#4F8935"  angle=180
- //       active-gradient from="#755905" to="#4F8935"  angle=180
-//        active-gradient from="" to=""  angle=180
+  // Niri Wiki:     https://yalter.github.io/niri/Configuration:-Introduction
+  // Input config.: https://yalter.github.io/niri/Configuration:-Input
+  // Input config.: https://yalter.github.io/niri/Configuration:-Outputs
+  // Body config.:  https://yalter.github.io/niri/Configuration:-Layout
 
 
+  // input
+  include "input.kdl"
 
-        // To do that, set relative-to="workspace-view".
-        // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
-    }
+  // output
+  // include "output.kdl"
 
-    border {
-        // same settings as the focus ring
-	off
-        width 4
-        active-color "#ffc87f"
-        inactive-color "#505050"
+  // load external window rules
+  include "window-rules.kdl"
 
-        // Color of the border around windows that request your attention.
-        urgent-color "#9b0000"
+  // auto start
+  include "autostart.kdl"
 
-        // gradients with different interpolation color spaces
-        // pastel rainbow gradient via in="oklch longer hue".
-        //
-        // active-gradient from="#e5989b" to="#ffb4a2" angle=45 relative-to="workspace-view" in="oklch longer hue"
+  cursor {
+      hide-after-inactive-ms 2000
+  }
 
-        // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
-    }
+  // layout
+  layout {
+      gaps 8
+      // column centering when changing focus: "never", "always", "on-overflow"
+      center-focused-column "never"
 
-    struts {
-        // left 64
-        // right 64
-        // top 64
-        // bottom 64
-    }
-}
+      // column width preset "switch-preset-column-width" (Mod+R) toggles between
+      preset-column-widths {
+          proportion 0.33333
+          proportion 0.5
+          proportion 0.66667
 
+          // Fixed sets the width in logical pixels exactly.
+          // fixed 1920
+      }
 
-hotkey-overlay {
-    skip-at-startup
-    hide-not-bound
-}
+      // column height preset "switch-preset-window-height" (Mod+Shift+R) toggles between
+      // preset-window-heights { }
 
-     prefer-no-csd
+      // You can change the default width of the new windows.
+         default-column-width { proportion 0.5; }
+      // default-column-width {}
+      // draw-border-with-background
 
-// screenshot path formatted with strftime(3)
-screenshot-path "~/Pix/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+  // focus-ring
+      focus-ring {
+          // focus ring/border/gradients
+          // https://niri-wm.github.io/niri/Configuration:-Layout#focus-ring-and-border
+          // off
+          width 0.5
 
-// disable saving screenshots to disk
-// screenshot-path null
+          // Colors can be set in a variety of ways:
+          // - CSS named colors: "red"
+          // - RGB hex: "#rgb", "#rgba", "#rrggbb", "#rrggbbaa"
+          // - CSS-like notation: "rgb(255, 127, 0)", rgba(), hsl() and a few others.
 
-// Animation settings
-// https://yalter.github.io/niri/Configuration:-Animations
-animations {
-    // Uncomment to turn off all animations.
-    // off
+          // active monitor ring color
+          active-color "gold"
+          // inactive monitor ring color
+          inactive-color "#505050"
 
-    // Slow down all animations by factor, below 1 speed them up
-    // slowdown 3.0
-}
-
-// Window rules let you adjust behavior for individual windows.
-// https://yalter.github.io/niri/Configuration:-Window-Rules
-
-// Work around WezTerm's initial configure bug
-// by setting an empty default-column-width.
-window-rule {
-    match title="^$"
-    match app-id="^$"
-    open-floating true
-}
-
-window-rule {
-    // This regular expression is intentionally made as specific as possible,
-    // since this is the default config, and we want no false positives.
-    // You can get away with just app-id="wezterm" if you want.
-    match app-id=r#"^org\.wezfurlong\.wezterm$"#
-    default-column-width {}
-}
-
-// Open the Firefox picture-in-picture player as floating by default.
-window-rule {
-    // This app-id regular expression will work for both:
-    // - host Firefox (app-id is "firefox")
-    // - Flatpak Firefox (app-id is "org.mozilla.firefox")
-    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
-    open-floating true
-}
-
-// Example: block out two password managers from screen capture.
-// (This example rule is commented out with a "/-" in front.)
-/-window-rule {
-    match app-id=r#"^org\.keepassxc\.KeePassXC$"#
-    match app-id=r#"^org\.gnome\.World\.Secrets$"#
-
-    block-out-from "screen-capture"
-
-    // Use this instead if you want them visible on third-party screenshot tools.
-    // block-out-from "screencast"
-}
-
-// Example: enable rounded corners for all windows.
-// (This example rule is commented out with a "/-" in front.)
-window-rule {
-    geometry-corner-radius 12
-    clip-to-geometry true
-}
-
-// binds
-include "binds.kdl"
+          // gradients
+          // https://www.css-gradient.com/
+          // active-gradient from="#80c8ff" to="#c7ff7f" angle=45
+          active-gradient from="#AA840F" to="#4F8935"  angle=180
+   //       active-gradient from="#755905" to="#4F8935"  angle=180
+  //        active-gradient from="" to=""  angle=180
 
 
-debug {
-    wait-for-frame-completion-before-queueing
-}
+
+          // To do that, set relative-to="workspace-view".
+          // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+      }
+
+      border {
+          // same settings as the focus ring
+  	off
+          width 4
+          active-color "#ffc87f"
+          inactive-color "#505050"
+
+          // Color of the border around windows that request your attention.
+          urgent-color "#9b0000"
+
+          // gradients with different interpolation color spaces
+          // pastel rainbow gradient via in="oklch longer hue".
+          //
+          // active-gradient from="#e5989b" to="#ffb4a2" angle=45 relative-to="workspace-view" in="oklch longer hue"
+
+          // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+      }
+
+      struts {
+          // left 64
+          // right 64
+          // top 64
+          // bottom 64
+      }
+  }
+
+
+  hotkey-overlay {
+      skip-at-startup
+      hide-not-bound
+  }
+
+       prefer-no-csd
+
+  // screenshot path formatted with strftime(3)
+  screenshot-path "~/Pix/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+  // disable saving screenshots to disk
+  // screenshot-path null
+
+  // Animation settings
+  // https://yalter.github.io/niri/Configuration:-Animations
+  animations {
+      // Uncomment to turn off all animations.
+      // off
+
+      // Slow down all animations by factor, below 1 speed them up
+      // slowdown 3.0
+  }
+
+  // Window rules let you adjust behavior for individual windows.
+  // https://yalter.github.io/niri/Configuration:-Window-Rules
+
+  // Work around WezTerm's initial configure bug
+  // by setting an empty default-column-width.
+  window-rule {
+      match title="^$"
+      match app-id="^$"
+      open-floating true
+  }
+
+  window-rule {
+      // This regular expression is intentionally made as specific as possible,
+      // since this is the default config, and we want no false positives.
+      // You can get away with just app-id="wezterm" if you want.
+      match app-id=r#"^org\.wezfurlong\.wezterm$"#
+      default-column-width {}
+  }
+
+  // Open the Firefox picture-in-picture player as floating by default.
+  window-rule {
+      // This app-id regular expression will work for both:
+      // - host Firefox (app-id is "firefox")
+      // - Flatpak Firefox (app-id is "org.mozilla.firefox")
+      match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+      open-floating true
+  }
+
+  // Example: block out two password managers from screen capture.
+  // (This example rule is commented out with a "/-" in front.)
+  /-window-rule {
+      match app-id=r#"^org\.keepassxc\.KeePassXC$"#
+      match app-id=r#"^org\.gnome\.World\.Secrets$"#
+
+      block-out-from "screen-capture"
+
+      // Use this instead if you want them visible on third-party screenshot tools.
+      // block-out-from "screencast"
+  }
+
+  // Example: enable rounded corners for all windows.
+  // (This example rule is commented out with a "/-" in front.)
+  window-rule {
+      geometry-corner-radius 12
+      clip-to-geometry true
+  }
+
+  // binds
+  include "binds.kdl"
+
+
+  debug {
+      wait-for-frame-completion-before-queueing
+  }
+
+  // noctalia theme (Niri follows it)
+  include "noctalia.kdl"
+
+  workspace "Trading-DP1" {
+      open-on-output "DP-1"
+      layout {
+          gaps 0
+      }
+  }
+
+  workspace "Trading-HDMI" {
+      open-on-output "HDMI-A-1"
+      layout {
+          gaps 0
+      }
+  }
 #+end_src
 
 ***** input.kdl
@@ -1344,6 +1362,7 @@ input {
 #+end_src
 
 ***** window-rules.kdl
+
 #+begin_src conf :tangle ~/.config/niri/window-rules.kdl
   // Rule 1: ONLY float swayimg when it is called by Emacs
   window-rule {
@@ -1394,36 +1413,43 @@ input {
   // HDMI-A-1 (Left Monitor)
   // DP-1 (Right Monitor)
 
-  // Distinct names prevent Niri from overwriting the workspace tree
-  workspace "1-left"
-  workspace "1-right"
+  // DO NOT declare explicit workspaces here. Let Niri auto-manage them.
 
-  // --- LEFT MONITOR RULES (HDMI-A-1) ---
+  // --- LEFT MONITOR RULES ---
   window-rule {
       match app-id="kitty-left"
+      // IMPORTANT: Change HDMI-A-1 to the exact name from Step 1
       open-on-output "HDMI-A-1"
-      open-on-workspace "1-left"
+      open-on-workspace "1"
       default-column-width { proportion 1.0; }
   }
   window-rule {
       match title="emacs-left"
       open-on-output "HDMI-A-1"
-      open-on-workspace "1-left"
+      open-on-workspace "1"
       default-column-width { proportion 1.0; }
   }
 
-  // --- RIGHT MONITOR RULES (DP-1) ---
+  // --- RIGHT MONITOR RULES ---
   window-rule {
       match app-id="firefox-right"
       open-on-output "DP-1"
-      open-on-workspace "1-right"
+      open-on-workspace "1"
       default-column-width { proportion 1.0; }
   }
+
   window-rule {
       match title="emacs-right"
       open-on-output "DP-1"
-      open-on-workspace "1-right"
+      open-on-workspace "1"
       default-column-width { proportion 1.0; }
+  }
+
+  // BRAVE FOR TRADING!
+  window-rule {
+      match title="(?i).*TradingView.*"
+      border { off; }
+      focus-ring { off; }
   }
 #+end_src
 
@@ -2032,7 +2058,7 @@ image and text preview generation script
 **** starship (shell prompt)                                      :common:
 gruvbox dark powerline prompt configuration
 
-#+begin_src toml :tangle ~/.config/starship.toml
+#+begin_src toml :tangle ~/.config/starship.toml :eval no
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """

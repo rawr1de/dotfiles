@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; my-musk-show-album-art.el --- Dedicated Album Art Viewer using swayimg
 
 (require 'emms)

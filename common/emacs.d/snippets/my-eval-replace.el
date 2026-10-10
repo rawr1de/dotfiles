@@ -1,4 +1,4 @@
-;;;; --- EVALUATE & REPLACE SEXP
+;;;; --- EVALUATE & REPLACE SEXP  -*- lexical-binding: t; -*-
 ;; Evaluates the Lisp expression immediately before the cursor (the sexp).
 ;; Deletes the original code and replaces it with the evaluated result.
 ;; Useful for doing math, generating strings, or testing Elisp logic in-place.

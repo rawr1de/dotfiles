@@ -4,8 +4,8 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
  (filename . "~/Docs/10.Org/trading-log.org")
- (front-context-string . "***** 2026-09-23")
- (rear-context-string . "-------------|\n\n")
- (position . 101063)
- (last-modified 27316 17274 207299 323000))
+ (front-context-string . "**** 2026-10-09 ")
+ (rear-context-string . "6-10-09 Friday\n\n")
+ (position . 139116)
+ (last-modified 27337 3149 76588 35000))
 )

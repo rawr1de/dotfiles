@@ -1,4 +1,4 @@
-;; close help/info/apropos/man 'mode' windows while in XFK command-mode with 'q'
+;; close help/info/apropos/man 'mode' windows while in XFK command-mode with 'q'  -*- lexical-binding: t; -*-
 
 (defun my-xfk-smart-quit ()
   "Close window in help buffers, otherwise do standard XFK 'q' action"

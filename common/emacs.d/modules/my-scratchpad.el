@@ -1,4 +1,4 @@
-;;; --- WAYLAND SCRATCHPAD & CLIPBOARD LOGGER ---
+;;; --- WAYLAND SCRATCHPAD & CLIPBOARD LOGGER ---  -*- lexical-binding: t; -*-
 ;; Spawns a floating scratchpad buffer. Committing (C-c C-c) copies the text
 ;; to the Wayland clipboard, permanently logs it to ~/.emacs.d/.spad_hist,
 ;; and safely destroys the frame. Quick access to history via (C-c h).

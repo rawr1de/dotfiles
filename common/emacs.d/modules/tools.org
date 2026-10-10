@@ -47,26 +47,26 @@
   ;; to prevent the ellipsis (...) stuck bug of the current engine folding that
   ;; uses "text properties"
 
-  (with-eval-after-load 'org
-    (if (version< (org-version) "9.8")
-        (progn
+  ;; (with-eval-after-load 'org
+  ;;   (if (version< (org-version) "9.8")
+  ;;       (progn
           ;; 1. Revert to the classic engine
-          (setq org-fold-core-style 'overlays)
+          ;; (setq org-fold-core-style 'overlays)
 
           ;; 2. Prevent accidental typing inside hidden text
-          (setq org-catch-invisible-edits 'smart)
+          ;; (setq org-catch-invisible-edits 'smart)
 
           ;; 3. Stop vertical movement from clinging to the ends of lines
-          (setq track-eol nil)
+          ;; (setq track-eol nil)
 
           ;; 4. THE FIX: Force strict logical movement (newline to newline)
           ;; This is added as a hook so it only affects Org-mode and doesn't
           ;; break visual word-wrapping in your other text files!
-          (add-hook 'org-mode-hook (lambda () (setq line-move-visual nil))))
+          ;; (add-hook 'org-mode-hook (lambda () (setq line-move-visual nil))))
 
-      (display-warning 'my-config
-                       "Org updated! Check bug, delete hack from tools.org !!!"
-                       :warning)))
+      ;; (display-warning 'my-config
+                       ;; "Org updated! Check bug, delete hack from tools.org !!!"
+                       ;; :warning)))
 #+end_src
 
 *** org-capture

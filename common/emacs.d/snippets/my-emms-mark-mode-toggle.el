@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
   ;; "SPC z e" toggle 'emms-mark-mode' on and off
   (defvar my-emms-mark-mode-active nil)
   (defun my-emms-mark-mode-toggle ()

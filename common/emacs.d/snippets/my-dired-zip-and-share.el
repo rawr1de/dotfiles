@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; --- ZIP AND SHARE FILES ---
 ;; Compresses marked Dired files into a sequentially named archive (share_01.zip)
 ;; and immediately prompts the user to share the resulting archive via either

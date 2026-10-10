@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; Auto-Save Playlist Function
 ;; my-emms-save-last-playlist.el
 

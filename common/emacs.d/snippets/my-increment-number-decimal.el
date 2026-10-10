@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; --- INCREMENT-NUMBER-DECIMAL  [C-c +]
 ;; Increments number at point or all numbers in a region by a set amount.
 ;; Smartly preserves zero-padding (009 -> 010) and handles negative results.

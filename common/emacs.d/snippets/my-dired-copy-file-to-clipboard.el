@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (require 'url-util) ;; Ensure URL encoding functions are loaded
 
 (defun my-dired-copy-file-to-clipboard ()

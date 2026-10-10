@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; --- SCREEN LINE SCROLLING
 
 (defun my-scroll-one-line-down ()

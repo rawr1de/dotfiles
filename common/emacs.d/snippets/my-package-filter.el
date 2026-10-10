@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; --- PACKAGE-FILTER
 ;; Adds status filtering (s) and mark searching (a) to the Package Menu.
 ;; Filter list by status: new, installed, dependency, or obsolete.

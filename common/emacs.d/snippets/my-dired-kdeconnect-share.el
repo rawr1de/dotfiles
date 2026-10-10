@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; KDE CONNECT SHARE FILE in DIRED/DIRVISH
 
 (defun my-dired-kdeconnect-share ()

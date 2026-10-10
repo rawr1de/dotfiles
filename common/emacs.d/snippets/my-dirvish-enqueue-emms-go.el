@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (defun my-dirvish-enqueue-emms-go ()
   "Instantly add marked files or directories in Dirvish directly to EMMS"
   (interactive)

@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; XFK minibuffer smart escape
 
 (defun my-xfk-minibuffer-setup ()

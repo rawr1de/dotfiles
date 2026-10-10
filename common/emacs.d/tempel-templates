@@ -160,6 +160,7 @@ n)
  "*Jd. California*" n
  "CEP:: 75383-848" n
  "Água: 0880752-3 ([[https://agencia-virtual.saneago.com.br/segundaViaSimplificada][saneago]], [[https://www.go.gov.br/servicos/servico/emitir-segunda-via-da-fatura-de-agua-eou-esgoto][prefeitura]])" n
+ "                 (CPF Zezao: 43338658168)" n
  "Luz:: 11944833 -- 17611301214 ([[https://goias.equatorialenergia.com.br/LoginGO.aspx][equatorial]])" n
  "Net:: zap_opyt" n
  "IPTU: buscar por cpf ([[https://trindade.centi.com.br/servicos/extratoimoveis][prefeitura]]) /[CALIFORNIA]/ +2026+" n
@@ -202,7 +203,6 @@ n)
  "| +MPgo+    | Mar/14 | Apr/14 |    31 | 14/mês | 09/mês | R$   |" n
  "|---------+--------+--------+-------+--------+--------+------|" n n
  "_NOTAS:_" n
- "*DSVR -- Oct/05/2026 Fim 12 meses 0% APR !!*" n
  "*cSTR -- Jan/18/2027 Fim xx meses 0% APR (Purchases)!!*" n n
  "** FIXOS US/BR  [" (s month) "]" n n
  "|---------------+---------+-----------+-------+------------+------|" n
@@ -247,7 +247,6 @@ n)
  "|---------------+------------+-------------|" n
  "ins/net (current month) = SWAB , zelle rich" n n
  "_NOTAS:_" n
- "*DSVR -- Oct/05/2026 Fim 12 meses 0% APR !!*" n
  "*cSTR -- Jan/18/2027 Fim xx meses 0% APR (Purchases)!!*" n
  "** +Outras Contas (" (s month) ") +" n n
  "|------+--------|" n

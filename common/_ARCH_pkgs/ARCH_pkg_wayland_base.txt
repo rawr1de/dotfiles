@@ -42,6 +42,7 @@ pass
 pass-otp
 passff-host
 gnupg
+fd
 
 
 # --- Archive tools ---
@@ -55,7 +56,7 @@ p7zip
 # --- Filesystem ---
 ntfs-3g
 dosfstools
-exfat-utils
+exfatprogs
 mtools
 plocate
 

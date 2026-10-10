@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;; --- MAGIC WORMHOLE (TERMINAL + WAYLAND CLIPBOARD) ---
 ;; Send file via wormhole-rs in a popup Kitty terminal, trick it into rendering
 ;; its native QR code, and simultaneously hijack the text code to Wayland clipboard.

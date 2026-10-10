@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (message "test_new.el FILE HAS BEEN LOADED!")
 
 ;; CODE 1 - WATCHING...

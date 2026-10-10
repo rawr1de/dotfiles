@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; Open URL and explicitly command Niri to focus the web browser
 
 (defun my-browse-url-and-focus (url &optional new-window)

@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; --- COLORED JUMP MARKS (CJM) [SPC 0 // 0 // SPC 9]
 ;; Sets up to 3 persistent, colored markers (Green, Yellow, Pink) per buffer.
 ;; Press 'SPC 0' to set a mark, '0' to cycle through them, 'SPC 9' to clear.

@@ -1,4 +1,4 @@
-;;;; --- GLOBAL XFK UNIVERSAL SNAP (my-xfk-universal-snap.el)
+;;;; --- GLOBAL XFK UNIVERSAL SNAP (my-xfk-universal-snap.el)  -*- lexical-binding: t; -*-
 
 (defun my-xfk-universal-snap (&optional _)
   "Globally force XFK states based on the major-mode we land in"

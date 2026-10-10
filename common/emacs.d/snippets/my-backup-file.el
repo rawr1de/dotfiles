@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; --- QUICK FILE BACKUP (Dired / Dirvish / Buffer)
 ;; Automatically creates a timestamped snapshot of the current file(s)
 ;; inside a hidden `.bak` subdirectory. It also sweeps up any stray

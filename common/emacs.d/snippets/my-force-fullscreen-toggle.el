@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; F11: Brute-force fullscreen toggle
 ;; (because the native Emacs one is broken on Linux WMs).
 

@@ -1,4 +1,4 @@
-;;; my-termux-sms.el --- Unified Termux SMS Integration for Emacs
+;;; my-termux-sms.el --- Unified Termux SMS Integration for Emacs  -*- lexical-binding: t; -*-
 ;;
 ;; This script provides a complete, 2-way SMS integration using an Android
 ;; phone running Termux. It bypasses GUI daemons completely by using SSH

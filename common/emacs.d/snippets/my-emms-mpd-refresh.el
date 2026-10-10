@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;; --- EMMS REFRESH CACHE AND UPDATE DB
 
 (defun my-emms-mpd-refresh ()

@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (defun my-dirvish-enqueue-emms ()
   "Instantly add marked/point file(s) or dir(s) in Dirvish to EMMS."
   (interactive)

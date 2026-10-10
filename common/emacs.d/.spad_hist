@@ -6842,3 +6842,306 @@ me escreve um pine script simples que faça exatamente isso mostrado na imagem, 
 |----------+---------+----------+---------+--------------+------------|
 #+TBLFM: $5=($4/$3)*100;%.2f :: $6=$5*($3/$2);%.2f
 
+[2026-09-25] --- [16:43:14]
+no QQQ nao lucrei antes pois eu ainda nao sei operar muito bem a Tasty, na verdade nao estou gostando tanto assim da plataforma... minha conta na IBKR foi finalmente liberada o Level 2, entao posso fazer trade lá e sair do ToS que vem dando muita dor de cabeça... Como eu nunca segurei contratos pra outro dia preciso saber:
+
+- nesse momento o preço dos contratos estao congelados mesmo a sessão andando sem minha participação, se no pre-mercado o preço subir, quando abrir os meus contratos 'pularam' de preço automaticamente ou permaneceram onde estao e apenas ira dar continuidade no dia?
+  - geralmente na abertura do pregao, as velas movem agressivamente, se começar a cair tenho que vender meus contratos nas pressas certo?
+
+[2026-09-25] --- [16:49:53]
+crie a mesma tabela para a exposicao das posicoes na tasty
+
+*Exposição/Risco Real (Tracker - 09.25.Fr)*
+|-------+--------+-----+--------+---------+---------+-----------------+-------------------|
+| Trade | Ticker | Qty | Buy($) | Sell($) | P/L ($) | Custo Total ($) | Exposição Conta % |
+|-------+--------+-----+--------+---------+---------+-----------------+-------------------|
+
+*Trades (Tasty - 09.25.Fr)*
+|---+-------+----------+------+---------------+----------+--------------+--------------+-----------+----------|
+| # | Stock | Strike   | Cons | Time (In/Out) | Duration | Cost (Total) | Sell (Total) | P/L Final |      ROI |
+|---+-------+----------+------+---------------+----------+--------------+--------------+-----------+----------|
+| 1 | QQQ   | 748 CALL |    1 | 09:54 / 12:14 | 2h 20m   | $199.00      | $214.00      | +$15.00   |   +7.54% |
+| 2 | SPY   | 772 CALL |    1 | 09:55 / 12:14 | 2h 19m   | $158.00      | $223.00      | +$65.00   |  +41.14% |
+| 3 | QQQ   | 750 CALL |    1 | 10:09 / 12:14 | 2h 05m   | $91.00       | $142.00      | +$51.00   |  +56.04% |
+| 4 | SPY   | 775 CALL |    1 | 10:10 / 12:15 | 2h 05m   | $39.00       | $107.00      | +$68.00   | +174.36% |
+| 5 | QQQ   | 751 CALL |    1 | 12:52 / OPEN  | OVERWEEK | $101.00      | OPEN         | OPEN      |     OPEN |
+| 6 | QQQ   | 750 CALL |    1 | 15:43 / OPEN  | OVERWEEK | $103.00      | OPEN         | OPEN      |     OPEN |
+|---+-------+----------+------+
+
+[2026-09-26] --- [16:12:49]
+tirar da SoFi $786.38
+
+[2026-09-26] --- [16:16:04]
+se eu pagar parte dessa fatura antes da data de vencimento. e depois da data de vencimento devolver alguns items que comprei nesse cartao (receberei o credito de volta) que irá teoricamente ZERAR todo o credito devedor pro mês que vem, ainda serei cobrado ALGUM juros sobre a finalização do 0% APR em cima dos items que ficaram em 'aberto' ANTES de ocorrer as devoluções?
+
+[2026-09-26] --- [16:18:46]
+entao o mais inteligente pra nao pagar nem um centavo de juros, eh devolver tudo que comprei nesse cartão na segunda-feira e então pagar o restante da fatura no prazo. logo o cartão ficara completamente zerado
+
+[2026-09-26] --- [21:47:02]
+LEGS:
+- goblet squat (3count down, 1 count up)
+- kettlebell cossack squat
+- rear foot elevated split squat (w/ bells)
+- goblet curtsey lunge
+- single leg RDL (aviaozinho)
+- kickstand RDL
+
+CHEST:
+- decline see saw w/ rotation (2 bells)
+- crush grip incline (feet) push
+- front rack carry OR hold
+- dips (add weight later)
+
+[2026-09-27] --- [10:43:16]
+questao 22 eu compreendi que 45/x pois eh POR HORA, deu 0.1 que esta errado...
+
+[2026-09-27] --- [11:32:57]
+3.1
+ 82.0
+06:51
+19:19
+23:45
+
+[2026-10-01] --- [12:57:30]
+1. se meu risco maximo eh de 10% da conta, quanto realisticamente posso perder por dia e na semana?
+2. talvez entrar com 10% de risco SÓ em posições que realmente tem possibilidade de vitoria
+
+[2026-10-01] --- [13:13:13]
+o ponto um tem um problema, se uma vela brusca varrer a liquides eu sou jogado pra fora da operação automaticamente pela propria plataforma...
+
+[2026-10-01] --- [18:03:39]
+Employee hours tracking is a neat use case of functions. Maybe set up the logic to automatically calculate different overtime pay rates depending on the exact hours logged? Or conditionally format the spreadsheet to highlight a cell in yellow the second an employee gets close to hitting their maximum weekly hours limit? Just some ideas...
+
+I feel (mostly) compelled to use basic SUM and AVERAGE functions when dealing with personal budget. By bringing in Goal Seek and Data Tables completely changes the picture for sure. Took me a while to appreciate how Goal Seek works backwards to tell you exactly how much revenue you need to generate to hit a specific yearly target. On a personal budget, Data Tables let you compare different what-if scenarios side-by-side, all neat stuff.
+
+[2026-10-02] --- [11:12:57]
+car insurance $628.53
+car pay 624.61
+
+[2026-10-02] --- [12:47:42]
+@neto
+
+- how would you suggest someone to fix his overtrading behavior? Lets say, you make money early and it is a winning day (so far). But it is SO EARLY that you know that more opportunities may arise and you go on to try more trades (way too early) then leading you to unnecessary losses.
+
+[2026-10-03] --- [13:26:35]
+tive uma duvida hoje.. faz sentido entrar em uma trade que esta MUITO ALEM do sizing permitido (10%) da minha conta??
+
+Hoje se eu tivesse entrado na AMD com meu mentor teria aumentado minha conta significantemente, porem sei que se eu fizer isso com frequencia, nao soh irei contra minhas proprias regras, mas reforçarei o comportamento 'errôneo' e se a trade falhar me pruizo tambem sera grande, como posso combater esse desejo?
+
+[2026-10-05] --- [14:12:04]
+Format the text to strictly fit an 80-character column limit, using emacs org-mode syntax.
+Keep it short, concise, and technical, but simple to understand.
+
+[2026-10-05] --- [14:50:58]
+nao estou pensando em "café da manhã, almoço e jantar" mas sim em alimentar de 2 a 3x ao dia, obviamente que dependendo do tamanho da refeição eu não vá conseguir comer uma única vez, portanto é inteligente quebrar em diversas vezes, mas eu nao dou a minima se irei começar a comer as 15h ou 8h da manhã. apenas quero bater os macros e saber que estou comendo corretamente.
+
+faltou na lista a kombucha também.
+
+preciso montar uma lista de refeições simples baseada nessa tabela pra testar por 3 semanas.
+
+[2026-10-05] --- [15:03:33]
+nao estou pensando em "café da manhã, almoço e jantar" mas sim em alimentar de 2 a 3x ao dia, obviamente que dependendo do tamanho da refeição eu não vá conseguir comer uma única vez, portanto é inteligente quebrar em diversas vezes, mas eu nao dou a minima se irei começar a comer as 15h ou 8h da manhã. apenas quero bater os macros e saber que estou comendo corretamente.
+
+faltou na lista a kombucha também.
+
+preciso montar uma lista de refeições simples baseada nessa tabela pra testar por 3 semanas.
+
+tambem quero incluir batata doce como carboidratos pra energia, creio que esteja limpa certo?
+
+acho que as proteinas estao em excesso, meu peso atual esta em 81 e 82.5 entao acredito que 160 no maximo 180g de proteina seja o suficiente
+
+
+gostei dessas 2 receitas repassadas. o que mais posso fazer pras outras refeições do dia baseado na atual lista, tem que ser coisa simples.
+
+[2026-10-07] --- [16:32:37]
+Like you pointed out, costs constantly fluctuate. Running a what-if analysis lets you simulate a massive price hike or a sudden supplier issue without accidentally wrecking your master spreadsheet data.
+
+Goal Seek can be used instead of manually guessing different price points or sales volumes until your profit margin looks acceptable, the software just spits out the exact number you need to hit your target. Basically turning a static sheet into an automated forecasting engine.
+
+[2026-10-07] --- [16:45:02]
+U 272 037 96
+
+[2026-10-07] --- [20:24:11]
+como funciona o função de 'Post Only' na IBRK? isso diminui os fees?
+
+[2026-10-08] --- [16:21:51]
+systemd-+-NetworkManager---6*[{NetworkManager}]
+        |-bluetoothd
+        |-dbus-broker-lau---dbus-broker
+        |-jackett---8*[{jackett}]
+        |-keyd
+        |-ly-dm---ly-dm
+        |-niri-session---systemctl
+        |-polkitd---3*[{polkitd}]
+        |-power-profiles----3*[{power-profiles-}]
+        |-rtkit-daemon---2*[{rtkit-daemon}]
+        |-seatd
+        |-systemd-+-(sd-pam)
+        |         |-at-spi-bus-laun-+-dbus-broker-lau---dbus-broker
+        |         |                 `-4*[{at-spi-bus-laun}]
+        |         |-at-spi2-registr---3*[{at-spi2-registr}]
+        |         |-blueman-applet---5*[{blueman-applet}]
+        |         |-blueman-tray---5*[{blueman-tray}]
+        |         |-brave-+-brave---brave---28*[{brave}]
+        |         |       |-brave---brave-+-2*[brave---8*[{brave}]]
+        |         |       |               |-5*[brave---22*[{brave}]]
+        |         |       |               |-2*[brave---10*[{brave}]]
+        |         |       |               |-brave---23*[{brave}]
+        |         |       |               |-brave---27*[{brave}]
+        |         |       |               |-6*[brave---24*[{brave}]]
+        |         |       |               |-brave---39*[{brave}]
+        |         |       |               `-2*[brave---25*[{brave}]]
+        |         |       |-brave---21*[{brave}]
+        |         |       |-brave---8*[{brave}]
+        |         |       `-37*[{brave}]
+        |         |-chrome_crashpad---2*[{chrome_crashpad}]
+        |         |-chrome_crashpad---{chrome_crashpad}
+        |         |-dbus-broker-lau---dbus-broker
+        |         |-dconf-service---3*[{dconf-service}]
+        |         |-emacs-+-hunspell
+        |         |       `-5*[{emacs}]
+        |         |-emacsclient
+        |         |-gvfs-mtp-volume---3*[{gvfs-mtp-volume}]
+        |         |-gvfs-udisks2-vo---4*[{gvfs-udisks2-vo}]
+        |         |-gvfsd-+-gvfsd-trash---4*[{gvfsd-trash}]
+        |         |       `-3*[{gvfsd}]
+        |         |-gvfsd-fuse---6*[{gvfsd-fuse}]
+        |         |-gvfsd-metadata---3*[{gvfsd-metadata}]
+        |         |-kanshi
+        |         |-kdeconnectd---8*[{kdeconnectd}]
+        |         |-kitty-+-kitten---9*[{kitten}]
+        |         |       |-kitten---12*[{kitten}]
+        |         |       |-zsh-+-pstree
+        |         |       |     `-wl-copy---cat
+        |         |       `-14*[{kitty}]
+        |         |-mako---{mako}
+        |         |-mpd---2*[{mpd}]
+        |         |-mpris-proxy
+        |         |-niri-+-xwayland-satell-+-Xwayland---10*[{Xwayland}]
+        |         |      |                 `-{xwayland-satell}
+        |         |      `-30*[{niri}]
+        |         |-nm-applet-+-bwrap---bwrap---glycin-image-rs---2*[{glycin-image-rs}]
+        |         |           `-8*[{nm-applet}]
+        |         |-pipewire---2*[{pipewire}]
+        |         |-pipewire-pulse---2*[{pipewire-pulse}]
+        |         |-polkit-gnome-au---5*[{polkit-gnome-au}]
+        |         |-qs-+-nmcli---3*[{nmcli}]
+        |         |    |-sh
+        |         |    |-udevadm
+        |         |    |-2*[wl-paste]
+        |         |    |-wlsunset
+        |         |    `-124*[{qs}]
+        |         |-ssh-agent
+        |         |-udiskie---3*[{udiskie}]
+        |         |-udiskie-+-bwrap---bwrap---glycin-image-rs---2*[{glycin-image-rs}]
+        |         |         `-8*[{udiskie}]
+        |         |-wireplumber---5*[{wireplumber}]
+        |         |-2*[wl-paste]
+        |         |-xdg-desktop-por---4*[{xdg-desktop-por}]
+        |         |-2*[xdg-desktop-por---5*[{xdg-desktop-por}]]
+        |         |-xdg-desktop-por---8*[{xdg-desktop-por}]
+        |         |-xdg-document-po-+-fusermount3
+        |         |                 `-7*[{xdg-document-po}]
+        |         |-xdg-permission----3*[{xdg-permission-}]
+        |         `-xwayland-satell-+-Xwayland---14*[{Xwayland}]
+        |                           `-{xwayland-satell}
+        |-systemd-journal
+        |-systemd-logind
+        |-systemd-timesyn---{systemd-timesyn}
+        |-systemd-udevd
+        |-systemd-userdbd---3*[systemd-userwor]
+        |-tailscaled---17*[{tailscaled}]
+        |-udisksd---6*[{udisksd}]
+        |-upowerd---3*[{upowerd}]
+        `-wpa_supplicant
+
+[2026-10-09] --- [11:47:38]
+*** IBKR
+**** Account Statement (Daily)
+|----------+---------+----------+----------+---------+----------+----------|
+| Date     | b4 MKT  | Current  | valley   | peak    | draw $   |   draw % |
+|----------+---------+----------+----------+---------+----------+----------|
+| 10/05/26 |         |          |          |         |          |          |
+| 10/06/26 | $998.50 | $719.00  | $719.00  | $998.50 | -$279.50 |  -27.99% |
+| 10/07/26 | $719.00 | $679.00  | $679.00  | $719.00 | -$40.00  |   -5.56% |
+| 10/08/26 | $679.00 | $599.78* | $599.78* | $679.00 | -$79.22* | -11.66%* |
+|          |         |          |          |         |          |          |
+|----------+---------+----------+----------+---------+----------+----------|
+Valores estimados baseados apenas no P/L Realizado. O P/L Não Realizado da NVDA
+e SPY em aberto não está refletido. A queda real diária foi de -$79.22 (pois
+-$25.10 da perda do SPY já estava contabilizada no saldo de ontem).
+
+**** Pre-Market Planning (10% Risk / Growth Goals)
+|----------+--------------+-------------+-----------+-----------+-----------+-----------+------------------|
+| Date     | Starting Bal | 10% Max Exp | +15% Goal | +20% Goal | +25% Goal | +30% Goal | Target Bal (20%) |
+|----------+--------------+-------------+-----------+-----------+-----------+-----------+------------------|
+| 10/05/26 |              |             |           |           |           |           |                  |
+| 10/06/26 | $998.50      | $99.85      | $1,148.28 | $1,198.20 | $1,248.13 | $1,298.05 | $1,198.20        |
+| 10/07/26 | $719.00      | $71.90      | $826.85   | $862.80   | $898.75   | $934.70   | $862.80          |
+| 10/08/26 | $679.00      | $67.90      | $780.85   | $814.80   | $848.75   | $882.70   | $814.80          |
+| 10/09/26 | $599.78      | $59.97      | $689.74   | $719.73   | $749.72   | $779.71   | $719.73          |
+|----------+--------------+-------------+-----------+-----------+-----------+-----------+------------------|
+
+**** growth tracker
+|----------+---------+----------+----------+--------------+------------|
+| date     | account | risk ($) | p/l ($)  | roi risk (%) | growth (%) |
+|----------+---------+----------+----------+--------------+------------|
+| 10/05/26 |         |          |          |              |            |
+| 10/06/26 | $719.00 | $99.85   | -$279.20 |     -279.62% |    -27.99% |
+| 10/07/26 | $679.00 | $71.90   | -$40.00  |      -55.63% |     -5.56% |
+| 10/08/26 | $599.78 | $67.90   | -$79.22  |     -116.67% |    -11.66% |
+|----------+---------+----------+----------+--------------+------------|
+
+**** Best/Worst Trades
+***** Best
+|--------+----------+---------+---------+---------+------------|
+| Ticker | P/L      |     ROI | Duração | Tipo    | Dia        |
+|--------+----------+---------+---------+---------+------------|
+| QQQ    |  $15.27  |  26.93% | 10m     | CALL    | 10/06/2026 |
+| TSLA   |   $9.93  |   8.71% | 347m    | CALL    | 10/07/2026 |
+| SPY    |   $4.90  |   3.86% | 14m     | CALL    | 10/06/2026 |
+|--------+----------+---------+---------+---------+------------|
+
+***** Worst
+|--------+---------+---------+---------+------+------------|
+| Ticker | P/L     |     ROI | Duração | Tipo | Dia        |
+|--------+---------+---------+---------+------+------------|
+| TSLA   | -$92.08 | -21.26% | 3m      | CALL | 10/06/2026 |
+| SPY    | -$80.17 | -88.94% | 1228m   | CALL | 10/08/2026 |
+| QQQ    | -$39.74 | -70.10% | 129m    | CALL | 10/06/2026 |
+|--------+---------+---------+---------+------+------------|
+
+
+
+**** 2026-10-09 Friday
+*Trades*
+|---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+| # | Stock | Strike  | Cons | Time (In/Out) | Duration | Cost (Total)    | Sell (Total)    | P/L Final |     ROI |
+|---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+_Summary:_
+TOTAL P/L: 
+TOTAL ROI: 
+Average Duration: 
+Max Duration: 
+Min Duration: 
+Highest Daily P/L: 
+Lowest Daily P/L:
+
+
+# tarefa
+atualize as tabelas como de costume
+
+[2026-10-09] --- [12:05:47]
+duas perguntas:
+
+1. como eu envio um contrato pra outra janela (chart por exemplo) que esta com um 'color link' diferente
+2. como fazer que 'pills' como nos charts do ToS apareçam no TWS? quero aquela pill que mostra quando o preço atinge uma Alta no dia e baixa, e também que mostra minhas entradas e saidas
+
+[2026-10-09] --- [15:19:35]
+󰣇 legion  ~   15:15  
+➜ pgrep -a qs
+
+󰣇 legion  ~   15:17  
+➜ env QT_QPA_PLATFORMTHEME=qt6ct QT_ICON_THEME=Papirus-Dark qs -c noctalia
+qs: symbol lookup error: qs: undefined symbol: _ZN23QUntypedPropertyBindingC1EP23QPropertyBindingPrivate, version Qt_6_PRIVATE_API
+

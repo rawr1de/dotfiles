@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; Copy the contents of marked Dired files to the clipboard
 
 (defun my-dired-copy-file-contents ()

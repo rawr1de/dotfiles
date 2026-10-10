@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; FORCE kill-buffer to quit without saving
 (defun my-kill-buffer-no-confirm ()
   "Kill buffer without save prompt"
