@@ -4,29 +4,22 @@
 
 #+begin_comment
 _HOW TO INSTALL:_
-1. DL github .dotfiles folder
-  ~git clone https://github.com/rawr1de/dotfiles.git ~/.dotfiles~
-2. install emacs
-3. set new default emacs dir ($USER/home/.dotfiles/emacs.d/)
-   a.) commands already set on /.zshrc/
-   b.) /if/ zsh config files in place skip this step
+1. DL git + emacs (wayland)
+   ~sudo pacman -S git emacs-wayland~
+
+2. Clone .dotfiles repo
+   ~git clone https://github.com/rawr1de/dotfiles.git ~/.dotfiles~
+
+3. Set temporary aliases
    ~alias emacs='emacs --init-directory="~/.dotfiles/common/emacs.d/"'~
    ~alias emacs-daemon='emacs --daemon --init-directory="~/.dotfiles/common/emacs.d/"'~
+
 4. start emacs and check if all good!
+
 5. to tangle config files:
    - all code blocks: =M-x= ~org-babel-tangle~ (=C-c C-v t=)
    - same destination code block : =C-u C-c C-v t=
    - single code block: =C-u C-u C-c C-v t=
-
-_RECOVERING FILES:_
-.mc-lists.el
-.spad_hist
-base_cfg.el
-base_cfg.org
-custom.el
-early-init.el
-init.el
-test_new.el
 #+end_comment
 
 * common (wayland/x11)
@@ -1374,14 +1367,6 @@ input {
       default-window-height { proportion 0.5; }
   }
 
-  // Rule 2: Float the Emacs Org-mode EMMS popup
-  // window-rule {
-      // Match the exact title we gave this frame
-      // match app-id=r#"^emacs$"# title=r#"^emms-popup$"#
-      // open-floating true
-  // }
-
-
   // Rule 2: Float the Kitty EMMS dashboard
   window-rule {
       match app-id="emms-popup"
@@ -1392,58 +1377,12 @@ input {
       default-window-height { fixed 1200; }
   }
 
-
-  // Emacs scratchpad float in the center
-      // window-rule {
-          // match title="niri-scratchpad"
-          // open-floating true
-          // Optional: Force a specific starting size
-          // default-column-width { proportion 0.4; }
-      // }
-
   // Emacs scratchpad in tiled (column mode)
   window-rule {
           match title="niri-scratchpad"
           // Force the column to take up exactly 35% of the screen
           default-column-width { proportion 0.35; }
       }
-
-
-
-  // HDMI-A-1 (Left Monitor)
-  // DP-1 (Right Monitor)
-
-  // DO NOT declare explicit workspaces here. Let Niri auto-manage them.
-
-  // --- LEFT MONITOR RULES ---
-  window-rule {
-      match app-id="kitty-left"
-      // IMPORTANT: Change HDMI-A-1 to the exact name from Step 1
-      open-on-output "HDMI-A-1"
-      open-on-workspace "1"
-      default-column-width { proportion 1.0; }
-  }
-  window-rule {
-      match title="emacs-left"
-      open-on-output "HDMI-A-1"
-      open-on-workspace "1"
-      default-column-width { proportion 1.0; }
-  }
-
-  // --- RIGHT MONITOR RULES ---
-  window-rule {
-      match app-id="firefox-right"
-      open-on-output "DP-1"
-      open-on-workspace "1"
-      default-column-width { proportion 1.0; }
-  }
-
-  window-rule {
-      match title="emacs-right"
-      open-on-output "DP-1"
-      open-on-workspace "1"
-      default-column-width { proportion 1.0; }
-  }
 
   // BRAVE FOR TRADING!
   window-rule {
@@ -1780,13 +1719,12 @@ custom file routing and application bindings
   # ===================================================================
   # TEXT EDITORS (Emacs daemon routing)
   # ===================================================================
-  ext md, has mdfried = kitty --class "md_floating" -e mdfried "$@" &
-  ext md, has mdfried = kitty --class "md_floating" -e glow "$@" &
+  ext md, has glow = kitty --class "md_floating" -e glow "$@" &
   mime ^text,  label editor = emacsclient -c -a -- "$1"
   mime ^text,  label editor = emacsclient -nw -- "$1"
   mime ^text,  label pager  = "$PAGER" -- "$@"
-  mime ^text, label editor, ext xml|json|csv|tex|py|pl|rb|js|sh|php|org|txt|conf|org = emacsclient -c -a -- "$1"
-  mime ^text, label editor, ext xml|json|csv|tex|py|pl|rb|js|sh|php|org|txt|conf|org = emacsclient -nw -- "$1"
+  mime ^text, label editor, ext xml|json|csv|tex|py|pl|rb|js|sh|php|org|txt|conf = emacsclient -c -a -- "$1"
+  mime ^text, label editor, ext xml|json|csv|tex|py|pl|rb|js|sh|php|org|txt|conf = emacsclient -nw -- "$1"
   mime ^text, label pager,  ext xml|json|csv|tex|py|pl|rb|js|sh|php|org = "$PAGER" -- "$@"
 
   ext 1                         = man "$1"
@@ -2560,48 +2498,63 @@ tls_backend = "rustls-with-webpki-roots"
 #+end_src
 
 **** XDG (user directories)                                       :common:
+***** full generation
 Generates default system folders, applies custom xdg paths,
 and safely renames the physical directories natively via Emacs
 
-#+begin_src conf :tangle ~/.config/user-dirs.dirs
-  (defun my-setup-xdg-dirs ()
-    "Generates defaults, writes config, and renames XDG folders."
-    (interactive)
+#+begin_src emacs-lisp
+    (defun my-setup-xdg-dirs ()
+      "Generates defaults, writes config, and renames XDG folders."
+      (interactive)
 
-    ;; 1. Force the system to generate the default folders first
-    (shell-command "xdg-user-dirs-update")
+      ;; 1. Force the system to generate the default folders first
+      (shell-command "xdg-user-dirs-update")
 
-    ;; 2. Write your custom user-dirs.dirs config
-    (with-temp-file (expand-file-name ".config/user-dirs.dirs" (getenv "HOME"))
-      (insert "XDG_DESKTOP_DIR=\"$HOME/Desk\"\n"
-              "XDG_DOCUMENTS_DIR=\"$HOME/Docs\"\n"
-              "XDG_DOWNLOAD_DIR=\"$HOME/DLs\"\n"
-              "XDG_MUSIC_DIR=\"$HOME/Musk\"\n"
-              "XDG_PICTURES_DIR=\"$HOME/Pix\"\n"
-              "XDG_PUBLICSHARE_DIR=\"$HOME/\"\n"
-              "XDG_TEMPLATES_DIR=\"$HOME/tmp\"\n"
-              "XDG_TEMP_DIR=\"$HOME/tmp\"\n"
-              "XDG_VIDEOS_DIR=\"$HOME/Vidz\"\n"))
+      ;; 2. Write your custom user-dirs.dirs config
+      (with-temp-file (expand-file-name ".config/user-dirs.dirs" (getenv "HOME"))
+        (insert "XDG_DESKTOP_DIR=\"$HOME/Desk\"\n"
+                "XDG_DOCUMENTS_DIR=\"$HOME/Docs\"\n"
+                "XDG_DOWNLOAD_DIR=\"$HOME/DLs\"\n"
+                "XDG_MUSIC_DIR=\"$HOME/Musk\"\n"
+                "XDG_PICTURES_DIR=\"$HOME/Pix\"\n"
+                "XDG_PUBLICSHARE_DIR=\"$HOME/\"\n"
+                "XDG_TEMPLATES_DIR=\"$HOME/tmp\"\n"
+                "XDG_TEMP_DIR=\"$HOME/tmp\"\n"
+                "XDG_VIDEOS_DIR=\"$HOME/Vidz\"\n"))
 
-    ;; 3. Safely rename the physical directories
-    (let ((dir-map '(("Desktop"   . "Desk")
-                     ("Documents" . "Docs")
-                     ("Downloads" . "DLs")
-                     ("Music"     . "Musk")
-                     ("Pictures"  . "Pix")
-                     ("Videos"    . "Vidz"))))
-      (dolist (mapping dir-map)
-        (let ((old-path (expand-file-name (car mapping) (getenv "HOME")))
-              (new-path (expand-file-name (cdr mapping) (getenv "HOME"))))
-          ;; If the old default exists and the new custom one DOESN'T, move it.
-          (when (and (file-exists-p old-path)
-                     (not (file-exists-p new-path)))
-            (rename-file old-path new-path))))))
+      ;; 3. Safely rename the physical directories
+      (let ((dir-map '(("Desktop"   . "Desk")
+                       ("Documents" . "Docs")
+                       ("Downloads" . "DLs")
+                       ("Music"     . "Musk")
+                       ("Pictures"  . "Pix")
+                       ("Videos"    . "Vidz"))))
+        (dolist (mapping dir-map)
+          (let ((old-path (expand-file-name (car mapping) (getenv "HOME")))
+                (new-path (expand-file-name (cdr mapping) (getenv "HOME"))))
+            ;; If the old default exists and the new custom one DOESN'T, move it.
+            (when (and (file-exists-p old-path)
+                       (not (file-exists-p new-path)))
+              (rename-file old-path new-path))))))
 
-  ;; Execute it automatically when you deploy this config block
-  (my-setup-xdg-dirs)
+    ;; Execute it automatically when you evaluate this block
+    (my-setup-xdg-dirs)
 #+end_src
 
+***** updates only
+Use after a system updates /IF/ dirs paths get messed up
+
+#+begin_src conf :tangle ~/.config/user-dirs.dirs
+  XDG_DESKTOP_DIR="$HOME/Desk"
+  XDG_DOCUMENTS_DIR="$HOME/Docs"
+  XDG_DOWNLOAD_DIR="$HOME/DLs"
+  XDG_MUSIC_DIR="$HOME/Musk"
+  XDG_PICTURES_DIR="$HOME/Pix"
+  XDG_PUBLICSHARE_DIR="$HOME/"
+  XDG_TEMPLATES_DIR="$HOME/tmp"
+  XDG_TEMP_DIR="$HOME/tmp"
+  XDG_VIDEOS_DIR="$HOME/Vidz"
+#+end_src
 **** Xmodmap                                                        :x11:
 keyboard mapping for x11
 #+begin_src conf :tangle ~/.Xmodmap
@@ -3401,7 +3354,7 @@ login profile and interactive shell configuration for zsh
 ** Void Linux - PGKs Install
 *** Void (Wayland BASE)
 
-#+begin_src text :tangle ~/.dotfiles/common/_ARCH_pkgs/VOID_pkg_wayland_base.txt :mkdirp yes :padline no
+#+begin_src text :tangle ~/.dotfiles/common/_VOID_pkgs/VOID_pkg_wayland_base.txt :mkdirp yes :padline no
   # VOID — Wayland Base
   # Minimal comfortable system: media, editing, file management, terminal tools
   # Install: xbps-install -S $(grep -v '^#' VOID_pkg_wayland_base.txt | tr '\n' ' ')
@@ -3593,85 +3546,85 @@ login profile and interactive shell configuration for zsh
 
 *** Void (Wayland FULL)
 
-#+begin_src text :tangle ~/.dotfiles/common/_ARCH_pkgs/VOID_pkg_wayland_full.txt :mkdirp yes :padline no
-# VOID — Wayland Full
-# Everything in base plus: heavy audio/video, gaming, torrents, production tools
-# Install base first, then: xbps-install -S $(grep -v '^#' VOID_pkg_wayland_full.txt | tr '\n' ' ')
+#+begin_src text :tangle ~/.dotfiles/common/_VOID_pkgs/VOID_pkg_wayland_full.txt :mkdirp yes :padline no
+  # VOID — Wayland Full
+  # Everything in base plus: heavy audio/video, gaming, torrents, production tools
+  # Install base first, then: xbps-install -S $(grep -v '^#' VOID_pkg_wayland_full.txt | tr '\n' ' ')
 
-# --- Heavy audio tools ---
-audacity
-lame
-shntool
-cuetools
-flacon
-wavpack
-musepack-tools
-taglib
-puddletag
-freac
-fatsort
-musikcube
+  # --- Heavy audio tools ---
+  audacity
+  lame
+  shntool
+  cuetools
+  flacon
+  wavpack
+  musepack-tools
+  taglib
+  puddletag
+  freac
+  fatsort
+  musikcube
 
-# --- Libs ---
-qt5-wayland
-# Qt Rendering
-qt6-svg
-qt5-svg
-kimageformats
-
-
-# Tray Support
-libappindicator-gtk3
-libayatana-appindicator
-libdbusmenu-gtk3
+  # --- Libs ---
+  qt5-wayland
+  # Qt Rendering
+  qt6-svg
+  qt5-svg
+  kimageformats
 
 
-# GTK Rendering
-librsvg
-gdk-pixbuf2
+  # Tray Support
+  libappindicator-gtk3
+  libayatana-appindicator
+  libdbusmenu-gtk3
 
 
-# Theming
-qt6ct
-papirus-icon-theme
-#adwaita-icon-theme
+  # GTK Rendering
+  librsvg
+  gdk-pixbuf2
 
 
-# --- Image & graphics ---
-gimp
-gimp-plugin-gmic
-gpick
-ocrmypdf
+  # Theming
+  qt6ct
+  papirus-icon-theme
+  #adwaita-icon-theme
 
-# --- Video production ---
-obs-studio
-handbrake
 
-# --- Gaming ---
-steam
-wine
-winetricks
-gamemode
-mangohud
+  # --- Image & graphics ---
+  gimp
+  gimp-plugin-gmic
+  gpick
+  ocrmypdf
 
-# --- Torrents ---
-qbittorrent
+  # --- Video production ---
+  obs-studio
+  handbrake
 
-# --- Dev & scripting ---
-ctags
-task-spooler
-exiv2
-perl-Image-ExifTool
+  # --- Gaming ---
+  steam
+  wine
+  winetricks
+  gamemode
+  mangohud
 
-# --- Documents ---
-#texlive-latexextra
-#irssi
-# spell checking in emacs
-hunspell
-hunspell-en_us
-hunspell-pt_br
+  # --- Torrents ---
+  qbittorrent
 
-# --- File sharing ---
-#vsftpd
-#filezilla
+  # --- Dev & scripting ---
+  ctags
+  task-spooler
+  exiv2
+  perl-Image-ExifTool
+
+  # --- Documents ---
+  #texlive-latexextra
+  #irssi
+  # spell checking in emacs
+  hunspell
+  hunspell-en_us
+  hunspell-pt_br
+
+  # --- File sharing ---
+  #vsftpd
+  #filezilla
 #+end_src

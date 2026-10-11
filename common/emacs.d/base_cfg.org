@@ -28,7 +28,7 @@
 
   ;; FUNCTIONS (SNIPPETS)
   (require 'my-function-template)
-  (require 'my-scratchpad)
+  ;; (require 'my-scratchpad)
   (require 'my-termux-sms)
   (require 'my-force-fullscreen-toggle)
   (require 'my-colored-jump-marks)

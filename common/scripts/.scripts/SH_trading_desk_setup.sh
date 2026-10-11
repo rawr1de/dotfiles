@@ -1,6 +1,47 @@
 #!/usr/bin/env bash
 
 # ==============================================================================
+# 0. Injetar configurações dinâmicas do Niri
+# ==============================================================================
+WINDOW_RULES_FILE="$HOME/.config/niri/window-rules.kdl"
+CONFIG_FILE="$HOME/.config/niri/config.kdl"
+
+if ! grep -q "// START - BRAVE FOR TRADING!" "$WINDOW_RULES_FILE"; then
+cat << 'EOF' >> "$WINDOW_RULES_FILE"
+// START - BRAVE FOR TRADING!
+window-rule {
+    match title="(?i).*TradingView.*"
+    border { off; }
+    focus-ring { off; }
+}
+// END - BRAVE FOR TRADING!
+EOF
+fi
+
+if ! grep -q "// START - BRAVE FOR TRADING!" "$CONFIG_FILE"; then
+cat << 'EOF' >> "$CONFIG_FILE"
+// START - BRAVE FOR TRADING!
+workspace "Trading-DP1" {
+    open-on-output "DP-1"
+    layout {
+        gaps 0
+    }
+}
+
+workspace "Trading-HDMI" {
+    open-on-output "HDMI-A-1"
+    layout {
+        gaps 0
+    }
+}
+// END - BRAVE FOR TRADING!
+EOF
+fi
+
+# Aguarde 1 segundo para o Niri recarregar as configurações automaticamente
+sleep 1
+
+# ==============================================================================
 # 1. Monitor DP-1: 2 janelas do Brave (TradingView) em Stack Vertical
 # ==============================================================================
 niri msg action focus-workspace "Trading-DP1"
