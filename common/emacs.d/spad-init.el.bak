@@ -1,0 +1,55 @@
+;; -*- lexical-binding: t; -*-
+
+;; 1. INICIALIZAÇÃO BÁSICA
+(setq user-emacs-directory "/home/rdo/.dotfiles/common/emacs.d/")
+(setq package-user-dir (concat user-emacs-directory "elpa/"))
+(package-initialize)
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file 'noerror)
+
+;; 2. BLINDAGEM PRÉ-CARREGAMENTO
+(setq recentf-auto-cleanup 'never)
+(setq recentf-save-file "/tmp/spad-recentf")
+(setq savehist-file "/tmp/spad-savehist")
+(with-eval-after-load 'emms (setq emms-history-file "/tmp/spad-emms-history"))
+(setq org-roam-db-update-on-save nil)
+
+;; 3. CARREGA O AMBIENTE
+(load (concat user-emacs-directory "base_cfg.el") nil t)
+
+;; 4. OVERRIDES E CANCELAMENTOS
+(menu-bar-mode -1)
+(remove-hook 'org-mode-hook #'org-modern-mode)
+(when (fboundp 'recentf-mode) (recentf-mode -1))
+(when (fboundp 'savehist-mode) (savehist-mode -1))
+(when (fboundp 'gcmh-mode) (gcmh-mode -1))
+(when (fboundp 'org-roam-db-autosync-mode) (org-roam-db-autosync-mode -1))
+(when (fboundp 'save-place-mode) (save-place-mode -1))
+
+(defalias 'keyfreq-mode #'ignore)
+(defalias 'keyfreq-autosave-mode #'ignore)
+(defalias 'emms-history-save #'ignore)
+
+(require 'hl-line)
+(set-face-attribute 'hl-line nil :inherit 'secondary-selection :background 'unspecified :foreground 'unspecified :weight 'unspecified :extend t)
+
+(with-eval-after-load 'xah-fly-keys
+  (setq xah-fly-insert-mode-activate-hook nil)
+  (setq xah-fly-command-mode-activate-hook nil)
+  (add-hook 'xah-fly-command-mode-activate-hook (lambda () (global-hl-line-mode 1)))
+  (add-hook 'xah-fly-insert-mode-activate-hook (lambda () (global-hl-line-mode -1))))
+
+;; 5. CORREÇÃO DO CORFU E AVISOS VISUAIS
+(setq native-comp-async-report-warnings-errors nil)
+(setq warning-minimum-level :error)
+(require 'corfu nil t)
+(when (fboundp 'global-corfu-mode) (global-corfu-mode -1))
+
+;; 6. DETOX DE MEMÓRIA
+;; Restaura o limite do GC para 800kb e força uma limpeza profunda
+(setq gc-cons-threshold 800000)
+(garbage-collect)
+
+;; 7. ABERTURA DO SCRATCHPAD
+(load (concat user-emacs-directory "modules/my-scratchpad.el") nil t)
+(add-hook 'server-after-make-frame-hook #'my-spawn-scratchpad)

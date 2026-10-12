@@ -550,9 +550,9 @@ n
 (<tr-review
 "****** Trade " (p "#" number) ": " (p "TICKER" ticker) n
 "*Risk & Sizing (Checklist)*" n
-"- [ ] Contract price fits account management (Ideal <= $1.50)" n
+"- [ ] Contract price fits account management Ideal <= " (p "%" price) " ($10% acct size)" n
 "- [ ] Position sized strictly to max 2 contracts" n
-"- [ ] Spread visually validated before entry (Ask - Bid <= $0.05 to $0.08)" n n
+"- [ ] Spread visually validated before entry (Ask - Bid <= $0.05)" n n
 
 "*Entry & Exit Mechanics (Checklist)*" n
 "- [ ] Entry triggered by clear technical setup on underlying chart" n
@@ -562,7 +562,7 @@ n
 "- [ ] Exit executed without hesitation, hope, or praying for a reversal" n n
 
 "*Daily Routine & Limits*" n
-"- [ ] Attempt cycle respected (Max 3/Daily)" n
+"- [ ] Attempt cycle respected (Max 3-5/Daily)" n
 "- [ ] Early quitting activated (profit target met)" n n
 
 "*Performance Classification*" n

@@ -746,10 +746,6 @@ wayland notification daemon configuration
 
 #+begin_src conf :tangle ~/.config/niri/autostart.kdl
   // AUTO START
-  // spawn-at-startup "pipewire"
-  // spawn-at-startup "wireplumber"
-  // spawn-sh-at-startup "emacs --daemon --init-directory=~/.dotfiles/common/emacs.d/"
-
   spawn-at-startup "xwayland-satellite"
   spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
   spawn-at-startup "bash" "-c" "wl-paste --type text --watch cliphist store"
@@ -760,6 +756,7 @@ wayland notification daemon configuration
   spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_RUNTIME_DIR DISPLAY DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP && systemctl --user start emacs.service"
 
   // spawn-at-startup "udiskie" "--no-notify" "--tray" "--appindicator"
+  spawn-at-startup "emacs" "--daemon=spad" "-l" "/home/rdo/.dotfiles/common/emacs.d/spad-init.el"
   spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "icon-theme" "Papirus-Dark"
   spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "gtk-theme" "Nordic"
   spawn-at-startup "systemctl" "--user" "start" "graphical-session.target"
@@ -799,14 +796,13 @@ wayland notification daemon configuration
       // APPLICATIONS
       // ──────────────────────
       Mod+Return   hotkey-overlay-title="Kitty"               { spawn "kitty"; }
-      Mod+1        hotkey-overlay-title="Emacs"               { spawn-sh "emacsclient -c -a 'emacs --init-directory=/home/rdo/.dotfiles/common/emacs.d/'"; }
+      Mod+1        hotkey-overlay-title="Emacs"               { spawn-sh "emacsclient -n -c -a 'emacs --init-directory=/home/rdo/.dotfiles/common/emacs.d/'"; }
       Mod+2        hotkey-overlay-title="Brave"               { spawn "brave"; }
       Mod+7        hotkey-overlay-title="Fuzzel Clipboard"    { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
       Mod+8        hotkey-overlay-title="Fuzzel Launcher"     { spawn "fuzzel"; }
-      Mod+F10      hotkey-overlay-title="Reply Last SMS"      { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-termux-last-sms)'"; }
-      Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' -c -F '((title . \"niri-scratchpad\") (width . 70) (height . 20))' -e '(my-spawn-scratchpad)'"; }
+      Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn-sh "kitty --class 'niri-scratchpad' -e emacsclient -s spad -t"; }
       Mod+N        hotkey-overlay-title="Noctalia Bar Toggle" { spawn-sh "noctalia msg bar-toggle"; }
-      Mod+P hotkey-overlay-title="Song Playing Info" { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-emms-now-playing-popup)'"; }
+      Mod+P        hotkey-overlay-title="Song Playing Info"   { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-emms-now-playing-popup)'"; }
       Mod+3        hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
       Mod+4        hotkey-overlay-title="Pulsemixer"          { spawn "kitty" "-e" "pulsemixer"; }
       XF86Calculator hotkey-overlay-title="calculator (CLI)"  { spawn-sh "kitty -e calculator_cli"; }

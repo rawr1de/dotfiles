@@ -10,6 +10,10 @@
 [[file:~/.dotfiles/common/rdo_dots.org][rdo_dots.org]] *(DOTFILES)*
 #+end_comment
 
+#+begin_src emacs-lisp :comments none
+;; -*- lexical-binding: t; buffer-read-only: t; -*-
+#+end_src
+
 * LOADOUT: FOLDERS & SNIPPETS
 
 #+begin_src emacs-lisp
@@ -28,7 +32,7 @@
 
   ;; FUNCTIONS (SNIPPETS)
   (require 'my-function-template)
-  ;; (require 'my-scratchpad)
+  (require 'my-scratchpad)
   (require 'my-termux-sms)
   (require 'my-force-fullscreen-toggle)
   (require 'my-colored-jump-marks)
@@ -915,30 +919,23 @@
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; FORCING Org to use the OLDER folding  engine that uses 'overlays' doing this
-  ;; to prevent the ellipsis (...) stuck bug of the current engine folding that
-  ;; uses "text properties"
+  ;; FORCING Org to use the OLDER folding engine that uses 'overlays'
+  ;; to prevent the ellipsis (...) stuck bug of the current engine
 
-  ;; (with-eval-after-load 'org
-    ;; (if (version< (org-version) "9.8")
-        ;; (progn
-          ;; 1. Revert to the classic engine
-          ;; (setq org-fold-core-style 'overlays)
+  (with-eval-after-load 'org
+    ;; 1. Revert to the classic engine
+    (setq org-fold-core-style 'overlays)
 
-          ;; 2. Prevent accidental typing inside hidden text
-          ;; (setq org-catch-invisible-edits 'smart)
+    ;; 2. Prevent accidental typing inside hidden text
+    (setq org-catch-invisible-edits 'smart)
 
-          ;; 3. Stop vertical movement from clinging to the ends of lines
-          ;; (setq track-eol nil)
+    ;; 3. Stop vertical movement from clinging to the ends of lines
+    (setq track-eol nil)
 
-          ;; 4. THE FIX: Force strict logical movement (newline to newline)
-          ;; This is added as a hook so it only affects Org-mode and doesn't
-          ;; break visual word-wrapping in your other text files!
-          ;; (add-hook 'org-mode-hook (lambda () (setq line-move-visual nil))))
-
-      ;; (display-warning 'my-config
-                       ;; "Org updated! Check bug, delete hack from tools.org !!!"
-                       ;; :warning)))
+    ;; 4. THE FIX: Force strict logical movement (newline to newline)
+    ;; This is added as a hook so it only affects Org-mode and doesn't
+    ;; break visual word-wrapping in your other text files!
+    (add-hook 'org-mode-hook (lambda () (setq line-move-visual nil))))
 #+end_src
 
 **** org-capture

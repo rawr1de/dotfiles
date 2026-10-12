@@ -1,0 +1,1797 @@
+;; -*- lexical-binding: t; buffer-read-only: t; -*-
+
+;; Dynamically build the path based on the proxy redirect!
+(add-to-list 'load-path (expand-file-name "modules/" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "snippets/" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
+(setq tempel-path (expand-file-name "tempel-templates" user-emacs-directory))
+
+;; Fix for Arch Linux: exiftool is in /usr/bin/vendor_perl
+(add-to-list 'exec-path "/usr/bin/vendor_perl")
+(setenv "PATH" (concat "/usr/bin/vendor_perl:" (getenv "PATH")))
+(with-eval-after-load 'custom
+  (custom-set-faces '(default ((t (:background unspecified))))))
+
+
+;; FUNCTIONS (SNIPPETS)
+(require 'my-function-template)
+(require 'my-scratchpad)
+(require 'my-termux-sms)
+(require 'my-force-fullscreen-toggle)
+(require 'my-colored-jump-marks)
+(require 'my-ripdrag)
+(require 'my-dired-copy-file-to-clipboard)
+(require 'my-mini-calc)
+(require 'my-org-column-sum)
+(require 'my-increment-number-decimal)
+(require 'my-eval-replace)
+(require 'my-package-filter)
+(require 'my-lyrics-formatter)
+(require 'my-emms-mpd-refresh)
+(require 'my-convert-md-to-org)
+(require 'my-org-tables-align)
+(require 'my-emms-now-playing-popup)
+(require 'my-musk-show-album-art)
+(require 'my-dired-kdeconnect-share)
+(require 'my-dired-wormhole-send)
+(require 'my-dired-syncthing-transfer)
+(require 'my-backup-file)
+(require 'my-batt-conserv-change)
+(require 'my-browse-url-and-focus)
+(require 'my-tab-or-frame-close)
+(require 'my-screen-scrolling)
+(require 'my-org-table-enclose)
+(require 'my-pomodoro-timer-edit)
+(require 'my-man-to-org)
+(require 'my-dired-custom-delete)
+
+;; --- MUSK ---
+;; open playing track cover art
+;; my-musk-show-album-art.el
+(require 'my-musk-show-album-art)
+
+;; kitty popup window with song info/progression bar
+;; my-emms-now-playing-popup.el
+(require 'my-emms-now-playing-popup)
+
+;; add marked/pointer file/dir(s) in Dired/Dirvish to EMMS
+;; my-dirvish-enqueue-emms.el
+(require 'my-dirvish-enqueue-emms)
+
+;; add marked/pointer file/dir(s) in Dired/Dirvish
+;; to EMMS and Jump to playlist
+;; my-dirvish-enqueue-emms-go.el
+(require 'my-dirvish-enqueue-emms-go)
+
+;; toggle 'emms-mark-mode' ON/OFF
+;; my-emms-mark-mode-toggle.el
+(require 'my-emms-mark-mode-toggle)
+
+;; Auto-Save Playlist Function
+;; my-emms-save-last-playlist.el
+(require 'my-emms-save-last-playlist)
+
+;; COPY/PASTE/CUT for DIRED/DIRVISH
+(with-eval-after-load 'dired
+(require 'my-dired-copy-paste)
+(require 'my-ranger-renaming))
+(require 'my-dired-copy-file-contents)
+(require 'my-dired-zip-and-share)
+
+;; 100MB for fast startup
+(setq gc-cons-threshold 100000000)
+
+(use-package gcmh
+  :ensure t
+  :init
+  ;; Give it a massive threshold to use while you are actively working
+  (setq gcmh-high-cons-threshold 100000000) ;; 100MB
+  ;; Tell it to trigger GC only after you stop typing/scrolling for 2 seconds
+  (setq gcmh-idle-delay 2)
+  :config
+  (gcmh-mode 1))
+
+(setq use-short-answers t)
+(setq inhibit-startup-message t
+      ring-bell-function 'ignore
+      scroll-preserve-screen-position t
+      scroll-step 1
+      create-lockfiles nil
+      case-fold-search t
+      read-quoted-char-radix 10)
+;; controls number system (base) numerical code
+;; Default (8): Octal (0-7) type C-q 141, get "a"
+;; Value (10): Decimal type C-q 97 get "a"
+;; Value (16): Hexadecimal type C-q 61 get "a"
+  ;; enable recent files tracking
+  (recentf-mode 1)
+
+;; maximum number of saved items
+(setq recentf-max-saved-items 50)
+
+(setq auto-window-vscroll nil)
+
+;; Fast scrolling optimizations
+;; (setq fast-but-imprecise-scrolling t)
+
+(setq jit-lock-defer-time 0.1)
+
+;; FORCE kill-buffer to quit without saving
+(require 'my-kill-buffer-no-confirm)
+
+;; clean unused buffers in iBuffer
+(require 'my-clean-unused-buffers)
+
+;; Globally force XFK states based on the major-mode we land in
+(require 'my-xfk-universal-snap)
+
+;; prevents XFK snap back to command-mode while typing on
+;; top of a source_code other than emacs-elisp
+(with-eval-after-load 'xah-fly-keys
+  (require 'my-xfk-ignore-org-src-fontification))
+
+;; Tell electric-pair-mode to ignore angled brackets for Tempel triggers
+(defun my-inhibit-angle-brackets (char)
+  "Prevent electric-pair from automatically closing `<'."
+  (if (eq char ?<)
+      t ;; Return true (yes, inhibit pairing for this character)
+    (electric-pair-default-inhibit char))) ;; Otherwise, behave normally
+
+(setq electric-pair-inhibit-predicate #'my-inhibit-angle-brackets)
+
+;; Stop Emacs from crashing completion by looking for a missing OS dictionary
+  (with-eval-after-load 'text-mode
+    ;; For modern Emacs versions
+    (setq text-mode-ispell-word-completion nil))
+
+  ;; Force-remove it from the local completion list in text-based modes
+  (add-hook 'text-mode-hook
+            (lambda ()
+              (remove-hook 'completion-at-point-functions #'ispell-completion-at-point t)))
+
+(use-package ibuffer
+  :ensure nil
+  :bind (:map ibuffer-mode-map
+         ("z" . (lambda () (interactive) (ibuffer-switch-to-saved-filter-groups "default"))))
+  :config
+  (setq ibuffer-saved-filter-groups
+        '(("default"
+           ("Musk" (filename . "Musk/"))
+           ("Config" (or (filename . ".emacs.d")
+                         (filename . ".config")
+                         (filename . ".dotfiles")))
+           ("Org" (mode . org-mode))
+           ("Dired" (mode . dired-mode))
+           ("Internal" (name . "^\\*")))))
+
+  (add-hook 'ibuffer-mode-hook
+            (lambda ()
+              (ibuffer-auto-mode 1)
+              (ibuffer-switch-to-saved-filter-groups "default")
+              (xah-fly-insert-mode-activate))))
+  ;; To "Smart Clean" the list:
+  ;; Press 'z' in ibuffer to filter, or 'S' to save
+  ;; Press 'D' on a group to kill all buffers in that group
+
+  ;; kill all "non-file" buffers & unused in a while
+
+(setq make-backup-files t)
+(setq auto-save-default t)
+;; Create quarantine folders for backups and auto-saves
+(make-directory "~/.emacs.d/backups/" t)
+(make-directory "~/.emacs.d/auto-saves/" t)
+
+;; Route all backup (~) and auto-save (#) files to the quarantine
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups/")))
+(setq auto-save-file-name-transforms
+      '((".*" "~/.emacs.d/auto-saves/" t)))
+
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
+
+;; set Firefox as default web browser
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "brave")
+
+(add-to-list 'auto-mode-alist '("\\.m3u\\'"  . text-mode))
+(add-to-list 'auto-mode-alist '("\\.m3u8\\'" . text-mode))
+(add-to-list 'auto-mode-alist '("\\.pls\\'"  . text-mode))
+(add-to-list 'auto-mode-alist '("\\.log\\'"  . text-mode))
+
+(use-package savehist
+  :init
+  (setq savehist-file "~/.emacs.d/history"
+        history-length 1000
+        history-delete-duplicates t)
+  (savehist-mode 1)
+  :config
+  (add-to-list 'savehist-additional-variables 'query-replace-history))
+
+;; ENABLE & LOAD LANGUAGES
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)
+   (shell . t)))
+
+(use-package async
+  :ensure t
+  :init (dired-async-mode 1))
+
+(use-package dired
+  :ensure nil
+  ;; 1. FUSED KEYBINDINGS (General keys + Window scrolling)
+  :bind (:map dired-mode-map
+         ("\\" . dired-narrow-fuzzy)
+         ("n"  . consult-line)
+         ("h"  . dired-maybe-insert-subdir)
+         ("'"  . delete-other-windows))
+
+  :config
+  ;; 1. Global Auto-Revert (The "Watchdog")
+  (setq global-auto-revert-non-file-buffers t)
+  (setq auto-revert-verbose nil)
+  (global-auto-revert-mode 1)
+  (add-hook 'dired-mode-hook 'auto-revert-mode)
+
+  ;; 2. The "Hard Kick" (Refresh immediately after Emacs commands)
+  (defun my-dired-revert-all-buffers (&rest _)
+    "Refresh all dired buffers after an operation."
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (derived-mode-p 'dired-mode)
+          (revert-buffer nil t)))))
+
+  (advice-add 'dired-do-copy :after #'my-dired-revert-all-buffers)
+  (advice-add 'dired-do-rename :after #'my-dired-revert-all-buffers)
+  (advice-add 'dired-do-delete :after #'my-dired-revert-all-buffers)
+  ;; Added for directory creation as well
+  (advice-add 'dired-create-directory :after #'my-dired-revert-all-buffers)
+
+  ;; Disable Arabic/Hebrew text scanning for massive speedup in file lists
+  (add-hook 'dired-mode-hook (lambda () (setq bidi-paragraph-direction 'left-to-right)))
+
+  (setq dired-kill-when-opening-new-dired-buffers t
+        dired-dwim-target t
+        dired-recursive-deletes 'always
+        dired-create-destination-dirs 'always
+        dired-recursive-copies 'always)
+
+  ;; ==========================================
+  ;; OPTION A: NATIVE GNU LS (SPEED & NUMBERS)
+  ;; ------------------------------------------
+  ;; PROS: Lightning fast on massive directories. Numbers (0, 1, 10) sort perfectly.
+  ;; CONS: Ignores punctuation; capital letters (A) and lowercase (a) are separated.
+  ;; ==========================================
+  ;; (setq ls-lisp-use-insert-directory-program t) ;; Ensure GNU ls is active
+  ;; (setq dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
+  ;; (setq dired-listing-switches "-AGFhlX --group-directories-first --time-style=long-iso")
+
+  ;; ==========================================
+  ;; OPTION B: LS-LISP (PERFECT VISUAL SORTING)
+  ;; ------------------------------------------
+  ;; PROS: Punctuation (!, +) floats to the top. Case-insensitive (A sits next to a).
+  ;; CONS: Emacs UI will freeze/lag when opening directories with thousands of files.
+  ;; ==========================================
+  (require 'ls-lisp)
+  (setq ls-lisp-use-insert-directory-program nil
+        ls-lisp-dirs-first t
+        ls-lisp-ignore-case t
+        ;; ls-lisp-UCA-like-collation nil
+        dired-listing-switches "-AGFhlv --time-style=long-iso")
+
+  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+
+  ;; AUTO-CREATE DIRECTORIES ON MOVE/COPY
+  (defun my-dired-auto-create-target-dir (orig-fun &rest args)
+    "Silently create target directories the moment the Dired prompt receives a path."
+    (let* ((target (apply orig-fun args))
+           ;; Check if the target is a directory path (ends in /) or a file path
+           (dir (if (string-suffix-p "/" target) target (file-name-directory target))))
+      ;; If it's a directory and doesn't exist, build the full path instantly
+      (when (and dir (not (file-exists-p dir)))
+        (make-directory dir t))
+      target))
+
+  ;; Attach this to the Dired destination prompt
+  (advice-add 'dired-mark-read-file-name :around #'my-dired-auto-create-target-dir)
+
+  ;; Moved from init.el as requested
+  (put 'dired-find-alternate-file 'disabled nil)
+
+  ;; --- Custom SPC Leader Menu for Insert Mode ---
+
+  ;; 1. create brand new keymaps
+  (defvar-keymap my-dired-rename-map
+    :doc "Ranger Renaming Map"
+    "r" '("rm standard" . my-ranger-rename-standard)
+    "a" '("append"      . my-ranger-rename-append)
+    "A" '("Appen/Absolute"  . my-ranger-rename-append-end)
+    "i" '("Insert"      . my-ranger-rename-prepend)
+    "e" '("Extension"   . my-ranger-rename-extension)
+    "u" '("spc → _"     . dirvish-rename-space-to-underscore)
+    "w" '("wDired"      . dired-toggle-read-only))
+
+  (defvar-keymap my-dired-share-map
+    :doc "Share to Phone Map"
+    "k" '("to phone > KDE"  . my-dired-kdeconnect-share)
+    "w" '("to phone > worm" . my-dired-wormhole-send)
+    "s" '("syncthing folder" . my-dired-syncthing-transfer))
+
+  (defvar-keymap my-dired-spc-map
+    :doc "Custom SPC leader map for Dired/Dirvish in Insert Mode"
+    "1" '("drag/drop"       . my-dired-ripdrag)
+    "2" '("wl-copy"         . my-dired-copy-file-to-clipboard)
+    "m" '("dired-jump"      . dired-jump)
+    "u" '("consult-buffer"  . consult-buffer)
+    ";" '("consult-ripgrep" . consult-ripgrep)
+    "f" '("iBuffer"         . ibuffer)
+    "r" `("ranger-rename"   . ,my-dired-rename-map)
+    "z" '("zip/share > phone" . my-dired-zip-and-share)
+    "b" '("backup files"    . my-backup-file)
+    "p" `("Share Menu"      . ,my-dired-share-map))
+
+  ;; 2. bind SPC to our new map (nuking old dired-next-line automatically)
+  (keymap-set dired-mode-map "SPC" my-dired-spc-map)
+
+  ;; 3. tell which-key what this menu is called
+  (with-eval-after-load 'which-key
+    (which-key-add-major-mode-key-based-replacements 'dired-mode "SPC" "Dirvish Menu")))
+
+(use-package dired-open
+  :ensure t
+  :config
+  (setq dired-open-extensions
+        '(
+          ;; --- IMAGES (swayimg) ---
+          ("png"  . "swayimg")  ("jpg"  . "swayimg")  ("jpeg" . "swayimg")
+          ("gif"  . "swayimg")  ("bmp"  . "swayimg")  ("ico"  . "swayimg")
+          ("svg"  . "swayimg")  ("webp" . "swayimg")  ("avif" . "swayimg")
+          ("tiff" . "swayimg")  ("tif"  . "swayimg")  ("tga"  . "swayimg")
+          ("heic" . "swayimg")  ("heif" . "swayimg")  ("jxl"  . "swayimg")
+
+          ;; --- VIDEO (mpv windowed) ---
+          ("mkv"  . "mpv --force-window=yes --keep-open=no")
+          ("mp4"  . "mpv --force-window=yes --keep-open=no")
+          ("avi"  . "mpv --force-window=yes --keep-open=no")
+          ("mov"  . "mpv --force-window=yes --keep-open=no")
+          ("webm" . "mpv --force-window=yes --keep-open=no")
+          ("flv"  . "mpv --force-window=yes --keep-open=no")
+          ("wmv"  . "mpv --force-window=yes --keep-open=no")
+          ("m4v"  . "mpv --force-window=yes --keep-open=no")
+          ("mpg"  . "mpv --force-window=yes --keep-open=no")
+          ("mpeg" . "mpv --force-window=yes --keep-open=no")
+          ("ts"   . "mpv --force-window=yes --keep-open=no")
+
+          ;; --- AUDIO (mpv windowed) ---
+          ("mp3"  . "mpv --force-window=yes --gapless-audio=yes")
+          ("flac" . "mpv --force-window=yes --gapless-audio=yes")
+          ("wav"  . "mpv --force-window=yes --gapless-audio=yes")
+          ("ogg"  . "mpv --force-window=yes --gapless-audio=yes")
+          ("opus" . "mpv --force-window=yes --gapless-audio=yes")
+          ("m4a"  . "mpv --force-window=yes --gapless-audio=yes")
+          ("aac"  . "mpv --force-window=yes --gapless-audio=yes")
+          ("alac" . "mpv --force-window=yes --gapless-audio=yes")
+
+          ;; --- DOCUMENTS & COMICS (zathura) ---
+          ("pdf"  . "zathura")  ("djvu" . "zathura")  ("ps"   . "zathura")
+          ("eps"  . "zathura")  ("cbz"  . "zathura")  ("cbr"  . "zathura")
+
+          ;; --- E-BOOKS (FBReader) ---
+          ("epub" . "FBReader") ("mobi" . "FBReader") ("fb2"  . "FBReader")
+          ("azw3" . "FBReader")
+          )))
+
+(use-package dirvish
+  :ensure t
+  :bind (("C-c f" . dirvish)
+         :map dirvish-mode-map
+         ("f"     . dirvish-file-info-menu)
+         ("g"     . dirvish-quick-access)
+         ("y"     . dirvish-yank-menu)
+         ("s"     . dirvish-quicksort)
+         ("j"     . dired-up-directory)
+         ("k"     . dired-next-line)
+         ("i"     . dired-previous-line)
+         ("l"     . dired-find-file)
+         ("TAB"   . dirvish-subtree-toggle)
+         ("v"     . dirvish-layout-toggle)
+         ("r"     . revert-buffer)
+         ("I"     . beginning-of-buffer)
+         ("K"     . end-of-buffer)
+         (","     . xah-next-window-or-frame)
+         ("C-c r" . dirvish-rsync-transient)
+         ("q"     . dirvish-quit)
+         ;; 1. This catches your physical Ctrl+I (because input-decode-map saved it)
+         ("<C-i>" . dired-prev-subdir)
+         ;; 2. Your other bindings
+         ("C-k"   . dired-next-subdir)
+         ("z"     . describe-mode)
+         ("b"     . xah-pop-local-mark-ring)
+         ;; Map window scrolling
+         ("M-i"   . (lambda () (interactive) (scroll-other-window-down 1)))
+         ("M-k"   . (lambda () (interactive) (scroll-other-window 1))))
+
+  :init
+  ;; Force creation of the cache dir to prevent silent thumbnail failures
+  (unless (file-exists-p (expand-file-name "~/.cache/dirvish/"))
+    (make-directory (expand-file-name "~/.cache/dirvish/") t))
+  (dirvish-override-dired-mode)
+
+  :custom
+  ;; Wait 150ms before triggering previews
+  (dirvish-preview-delay 0.15)
+  (dirvish-attributes '(nerd-icons file-size file-time))
+  (dirvish-layout '(0 45 55))
+  (dirvish-hilite-line t)
+  ;; (dirvish-hilite-line nil)
+  ;; Unified dispatchers here (removed the duplicate from :config)
+  (dirvish-preview-dispatchers '(font gif epub archive pdf video audio image eza-dir-preview))
+
+  :config
+  (require 'dirvish-rsync)
+  (require 'dirvish-extras)
+  (require 'dirvish-peek)
+
+  (dirvish-peek-mode 1)
+
+  (dirvish-define-preview eza-dir-preview (file)
+    "Use 'eza' for beautiful, icon-rich directory previews"
+    (when (file-directory-p file)
+      `(shell . ("eza" "-a" "-1" "--color=always" "--icons=always" "--group-directories-first" ,file))))
+
+  ;; Define the XFK segment for dirvish
+  (dirvish-define-mode-line xfk-mode
+    "Show current XFK mode."
+    (if xah-fly-insert-state-p
+        (propertize " INSERT " 'face '(:foreground "#5faf5f"))
+      (propertize " COMMAND " 'face '(:foreground "#ff5f5f"))))
+
+  ;; Mode-line format
+  (setq dirvish-mode-line-format '(:left (sort symlink) :right (my-org-timer omit xfk-mode)))
+
+  ;; Quick access
+  (setq dirvish-quick-access-entries
+        '(("h" "~/"                          "Home")
+          ("l" "~/Desk/"                     "Desk")
+          ("w" "~/DLs/"                      "DLs")
+          ("d" "~/Docs/"                     "Docs")
+          ("r" "~/Docs/11.git_docs/"         "git-docs")
+          ("m" "~/Musk/"                     "Musk")
+          ("p" "~/Pix/"                      "Pix")
+          ("v" "~/Vidz/"                     "Vidz")
+          ("t" "~/tmp/"                      "tmp")
+          ("f" "~/.dotfiles/"                ".dotfiles")
+          ("c" "~/.config/"                  ".config")
+          ("e" "~/.dotfiles/common/emacs.d/" ".emacs.d")
+          ("s" "~/.scripts/"                 ".scripts")
+          ("T" "~/.local/share/Trash/files/" "Trash")
+          ("i" "/run/media/"                 "Media")))
+
+  ;; Transient menus
+  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+    '("t" "file contents to wl-copy" my-dired-copy-file-contents))
+  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+    '("x" "Cut"   my-dired-copy-paste-do-cut))
+  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+    '("c" "Copy"  my-dired-copy-paste-do-copy))
+  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+    '("v" "Paste" my-dired-copy-paste-do-paste))
+  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+    '("q" "Quit" transient-quit-one))
+
+  ;; Note: The redundant global-auto-revert and (advice-add 'dired-do-copy ...)
+  ;; from the end of the original dirvish block were merged into the authoritative
+  ;; Dired block above to prevent duplicate execution.
+  )
+
+(use-package emms
+  :ensure t
+  :demand t
+  :config
+  (require 'emms-setup)
+  (require 'emms-player-mpv)
+  (require 'emms-player-mpd)
+
+
+  ;; --- 1. DIRECTORY DEFAULTS ---
+  (setq emms-source-file-default-directory "~/Musk/")
+  (setq emms-player-mpd-music-directory "~/Musk/")
+
+  ;; --- 2. BACKEND PLAYER (MPV) ---
+  (setq emms-player-list '(emms-player-mpv))
+  (setq emms-player-mpv-parameters
+        '("--quiet" "--no-video" "--gapless-audio=yes" "--idle"))
+
+  ;; Explicitly tell EMMS to reuse the same MPV instance rather than restarting it
+  (setq emms-player-mpv-ipc-method 'ipc-server)
+
+
+  ;; --- 3. METADATA ENGINE (MPD) ---
+  (setq emms-player-mpd-server-name "localhost")
+  (setq emms-player-mpd-server-port "6600")
+  (setq emms-info-functions '(emms-info-mpd))
+
+
+  ;; --- 4. THE SYNC LOGIC
+  (defun musk-sync-music-metadata ()
+    "Force MPD update and pull all metadata into EMMS browser/cache."
+    (interactive)
+    (message "Syncing MPD and EMMS...")
+    ;; 1. Tell MPD server to scan disk for changes
+    (emms-player-mpd-update-all)
+    ;; 2. Clear EMMS local metadata cache
+    (emms-cache-reset)
+    ;; 3. Dump the entire MPD database into EMMS instantly (The fast way)
+    (emms-cache-set-from-mpd-all)
+    ;; 4. Refresh the UI
+    (when (fboundp 'emms-browser-refresh)
+      (emms-browser-refresh))
+    (message "Music sync complete."))
+
+
+  ;; --- 5. MPV ISOLATED VOLUME CONTROL & PERSISTENCE
+  (defvar musk-mpv-volume-file (expand-file-name "emms-volume-cache" user-emacs-directory)
+    "File where EMMS saves the last known MPV volume.")
+
+  (defun musk-load-saved-volume ()
+    "Read the saved volume from cache, default to 100."
+    (if (file-exists-p musk-mpv-volume-file)
+        (string-to-number (with-temp-buffer
+                            (insert-file-contents musk-mpv-volume-file)
+                            (buffer-string)))
+      100))
+
+  (defun musk-apply-saved-volume ()
+    "Inject the saved volume into MPV as soon as it starts."
+    (let ((vol (musk-load-saved-volume)))
+      (emms-player-mpv-cmd (list 'set_property 'volume vol))))
+
+  ;; Hook to apply volume instantly when a track begins
+  (add-hook 'emms-player-started-hook #'musk-apply-saved-volume)
+
+  (defun musk-volume-change (amount)
+    "Change MPV internal volume, save state, and notify Noctalia."
+    (emms-player-mpv-cmd (list 'add 'volume amount))
+    (emms-player-mpv-cmd '(get_property volume)
+                         (lambda (data _err)
+                           (let ((vol (round data)))
+                             ;; 1. Save new volume to cache file
+                             (with-temp-file musk-mpv-volume-file
+                               (insert (number-to-string vol)))
+                             ;; 2. Update Emacs Minibuffer
+                             (message "MPV Volume: %d%%" vol)
+                             ;; 3. Fire OSD-style transient notification
+                             (start-process "emms-vol-notify" nil "notify-send"
+                                            "-a" "EMMS" "-u" "low" "-t" "1500"
+                                            "-h" "string:x-canonical-private-synchronous:mpv-volume"
+                                            "-h" (format "int:value:%d" vol)
+                                            "-h" "int:transient:1"
+                                            "MPV Volume" (format "%d%%" vol))))))
+
+  ;; --- 6. XFK ACTIVE LINE HIGHLIGHT ---
+  ;; 1. Force line highlights to ONLY show in the currently focused window
+  (setq global-hl-line-sticky-flag nil)
+
+  ;; 2. Ensure we have a visible color from your theme for the highlight
+  (require 'hl-line)
+  (set-face-attribute 'hl-line nil :inherit 'highlight :extend t)
+
+  ;; 3. Hook directly into Xah-Fly-Keys to toggle the highlight
+  (with-eval-after-load 'xah-fly-keys
+    (add-hook 'xah-fly-insert-mode-activate-hook
+              (lambda () (global-hl-line-mode 1)))
+
+    (add-hook 'xah-fly-command-mode-activate-hook
+              (lambda () (global-hl-line-mode -1))))
+
+
+  (emms-all))
+
+(require 'emms)
+(require 'emms-browser)
+
+;; --- 2. BROWSER VIEW (Hierarchical) ---
+;; Level 1: Artist
+(setq emms-browser-info-artist-format "%n")
+
+;; Level 2: Year - Album (Indented, bold via face settings)
+(setq emms-browser-info-album-format "%i%y - %n")
+
+;; Level 3: Track. Title (Custom parser for clean 2-digit track numbers)
+(defun musk-browser-track-format (bdata fmt)
+  (let* ((track (emms-browser-bdata-first-track bdata))
+         (track-raw (or (emms-track-get track 'info-tracknumber) "00"))
+         (track-clean (if (string-match "^\\([0-9]+\\)" (format "%s" track-raw))
+                          (format "%02d" (string-to-number (match-string 1 (format "%s" track-raw))))
+                        "00"))
+         (title (or (emms-track-get track 'info-title) "Unknown Title")))
+
+    (concat (emms-browser-format-elem fmt "i")
+            track-clean ". " title)))
+
+(setq emms-browser-info-title-format #'musk-browser-track-format)
+
+
+;; --- 3. PLAYLIST VIEW (Track on left, Time right-aligned) ---
+(defun musk-playlist-description (track)
+  (let* ((artist (or (emms-track-get track 'info-artist) "Unknown"))
+         (album  (or (emms-track-get track 'info-album)  "Unknown"))
+
+         ;; Fetch track number and forcefully extract only the first numbers
+         (track-raw (or (emms-track-get track 'info-tracknumber) "00"))
+         (trackp (if (string-match "^\\([0-9]+\\)" (format "%s" track-raw))
+                     (format "%02d" (string-to-number (match-string 1 (format "%s" track-raw))))
+                   "00"))
+
+         ;; Restored missing Title and Time variables!
+         (title  (or (emms-track-get track 'info-title) "Unknown Title"))
+         (time   (let ((sec (emms-track-get track 'info-playing-time)))
+                   (if (and sec (> sec 0))
+                       (format "%02d:%02d" (/ sec 60) (% sec 60))
+                     "00:00")))
+
+         ;; 1. Left side: Artist  -  Album  -  Track  -  Title
+         (left-side (format "%s - %s - %s - %s" artist album trackp title))
+
+         ;; 2. Dynamic space: Pushes the next item exactly to the right edge
+         (align-space (propertize " " 'display `(space :align-to (- right ,(length time))))))
+
+    ;; 3. Combine: Left Side + Space + Time
+    (concat left-side align-space time)))
+
+(setq emms-track-description-function #'musk-playlist-description)
+
+
+;; --- 4. PREVENT BROWSER FROM HIJACKING THE PLAYLIST ---
+;; Silence the Artist and Album grouping headers when adding from the browser
+(setq emms-browser-playlist-info-artist-format "")
+(setq emms-browser-playlist-info-album-format "")
+
+;; Tell EMMS to completely skip inserting those grouping headers if they are empty
+(defun musk-skip-empty-browser-groups (orig-fun bdata)
+  (let ((name (emms-browser-format-line bdata 'playlist)))
+    (unless (string-blank-p name)
+      (funcall orig-fun bdata))))
+(advice-add 'emms-browser-playlist-insert-group :around #'musk-skip-empty-browser-groups)
+
+;; Force the browser to use our flat layout for the actual tracks
+(defun musk-browser-playlist-track-format (bdata _fmt)
+  (let ((track (emms-browser-bdata-first-track bdata)))
+    (musk-playlist-description track)))
+(setq emms-browser-playlist-info-title-format #'musk-browser-playlist-track-format)
+
+
+;; --- 5. MODE-LINE (Reverse Countdown & Truncation) ---
+(require 'emms-playing-time)
+(require 'emms-mode-line)
+
+;; 1. Silence the default EMMS formatting
+(setq emms-mode-line-format "")
+(setq emms-playing-time-display-format "")
+
+;; 2. Build the custom ticking mode-line
+(defun musk-custom-modeline-tick ()
+  "Draws the 13-char artist and reverse countdown every second."
+  (when emms-player-playing-p
+    (let* ((track (emms-playlist-current-selected-track))
+           (artist (or (emms-track-get track 'info-artist) "Unknown"))
+
+           ;; Truncates to 13 chars. Total width is 15 with the ".."
+           (artist-trunc (truncate-string-to-width artist 15 nil nil ".."))
+
+           ;; Time calculations
+           (total (round (or (emms-track-get track 'info-playing-time) 0)))
+           (current (round emms-playing-time))
+           (time-val (if (> total 0) (max 0 (- total current)) current)))
+
+      ;; Inject the 'artist-trunc' into the string
+      (setq emms-mode-line-string
+            (format " [%s  %02d:%02d] " artist-trunc (/ time-val 60) (% time-val 60)))
+
+      (force-mode-line-update t))))
+
+;; 3. Hook into the ticking timer SAFELY
+(advice-add 'emms-playing-time-display :after #'musk-custom-modeline-tick)
+
+;; 4. Clear it out when playback stops
+(defun musk-clear-modeline ()
+  (setq emms-mode-line-string ""))
+(add-hook 'emms-player-stopped-hook #'musk-clear-modeline)
+
+;; 5. Start the engines
+(emms-mode-line 1)
+(emms-playing-time 1)
+
+(use-package org
+    :ensure nil
+    :defer t
+    :config
+    ;; 1. Variables and Faces
+    (setq org-dir "~/Docs/Org/"
+          dropbox-orgriz "~/Desk/Dropbox/orgriz/"
+          dropbox-configs "~/Desk/Dropbox/configs/"
+          org-hide-leading-stars t
+          org-startup-folded t
+          org-src-window-setup 'current-window
+          org-support-shift-select t
+          org-hide-emphasis-markers t)
+
+    (setq org-emphasis-alist
+          '(("*" (bold :weight black))
+            ("/" (italic :foreground "goldenrod"))
+            ("_" (:underline t :foreground "deep sky blue"))
+            ("=" (verbatim :foreground "tomato"))
+            ("~" (:background "DarkSeaGreen" :foreground "dim gray"))
+            ("+" (:strike-through t :foreground "dark orange"))))
+
+    (setq org-todo-keyword-faces
+          '(("BACKLOG" . "gray")
+            ("SPRINT"  . "orange")
+            ("ACTIVE"  . "cyan")
+            ("DONE"    . "green")
+            ("DROPPED" . "red")))
+
+    ;; 2. Static File Apps (Safely quoted)
+    (setq org-file-apps
+          '((auto-mode . emacs)
+            (directory . emacs)
+            ("\\.mm\\'" . default)
+            ("\\.x?html?\\'" . default)
+            ("\\.pdf\\'" . system)   ; Opens PDF in system default app
+            ("\\.png\\'"  . "swayimg %s")  ; Opens images directly in SwayIMG
+            ("\\.jpg\\'"  . "swayimg %s")
+            ("\\.jpeg\\'" . "swayimg %s")
+            ("\\.webp\\'" . "swayimg %s")
+            ("\\.gif\\'"  . "swayimg %s")))
+
+
+
+    ;; 3. Dynamic/Async File Apps (Appended via add-to-list)
+    (dolist (ext '("\\.mp4\\'" "\\.mkv\\'" "\\.webm\\'" "\\.avi\\'"))
+      (add-to-list 'org-file-apps
+                   `(,ext . (lambda (file _link)
+                              (start-process "mpv-video" nil "mpv" file))))))
+
+;; FORCING Org to use the OLDER folding engine that uses 'overlays'
+;; to prevent the ellipsis (...) stuck bug of the current engine
+
+(with-eval-after-load 'org
+  ;; 1. Revert to the classic engine
+  (setq org-fold-core-style 'overlays)
+
+  ;; 2. Prevent accidental typing inside hidden text
+  (setq org-catch-invisible-edits 'smart)
+
+  ;; 3. Stop vertical movement from clinging to the ends of lines
+  (setq track-eol nil)
+
+  ;; 4. THE FIX: Force strict logical movement (newline to newline)
+  ;; This is added as a hook so it only affects Org-mode and doesn't
+  ;; break visual word-wrapping in your other text files!
+  (add-hook 'org-mode-hook (lambda () (setq line-move-visual nil))))
+
+;; CAPTURE TEMPLATE
+
+;; custom Kanban-style states
+;; (The letter in parentheses is the fast-access shortcut key)
+(setq org-todo-keywords
+  '((sequence "TODO(t)" "IN-PROGRESS(i)" "VERIFY(v)" "|" "DONE(d)")))
+
+(setq org-capture-templates
+  '(
+     ;; Stuff I wanna learn/implement
+     ("p" "Personal Searches" entry
+      (file+headline "~/Docs/10.Org/personal-searches.org" "OPEN SEARCHS")
+      "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%a\n"
+      :empty-lines 1)
+
+     ;; Study Tracker (Backlog Inbox)
+     ("s" "Study Backlog (Trading)" entry
+      (file+headline "~/Docs/10.Org/trading-study-tracker.org" "MASTER BACKLOG")
+      "** BACKLOG %?\n  %i\n  Context: %a\n"
+      :empty-lines 1)
+
+     ;; Day Trading Log (Datetree)
+     ("t" "Trade Log" entry
+      (file+olp+datetree "~/Docs/10.Org/trading-log.org")
+      "**** %<%Y-%m-%d %A>
+*Trades*
+|---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+| # | Stock | Strike  | Cons | Time (In/Out) | Duration | Cost (Total)    | Sell (Total)    | P/L Final |     ROI |
+|---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+_Summary:_
+TOTAL P/L: 
+TOTAL ROI: 
+Average Duration: 
+Max Duration: 
+Min Duration: 
+Highest Daily P/L: 
+Lowest Daily P/L:
+
+***** Review
+****** Trade #: TICKER
+*Risk & Sizing (Checklist)*
+- [ ] Contract price fits account management (Ideal <= $1.50)
+- [ ] Position sized strictly to max 2 contracts
+- [ ] Spread visually validated before entry (Ask - Bid <= $0.05 to $0.08)
+
+*Entry & Exit Mechanics (Checklist)*
+- [ ] Entry triggered by clear technical setup on underlying chart
+- [ ] Mental Stop Loss based on the CHART (support loss or structure break)
+- [ ] Gave it enough \"breathing room\" for volatility without violating technical limits
+- [ ] /Flatten/ triggered _MANUALLY_ the exact moment chart structure failed
+- [ ] Exit executed without hesitation, hope, or praying for a reversal
+
+*Daily Routine & Limits*
+- [ ] Attempt cycle respected (Max 3/Daily)
+- [ ] Early quitting activated (profit target met)
+
+*Performance Classification*
+- [ ] System Win (Followed technical read and profited — FLAWLESS!)
+- [ ] System Loss (Stopped out manually exactly where chart dictated — TOP EXEC!)
+- [ ] Rule Break (Hesitated on stop, ignored chart failure, or blew sizing — GARBAGE )
+
+*Psychology & Execution Audit*
+1. Anxiety, rush to enter, or FOMO before order?
+   - [ ] Yes
+   - [ ] No
+2. Hesitated on Flatten when technical/chart limit was lost?
+   - [ ] Yes
+   - [ ] No
+3. Influenced by previous P/L (revenge/greed)?
+   - [ ] Yes
+   - [ ] No
+4. Session Diagnosis:
+   - [ ] Technical
+   - [ ] Emotional
+   - [ ] BOTH ABOVE
+   - [ ] Flawless Execution
+5. Entry Origin:
+   - [ ] Personal
+   - [ ] Mentor
+
+_Notes:_
+/What worked well:/
+1. 
+
+/Where discipline failed:/
+1. 
+
+/Lesson:/
+1. "
+       :empty-lines 1)
+
+     ;; System Ticketing template
+     ("x" "System Ticket" entry
+      (file+headline "~/Docs/10.Org/system-tickets.org" "OPEN TICKETS")
+      "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%a\n"
+      :empty-lines 1)
+
+     ("r" "BuJo Daily Reflection" plain
+      (file "~/Docs/10.Org/bujo_reflection_2026.org")
+      "** %<%Y-%m-%d [%a]>\n:PROPERTIES:\n:HUMOR_MANHA: 1-5\n:HUMOR_NOITE: 1-5\n:END:\n\n*** Manhã\n**** Intenção do dia\n- %?\n\n**** Top 3 prioridades [%]\n- [ ] \n- [ ] \n- [ ] \n\n**** Energia ao despertar (1-5)\n- \n\n*** Noite\n**** O que funcionou bem hoje?\n- \n\n**** O que me drenou energia?\n- \n\n**** Que tarefa evitei e por quê?\n- \n\n**** APRENDI ou NOTEI algo sobre mim mesmo?\n- \n\n**** Frase-síntese do dia\n#+begin_quote\n\n#+end_quote\n"
+      :empty-lines 1)
+
+))
+
+(use-package org-superstar
+  :ensure t
+  :hook (org-mode . org-superstar-mode)
+  :config
+  ;; 1. Customize your heading bullets
+  (setq org-superstar-headline-bullets-list '("◉" "○" "◈" "◇"))
+
+  ;; 2. Customize your standard item lists
+  (setq org-superstar-item-bullet-alist
+        '((?- . ?•)
+          (?+ . ?○)
+          (?* . ?▪)))
+
+  ;; 3. Hide leading stars
+  (setq org-hide-leading-stars t
+        org-superstar-remove-leading-stars t))
+
+;; pretify .org files
+(use-package org-modern
+  :ensure t
+  :hook (org-mode . org-modern-mode)
+  :config
+  (set-face-attribute 'org-modern-symbol nil :height 1.5))
+
+(setq org-modern-todo-faces
+      '(("BACKLOG" :background "gray" :foreground "white")
+        ("SPRINT"  :background "orange" :foreground "black")
+        ("ACTIVE"  :background "cyan" :foreground "black")
+        ("DONE"    :background "green" :foreground "white")
+        ("DROPPED" :background "red" :foreground "white")))
+
+(setq org-modern-label-border 1)
+
+;; (setq org-modern-star '("◉" "○" "✸" "✿" "✤"))
+;; Filled circles
+;; (setq org-modern-star '("●" "◉" "○" "◈" "◇"))
+;; Arrows
+;; (setq org-modern-star '("▶" "▷" "◆" "◇" "✦"))
+;; Minimal
+;; (setq org-modern-star '("•" "◦" "▸" "▹" "·"))
+
+; hides *bold* markers, shows only the formatting
+(setq org-hide-emphasis-markers t)
+; clean indentation by heading level
+(setq org-startup-indented t)
+
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory (file-truename "~/Docs/10.Org/roam/"))
+  :config
+  ;; 1. Initialize Database Autosync
+  (org-roam-db-autosync-mode)
+
+  ;; 2. Global Tag Dictionary
+  ;; Pressing C-c C-q on a heading will open a menu.
+  ;; Pressing the assigned letter (e.g., 'l') applies the tag.
+  (setq org-tag-alist '(("linux" . ?l)
+                        ("emacs" . ?e)
+                        ("audio" . ?a)
+                        ("video" . ?v)
+                        ("image" . ?i)
+                        ("network" . ?n)
+                        ("hardware" . ?h)
+                        ("terminal" . ?t)
+                        ("scripting" . ?s)
+                        ("pacman" . ?p)
+                        ("arch_linux" . ?A)
+                        ("void_linux" . ?V)
+                        ("cli" . ?c)
+                        ("tui" . ?u)
+                        ("gui" . ?G)
+                        ("pdf" . ?f)
+                        ("wm_de" . ?w)
+                        ("git" . ?g)
+                        ("troubleshoot" . ?r)
+                        ("regex" . ?x)
+                        ("compression" . ?C)
+                        ("mount" . ?m)))
+
+  ;; 3. Clean Org-roam Capture Templates (Logseq Compatible)
+  (setq org-roam-capture-templates
+        '(("h" "[TECH] Hub & Spoke / In-Depth / Add-on" plain
+           "%?"
+           :if-new (file+head "tech/%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+TITLE: ${title}\n#+DATE: %T\n#+AUTHOR: Renato O.\n#+FILETAGS: :TECH:\n\n* QUICK REFERENCE\n\n# if editing files, source describe path\n# *Config Path:* =~/.config/zathura/zathurarc=\n\n# *Problem*\n# describe scenario in case of troubleshooting resolution\n\n# *Solution*\n# describe sequential steps taken to resolve problem\n# make sure to use ordered lists \"1.\"\n\n# use tables for multiple inline commands\n| Action | Command                    |\n|--------+---------------------------|\n| act_1  | ~inline command/code here!~ |\n|        |                           |\n|        |                           |\n\n** heading_1\n# detailed description of event - SCRIPTS & TROUBLESHOOTING\n# detailed description of event - COMMANDS & CODING\n\n** heading_2\n# depeer detailed description of event\n\ngeneral code block description\n#+begin_src bash\nblock code here!\n#+end_src\n\ngeneral inline code description (use tables if too many inline codes >=3)\n~inline code here!~\n\n* TROUBLESHOOT\n** [CATEGORY]: [Title]\n*** Summary\n*Problem:*\n*Solution:*\n/Tools involved:/\n- list tools...\n*** Background / Context\n# Background / Context\n*** Investigation\n# Investigation\n# **** Summary (quick)\n# **** Packages required\n# **** Tests\n*** Root Cause / Fix\n# Fix / Implementation (step-by-step)\n*** Notes / Caveats\n# Notes / Caveats\n\n* IN-DEPTH\n** Header 2: Title Casing\n*** Header 3: Title Casing\n\n# table description (if any)\n|--------+--------+--------|\n| item 1 | item 2 | item 3 |\n|--------+--------+--------|\n| asdf   |        |        |\n| asdf   |        |        |\n|--------+--------+--------|\n\n**** Header 4: Title Casing\n\n- dashed/bullet list, may contain line breaks for good visuals, depending or paragraph size?\n\n- dashed/bullet list, may contain line breaks for good visuals, depending or paragraph size?\n\n- or keep it together if lean\n- or keep it together if lean\n- or keep it together if lean\n\n1. numbered CAN be broken..\n2. just align right under\n\n")
+           :unnarrowed t)
+
+          ("f" "[LIFE] Hub & Spoke / In-Depth / Add-on" plain
+           "%?"
+           :if-new (file+head "life/%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+TITLE: ${title}\n#+DATE: %T\n#+AUTHOR: Renato O.\n#+FILETAGS: :LIFE:\n\n* QUICK REFERENCE\n\n# if editing files, source describe path\n# *Config Path:* =~/.config/zathura/zathurarc=\n\n# *Problem*\n# describe scenario in case of troubleshooting resolution\n\n# *Solution*\n# describe sequential steps taken to resolve problem\n# make sure to use ordered lists \"1.\"\n\n# use tables for multiple inline commands\n| Action | Command                    |\n|--------+---------------------------|\n| act_1  | ~inline command/code here!~ |\n|        |                           |\n|        |                           |\n\n** heading_1\n# detailed description of event - SCRIPTS & TROUBLESHOOTING\n# detailed description of event - COMMANDS & CODING\n\n** heading_2\n# depeer detailed description of event\n\ngeneral code block description\n#+begin_src bash\nblock code here!\n#+end_src\n\ngeneral inline code description (use tables if too many inline codes >=3)\n~inline code here!~\n\n* TROUBLESHOOT\n** [CATEGORY]: [Title]\n*** Summary\n*Problem:*\n*Solution:*\n/Tools involved:/\n- list tools...\n*** Background / Context\n# Background / Context\n*** Investigation\n# Investigation\n# **** Summary (quick)\n# **** Packages required\n# **** Tests\n*** Root Cause / Fix\n# Fix / Implementation (step-by-step)\n*** Notes / Caveats\n# Notes / Caveats\n\n* IN-DEPTH\n** Header 2: Title Casing\n*** Header 3: Title Casing\n\n# table description (if any)\n|--------+--------+--------|\n| item 1 | item 2 | item 3 |\n|--------+--------+--------|\n| asdf   |        |        |\n| asdf   |        |        |\n|--------+--------+--------|\n\n**** Header 4: Title Casing\n\n- dashed/bullet list, may contain line breaks for good visuals, depending or paragraph size?\n\n- dashed/bullet list, may contain line breaks for good visuals, depending or paragraph size?\n\n- or keep it together if lean\n- or keep it together if lean\n- or keep it together if lean\n\n1. numbered CAN be broken..\n2. just align right under\n\n")
+           :unnarrowed t)
+
+          ("a" "[AI ANSWERS] Spokes ONLY" plain
+           "%?"
+           :if-new (file+head "AI_general/%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+TITLE: ${title}\n#+DATE: %T\n#+AUTHOR: Renato O.\n#+FILETAGS: :AI:ANSWERS:\n\n* Header 1\n** Quick Reference\n\n|------+------|\n| asdf | asdf |\n|------+------|\n|      |      |\n|      |      |\n|      |      |\n|      |      |\n|------+------|\n\n** Explanation\n")
+           :unnarrowed t)))
+
+  ;; allow searches on TAGS, reserves 30 chars space
+  ;; on minibuffer and applies org-tag color to it.
+  (setq org-roam-node-display-template
+        (concat "${title:*} "
+                (propertize "${tags:30}" 'face 'org-tag)))
+  )
+
+;;  emacs command helper
+(use-package which-key
+  :ensure t
+  :init (which-key-mode)
+  :config
+  (setq which-key-max-description-length nil)     ;; no truncation
+  ;; (setq which-key-max-description-length 100)     ;; set truncation limit 80, 120...
+  (setq which-key-add-column-padding 1)           ;; nicer spacing
+  (setq which-key-idle-delay 0.3)                 ;; adjust to your taste
+  (which-key-setup-minibuffer)                    ;; show in minibuffer instead of side popup
+  (setq which-key-show-prefix 'echo)           ;; show the prefix you typed at the top
+  (setq which-key-popup-type 'minibuffer)      ;; force minibuffer (same as setup-minibuffer)
+  (setq which-key-side-window-max-height 0.5) ;; if you still prefer side window
+  :custom
+  (which-key-side-window-max-lines 20)
+  (which-key-mode 1))
+
+;; add/change/remove surronding brackets and more!
+(use-package embrace
+  :ensure t
+  :config
+  ;; Create a dedicated sub-map for Embrace
+  (defvar my-embrace-map (make-sparse-keymap) "Embrace surround map")
+  ;; Hook it into standard modes
+  (add-hook 'org-mode-hook #'embrace-org-mode-hook)
+  ;; (Loads standard programming pairs)
+  (add-hook 'prog-mode-hook #'embrace-ruby-mode-hook))
+
+;; GIT
+(use-package magit :ensure t :defer t)
+;; VTERM TERMINAL
+(use-package vterm :ensure t :defer t)
+;; TEXT EDITION
+(use-package iedit :ensure t :bind ("C-;" . iedit-mode))
+;; JUMP TO TEXT
+(use-package avy :ensure t :bind ("M-s" . avy-goto-char-2))
+
+;; (Lazy: only loads when opening .lua file)
+(use-package lua-mode
+:ensure t
+:mode "\\.lua\\'"
+:defer t)
+
+;; Lazy: only loads when opening a .kdl file
+(use-package kdl-mode
+:ensure t
+:mode "\\.kdl\\'"
+:defer t)
+
+;; Lazy: starts 2 seconds after Emacs is idle
+(use-package keyfreq
+:ensure t
+:init
+(run-with-idle-timer 2 nil (lambda ()
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))))
+
+(use-package sudo-edit
+:ensure t
+:commands (sudo-edit))
+
+(use-package ultra-scroll
+  :ensure t
+  :init
+  (setq scroll-conservatively 3     ; or any value you like (v0.4+)
+        scroll-margin 0)            ; ultra-scroll requires this
+  :config
+  (ultra-scroll-mode 1))
+
+;; --- 1. Set the Engine and Default Language ---
+(setq ispell-program-name "hunspell")
+;; Set default to English (or "pt_BR" if you prefer)
+(setq ispell-dictionary "en_US")
+
+;; --- 2. Auto-enable in Specific Modes ---
+;; On-the-fly checking for prose (Markdown, Org, txt)
+(add-hook 'text-mode-hook 'flyspell-mode)
+;; On-the-fly checking ONLY in comments/strings for code
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
+;; --- 3. Fast Language Toggle ---
+(defun my-toggle-spell-language ()
+  "Toggle the spell-checking dictionary between English and Portuguese."
+  (interactive)
+  (let* ((current-dict (or ispell-local-dictionary ispell-dictionary))
+         (new-dict (if (string= current-dict "en_US") "pt_BR" "en_US")))
+    (ispell-change-dictionary new-dict)
+    (message "Dictionary switched to: %s" new-dict)))
+
+;; The GPG Daemon Fix: Force prompts into the minibuffer
+(use-package epg
+  :ensure nil
+  :custom
+  (epg-pinentry-mode 'loopback))
+
+;; Core API for Pass
+(use-package password-store
+  :ensure t
+  :custom
+  (password-store-password-length 20)
+  :bind
+  (("C-c C-p" . password-store-copy)     ; Copy a password
+  ("C-c C-i" . password-store-insert))) ; Add a new password
+
+;; Emacs Native Integration (Magit/Forge, Tramp, ERC)
+(use-package auth-source-pass
+  :ensure nil
+  :config
+  (auth-source-pass-enable)
+  (setq auth-sources '(password-store "~/.authinfo.gpg")))
+
+;; Install Emacs support for pass-otp
+(use-package password-store-otp
+  :ensure t)
+
+;; Defer the map creation until Embark is actually loaded
+(with-eval-after-load 'embark
+  (defvar-keymap embark-password-store-map
+    :doc "Keymap for Embark password-store actions."
+    :parent embark-general-map
+    "u" #'password-store-copy-field       ; Prompts for which field to copy
+    "o" #'password-store-otp-token-copy   ; Generates and copies the 6-digit TOTP
+    "e" #'password-store-edit             ; Edit the file
+    "r" #'password-store-remove)          ; Delete the file
+
+  ;; Register the map with Embark
+  (add-to-list 'embark-keymap-alist '(password-store . embark-password-store-map)))
+
+;; Tell Marginalia to assign the 'password-store category
+(with-eval-after-load 'marginalia
+  (add-to-list 'marginalia-prompt-categories '("Password entry" . password-store)))
+
+;; Enable vertical minibuffer completion
+(use-package vertico
+  :ensure t
+  :init
+  (vertico-mode)
+
+  ;; Optional: Grow and shrink the minibuffer automatically
+  :custom
+  (vertico-resize t)
+
+  ;; Optional: Enable cycling so C-n loops back to the top at the end
+  (vertico-cycle t))
+
+;; embark main package
+(use-package embark
+  :ensure t
+  :bind (("C-." . embark-act)
+	 ("M-." . embark-dwim)
+         ;; Press C-h B anywhere to see a searchable Vertico list of EVERY active keybinding
+         ("C-h B" . embark-bindings)))
+
+  ;; C-h after a prefix (like C-c C-h), pipe the results into Vertico
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+
+;; embark-consult
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
+
+;;  consult main package
+(use-package consult
+  :ensure t
+  :config
+  ;; Increase history so you don't lose search strings
+  (setq history-length 1000)
+  (setq consult-history-max 1000))
+
+;; consult-dir
+(use-package consult-dir
+  :ensure t
+  :bind (("C-x C-d" . consult-dir)
+         :map minibuffer-local-map
+         ("C-x C-d" . consult-dir)
+         ("C-x C-j" . consult-dir-jump-file))
+  :config
+  (defun consult-dir--zoxide-dirs ()
+    (split-string (shell-command-to-string "zoxide query --list") "\n" t))
+
+;; consult within zoxide
+  (defvar consult-dir--source-zoxide
+    `(:name "Zoxide"
+      :narrow ?z
+      :category file
+      :face consult-file
+      :history file-name-history
+      :items ,#'consult-dir--zoxide-dirs)
+    "Zoxide source for consult-dir.")
+  (add-to-list 'consult-dir-sources 'consult-dir--source-zoxide t))
+
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package marginalia :ensure t :init (marginalia-mode))
+
+(use-package zoxide
+  :ensure t
+  :hook (dired-after-readin . (lambda () (zoxide-add default-directory))))
+
+(use-package tempel
+  :ensure t
+  :custom
+  (tempel-path "~/.dotfiles/common/emacs.d/tempel-templates")
+
+  :bind
+  ("M-*" . tempel-insert)
+
+  :init
+  (defun tempel-setup-capf ()
+    (setq-local completion-at-point-functions
+                (cons #'tempel-complete completion-at-point-functions)))
+  (add-hook 'conf-mode-hook 'tempel-setup-capf)
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf)
+  (add-hook 'org-mode-hook 'tempel-setup-capf)
+
+  :config
+  ;; TAB triggers tempel expansion
+  (keymap-set tempel-map "TAB" #'tempel-complete)
+  ;; Jump to the next field with TAB
+  (keymap-set tempel-map "<tab>" #'tempel-next)
+  (keymap-set tempel-map "<backtab>" #'tempel-previous))
+  ;; Keep your Ctrl bindings if you still want them
+  ;; (keymap-set tempel-map "C-n" #'tempel-next)
+  ;; (keymap-set tempel-map "C-p" #'tempel-previous))
+
+
+;; ==============================================================================
+;; TEMPEL: AUTO-EXPAND NESTED TRIGGERS & CLEANUP
+;; ==============================================================================
+
+(defun my-tempel-expand-nested-triggers (&rest _)
+  "Erase %+...+\% marker lines, then expand nested Tempel triggers."
+  (interactive)
+  (save-excursion
+
+    ;; PASS 1: Nuke any line containing a %+...+\% marker
+    (goto-char (point-min))
+    (while (re-search-forward "%\\+.*?\\+%" nil t)
+      ;; delete from the start of the line to the start of the NEXT line (removes the gap)
+      (delete-region (line-beginning-position) (line-beginning-position 2)))
+
+    ;; PASS 2: Scan for raw Tempel triggers (e.g., <wm-niri-learn) and expand them
+    (goto-char (point-min))
+    (while (re-search-forward "<[a-zA-Z0-9-]+" nil t)
+      (let* ((trigger-string (match-string 0))
+             (trigger-symbol (intern trigger-string)))
+        ;; Check if it is a valid Tempel snippet
+        (when (assoc trigger-symbol (tempel--templates))
+          ;; Delete the raw string and expand it
+          (delete-region (match-beginning 0) (match-end 0))
+          (tempel-insert trigger-symbol))))))
+
+;; Attach directly to Tempel's internal cleanup function
+(advice-add 'tempel--done :after #'my-tempel-expand-nested-triggers)
+
+(use-package corfu
+  :ensure t
+  :init
+  (global-corfu-mode)
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto nil)               ;; Enable auto completion
+  (corfu-auto-prefix 3)          ;; Trigger popup after 3 chars
+  (corfu-auto-delay .8)          ;; popup wait time (0 for instant)
+  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  (corfu-quit-no-match t)        ;; Auto-quit if there are no matches
+  (corfu-preview-current nil)    ;; Disable inline preview (keeps buffer clean)
+  (corfu-preselect 'prompt)      ;; Preselect the prompt, not the first candidate
+
+  :bind
+   ("M-/" . completion-at-point)
+
+  (:map corfu-map
+        ;; use standard modal keys for navigating the popup
+        ("C-i"      . corfu-next)
+        ("C-k"      . corfu-previous)
+        ("C-g"      . corfu-quit)
+        ("RET"      . corfu-insert)
+        ;; Allows you to type "foo bar" to filter fuzzy matches via Orderless
+        ("SPC"      . corfu-insert-separator))
+:config
+    ;; Use TAB to trigger Corfu completion
+    (keymap-set corfu-map "TAB" #'corfu-complete)
+    (keymap-set corfu-map "<tab>" #'corfu-complete))
+
+;; Add extensions for better Elisp/Code completion
+(use-package cape
+  :ensure t
+  :init
+  ;; Add these to the global completion list. Order matters!
+  ;; The top of the list is prioritized.
+  (add-to-list 'completion-at-point-functions #'cape-keyword) ;; Programming keywords
+  (add-to-list 'completion-at-point-functions #'cape-file)    ;; File paths
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev) ;; Words in current buffer
+
+  :bind
+  ;; Optional: Dedicated keys to FORCE a specific completion menu
+  ;; (e.g., "I only want to see file paths right now")
+  (("C-c p f" . cape-file)
+   ("C-c p w" . cape-dict)))
+
+;;; --- UI ELEMENTS
+  (column-number-mode 1)
+  (show-paren-mode 1)
+  (save-place-mode 1)
+  (delete-selection-mode t)
+
+  (global-subword-mode 1)
+  ;; Prevent Emacs' slow highlight from interfering with Dirvish's fast highlight
+  (setq global-hl-line-modes '(not dired-mode dirvish-mode))
+  (global-hl-line-mode t)
+  (visual-line-mode 1)
+
+  (setq-local word-wrap t)
+  (display-time)
+
+  ;; keep a 3-line distance from the buffer's edge
+  ;; must be '0' for ultra-scroll pkg to work
+  ;; (setq scroll-margin 3)
+
+  (setq display-time-24hr-format t display-time-load-average nil)
+  (when window-system (global-prettify-symbols-mode t))
+
+  ;; PREVENT UI FLICKERING, DISABLE BARS BEFORE FRAME EVEN OPENS
+  (setq default-frame-alist '((tool-bar-lines . 0)
+                              (menu-bar-lines . 0)
+                              (vertical-scroll-bars . nil)))
+
+
+  ;; LINE NUMBERS / COLUMN_DELIMITER
+  ;; show line numbers/column_delimiter in code/text environments
+  ;; prevents apps from look ugly (vterm, dirvish, magit..)
+    (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+    (add-hook 'text-mode-hook #'display-line-numbers-mode)
+    (setq-default fill-column 80)
+
+  ;; Automatically enable auto-fill in text-based modes (Markdown, Org, etc.)
+    (add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+  ;; display column delimiter
+    ;; (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+    ;; (add-hook 'text-mode-hook #'display-fill-column-indicator-mode)
+
+  ;; show WHITES SPACES in code/text environments
+  (require 'whitespace)
+    (setq whitespace-style '(face empty tabs lines-tail trailing))
+    (add-hook 'prog-mode-hook #'whitespace-mode)
+    (add-hook 'text-mode-hook #'whitespace-mode)
+
+
+  ;; show matching parenthesis, brackets..
+  (electric-pair-mode 1)
+  (setq electric-pair-pairs '((?\{ . ?\}) (?\( . ?\)) (?\[ . ?\]) (?\" . ?\")))
+
+
+  ;; THEMES & APPEARANCE
+  (use-package doom-themes
+    :ensure t
+    :config
+    (setq doom-themes-enable-bold t doom-themes-enable-italic t)
+      ;; 'latte (light) 'frappe (dark) 'macchiato (darker) 'mocha (darkest)
+      ;; (setq catppuccin-flavor 'mocha)
+      ;; (load-theme 'catppuccin t) ;;
+    (set-face-attribute 'default nil :height 160)
+
+    ;; Apply Org faces ONLY after Org is loaded to prevent "Invalid Face" error
+    (with-eval-after-load 'org
+      (set-face-attribute 'org-level-1 nil :height 1.1)
+      (set-face-attribute 'org-level-2 nil :height 1.08)
+      (set-face-attribute 'org-level-3 nil :height 1.05)
+      (set-face-attribute 'org-level-4 nil :height 1.0)))
+
+  (use-package doom-modeline
+    :ensure t
+    :init (add-hook 'after-init-hook #'doom-modeline-mode)
+    :config (setq doom-modeline-icon nil doom-modeline-minor-modes nil))
+
+;; download xah-fly-keys if dir/files do not exist
+(defvar my-xfk-dir (expand-file-name "lisp/" user-emacs-directory))
+(defvar my-xfk-file (expand-file-name "xah-fly-keys.el" my-xfk-dir))
+
+;; 1. Check if the file is missing
+(unless (file-exists-p my-xfk-file)
+  (message "xah-fly-keys not found. Cloning directly into lisp/...")
+
+  ;; 2. Ensure the directory exists
+  (make-directory my-xfk-dir t)
+
+  ;; 3. Clone straight into the lisp directory
+  (let ((clone-status
+         (call-process "git" nil "*git-clone-xfk*" nil
+                       "clone" "https://github.com/xahlee/xah-fly-keys" my-xfk-dir)))
+    (if (eq clone-status 0)
+        (message "xah-fly-keys cloned successfully!")
+      (error "Failed to clone xah-fly-keys. Check the *git-clone-xfk* buffer for errors."))))
+
+  (use-package xah-fly-keys
+    :config
+    (setq xah-fly-use-control-key t)
+    (setq xah-fly-command-mode-cursor-color nil)
+    (setq xah-fly-insert-mode-cursor-color nil)
+    (xah-fly-keys-set-layout "qwerty")
+    (xah-fly-keys 1))
+    (add-hook 'server-after-make-frame-hook 'xah-fly-command-mode-activate)
+    (global-set-key (kbd "<home>") 'xah-fly-command-mode-activate)
+
+     ;; COMMAND MODE EVERYWHERE!
+     (add-hook 'find-file-hook #'xah-fly-command-mode-activate)
+     (add-hook 'after-change-major-mode-hook #'xah-fly-command-mode-activate)
+
+;; ORG-MODE
+(with-eval-after-load 'org
+  ;; Force C-k to be a dead-end (does absolutely nothing)
+  (define-key org-mode-map (kbd "C-k") #'ignore)
+
+  ;; Force C-i to be a dead-end
+  (define-key org-mode-map (kbd "C-i") #'ignore)
+)
+
+;; ==============================================
+;; TERMINAL COLLISION (DAEMON & STANDALONE SAFE)
+;; ==============================================
+
+(defun my-apply-terminal-key-decodes (&optional frame)
+  "Apply input-decode-map to the current frame. Mandatory for emacsclient."
+  (with-selected-frame (or frame (selected-frame))
+    ;; We must check if we are in a GUI or a terminal, because TTYs handle this differently
+    (when (display-graphic-p)
+      (define-key input-decode-map (kbd "C-i") (kbd "<C-i>"))
+      (define-key input-decode-map (kbd "C-m") (kbd "<C-m>")))))
+
+;; 1. Run it immediately for standalone Emacs (if you aren't using the daemon)
+(my-apply-terminal-key-decodes)
+
+;; 2. Force the Daemon to run it every time you connect a new emacsclient frame
+(add-hook 'after-make-frame-functions #'my-apply-terminal-key-decodes)
+
+
+;; XFK MODAL
+  ;; [SPC a]
+  (define-key xah-fly-leader-key-map (kbd "a") nil)
+;; OTHER
+  ;; dired-jump
+  (define-key ctl-x-map (kbd "C-j") nil)
+  ;; mark-paragraph
+  (define-key global-map (kbd "M-h") nil)
+
+
+
+;; EMMS BROWSER MAP NUKE!
+;; (with-eval-after-load 'emms-browser
+  ;; (setq emms-browser-mode-map (make-sparse-keymap)))
+
+;; EMMS PLAYLIST MAP NUKE!
+(with-eval-after-load 'emms-playlist-mode
+  ;; (setq emms-playlist-mode-map (make-sparse-keymap))
+  (define-key emms-playlist-mode-map (kbd "a") #'ignore)
+  ;; insert single track (emms)
+  (define-key emms-playlist-mode-map (kbd "i") nil)
+  (define-key emms-playlist-mode-map (kbd "p") nil)
+  (define-key emms-playlist-mode-map (kbd "g") nil)
+  (define-key emms-playlist-mode-map (kbd "w") nil)
+  ;; (define-key emms-playlist-mode-map (kbd "S-i") nil)
+  ;; (define-key emms-playlist-mode-map (kbd "S-k") nil)
+)
+
+;; Disable Scroll Lock key in Emacs
+(global-set-key (kbd "<Scroll_Lock>") #'ignore)
+
+;; Flyspell
+(with-eval-after-load 'flyspell
+  (define-key flyspell-mode-map (kbd "C-;") nil))
+
+;; kill buffer with no confirmation (!)
+(global-set-key (kbd "C-w") 'my-kill-buffer-no-confirm)
+;; toggle XFK modal
+(global-set-key (kbd "<f12>") 'xah-fly-keys)
+
+;; toggle corfu GLOBALLY
+(global-set-key (kbd "<C-f12>") #'global-corfu-mode)
+;; toggle corfu LOCALLY
+;; (global-set-key (kbd "<C-f12>") #'corfu-mode)
+
+;; Explicitly bind the GUI <f11> key to the native toggle command
+;; (global-set-key (kbd "<f11>") #'toggle-frame-fullscreen)
+
+;; custom functions skel template, auto save in:
+;; "~/.dotfiles/common/emacs/.emacs.d/snippets/"
+(global-set-key (kbd "C-c e") #'my-function-template)
+
+(global-set-key (kbd "C-S-i") 'enlarge-window)
+(global-set-key (kbd "C-S-k") 'shrink-window)
+(global-set-key (kbd "C-S-l") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-S-j") 'shrink-window-horizontally)
+(define-key xah-fly-leader-key-map (kbd "=") 'balance-windows)
+
+;; cycle through tabs
+(global-set-key (kbd "C-S-o") 'tab-next)
+;; close tab & frame
+(global-set-key (kbd "C-S-w") 'my-tab-or-frame-close)
+;; open/jump to new tab
+(define-key xah-fly-key-map (kbd "SPC t") 'tab-new)
+;; disable (hide) tabs
+(define-key xah-fly-key-map (kbd "SPC T") 'tab-bar-mode)
+
+(global-set-key (kbd "M-i") 'my-scroll-one-line-down)
+(global-set-key (kbd "M-k") 'my-scroll-one-line-up)
+
+(defun config-visit ()
+  (interactive)
+  (find-file (expand-file-name "base_cfg.org" user-emacs-directory)))
+(global-set-key (kbd "C-c 9") 'config-visit)
+
+(defun config-visit-dots ()
+  (interactive)
+  (find-file (expand-file-name "~/.dotfiles/common/rdo_dots.org")))
+(global-set-key (kbd "C-c 0") 'config-visit-dots)
+
+(defun my-tangle-and-load ()
+  (when (string= (buffer-file-name)
+                 (expand-file-name "~/.emacs.d/base_cfg.org"))
+    (org-babel-tangle)
+    (load-file (expand-file-name "~/.emacs.d/base_cfg.el"))))
+(add-hook 'after-save-hook #'my-tangle-and-load)
+
+;; pomodoro timer (system wide)
+(defalias 'pomo 'org-timer-set-timer)
+(defalias 'pomo-stop 'org-timer-stop)
+(defalias 'pomo-pause 'org-timer-pause-or-continue)
+
+(define-key xah-fly-leader-key-map (kbd "0") 'my-set-cycle-mark)
+(define-key xah-fly-command-map    (kbd "0") 'my-jump-cycle-mark)
+(define-key xah-fly-leader-key-map (kbd "9") 'my-clear-all-cycle-marks)
+(define-key xah-fly-leader-key-map (kbd "c") 'my-mini-calc)
+(define-key xah-fly-leader-key-map (kbd ", b") 'my-backup-file)
+(define-key xah-fly-leader-key-map (kbd "+") 'my-termux-send-sms)
+(define-key xah-fly-leader-key-map (kbd ", s") 'save-buffer)
+(define-key xah-fly-leader-key-map (kbd "u") 'consult-buffer)
+(define-key xah-fly-leader-key-map (kbd "s") 'consult-line)
+(define-key xah-fly-leader-key-map (kbd "S") 'isearch-forward-word)
+(define-key xah-fly-leader-key-map (kbd "r") 'replace-string)
+(define-key xah-fly-leader-key-map (kbd "R") 'query-replace)
+(define-key xah-fly-leader-key-map (kbd "f") 'ibuffer)
+(define-key xah-fly-leader-key-map (kbd "SPC") 'kill-line)
+(define-key xah-fly-leader-key-map (kbd ";") 'consult-ripgrep)
+(define-key xah-fly-key-map (kbd "n") 'consult-line)
+
+(define-key xah-fly-key-map (kbd "5") 'delete-char)
+(define-key xah-fly-key-map (kbd "6") 'xah-select-block)
+(define-key xah-fly-key-map (kbd "7") 'xah-select-line)
+(define-key xah-fly-key-map (kbd "8") 'xah-select-text-in-quote)
+
+;; close help/info/apropos/man 'mode' windows
+;; while in XFK command-mode with 'q'
+(with-eval-after-load 'xah-fly-keys
+  (require 'my-xfk-smart-quit)
+  (define-key xah-fly-command-map (kbd "q") 'my-xfk-smart-quit))
+
+;; submap definition
+(defvar my-xah-org-prefix-map (make-sparse-keymap) "Org-mode sub-menu for XFK")
+
+;; add submap keys here...
+(define-key my-xah-org-prefix-map (kbd "s") 'my-org-column-sum)
+(define-key my-xah-org-prefix-map (kbd "t") 'org-todo)
+
+;; sub-map contextual logic for XFK
+;; "SPC 1" ripdrag in Dired, other in Org-mode
+;; ripdrag marked/pointer file(s)
+(define-key xah-fly-leader-key-map (kbd "1")
+  '(menu-item "Contextual 1" nil
+              :filter (lambda (_)
+                        (cond
+                         ((derived-mode-p 'dired-mode) 'my-dired-ripdrag)
+                         ((derived-mode-p 'org-mode) my-xah-org-prefix-map)
+                         (t nil)))))
+
+;; "SPC 2" copy ripdrag in Dired, other in Org-mode
+;; copy marked/pointer file(s) to memory (easy Ctrl+v drop in web sites)
+(define-key xah-fly-leader-key-map (kbd "2")
+  '(menu-item "Contextual 2" nil
+     :filter (lambda (_)
+               (cond
+                ((derived-mode-p 'dired-mode) 'my-dired-copy-file-to-clipboard)
+                ((derived-mode-p 'org-mode) my-xah-org-prefix-map)
+                (t nil)))))
+
+(with-eval-after-load 'org
+      ;; 1. The custom function to check for snippets before Org folds trees
+      (defun my-org-try-tempel-expand ()
+        "Try expanding Tempel snippet. Return t if expanded, stopping org-cycle."
+        (require 'tempel)
+        ;; tempel-expand without arguments acts as a silent checker.
+        ;; It returns data ONLY if there is an exact match (like <s).
+        (let ((exact-match (tempel-expand)))
+          (when exact-match
+            (tempel-expand t) ;; Force the actual expansion!
+            t)))              ;; Return t to tell Org-mode: "I handled this, stop!"
+
+      ;; 2. Attach it to Org's native TAB interceptor hook
+      (add-hook 'org-tab-first-hook #'my-org-try-tempel-expand)
+
+      ;; 3. Ensure TAB is mapped to org-cycle normally so the hook can do its job
+      (define-key org-mode-map (kbd "<tab>") #'org-cycle)
+      (define-key org-mode-map (kbd "TAB") #'org-cycle))
+
+(with-eval-after-load 'ibuffer
+    ;; 1. Create a brand new keymap
+    (defvar my-ibuffer-spc-map (make-sparse-keymap)
+      "Custom SPC leader map for Ibuffer in Insert Mode.")
+
+    ;; 2. Nuke the default SPC binding in Ibuffer
+    (define-key ibuffer-mode-map (kbd "SPC") nil)
+
+    ;; 3. Bind SPC to our new map
+    (define-key ibuffer-mode-map (kbd "SPC") my-ibuffer-spc-map)
+
+    ;; 4. Tell which-key what this menu is called
+    (with-eval-after-load 'which-key
+      (which-key-add-major-mode-key-based-replacements 'ibuffer-mode
+        "SPC" "Ibuffer Menu"))
+
+    ;; 5. Populate the menu
+    (define-key my-ibuffer-spc-map (kbd "m") '("dired-jump" . dired-jump))
+    (define-key my-ibuffer-spc-map (kbd "f") '("Filter by Mode" . ibuffer-filter-by-mode))
+    (define-key my-ibuffer-spc-map (kbd "c") '("Clear Filters" . ibuffer-filter-disable))
+    (define-key my-ibuffer-spc-map (kbd "u") '("consult-buffer" . consult-buffer))
+    (define-key my-ibuffer-spc-map (kbd "k") '("kill-lines" . ibuffer-do-kill-lines))
+    (define-key my-ibuffer-spc-map (kbd "s") '("Save (Write)" . ibuffer-do-save))
+    (define-key my-ibuffer-spc-map (kbd "a") '("Clean Unused" . my-clean-unused-buffers))
+
+    ;; iBuffer navigation
+    (define-key ibuffer-mode-map  (kbd "k") '("next line " . ibuffer-forward-line))
+    (define-key ibuffer-mode-map  (kbd "i") '("prev line" . ibuffer-backward-line)))
+
+(set-register ?a (cons 'file "~/DLs/0.syncthing_share/[PERSO]_agenda_2026.org"))
+(set-register ?h (cons 'file "~/DLs/0.syncthing_share/health.org"))
+(set-register ?s (cons 'file "~/Docs/10.Org/trading-study-tracker.org"))
+(set-register ?t (cons 'file "~/Docs/10.Org/trading-log.org"))
+(set-register ?p (cons 'file "~/Docs/10.Org/personal-searches.org"))
+(set-register ?f (cons 'file "~/Docs/10.Org/system-tickets.org"))
+(set-register ?r (cons 'file "~/Docs/10.Org/bujo_reflection_2026.org"))
+(set-register ?x (cons 'file "~/Docs/10.Org/bujo_remember_index.org"))
+(set-register ?i (cons 'file "~/Docs/10.Org/roam/life/20260421170118-life_hub_index.org"))
+(set-register ?l (cons 'file "~/Docs/10.Org/roam/tech/20260417193707-tech_hub_index.org"))
+(set-register ?e (cons 'file "~/Docs/10.Org/roam/tech/20260421144405-emacs_journey.org"))
+
+(defvar z-emms-map (make-sparse-keymap))
+(define-key xah-fly-leader-key-map (kbd "z") z-emms-map)
+
+;; --- RIGHT HAND: Playback (Home Row Cluster) ---
+(define-key z-emms-map (kbd "j") '("previous song" . emms-previous))
+(define-key z-emms-map (kbd "k") '("next song" . emms-next))
+(define-key z-emms-map (kbd ";") '("playing popup" . my-emms-now-playing-popup))
+(define-key z-emms-map (kbd "h") '("show artwork" . my-musk-show-album-art))
+(define-key z-emms-map (kbd "l") '("stop" . emms-stop))
+(define-key z-emms-map (kbd "SPC") #'("pause" . emms-pause))
+(define-key z-emms-map (kbd "RET") #'("add to emms" . my-dirvish-enqueue-emms))
+
+;; --- LEFT HAND: Management ---
+(define-key z-emms-map (kbd "a") '("add/jump to emms" . my-dirvish-enqueue-emms-go))
+(define-key z-emms-map (kbd "s") '("save playlist" . my-emms-save-last-playlist))
+(define-key z-emms-map (kbd "f") '("jump to playlist" . emms-playlist-mode-go))
+(define-key z-emms-map (kbd "z") '("smart-browse" . emms-smart-browse))
+;; "d" load/jump to emms last playlist saved
+(define-key z-emms-map (kbd "d")
+  (lambda () (interactive)
+    (emms-add-playlist "~/Musk/_plts/last.m3u")
+    (emms-playlist-mode-go)))
+
+;; --- UTILITY ---
+(define-key z-emms-map (kbd "u") '("sync metadata" . musk-sync-music-metadata))
+(define-key z-emms-map (kbd "e") '("toggle mark-mode" . my-emms-mark-mode-toggle))
+
+;; descriptions for which-key z-emms-map
+(which-key-add-keymap-based-replacements z-emms-map
+  "d"   "load last plist")
+
+(add-hook 'emms-playlist-mode-hook
+      (lambda ()
+        ;; 1. Turn on the current-line highlight
+        (hl-line-mode 1)
+
+        ;; 2. Override the color locally (only in this buffer)
+        (face-remap-add-relative 'hl-line
+                                 :background "#3e4451"
+                                 :foreground "#61afef"
+                                 :weight 'bold)))
+
+;; my 'blank slate' keybinds
+(define-key emms-playlist-mode-map (kbd "i")   'previous-line)
+(define-key emms-playlist-mode-map (kbd "k")   'next-line)
+(define-key emms-playlist-mode-map (kbd "K")   'end-of-buffer)
+(define-key emms-playlist-mode-map (kbd "I")   'beginning-of-buffer)
+(define-key emms-playlist-mode-map (kbd "RET") 'emms-playlist-mode-play-current-track)
+(define-key emms-playlist-mode-map (kbd "SPC") 'emms-pause)
+(define-key emms-playlist-mode-map (kbd "v")   'emms-stop)
+(define-key emms-playlist-mode-map (kbd "m")   'emms-next)
+(define-key emms-playlist-mode-map (kbd "n")   'emms-previous)
+(define-key emms-playlist-mode-map (kbd ",")   'xah-next-window-or-frame)
+(define-key emms-playlist-mode-map (kbd ";")   'my-emms-now-playing-popup)
+(define-key emms-playlist-mode-map (kbd "h")   'my-musk-show-album-art)
+(define-key emms-playlist-mode-map (kbd "d")   'emms-playlist-mode-goto-dired-at-point)
+(define-key emms-playlist-mode-map (kbd "q")   'emms-playlist-mode-bury-buffer)
+(define-key emms-playlist-mode-map (kbd "D")   'emms-playlist-mode-kill-track)
+(define-key emms-playlist-mode-map (kbd "C")   'emms-playlist-clear)
+(define-key emms-playlist-mode-map (kbd "'")   'delete-other-windows)
+(define-key emms-playlist-mode-map (kbd "y")   'emms-playlist-mode-center-current)
+
+;; shift tracks
+(define-key emms-playlist-mode-map (kbd "<C-i>") 'emms-playlist-mode-shift-track-up)
+(define-key emms-playlist-mode-map (kbd "C-k")   'emms-playlist-mode-shift-track-down)
+
+;; volume (MPV internal)
+(define-key emms-playlist-mode-map (kbd "u") (lambda () (interactive) (musk-volume-change -5)))
+(define-key emms-playlist-mode-map (kbd "o") (lambda () (interactive) (musk-volume-change  5)))
+(define-key emms-playlist-mode-map (kbd "U") (lambda () (interactive) (musk-volume-change -1)))
+(define-key emms-playlist-mode-map (kbd "O") (lambda () (interactive) (musk-volume-change  1)))
+
+;; seek 5sec
+(define-key emms-playlist-mode-map (kbd "j") (lambda () (interactive) (emms-seek -5)))
+(define-key emms-playlist-mode-map (kbd "l") (lambda () (interactive) (emms-seek  5)))
+
+;; set this AFTER the keybinds
+;; (set-face-attribute 'emms-playlist-selected-face nil
+                    ;; :background "#3e4451" ; A subtle grey-blue
+                    ;; :foreground "#61afef" ; Blue text
+;; :weight 'bold)
+
+(with-eval-after-load 'emms-browser
+
+;; my 'blank slate' keybinds
+(define-key emms-browser-mode-map (kbd "i")     #'previous-line)
+(define-key emms-browser-mode-map (kbd "k")     #'next-line)
+(define-key emms-browser-mode-map (kbd "SPC")   #'emms-browser-toggle-subitems-recursively)
+(define-key emms-browser-mode-map (kbd "<tab>") #'emms-playlist-mode-go)
+(define-key emms-browser-mode-map (kbd "a")     #'emms-browser-add-tracks)
+(define-key emms-browser-mode-map (kbd "RET")   #'emms-browser-add-tracks-and-play)
+(define-key emms-browser-mode-map (kbd ",")     #'xah-next-window-or-frame)
+;; (define-key emms-browser-mode-map (kbd "1")     #'emms-browser-collapse-all)
+;; (define-key emms-browser-mode-map (kbd "2")     #'emms-browser-expand-level-2)
+;; (define-key emms-browser-mode-map (kbd "3")     #'emms-browser-expand-level-3)
+;; (define-key emms-browser-mode-map (kbd "4")     #'emms-browser-expand-all)
+)
+
+(with-eval-after-load 'emms-tag-editor
+  (define-key emms-tag-editor-mode-map (kbd "C-c C-c") 'emms-tag-editor-submit))
+
+(global-set-key (kbd "C-c c") 'org-capture)
+
+(global-set-key (kbd "C-c n l") 'org-roam-buffer-toggle)
+(global-set-key (kbd "C-c n f") 'org-roam-node-find)
+(global-set-key (kbd "C-c n g") 'org-roam-graph)
+(global-set-key (kbd "C-c n i") 'org-roam-node-insert)
+(global-set-key (kbd "C-c n c") 'org-roam-capture)
+
+;; Bind the map to 'SPC q'
+(define-key xah-fly-leader-key-map (kbd "\\") my-embrace-map)
+
+;; The Core 3 Commands
+(define-key my-embrace-map (kbd "a") #'embrace-add)
+(define-key my-embrace-map (kbd "c") #'embrace-change)
+(define-key my-embrace-map (kbd "d") #'embrace-delete)
+
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->"         . mc/mark-next-like-this)
+         ("C-<"         . mc/mark-previous-like-this)
+         ("C-c C-<"     . mc/mark-all-like-this))
+  :config (setq mc/always-run-for-all t))
+
+;; toggle US/BR dictionaries
+(global-set-key (kbd "C-c <f11>") 'my-toggle-spell-language)
+;; toggle on-the-fly spell checking
+(global-set-key (kbd "C-c <f12>") 'flyspell-mode)
+
+(with-eval-after-load 'vertico
+  (define-key vertico-map (kbd "C-j") #'vertico-exit-input))
+
+;; tangle multiple org files, why this?
+;; main config (base_cfg.org) is read-only
+;; experimental changes will be tested out in a sandbox called 'test_new.el'
+;; after approval, changes will migrate to main config
+;; the idea is protect the core config file from breakage
+
+(defun my-org-babel-tangle-config ()
+  "Automatically tangle our Org config files when we save them"
+  (when (member (buffer-file-name)
+                (list (expand-file-name "base_cfg.org"     user-emacs-directory)
+                      (expand-file-name "modules/completion.org"   user-emacs-directory)
+                      (expand-file-name "modules/file-manager.org" user-emacs-directory)
+                      (expand-file-name "modules/system.org"   user-emacs-directory)
+                      (expand-file-name "modules/musk.org"     user-emacs-directory)
+                      (expand-file-name "modules/tools.org"    user-emacs-directory)))
+
+;; >>> ADD THIS LINE TO TEST <<<
+      (message "SUCCESS! Auto-tangling %s..." (buffer-name))
+
+    ;; Dynamic scoping to the rescue
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
+
+(add-hook 'org-mode-hook
+        (lambda ()
+          (add-hook 'after-save-hook #'my-org-babel-tangle-config nil 'make-it-local)))

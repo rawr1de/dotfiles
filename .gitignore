@@ -12,7 +12,6 @@ common/emacs/.emacs.d/%backup%~
 common/emacs/.emacs.d/.org-id-locations
 common/emacs/.emacs.d/.scratch_copy
 common/emacs/.emacs.d/backups/
-common/emacs/.emacs.d/base_cfg.el
 common/emacs/.emacs.d/custom.el
 common/emacs/.emacs.d/dirvish/
 common/emacs/.emacs.d/eln-cache/
@@ -38,7 +37,6 @@ wm/niri/niri_conf/.config/niri/unused_binds.txt
 /common/emacs/.emacs.d/snippets/.bak/my-dired-zip-and-share.el.20260424_160705.bak
 /common/emacs.d/.cache/whisper.cpp/
 /common/emacs.d/elpa/whisper/
-/common/emacs.d/lisp/
 /common/emacs.d/eln-cache/30.2-8d250d40/magit-gitignore-6e23a062-62772b9f.eln
 
 common/emacs.d/.bak/
@@ -73,7 +71,6 @@ common/emacs.d/emms-volume-cache
 /common/emacs.d/persist/
 /common/emacs.d/places
 /common/emacs.d/projects
-/common/emacs.d/base_cfg.el
 /common/scripts/.scripts/.bak/NIRI_cycle-tabs.sh.20260428_150605.bak
 /common/emacs.d/.spad_hist
 /common/emacs.d/recentf

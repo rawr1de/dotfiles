@@ -38,47 +38,40 @@ workspace "Trading-HDMI" {
 EOF
 fi
 
-# Aguarde 1 segundo para o Niri recarregar as configurações automaticamente
 sleep 1
 
 # ==============================================================================
-# 1. Monitor DP-1: 2 janelas do Brave (TradingView) em Stack Vertical
+# 1. Monitor DP-1: 2 janelas do Brave (TradingView isolado)
 # ==============================================================================
 niri msg action focus-workspace "Trading-DP1"
 
-brave --new-window --app="https://www.tradingview.com/chart/0LQdFlnI/" --enable-features=UseOzonePlatform --ozone-platform=wayland &
+nohup brave --user-data-dir="$HOME/.config/brave-trading" --new-window --app="https://www.tradingview.com/chart/0LQdFlnI/" --enable-features=UseOzonePlatform --ozone-platform=wayland > /dev/null 2>&1 &
+nohup brave --user-data-dir="$HOME/.config/brave-trading" --new-window --app="https://www.tradingview.com/chart/0LQdFlnI/" --enable-features=UseOzonePlatform --ozone-platform=wayland > /dev/null 2>&1 &
+
 sleep 4
 
-brave --new-window --app="https://www.tradingview.com/chart/0LQdFlnI/" --enable-features=UseOzonePlatform --ozone-platform=wayland &
-sleep 4
-
-# Empilha as janelas em coluna
 niri msg action consume-or-expel-window-left
 niri msg action maximize-column
 
 # ==============================================================================
-# 2. Monitor HDMI-A-1: 2 janelas do Brave (TradingView) na Workspace 2
+# 2. Monitor HDMI-A-1: 2 janelas do Brave (TradingView isolado)
 # ==============================================================================
 niri msg action focus-workspace "Trading-HDMI"
 
-brave --new-window --app="https://www.tradingview.com/chart/0LQdFlnI/" --enable-features=UseOzonePlatform --ozone-platform=wayland &
+nohup brave --user-data-dir="$HOME/.config/brave-trading" --new-window --app="https://www.tradingview.com/chart/0LQdFlnI/" --enable-features=UseOzonePlatform --ozone-platform=wayland > /dev/null 2>&1 &
+nohup brave --user-data-dir="$HOME/.config/brave-trading" --new-window --app="https://www.tradingview.com/chart/0LQdFlnI/" --enable-features=UseOzonePlatform --ozone-platform=wayland > /dev/null 2>&1 &
+
 sleep 4
 
-brave --new-window --app="https://www.tradingview.com/chart/0LQdFlnI/" --enable-features=UseOzonePlatform --ozone-platform=wayland &
-sleep 4
-
-# Empilha as janelas em coluna
 niri msg action consume-or-expel-window-left
 niri msg action maximize-column
 
 # ==============================================================================
-# 3. Monitor eDP-2 (Notebook): Brave comum no Discord
+# 3. Monitor eDP-2 (Notebook): Discord
 # ==============================================================================
 niri msg action focus-monitor "eDP-2"
 niri msg action focus-workspace 3
 
-brave --new-window "https://discord.com/channels/1218766394997346395/1222377337975210064" --enable-features=UseOzonePlatform --ozone-platform=wayland &
+nohup discord > /dev/null 2>&1 &
 sleep 3
-
-# Maximiza a coluna/janela do Discord no eDP-2 mantendo os gaps normais
 niri msg action maximize-column
