@@ -753,10 +753,11 @@ wayland notification daemon configuration
   spawn-at-startup "mako"
 
   // new FIXER line that starts 3 services at once, preventing race condition failure
-  spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_RUNTIME_DIR DISPLAY DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP && systemctl --user start emacs.service"
+  // spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_RUNTIME_DIR DISPLAY DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP && systemctl --user start emacs.service"
+
+  spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_RUNTIME_DIR DISPLAY DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP && systemctl --user start emacs.service emacs-spad.service"
 
   // spawn-at-startup "udiskie" "--no-notify" "--tray" "--appindicator"
-  spawn-at-startup "emacs" "--daemon=spad" "-l" "/home/rdo/.dotfiles/common/emacs.d/spad-init.el"
   spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "icon-theme" "Papirus-Dark"
   spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "gtk-theme" "Nordic"
   spawn-at-startup "systemctl" "--user" "start" "graphical-session.target"
@@ -800,7 +801,7 @@ wayland notification daemon configuration
       Mod+2        hotkey-overlay-title="Brave"               { spawn "brave"; }
       Mod+7        hotkey-overlay-title="Fuzzel Clipboard"    { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
       Mod+8        hotkey-overlay-title="Fuzzel Launcher"     { spawn "fuzzel"; }
-      Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn-sh "kitty --class 'niri-scratchpad' -e emacsclient -s spad -t"; }
+      Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn-sh "env COLORTERM=truecolor kitty --class 'niri-scratchpad' -e emacsclient -s spad -t"; }
       Mod+N        hotkey-overlay-title="Noctalia Bar Toggle" { spawn-sh "noctalia msg bar-toggle"; }
       Mod+P        hotkey-overlay-title="Song Playing Info"   { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-emms-now-playing-popup)'"; }
       Mod+3        hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }
@@ -932,9 +933,9 @@ wayland notification daemon configuration
       Mod+Ctrl+7  hotkey-overlay-title="Move Column to Workspace 7"  { move-column-to-workspace 7; }
 
 
-      // NIRI — LAYOUT #1 | (Monitor Left)
+      // NIRI — Trading Desk Setup
       // ──────────────────────
-      Mod+F12   { spawn "~/.scripts/NIRI_FUZZEL_layout_selector.sh"; }
+      Mod+F12   { spawn "~/.scripts/NIRI_FUZZEL_trade_layouts.sh"; }
 
   }
 #+end_src
@@ -1200,7 +1201,7 @@ wayland notification daemon configuration
   // Example: enable rounded corners for all windows.
   // (This example rule is commented out with a "/-" in front.)
   window-rule {
-      geometry-corner-radius 12
+      geometry-corner-radius 6
       clip-to-geometry true
   }
 
@@ -1215,19 +1216,6 @@ wayland notification daemon configuration
   // noctalia theme (Niri follows it)
   include "noctalia.kdl"
 
-  workspace "Trading-DP1" {
-      open-on-output "DP-1"
-      layout {
-          gaps 0
-      }
-  }
-
-  workspace "Trading-HDMI" {
-      open-on-output "HDMI-A-1"
-      layout {
-          gaps 0
-      }
-  }
 #+end_src
 
 ***** input.kdl
@@ -1380,12 +1368,6 @@ input {
           default-column-width { proportion 0.35; }
       }
 
-  // BRAVE FOR TRADING!
-  window-rule {
-      match title="(?i).*TradingView.*"
-      border { off; }
-      focus-ring { off; }
-  }
 #+end_src
 
 **** ranger (terminal file manager)                               :common:

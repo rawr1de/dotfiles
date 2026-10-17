@@ -177,14 +177,20 @@
 
 (setq make-backup-files t)
 (setq auto-save-default t)
-;; Create quarantine folders for backups and auto-saves
-(make-directory "~/.emacs.d/backups/" t)
-(make-directory "~/.emacs.d/auto-saves/" t)
 
-;; Route all backup (~) and auto-save (#) files to the quarantine
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups/")))
-(setq auto-save-file-name-transforms
-      '((".*" "~/.emacs.d/auto-saves/" t)))
+;; Define paths inside your dotfiles
+(defvar my-emacs-backup-dir "/home/rdo/.dotfiles/common/emacs.d/backups/")
+(defvar my-emacs-auto-save-dir "/home/rdo/.dotfiles/common/emacs.d/auto-saves/")
+
+;; Automatically create the directories during startup if they don't exist
+(unless (file-exists-p my-emacs-backup-dir)
+  (make-directory my-emacs-backup-dir t))
+(unless (file-exists-p my-emacs-auto-save-dir)
+  (make-directory my-emacs-auto-save-dir t))
+
+;; Route all backup (~) and temporary auto-save (#) files to these folders
+(setq backup-directory-alist `(("." . ,my-emacs-backup-dir)))
+(setq auto-save-file-name-transforms `((".*" ,my-emacs-auto-save-dir t)))
 
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
@@ -199,13 +205,13 @@
 (add-to-list 'auto-mode-alist '("\\.log\\'"  . text-mode))
 
 (use-package savehist
-  :init
-  (setq savehist-file "~/.emacs.d/history"
-        history-length 1000
-        history-delete-duplicates t)
-  (savehist-mode 1)
-  :config
-  (add-to-list 'savehist-additional-variables 'query-replace-history))
+    :init
+    (setq savehist-file "/home/rdo/.dotfiles/common/emacs.d/history"
+          history-length 1000
+          history-delete-duplicates t)
+    (savehist-mode 1)
+    :config
+    (add-to-list 'savehist-additional-variables 'query-replace-history))
 
 ;; ENABLE & LOAD LANGUAGES
 (org-babel-do-load-languages
@@ -466,7 +472,7 @@
           ("e" "~/.dotfiles/common/emacs.d/" ".emacs.d")
           ("s" "~/.scripts/"                 ".scripts")
           ("T" "~/.local/share/Trash/files/" "Trash")
-          ("i" "/run/media/"                 "Media")))
+	  ("i" "/run/media/"                 "Media")))
 
   ;; Transient menus
   (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
@@ -771,6 +777,10 @@
   ;; break visual word-wrapping in your other text files!
   (add-hook 'org-mode-hook (lambda () (setq line-move-visual nil))))
 
+(setq org-priority-highest ?A
+      org-priority-lowest  ?D
+      org-priority-default ?D)
+
 ;; CAPTURE TEMPLATE
 
 ;; custom Kanban-style states
@@ -999,6 +1009,21 @@ _Notes:_
   (which-key-side-window-max-lines 20)
   (which-key-mode 1))
 
+(use-package iedit
+  :ensure t
+  :config
+  ;; Show the number of occurrences on minibuffer once active
+  (setq iedit-auto-save-state-in-desktop t))
+
+;; INVERT 'x' and 'X' BEHAVIOR
+(use-package avy
+  :ensure t
+  :config
+  ;; Make lowercase 'x' delete and KEEP the cursor in place
+  (setf (alist-get ?x avy-dispatch-alist) 'avy-action-kill-stay)
+  ;; Transfer "delete and jump" to uppercase 'X'
+  (setf (alist-get ?X avy-dispatch-alist) 'avy-action-kill-move))
+
 ;; add/change/remove surronding brackets and more!
 (use-package embrace
   :ensure t
@@ -1014,10 +1039,6 @@ _Notes:_
 (use-package magit :ensure t :defer t)
 ;; VTERM TERMINAL
 (use-package vterm :ensure t :defer t)
-;; TEXT EDITION
-(use-package iedit :ensure t :bind ("C-;" . iedit-mode))
-;; JUMP TO TEXT
-(use-package avy :ensure t :bind ("M-s" . avy-goto-char-2))
 
 ;; (Lazy: only loads when opening .lua file)
 (use-package lua-mode
@@ -1030,14 +1051,6 @@ _Notes:_
 :ensure t
 :mode "\\.kdl\\'"
 :defer t)
-
-;; Lazy: starts 2 seconds after Emacs is idle
-(use-package keyfreq
-:ensure t
-:init
-(run-with-idle-timer 2 nil (lambda ()
-  (keyfreq-mode 1)
-  (keyfreq-autosave-mode 1))))
 
 (use-package sudo-edit
 :ensure t
@@ -1153,16 +1166,12 @@ _Notes:_
   (setq history-length 1000)
   (setq consult-history-max 1000))
 
-;; consult-dir
-(use-package consult-dir
-  :ensure t
-  :bind (("C-x C-d" . consult-dir)
-         :map minibuffer-local-map
-         ("C-x C-d" . consult-dir)
-         ("C-x C-j" . consult-dir-jump-file))
-  :config
-  (defun consult-dir--zoxide-dirs ()
-    (split-string (shell-command-to-string "zoxide query --list") "\n" t))
+  ;; consult-dir
+  (use-package consult-dir
+    :ensure t
+    :config
+    (defun consult-dir--zoxide-dirs ()
+      (split-string (shell-command-to-string "zoxide query --list") "\n" t))
 
 ;; consult within zoxide
   (defvar consult-dir--source-zoxide
@@ -1246,31 +1255,29 @@ _Notes:_
 (advice-add 'tempel--done :after #'my-tempel-expand-nested-triggers)
 
 (use-package corfu
-  :ensure t
-  :init
-  (global-corfu-mode)
-  :custom
-  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto nil)               ;; Enable auto completion
-  (corfu-auto-prefix 3)          ;; Trigger popup after 3 chars
-  (corfu-auto-delay .8)          ;; popup wait time (0 for instant)
-  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-  (corfu-quit-no-match t)        ;; Auto-quit if there are no matches
-  (corfu-preview-current nil)    ;; Disable inline preview (keeps buffer clean)
-  (corfu-preselect 'prompt)      ;; Preselect the prompt, not the first candidate
+    :ensure t
+    :init
+    (global-corfu-mode)
+    :custom
+    (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+    (corfu-auto nil)               ;; Enable auto completion
+    (corfu-auto-prefix 3)          ;; Trigger popup after 3 chars
+    (corfu-auto-delay .8)          ;; popup wait time (0 for instant)
+    (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+    (corfu-quit-no-match t)        ;; Auto-quit if there are no matches
+    (corfu-preview-current nil)    ;; Disable inline preview (keeps buffer clean)
+    (corfu-preselect 'prompt)      ;; Preselect the prompt, not the first candidate
 
-  :bind
-   ("M-/" . completion-at-point)
+    :bind
+    (("M-/" . completion-at-point)
+     :map corfu-map
+     ("C-i" . corfu-next)
+     ("C-k" . corfu-previous)
+     ("C-g" . corfu-quit)
+     ("RET" . corfu-insert)
+     ("SPC" . corfu-insert-separator))
 
-  (:map corfu-map
-        ;; use standard modal keys for navigating the popup
-        ("C-i"      . corfu-next)
-        ("C-k"      . corfu-previous)
-        ("C-g"      . corfu-quit)
-        ("RET"      . corfu-insert)
-        ;; Allows you to type "foo bar" to filter fuzzy matches via Orderless
-        ("SPC"      . corfu-insert-separator))
-:config
+    :config
     ;; Use TAB to trigger Corfu completion
     (keymap-set corfu-map "TAB" #'corfu-complete)
     (keymap-set corfu-map "<tab>" #'corfu-complete))
@@ -1407,6 +1414,11 @@ _Notes:_
 
   ;; Force C-i to be a dead-end
   (define-key org-mode-map (kbd "C-i") #'ignore)
+
+  ;; Disable COMMENT keybind  "C-c ;" (org-toggle-comment)
+  ;; to stop accidental usage when using "C-c '" (org-edit-special)
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "C-c ;") nil))
 )
 
 ;; ==============================================
@@ -1427,10 +1439,6 @@ _Notes:_
 ;; 2. Force the Daemon to run it every time you connect a new emacsclient frame
 (add-hook 'after-make-frame-functions #'my-apply-terminal-key-decodes)
 
-
-;; XFK MODAL
-  ;; [SPC a]
-  (define-key xah-fly-leader-key-map (kbd "a") nil)
 ;; OTHER
   ;; dired-jump
   (define-key ctl-x-map (kbd "C-j") nil)
@@ -1509,10 +1517,10 @@ _Notes:_
 (global-set-key (kbd "C-c 0") 'config-visit-dots)
 
 (defun my-tangle-and-load ()
-  (when (string= (buffer-file-name)
-                 (expand-file-name "~/.emacs.d/base_cfg.org"))
-    (org-babel-tangle)
-    (load-file (expand-file-name "~/.emacs.d/base_cfg.el"))))
+ (when (string= (buffer-file-name)
+               "/home/rdo/.dotfiles/common/emacs.d/base_cfg.org")
+  (org-babel-tangle)
+  (load-file "/home/rdo/.dotfiles/common/emacs.d/base_cfg.el")))
 (add-hook 'after-save-hook #'my-tangle-and-load)
 
 ;; pomodoro timer (system wide)
@@ -1530,12 +1538,38 @@ _Notes:_
 (define-key xah-fly-leader-key-map (kbd "u") 'consult-buffer)
 (define-key xah-fly-leader-key-map (kbd "s") 'consult-line)
 (define-key xah-fly-leader-key-map (kbd "S") 'isearch-forward-word)
-(define-key xah-fly-leader-key-map (kbd "r") 'replace-string)
-(define-key xah-fly-leader-key-map (kbd "R") 'query-replace)
 (define-key xah-fly-leader-key-map (kbd "f") 'ibuffer)
 (define-key xah-fly-leader-key-map (kbd "SPC") 'kill-line)
 (define-key xah-fly-leader-key-map (kbd ";") 'consult-ripgrep)
 (define-key xah-fly-key-map (kbd "n") 'consult-line)
+
+
+;; ZOXIDE and HELP MENU in different keys
+;; 1. Capture the original XFK Help Menu from 'j' BEFORE overwriting it, and move it to '?'
+  (let ((xfk-orig-help-map (lookup-key xah-fly-leader-key-map (kbd "j"))))
+    (when (keymapp xfk-orig-help-map)
+      (define-key xah-fly-leader-key-map (kbd "?") xfk-orig-help-map)))
+
+  ;; 2. Now safely bind Zoxide (consult-dir) to 'j'
+  (define-key xah-fly-leader-key-map (kbd "j") 'consult-dir)
+
+  ;; 3. Update which-key descriptions
+  (with-eval-after-load 'which-key
+    (which-key-add-keymap-based-replacements xah-fly-leader-key-map
+      "?" "Emacs Help Menu"
+      "j" "Zoxide (consult-dir)"))
+
+
+;; QUERY-REPLACE and iEDIT
+  ;; Replace & Refactor
+  (define-key xah-fly-leader-key-map (kbd "r") 'query-replace)
+  (define-key xah-fly-leader-key-map (kbd "R") 'iedit-mode)
+
+  ;; Update which-key descriptions
+  (with-eval-after-load 'which-key
+    (which-key-add-keymap-based-replacements xah-fly-leader-key-map
+      "r" "Query Replace"
+      "R" "Iedit Mode"))
 
 (define-key xah-fly-key-map (kbd "5") 'delete-char)
 (define-key xah-fly-key-map (kbd "6") 'xah-select-block)
@@ -1624,6 +1658,7 @@ _Notes:_
     (define-key ibuffer-mode-map  (kbd "k") '("next line " . ibuffer-forward-line))
     (define-key ibuffer-mode-map  (kbd "i") '("prev line" . ibuffer-backward-line)))
 
+(set-register ?q (cons 'file "~/Docs/11.git_docs/01.west_ga_tech/sem2_2026/"))
 (set-register ?a (cons 'file "~/DLs/0.syncthing_share/[PERSO]_agenda_2026.org"))
 (set-register ?h (cons 'file "~/DLs/0.syncthing_share/health.org"))
 (set-register ?s (cons 'file "~/Docs/10.Org/trading-study-tracker.org"))
@@ -1635,6 +1670,8 @@ _Notes:_
 (set-register ?i (cons 'file "~/Docs/10.Org/roam/life/20260421170118-life_hub_index.org"))
 (set-register ?l (cons 'file "~/Docs/10.Org/roam/tech/20260417193707-tech_hub_index.org"))
 (set-register ?e (cons 'file "~/Docs/10.Org/roam/tech/20260421144405-emacs_journey.org"))
+
+(setq bookmark-save-flag 1)
 
 (defvar z-emms-map (make-sparse-keymap))
 (define-key xah-fly-leader-key-map (kbd "z") z-emms-map)
@@ -1752,6 +1789,35 @@ _Notes:_
 (define-key my-embrace-map (kbd "a") #'embrace-add)
 (define-key my-embrace-map (kbd "c") #'embrace-change)
 (define-key my-embrace-map (kbd "d") #'embrace-delete)
+
+;; XFK sub-map
+
+;; 1. Create the submap for Avy
+(defvar my-avy-map (make-sparse-keymap) "Avy Jump Map")
+
+;; 2. Bind 'a' in the leader map to the new submap
+(define-key xah-fly-leader-key-map (kbd "a") my-avy-map)
+
+;; 3. Populate the commands (SPC a a / SPC a l)
+(define-key my-avy-map (kbd "a") 'avy-goto-char-timer)
+(define-key my-avy-map (kbd "l") 'avy-goto-line)
+
+;; 4. Tell which-key the menu name so the popup looks nice
+(with-eval-after-load 'which-key
+  (which-key-add-keymap-based-replacements xah-fly-leader-key-map
+    "a" "Avy Jump"))
+
+;; Override traditional Emacs replace bindings with iedit
+(global-set-key (kbd "M-%") 'iedit-mode)
+(global-set-key (kbd "C-M-%") 'iedit-mode)
+
+;; Bind to XFK leader map (e.g., replacing the old 'replace' shortcut)
+(define-key xah-fly-leader-key-map (kbd "R") 'iedit-mode)
+
+;; Add description for which-key popup
+(with-eval-after-load 'which-key
+  (which-key-add-keymap-based-replacements xah-fly-leader-key-map
+    "R" "Iedit"))
 
 (use-package multiple-cursors
   :ensure t

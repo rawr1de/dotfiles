@@ -18,21 +18,18 @@
 
 ;;; --- CORE FUNCTIONALITY ---
 
+
 (defun my-scratchpad-commit ()
-  "Copy text to Wayland clipboard, append to log with timestamp, and close safely."
   (interactive)
   (goto-char (point-min))
   (if (search-forward "---" nil t)
       (forward-line 1)
     (goto-char (point-min)))
 
-  (let* ((text (string-trim (buffer-substring-no-properties (point) (point-max))))
-         (log-file (expand-file-name ".spad_hist" user-emacs-directory)))
-
+  (let ((text (string-trim (buffer-substring-no-properties (point) (point-max)))))
     (when (> (length text) 0)
-      (let ((timestamp (format-time-string "[%Y-%m-%d] --- [%H:%M:%S]")))
-        (write-region (concat timestamp "\n" text "\n\n") nil log-file 'append))
-
+      (write-region (concat (format-time-string "[%Y-%m-%d] --- [%H:%M:%S]\n") text "\n\n")
+                    nil (expand-file-name ".spad_hist" user-emacs-directory) 'append)
       (with-temp-buffer
         (insert text)
         (call-process-region (point-min) (point-max) "wl-copy" nil nil nil))))
@@ -40,14 +37,6 @@
   (set-buffer-modified-p nil)
   (erase-buffer)
   (save-buffers-kill-terminal))
-
-(defun my-scratchpad-open-history ()
-  "Instantly open the scratchpad history file, creating it safely if it doesn't exist."
-  (interactive)
-  (let ((log-file (expand-file-name ".spad_hist" user-emacs-directory)))
-    (unless (file-exists-p log-file)
-      (write-region ";;; Scratchpad History Initialized\n\n" nil log-file))
-    (find-file log-file)))
 
 
 ;;; --- ENVIRONMENT CONSTRAINTS ---

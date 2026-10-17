@@ -41,7 +41,7 @@ fi
 sleep 1
 
 # ==============================================================================
-# 1. Monitor DP-1: 2 janelas do Brave (TradingView isolado)
+# 1. Monitor DP-1: 2 janelas do Brave empilhadas (Stack Vertical)
 # ==============================================================================
 niri msg action focus-workspace "Trading-DP1"
 
@@ -54,7 +54,7 @@ niri msg action consume-or-expel-window-left
 niri msg action maximize-column
 
 # ==============================================================================
-# 2. Monitor HDMI-A-1: 2 janelas do Brave (TradingView isolado)
+# 2. Monitor HDMI-A-1: 2 janelas do Brave empilhadas (Stack Vertical)
 # ==============================================================================
 niri msg action focus-workspace "Trading-HDMI"
 
@@ -70,8 +70,12 @@ niri msg action maximize-column
 # 3. Monitor eDP-2 (Notebook): Discord
 # ==============================================================================
 niri msg action focus-monitor "eDP-2"
-niri msg action focus-workspace 3
+niri msg action focus-workspace 1
 
 nohup discord > /dev/null 2>&1 &
-sleep 3
+
+sleep 6
+
+niri msg action focus-monitor "eDP-2"
+niri msg action focus-workspace 1
 niri msg action maximize-column

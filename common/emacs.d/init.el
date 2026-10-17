@@ -1,5 +1,8 @@
 ;;;;;;;;;;  NEW LIGHTWEIGHT INIT.EL  ;;;;;;;;;;  -*- lexical-binding: t; -*-
 
+;; Força o diretório do usuário antes de tudo
+(setq user-emacs-directory "/home/rdo/.dotfiles/common/emacs.d/")
+
 ;; Move customization variables outside of init.el
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)

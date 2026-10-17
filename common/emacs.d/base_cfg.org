@@ -4,7 +4,8 @@
 #+begin_comment MODULES/SNIPPETS
 *MODULES*
 [[file:modules/my-scratchpad.el][my-scratchpad.el]]
-[[/home/rdo/.emacs.d/modules/my-kde-sms.el][my-kde-sms.el]]
+[[/home/rdo/.dotfiles/common/emacs.d/modules/my-termux-sms.el
+][my-termux-sms.el]]
 
 [[file:snippets/][SNIPPETS]] *(FOLDER)*
 [[file:~/.dotfiles/common/rdo_dots.org][rdo_dots.org]] *(DOTFILES)*
@@ -274,16 +275,22 @@
 *** backup/auto-save
 
 #+begin_src emacs-lisp
-  (setq make-backup-files t)
-  (setq auto-save-default t)
-  ;; Create quarantine folders for backups and auto-saves
-  (make-directory "~/.emacs.d/backups/" t)
-  (make-directory "~/.emacs.d/auto-saves/" t)
+    (setq make-backup-files t)
+    (setq auto-save-default t)
 
-  ;; Route all backup (~) and auto-save (#) files to the quarantine
-  (setq backup-directory-alist '(("." . "~/.emacs.d/backups/")))
-  (setq auto-save-file-name-transforms
-        '((".*" "~/.emacs.d/auto-saves/" t)))
+    ;; Define paths inside your dotfiles
+    (defvar my-emacs-backup-dir "/home/rdo/.dotfiles/common/emacs.d/backups/")
+    (defvar my-emacs-auto-save-dir "/home/rdo/.dotfiles/common/emacs.d/auto-saves/")
+
+    ;; Automatically create the directories during startup if they don't exist
+    (unless (file-exists-p my-emacs-backup-dir)
+      (make-directory my-emacs-backup-dir t))
+    (unless (file-exists-p my-emacs-auto-save-dir)
+      (make-directory my-emacs-auto-save-dir t))
+
+    ;; Route all backup (~) and temporary auto-save (#) files to these folders
+    (setq backup-directory-alist `(("." . ,my-emacs-backup-dir)))
+    (setq auto-save-file-name-transforms `((".*" ,my-emacs-auto-save-dir t)))
 #+end_src
 
 *** system language/coding environment
@@ -314,13 +321,13 @@
 
 #+begin_src emacs-lisp
   (use-package savehist
-    :init
-    (setq savehist-file "~/.emacs.d/history"
-          history-length 1000
-          history-delete-duplicates t)
-    (savehist-mode 1)
-    :config
-    (add-to-list 'savehist-additional-variables 'query-replace-history))
+      :init
+      (setq savehist-file "/home/rdo/.dotfiles/common/emacs.d/history"
+            history-length 1000
+            history-delete-duplicates t)
+      (savehist-mode 1)
+      :config
+      (add-to-list 'savehist-additional-variables 'query-replace-history))
 #+end_src
 
 *** org-babel
@@ -332,20 +339,6 @@
    '((emacs-lisp . t)
      (python . t)
      (shell . t)))
-#+end_src
-
-*** COMMENT open/reload config file  [C-c 9 / C-c 0]
-
-#+begin_src emacs-lisp
-  (defun config-visit ()
-    (interactive)
-    (find-file "~/.emacs.d/base_cfg.org"))
-  (global-set-key (kbd "C-c 9") 'config-visit)
-
-  (defun config-reload ()
-    (interactive)
-    (org-babel-load-file (expand-file-name "~/.emacs.d/base_cfg.el")))
-  (global-set-key (kbd "C-c 0") 'config-reload)
 #+end_src
 
 ** FILE MANAGER
@@ -532,108 +525,108 @@
 *** dirvish
 
 #+begin_src emacs-lisp
-(use-package dirvish
-  :ensure t
-  :bind (("C-c f" . dirvish)
-         :map dirvish-mode-map
-         ("f"     . dirvish-file-info-menu)
-         ("g"     . dirvish-quick-access)
-         ("y"     . dirvish-yank-menu)
-         ("s"     . dirvish-quicksort)
-         ("j"     . dired-up-directory)
-         ("k"     . dired-next-line)
-         ("i"     . dired-previous-line)
-         ("l"     . dired-find-file)
-         ("TAB"   . dirvish-subtree-toggle)
-         ("v"     . dirvish-layout-toggle)
-         ("r"     . revert-buffer)
-         ("I"     . beginning-of-buffer)
-         ("K"     . end-of-buffer)
-         (","     . xah-next-window-or-frame)
-         ("C-c r" . dirvish-rsync-transient)
-         ("q"     . dirvish-quit)
-         ;; 1. This catches your physical Ctrl+I (because input-decode-map saved it)
-         ("<C-i>" . dired-prev-subdir)
-         ;; 2. Your other bindings
-         ("C-k"   . dired-next-subdir)
-         ("z"     . describe-mode)
-         ("b"     . xah-pop-local-mark-ring)
-         ;; Map window scrolling
-         ("M-i"   . (lambda () (interactive) (scroll-other-window-down 1)))
-         ("M-k"   . (lambda () (interactive) (scroll-other-window 1))))
+  (use-package dirvish
+    :ensure t
+    :bind (("C-c f" . dirvish)
+           :map dirvish-mode-map
+           ("f"     . dirvish-file-info-menu)
+           ("g"     . dirvish-quick-access)
+           ("y"     . dirvish-yank-menu)
+           ("s"     . dirvish-quicksort)
+           ("j"     . dired-up-directory)
+           ("k"     . dired-next-line)
+           ("i"     . dired-previous-line)
+           ("l"     . dired-find-file)
+           ("TAB"   . dirvish-subtree-toggle)
+           ("v"     . dirvish-layout-toggle)
+           ("r"     . revert-buffer)
+           ("I"     . beginning-of-buffer)
+           ("K"     . end-of-buffer)
+           (","     . xah-next-window-or-frame)
+           ("C-c r" . dirvish-rsync-transient)
+           ("q"     . dirvish-quit)
+           ;; 1. This catches your physical Ctrl+I (because input-decode-map saved it)
+           ("<C-i>" . dired-prev-subdir)
+           ;; 2. Your other bindings
+           ("C-k"   . dired-next-subdir)
+           ("z"     . describe-mode)
+           ("b"     . xah-pop-local-mark-ring)
+           ;; Map window scrolling
+           ("M-i"   . (lambda () (interactive) (scroll-other-window-down 1)))
+           ("M-k"   . (lambda () (interactive) (scroll-other-window 1))))
 
-  :init
-  ;; Force creation of the cache dir to prevent silent thumbnail failures
-  (unless (file-exists-p (expand-file-name "~/.cache/dirvish/"))
-    (make-directory (expand-file-name "~/.cache/dirvish/") t))
-  (dirvish-override-dired-mode)
+    :init
+    ;; Force creation of the cache dir to prevent silent thumbnail failures
+    (unless (file-exists-p (expand-file-name "~/.cache/dirvish/"))
+      (make-directory (expand-file-name "~/.cache/dirvish/") t))
+    (dirvish-override-dired-mode)
 
-  :custom
-  ;; Wait 150ms before triggering previews
-  (dirvish-preview-delay 0.15)
-  (dirvish-attributes '(nerd-icons file-size file-time))
-  (dirvish-layout '(0 45 55))
-  (dirvish-hilite-line t)
-  ;; (dirvish-hilite-line nil)
-  ;; Unified dispatchers here (removed the duplicate from :config)
-  (dirvish-preview-dispatchers '(font gif epub archive pdf video audio image eza-dir-preview))
+    :custom
+    ;; Wait 150ms before triggering previews
+    (dirvish-preview-delay 0.15)
+    (dirvish-attributes '(nerd-icons file-size file-time))
+    (dirvish-layout '(0 45 55))
+    (dirvish-hilite-line t)
+    ;; (dirvish-hilite-line nil)
+    ;; Unified dispatchers here (removed the duplicate from :config)
+    (dirvish-preview-dispatchers '(font gif epub archive pdf video audio image eza-dir-preview))
 
-  :config
-  (require 'dirvish-rsync)
-  (require 'dirvish-extras)
-  (require 'dirvish-peek)
+    :config
+    (require 'dirvish-rsync)
+    (require 'dirvish-extras)
+    (require 'dirvish-peek)
 
-  (dirvish-peek-mode 1)
+    (dirvish-peek-mode 1)
 
-  (dirvish-define-preview eza-dir-preview (file)
-    "Use 'eza' for beautiful, icon-rich directory previews"
-    (when (file-directory-p file)
-      `(shell . ("eza" "-a" "-1" "--color=always" "--icons=always" "--group-directories-first" ,file))))
+    (dirvish-define-preview eza-dir-preview (file)
+      "Use 'eza' for beautiful, icon-rich directory previews"
+      (when (file-directory-p file)
+        `(shell . ("eza" "-a" "-1" "--color=always" "--icons=always" "--group-directories-first" ,file))))
 
-  ;; Define the XFK segment for dirvish
-  (dirvish-define-mode-line xfk-mode
-    "Show current XFK mode."
-    (if xah-fly-insert-state-p
-        (propertize " INSERT " 'face '(:foreground "#5faf5f"))
-      (propertize " COMMAND " 'face '(:foreground "#ff5f5f"))))
+    ;; Define the XFK segment for dirvish
+    (dirvish-define-mode-line xfk-mode
+      "Show current XFK mode."
+      (if xah-fly-insert-state-p
+          (propertize " INSERT " 'face '(:foreground "#5faf5f"))
+        (propertize " COMMAND " 'face '(:foreground "#ff5f5f"))))
 
-  ;; Mode-line format
-  (setq dirvish-mode-line-format '(:left (sort symlink) :right (my-org-timer omit xfk-mode)))
+    ;; Mode-line format
+    (setq dirvish-mode-line-format '(:left (sort symlink) :right (my-org-timer omit xfk-mode)))
 
-  ;; Quick access
-  (setq dirvish-quick-access-entries
-        '(("h" "~/"                          "Home")
-          ("l" "~/Desk/"                     "Desk")
-          ("w" "~/DLs/"                      "DLs")
-          ("d" "~/Docs/"                     "Docs")
-          ("r" "~/Docs/11.git_docs/"         "git-docs")
-          ("m" "~/Musk/"                     "Musk")
-          ("p" "~/Pix/"                      "Pix")
-          ("v" "~/Vidz/"                     "Vidz")
-          ("t" "~/tmp/"                      "tmp")
-          ("f" "~/.dotfiles/"                ".dotfiles")
-          ("c" "~/.config/"                  ".config")
-          ("e" "~/.dotfiles/common/emacs.d/" ".emacs.d")
-          ("s" "~/.scripts/"                 ".scripts")
-          ("T" "~/.local/share/Trash/files/" "Trash")
-          ("i" "/run/media/"                 "Media")))
+    ;; Quick access
+    (setq dirvish-quick-access-entries
+          '(("h" "~/"                          "Home")
+            ("l" "~/Desk/"                     "Desk")
+            ("w" "~/DLs/"                      "DLs")
+            ("d" "~/Docs/"                     "Docs")
+            ("r" "~/Docs/11.git_docs/"         "git-docs")
+            ("m" "~/Musk/"                     "Musk")
+            ("p" "~/Pix/"                      "Pix")
+            ("v" "~/Vidz/"                     "Vidz")
+            ("t" "~/tmp/"                      "tmp")
+            ("f" "~/.dotfiles/"                ".dotfiles")
+            ("c" "~/.config/"                  ".config")
+            ("e" "~/.dotfiles/common/emacs.d/" ".emacs.d")
+            ("s" "~/.scripts/"                 ".scripts")
+            ("T" "~/.local/share/Trash/files/" "Trash")
+  	  ("i" "/run/media/"                 "Media")))
 
-  ;; Transient menus
-  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("t" "file contents to wl-copy" my-dired-copy-file-contents))
-  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("x" "Cut"   my-dired-copy-paste-do-cut))
-  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("c" "Copy"  my-dired-copy-paste-do-copy))
-  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("v" "Paste" my-dired-copy-paste-do-paste))
-  (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
-    '("q" "Quit" transient-quit-one))
+    ;; Transient menus
+    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+      '("t" "file contents to wl-copy" my-dired-copy-file-contents))
+    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+      '("x" "Cut"   my-dired-copy-paste-do-cut))
+    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+      '("c" "Copy"  my-dired-copy-paste-do-copy))
+    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+      '("v" "Paste" my-dired-copy-paste-do-paste))
+    (transient-append-suffix 'dirvish-file-info-menu '(0 -1)
+      '("q" "Quit" transient-quit-one))
 
-  ;; Note: The redundant global-auto-revert and (advice-add 'dired-do-copy ...)
-  ;; from the end of the original dirvish block were merged into the authoritative
-  ;; Dired block above to prevent duplicate execution.
-  )
+    ;; Note: The redundant global-auto-revert and (advice-add 'dired-do-copy ...)
+    ;; from the end of the original dirvish block were merged into the authoritative
+    ;; Dired block above to prevent duplicate execution.
+    )
 #+end_src
 
 ** MUSK
@@ -938,6 +931,17 @@
     (add-hook 'org-mode-hook (lambda () (setq line-move-visual nil))))
 #+end_src
 
+**** org-priority
+
+Items without a priority fall below [#C] (treated as [#D]).
+Affects =C-c ^ p= (org-sort) and the org-agenda sorting.
+
+#+begin_src emacs-lisp
+  (setq org-priority-highest ?A
+        org-priority-lowest  ?D
+        org-priority-default ?D)
+#+end_src
+
 **** org-capture
 
 #+begin_src emacs-lisp
@@ -1185,6 +1189,28 @@
     (which-key-mode 1))
 #+end_src
 
+*** iedit
+
+#+begin_src emacs-lisp
+  (use-package iedit
+    :ensure t
+    :config
+    ;; Show the number of occurrences on minibuffer once active
+    (setq iedit-auto-save-state-in-desktop t))
+#+end_src
+
+*** Avy
+#+begin_src emacs-lisp
+  ;; INVERT 'x' and 'X' BEHAVIOR
+  (use-package avy
+    :ensure t
+    :config
+    ;; Make lowercase 'x' delete and KEEP the cursor in place
+    (setf (alist-get ?x avy-dispatch-alist) 'avy-action-kill-stay)
+    ;; Transfer "delete and jump" to uppercase 'X'
+    (setf (alist-get ?X avy-dispatch-alist) 'avy-action-kill-move))
+#+end_src
+
 *** embrace
 
 #+begin_src emacs-lisp
@@ -1203,14 +1229,10 @@
 *** git
 
 #+begin_src emacs-lisp
-    ;; GIT
-    (use-package magit :ensure t :defer t)
-    ;; VTERM TERMINAL
-    (use-package vterm :ensure t :defer t)
-    ;; TEXT EDITION
-    (use-package iedit :ensure t :bind ("C-;" . iedit-mode))
-    ;; JUMP TO TEXT
-    (use-package avy :ensure t :bind ("M-s" . avy-goto-char-2))
+  ;; GIT
+  (use-package magit :ensure t :defer t)
+  ;; VTERM TERMINAL
+  (use-package vterm :ensure t :defer t)
 #+end_src
 
 *** lua
@@ -1233,7 +1255,7 @@
   :defer t)
 #+end_src
 
-*** keyfreq
+*** COMMENT keyfreq
 
 #+begin_src emacs-lisp
 ;; Lazy: starts 2 seconds after Emacs is idle
@@ -1387,16 +1409,12 @@
     (setq history-length 1000)
     (setq consult-history-max 1000))
 
-  ;; consult-dir
-  (use-package consult-dir
-    :ensure t
-    :bind (("C-x C-d" . consult-dir)
-           :map minibuffer-local-map
-           ("C-x C-d" . consult-dir)
-           ("C-x C-j" . consult-dir-jump-file))
-    :config
-    (defun consult-dir--zoxide-dirs ()
-      (split-string (shell-command-to-string "zoxide query --list") "\n" t))
+    ;; consult-dir
+    (use-package consult-dir
+      :ensure t
+      :config
+      (defun consult-dir--zoxide-dirs ()
+        (split-string (shell-command-to-string "zoxide query --list") "\n" t))
 
   ;; consult within zoxide
     (defvar consult-dir--source-zoxide
@@ -1500,31 +1518,29 @@
 
 #+begin_src emacs-lisp
   (use-package corfu
-    :ensure t
-    :init
-    (global-corfu-mode)
-    :custom
-    (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-    (corfu-auto nil)               ;; Enable auto completion
-    (corfu-auto-prefix 3)          ;; Trigger popup after 3 chars
-    (corfu-auto-delay .8)          ;; popup wait time (0 for instant)
-    (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-    (corfu-quit-no-match t)        ;; Auto-quit if there are no matches
-    (corfu-preview-current nil)    ;; Disable inline preview (keeps buffer clean)
-    (corfu-preselect 'prompt)      ;; Preselect the prompt, not the first candidate
+      :ensure t
+      :init
+      (global-corfu-mode)
+      :custom
+      (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+      (corfu-auto nil)               ;; Enable auto completion
+      (corfu-auto-prefix 3)          ;; Trigger popup after 3 chars
+      (corfu-auto-delay .8)          ;; popup wait time (0 for instant)
+      (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+      (corfu-quit-no-match t)        ;; Auto-quit if there are no matches
+      (corfu-preview-current nil)    ;; Disable inline preview (keeps buffer clean)
+      (corfu-preselect 'prompt)      ;; Preselect the prompt, not the first candidate
 
-    :bind
-     ("M-/" . completion-at-point)
+      :bind
+      (("M-/" . completion-at-point)
+       :map corfu-map
+       ("C-i" . corfu-next)
+       ("C-k" . corfu-previous)
+       ("C-g" . corfu-quit)
+       ("RET" . corfu-insert)
+       ("SPC" . corfu-insert-separator))
 
-    (:map corfu-map
-          ;; use standard modal keys for navigating the popup
-          ("C-i"      . corfu-next)
-          ("C-k"      . corfu-previous)
-          ("C-g"      . corfu-quit)
-          ("RET"      . corfu-insert)
-          ;; Allows you to type "foo bar" to filter fuzzy matches via Orderless
-          ("SPC"      . corfu-insert-separator))
-  :config
+      :config
       ;; Use TAB to trigger Corfu completion
       (keymap-set corfu-map "TAB" #'corfu-complete)
       (keymap-set corfu-map "<tab>" #'corfu-complete))
@@ -1550,7 +1566,7 @@
      ("C-c p w" . cape-dict)))
 #+end_src
 
-*** DEPRECATED
+*** /DEPRECATED/
 
 Packages replacements:
 |---------------+-------------|
@@ -1705,7 +1721,7 @@ Packages replacements:
 
 * KEY BINDINGS
 ** GLOBAL
-*** DISABLED
+*** /DISABLED/
 
 #+begin_comment info1
 /terminal key collisions to know about:/
@@ -1731,6 +1747,11 @@ Packages replacements:
 
     ;; Force C-i to be a dead-end
     (define-key org-mode-map (kbd "C-i") #'ignore)
+
+    ;; Disable COMMENT keybind  "C-c ;" (org-toggle-comment)
+    ;; to stop accidental usage when using "C-c '" (org-edit-special)
+    (with-eval-after-load 'org
+      (define-key org-mode-map (kbd "C-c ;") nil))
   )
 
   ;; ==============================================
@@ -1751,10 +1772,6 @@ Packages replacements:
   ;; 2. Force the Daemon to run it every time you connect a new emacsclient frame
   (add-hook 'after-make-frame-functions #'my-apply-terminal-key-decodes)
 
-
-  ;; XFK MODAL
-    ;; [SPC a]
-    (define-key xah-fly-leader-key-map (kbd "a") nil)
   ;; OTHER
     ;; dired-jump
     (define-key ctl-x-map (kbd "C-j") nil)
@@ -1854,10 +1871,10 @@ Packages replacements:
   (global-set-key (kbd "C-c 0") 'config-visit-dots)
 
   (defun my-tangle-and-load ()
-    (when (string= (buffer-file-name)
-                   (expand-file-name "~/.emacs.d/base_cfg.org"))
-      (org-babel-tangle)
-      (load-file (expand-file-name "~/.emacs.d/base_cfg.el"))))
+   (when (string= (buffer-file-name)
+                 "/home/rdo/.dotfiles/common/emacs.d/base_cfg.org")
+    (org-babel-tangle)
+    (load-file "/home/rdo/.dotfiles/common/emacs.d/base_cfg.el")))
   (add-hook 'after-save-hook #'my-tangle-and-load)
 #+end_src
 
@@ -1884,12 +1901,38 @@ Packages replacements:
   (define-key xah-fly-leader-key-map (kbd "u") 'consult-buffer)
   (define-key xah-fly-leader-key-map (kbd "s") 'consult-line)
   (define-key xah-fly-leader-key-map (kbd "S") 'isearch-forward-word)
-  (define-key xah-fly-leader-key-map (kbd "r") 'replace-string)
-  (define-key xah-fly-leader-key-map (kbd "R") 'query-replace)
   (define-key xah-fly-leader-key-map (kbd "f") 'ibuffer)
   (define-key xah-fly-leader-key-map (kbd "SPC") 'kill-line)
   (define-key xah-fly-leader-key-map (kbd ";") 'consult-ripgrep)
   (define-key xah-fly-key-map (kbd "n") 'consult-line)
+
+
+  ;; ZOXIDE and HELP MENU in different keys
+  ;; 1. Capture the original XFK Help Menu from 'j' BEFORE overwriting it, and move it to '?'
+    (let ((xfk-orig-help-map (lookup-key xah-fly-leader-key-map (kbd "j"))))
+      (when (keymapp xfk-orig-help-map)
+        (define-key xah-fly-leader-key-map (kbd "?") xfk-orig-help-map)))
+
+    ;; 2. Now safely bind Zoxide (consult-dir) to 'j'
+    (define-key xah-fly-leader-key-map (kbd "j") 'consult-dir)
+
+    ;; 3. Update which-key descriptions
+    (with-eval-after-load 'which-key
+      (which-key-add-keymap-based-replacements xah-fly-leader-key-map
+        "?" "Emacs Help Menu"
+        "j" "Zoxide (consult-dir)"))
+
+
+  ;; QUERY-REPLACE and iEDIT
+    ;; Replace & Refactor
+    (define-key xah-fly-leader-key-map (kbd "r") 'query-replace)
+    (define-key xah-fly-leader-key-map (kbd "R") 'iedit-mode)
+
+    ;; Update which-key descriptions
+    (with-eval-after-load 'which-key
+      (which-key-add-keymap-based-replacements xah-fly-leader-key-map
+        "r" "Query Replace"
+        "R" "Iedit Mode"))
 #+end_src
 
 **** numbers row
@@ -2003,6 +2046,7 @@ Packages replacements:
 *** REGISTERS
 
 #+begin_src emacs-lisp
+  (set-register ?q (cons 'file "~/Docs/11.git_docs/01.west_ga_tech/sem2_2026/"))
   (set-register ?a (cons 'file "~/DLs/0.syncthing_share/[PERSO]_agenda_2026.org"))
   (set-register ?h (cons 'file "~/DLs/0.syncthing_share/health.org"))
   (set-register ?s (cons 'file "~/Docs/10.Org/trading-study-tracker.org"))
@@ -2017,6 +2061,10 @@ Packages replacements:
 #+end_src
 
 *** BOOKMARKS
+
+#+begin_src emacs-lisp
+(setq bookmark-save-flag 1)
+#+end_src
 
 ** MUSK
 *** Z MODE MAP FOR XFK
@@ -2165,6 +2213,43 @@ Packages replacements:
   (define-key my-embrace-map (kbd "d") #'embrace-delete)
 #+end_src
 
+*** avy
+
+#+begin_src emacs-lisp
+  ;; XFK sub-map
+
+  ;; 1. Create the submap for Avy
+  (defvar my-avy-map (make-sparse-keymap) "Avy Jump Map")
+
+  ;; 2. Bind 'a' in the leader map to the new submap
+  (define-key xah-fly-leader-key-map (kbd "a") my-avy-map)
+
+  ;; 3. Populate the commands (SPC a a / SPC a l)
+  (define-key my-avy-map (kbd "a") 'avy-goto-char-timer)
+  (define-key my-avy-map (kbd "l") 'avy-goto-line)
+
+  ;; 4. Tell which-key the menu name so the popup looks nice
+  (with-eval-after-load 'which-key
+    (which-key-add-keymap-based-replacements xah-fly-leader-key-map
+      "a" "Avy Jump"))
+#+end_src
+
+*** iedit
+
+#+begin_src emacs-lisp
+  ;; Override traditional Emacs replace bindings with iedit
+  (global-set-key (kbd "M-%") 'iedit-mode)
+  (global-set-key (kbd "C-M-%") 'iedit-mode)
+
+  ;; Bind to XFK leader map (e.g., replacing the old 'replace' shortcut)
+  (define-key xah-fly-leader-key-map (kbd "R") 'iedit-mode)
+
+  ;; Add description for which-key popup
+  (with-eval-after-load 'which-key
+    (which-key-add-keymap-based-replacements xah-fly-leader-key-map
+      "R" "Iedit"))
+#+end_src
+
 *** multiple cursors
 
 #+begin_src emacs-lisp
@@ -2195,7 +2280,7 @@ Packages replacements:
 #+end_src
 
 ** MY-SCRATCHPAD
-** MY-KDE-SMS
+** MY-TERMUX-SMS
 
 * AUTO-TANGLE CONFIGURATION
 
