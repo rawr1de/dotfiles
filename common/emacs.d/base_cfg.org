@@ -353,125 +353,126 @@
 *** dired
 
 #+begin_src emacs-lisp
-(use-package dired
-  :ensure nil
-  ;; 1. FUSED KEYBINDINGS (General keys + Window scrolling)
-  :bind (:map dired-mode-map
-         ("\\" . dired-narrow-fuzzy)
-         ("n"  . consult-line)
-         ("h"  . dired-maybe-insert-subdir)
-         ("'"  . delete-other-windows))
+  (use-package dired
+    :ensure nil
+    ;; 1. FUSED KEYBINDINGS (General keys + Window scrolling)
+    :bind (:map dired-mode-map
+           ("\\" . dired-narrow-fuzzy)
+           ("n"  . consult-line)
+           ("h"  . dired-maybe-insert-subdir)
+           ("'"  . delete-other-windows)
+           ("\""  . delete-window))
 
-  :config
-  ;; 1. Global Auto-Revert (The "Watchdog")
-  (setq global-auto-revert-non-file-buffers t)
-  (setq auto-revert-verbose nil)
-  (global-auto-revert-mode 1)
-  (add-hook 'dired-mode-hook 'auto-revert-mode)
+    :config
+    ;; 1. Global Auto-Revert (The "Watchdog")
+    (setq global-auto-revert-non-file-buffers t)
+    (setq auto-revert-verbose nil)
+    (global-auto-revert-mode 1)
+    (add-hook 'dired-mode-hook 'auto-revert-mode)
 
-  ;; 2. The "Hard Kick" (Refresh immediately after Emacs commands)
-  (defun my-dired-revert-all-buffers (&rest _)
-    "Refresh all dired buffers after an operation."
-    (dolist (buf (buffer-list))
-      (with-current-buffer buf
-        (when (derived-mode-p 'dired-mode)
-          (revert-buffer nil t)))))
+    ;; 2. The "Hard Kick" (Refresh immediately after Emacs commands)
+    (defun my-dired-revert-all-buffers (&rest _)
+      "Refresh all dired buffers after an operation."
+      (dolist (buf (buffer-list))
+        (with-current-buffer buf
+          (when (derived-mode-p 'dired-mode)
+            (revert-buffer nil t)))))
 
-  (advice-add 'dired-do-copy :after #'my-dired-revert-all-buffers)
-  (advice-add 'dired-do-rename :after #'my-dired-revert-all-buffers)
-  (advice-add 'dired-do-delete :after #'my-dired-revert-all-buffers)
-  ;; Added for directory creation as well
-  (advice-add 'dired-create-directory :after #'my-dired-revert-all-buffers)
+    (advice-add 'dired-do-copy :after #'my-dired-revert-all-buffers)
+    (advice-add 'dired-do-rename :after #'my-dired-revert-all-buffers)
+    (advice-add 'dired-do-delete :after #'my-dired-revert-all-buffers)
+    ;; Added for directory creation as well
+    (advice-add 'dired-create-directory :after #'my-dired-revert-all-buffers)
 
-  ;; Disable Arabic/Hebrew text scanning for massive speedup in file lists
-  (add-hook 'dired-mode-hook (lambda () (setq bidi-paragraph-direction 'left-to-right)))
+    ;; Disable Arabic/Hebrew text scanning for massive speedup in file lists
+    (add-hook 'dired-mode-hook (lambda () (setq bidi-paragraph-direction 'left-to-right)))
 
-  (setq dired-kill-when-opening-new-dired-buffers t
-        dired-dwim-target t
-        dired-recursive-deletes 'always
-        dired-create-destination-dirs 'always
-        dired-recursive-copies 'always)
+    (setq dired-kill-when-opening-new-dired-buffers t
+          dired-dwim-target t
+          dired-recursive-deletes 'always
+          dired-create-destination-dirs 'always
+          dired-recursive-copies 'always)
 
-  ;; ==========================================
-  ;; OPTION A: NATIVE GNU LS (SPEED & NUMBERS)
-  ;; ------------------------------------------
-  ;; PROS: Lightning fast on massive directories. Numbers (0, 1, 10) sort perfectly.
-  ;; CONS: Ignores punctuation; capital letters (A) and lowercase (a) are separated.
-  ;; ==========================================
-  ;; (setq ls-lisp-use-insert-directory-program t) ;; Ensure GNU ls is active
-  ;; (setq dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
-  ;; (setq dired-listing-switches "-AGFhlX --group-directories-first --time-style=long-iso")
+    ;; ==========================================
+    ;; OPTION A: NATIVE GNU LS (SPEED & NUMBERS)
+    ;; ------------------------------------------
+    ;; PROS: Lightning fast on massive directories. Numbers (0, 1, 10) sort perfectly.
+    ;; CONS: Ignores punctuation; capital letters (A) and lowercase (a) are separated.
+    ;; ==========================================
+    ;; (setq ls-lisp-use-insert-directory-program t) ;; Ensure GNU ls is active
+    ;; (setq dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
+    ;; (setq dired-listing-switches "-AGFhlX --group-directories-first --time-style=long-iso")
 
-  ;; ==========================================
-  ;; OPTION B: LS-LISP (PERFECT VISUAL SORTING)
-  ;; ------------------------------------------
-  ;; PROS: Punctuation (!, +) floats to the top. Case-insensitive (A sits next to a).
-  ;; CONS: Emacs UI will freeze/lag when opening directories with thousands of files.
-  ;; ==========================================
-  (require 'ls-lisp)
-  (setq ls-lisp-use-insert-directory-program nil
-        ls-lisp-dirs-first t
-        ls-lisp-ignore-case t
-        ;; ls-lisp-UCA-like-collation nil
-        dired-listing-switches "-AGFhlv --time-style=long-iso")
+    ;; ==========================================
+    ;; OPTION B: LS-LISP (PERFECT VISUAL SORTING)
+    ;; ------------------------------------------
+    ;; PROS: Punctuation (!, +) floats to the top. Case-insensitive (A sits next to a).
+    ;; CONS: Emacs UI will freeze/lag when opening directories with thousands of files.
+    ;; ==========================================
+    (require 'ls-lisp)
+    (setq ls-lisp-use-insert-directory-program nil
+          ls-lisp-dirs-first t
+          ls-lisp-ignore-case t
+          ;; ls-lisp-UCA-like-collation nil
+          dired-listing-switches "-AGFhlv --time-style=long-iso")
 
-  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+    (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 
-  ;; AUTO-CREATE DIRECTORIES ON MOVE/COPY
-  (defun my-dired-auto-create-target-dir (orig-fun &rest args)
-    "Silently create target directories the moment the Dired prompt receives a path."
-    (let* ((target (apply orig-fun args))
-           ;; Check if the target is a directory path (ends in /) or a file path
-           (dir (if (string-suffix-p "/" target) target (file-name-directory target))))
-      ;; If it's a directory and doesn't exist, build the full path instantly
-      (when (and dir (not (file-exists-p dir)))
-        (make-directory dir t))
-      target))
+    ;; AUTO-CREATE DIRECTORIES ON MOVE/COPY
+    (defun my-dired-auto-create-target-dir (orig-fun &rest args)
+      "Silently create target directories the moment the Dired prompt receives a path."
+      (let* ((target (apply orig-fun args))
+             ;; Check if the target is a directory path (ends in /) or a file path
+             (dir (if (string-suffix-p "/" target) target (file-name-directory target))))
+        ;; If it's a directory and doesn't exist, build the full path instantly
+        (when (and dir (not (file-exists-p dir)))
+          (make-directory dir t))
+        target))
 
-  ;; Attach this to the Dired destination prompt
-  (advice-add 'dired-mark-read-file-name :around #'my-dired-auto-create-target-dir)
+    ;; Attach this to the Dired destination prompt
+    (advice-add 'dired-mark-read-file-name :around #'my-dired-auto-create-target-dir)
 
-  ;; Moved from init.el as requested
-  (put 'dired-find-alternate-file 'disabled nil)
+    ;; Moved from init.el as requested
+    (put 'dired-find-alternate-file 'disabled nil)
 
-  ;; --- Custom SPC Leader Menu for Insert Mode ---
+    ;; --- Custom SPC Leader Menu for Insert Mode ---
 
-  ;; 1. create brand new keymaps
-  (defvar-keymap my-dired-rename-map
-    :doc "Ranger Renaming Map"
-    "r" '("rm standard" . my-ranger-rename-standard)
-    "a" '("append"      . my-ranger-rename-append)
-    "A" '("Appen/Absolute"  . my-ranger-rename-append-end)
-    "i" '("Insert"      . my-ranger-rename-prepend)
-    "e" '("Extension"   . my-ranger-rename-extension)
-    "u" '("spc → _"     . dirvish-rename-space-to-underscore)
-    "w" '("wDired"      . dired-toggle-read-only))
+    ;; 1. create brand new keymaps
+    (defvar-keymap my-dired-rename-map
+      :doc "Ranger Renaming Map"
+      "r" '("rm standard" . my-ranger-rename-standard)
+      "a" '("append"      . my-ranger-rename-append)
+      "A" '("Appen/Absolute"  . my-ranger-rename-append-end)
+      "i" '("Insert"      . my-ranger-rename-prepend)
+      "e" '("Extension"   . my-ranger-rename-extension)
+      "u" '("spc → _"     . dirvish-rename-space-to-underscore)
+      "w" '("wDired"      . dired-toggle-read-only))
 
-  (defvar-keymap my-dired-share-map
-    :doc "Share to Phone Map"
-    "k" '("to phone > KDE"  . my-dired-kdeconnect-share)
-    "w" '("to phone > worm" . my-dired-wormhole-send)
-    "s" '("syncthing folder" . my-dired-syncthing-transfer))
+    (defvar-keymap my-dired-share-map
+      :doc "Share to Phone Map"
+      "k" '("to phone > KDE"  . my-dired-kdeconnect-share)
+      "w" '("to phone > worm" . my-dired-wormhole-send)
+      "s" '("syncthing folder" . my-dired-syncthing-transfer))
 
-  (defvar-keymap my-dired-spc-map
-    :doc "Custom SPC leader map for Dired/Dirvish in Insert Mode"
-    "1" '("drag/drop"       . my-dired-ripdrag)
-    "2" '("wl-copy"         . my-dired-copy-file-to-clipboard)
-    "m" '("dired-jump"      . dired-jump)
-    "u" '("consult-buffer"  . consult-buffer)
-    ";" '("consult-ripgrep" . consult-ripgrep)
-    "f" '("iBuffer"         . ibuffer)
-    "r" `("ranger-rename"   . ,my-dired-rename-map)
-    "z" '("zip/share > phone" . my-dired-zip-and-share)
-    "b" '("backup files"    . my-backup-file)
-    "p" `("Share Menu"      . ,my-dired-share-map))
+    (defvar-keymap my-dired-spc-map
+      :doc "Custom SPC leader map for Dired/Dirvish in Insert Mode"
+      "1" '("drag/drop"       . my-dired-ripdrag)
+      "2" '("wl-copy"         . my-dired-copy-file-to-clipboard)
+      "m" '("dired-jump"      . dired-jump)
+      "u" '("consult-buffer"  . consult-buffer)
+      ";" '("consult-ripgrep" . consult-ripgrep)
+      "f" '("iBuffer"         . ibuffer)
+      "r" `("ranger-rename"   . ,my-dired-rename-map)
+      "z" '("zip/share > phone" . my-dired-zip-and-share)
+      "b" '("backup files"    . my-backup-file)
+      "p" `("Share Menu"      . ,my-dired-share-map))
 
-  ;; 2. bind SPC to our new map (nuking old dired-next-line automatically)
-  (keymap-set dired-mode-map "SPC" my-dired-spc-map)
+    ;; 2. bind SPC to our new map (nuking old dired-next-line automatically)
+    (keymap-set dired-mode-map "SPC" my-dired-spc-map)
 
-  ;; 3. tell which-key what this menu is called
-  (with-eval-after-load 'which-key
-    (which-key-add-major-mode-key-based-replacements 'dired-mode "SPC" "Dirvish Menu")))
+    ;; 3. tell which-key what this menu is called
+    (with-eval-after-load 'which-key
+      (which-key-add-major-mode-key-based-replacements 'dired-mode "SPC" "Dirvish Menu")))
 #+end_src
 
 *** dired-open
@@ -915,7 +916,7 @@
   ;; FORCING Org to use the OLDER folding engine that uses 'overlays'
   ;; to prevent the ellipsis (...) stuck bug of the current engine
 
-  (with-eval-after-load 'org
+   (with-eval-after-load 'org
     ;; 1. Revert to the classic engine
     (setq org-fold-core-style 'overlays)
 
@@ -1746,7 +1747,7 @@ Packages replacements:
     (define-key org-mode-map (kbd "C-k") #'ignore)
 
     ;; Force C-i to be a dead-end
-    (define-key org-mode-map (kbd "C-i") #'ignore)
+    ;; (define-key org-mode-map (kbd "C-i") #'ignore)
 
     ;; Disable COMMENT keybind  "C-c ;" (org-toggle-comment)
     ;; to stop accidental usage when using "C-c '" (org-edit-special)
@@ -1925,13 +1926,13 @@ Packages replacements:
 
   ;; QUERY-REPLACE and iEDIT
     ;; Replace & Refactor
-    (define-key xah-fly-leader-key-map (kbd "r") 'query-replace)
+    (define-key xah-fly-leader-key-map (kbd "r") 'replace-string)
     (define-key xah-fly-leader-key-map (kbd "R") 'iedit-mode)
 
     ;; Update which-key descriptions
     (with-eval-after-load 'which-key
       (which-key-add-keymap-based-replacements xah-fly-leader-key-map
-        "r" "Query Replace"
+        "r" "Replace String"
         "R" "Iedit Mode"))
 #+end_src
 
@@ -1988,14 +1989,18 @@ Packages replacements:
 
 *** re-binds (org-mode)
 
-#+begin_src emacs-lisp
+
+#+end_src
+#+begin_src language: 
+  ,#+begin_src emacs-lisp
   (with-eval-after-load 'org
         ;; 1. The custom function to check for snippets before Org folds trees
         (defun my-org-try-tempel-expand ()
           "Try expanding Tempel snippet. Return t if expanded, stopping org-cycle."
           (require 'tempel)
           ;; tempel-expand without arguments acts as a silent checker.
-          ;; It returns data ONLY if there is an exact match (like <s).
+          ;; It returns data ONLY if there is an exact match (like 
+  	).
           (let ((exact-match (tempel-expand)))
             (when exact-match
               (tempel-expand t) ;; Force the actual expansion!

@@ -97,7 +97,7 @@
 		   ultra-scroll vertico vterm zoxide))
  '(package-vc-selected-packages
    '((whisper :url "https://github.com/natrys/whisper.el" :branch "master")))
- '(safe-local-variable-values '((read-only . t)))
+ '(safe-local-variable-values '((eval org-table-color #'cor-manual) (read-only . t)))
  '(warning-suppress-log-types
    '((files missing-lexbind-cookie "~/.dotfiles/common/emacs.d/test_new.el")))
  '(warning-suppress-types '((my-config))))

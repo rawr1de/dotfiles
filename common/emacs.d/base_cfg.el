@@ -231,7 +231,8 @@
          ("\\" . dired-narrow-fuzzy)
          ("n"  . consult-line)
          ("h"  . dired-maybe-insert-subdir)
-         ("'"  . delete-other-windows))
+         ("'"  . delete-other-windows)
+         ("\""  . delete-window))
 
   :config
   ;; 1. Global Auto-Revert (The "Watchdog")
@@ -762,7 +763,7 @@
 ;; FORCING Org to use the OLDER folding engine that uses 'overlays'
 ;; to prevent the ellipsis (...) stuck bug of the current engine
 
-(with-eval-after-load 'org
+ (with-eval-after-load 'org
   ;; 1. Revert to the classic engine
   (setq org-fold-core-style 'overlays)
 
@@ -1413,7 +1414,7 @@ _Notes:_
   (define-key org-mode-map (kbd "C-k") #'ignore)
 
   ;; Force C-i to be a dead-end
-  (define-key org-mode-map (kbd "C-i") #'ignore)
+  ;; (define-key org-mode-map (kbd "C-i") #'ignore)
 
   ;; Disable COMMENT keybind  "C-c ;" (org-toggle-comment)
   ;; to stop accidental usage when using "C-c '" (org-edit-special)
@@ -1562,13 +1563,13 @@ _Notes:_
 
 ;; QUERY-REPLACE and iEDIT
   ;; Replace & Refactor
-  (define-key xah-fly-leader-key-map (kbd "r") 'query-replace)
+  (define-key xah-fly-leader-key-map (kbd "r") 'replace-string)
   (define-key xah-fly-leader-key-map (kbd "R") 'iedit-mode)
 
   ;; Update which-key descriptions
   (with-eval-after-load 'which-key
     (which-key-add-keymap-based-replacements xah-fly-leader-key-map
-      "r" "Query Replace"
+      "r" "Replace String"
       "R" "Iedit Mode"))
 
 (define-key xah-fly-key-map (kbd "5") 'delete-char)
@@ -1609,25 +1610,6 @@ _Notes:_
                 ((derived-mode-p 'dired-mode) 'my-dired-copy-file-to-clipboard)
                 ((derived-mode-p 'org-mode) my-xah-org-prefix-map)
                 (t nil)))))
-
-(with-eval-after-load 'org
-      ;; 1. The custom function to check for snippets before Org folds trees
-      (defun my-org-try-tempel-expand ()
-        "Try expanding Tempel snippet. Return t if expanded, stopping org-cycle."
-        (require 'tempel)
-        ;; tempel-expand without arguments acts as a silent checker.
-        ;; It returns data ONLY if there is an exact match (like <s).
-        (let ((exact-match (tempel-expand)))
-          (when exact-match
-            (tempel-expand t) ;; Force the actual expansion!
-            t)))              ;; Return t to tell Org-mode: "I handled this, stop!"
-
-      ;; 2. Attach it to Org's native TAB interceptor hook
-      (add-hook 'org-tab-first-hook #'my-org-try-tempel-expand)
-
-      ;; 3. Ensure TAB is mapped to org-cycle normally so the hook can do its job
-      (define-key org-mode-map (kbd "<tab>") #'org-cycle)
-      (define-key org-mode-map (kbd "TAB") #'org-cycle))
 
 (with-eval-after-load 'ibuffer
     ;; 1. Create a brand new keymap

@@ -2,4 +2,10 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-()
+(("org-capture-last-stored"
+  (filename . "~/Docs/10.Org/trading-log.org")
+  (front-context-string . "**** 2026-10-21 ")
+  (rear-context-string . "0-21 Wednesday\n\n")
+  (position . 196721)
+  (last-modified 27352 44946 146469 897000))
+)

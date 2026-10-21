@@ -755,7 +755,7 @@ wayland notification daemon configuration
   // new FIXER line that starts 3 services at once, preventing race condition failure
   // spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_RUNTIME_DIR DISPLAY DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP && systemctl --user start emacs.service"
 
-  spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_RUNTIME_DIR DISPLAY DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP && systemctl --user start emacs.service emacs-spad.service"
+  spawn-at-startup "sh" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_RUNTIME_DIR DISPLAY DBUS_SESSION_BUS_ADDRESS XDG_CURRENT_DESKTOP && systemctl --user start emacs.service"
 
   // spawn-at-startup "udiskie" "--no-notify" "--tray" "--appindicator"
   spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "icon-theme" "Papirus-Dark"
@@ -801,7 +801,7 @@ wayland notification daemon configuration
       Mod+2        hotkey-overlay-title="Brave"               { spawn "brave"; }
       Mod+7        hotkey-overlay-title="Fuzzel Clipboard"    { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
       Mod+8        hotkey-overlay-title="Fuzzel Launcher"     { spawn "fuzzel"; }
-      Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn-sh "env COLORTERM=truecolor kitty --class 'niri-scratchpad' -e emacsclient -s spad -t"; }
+      # Mod+M        hotkey-overlay-title="Scratchpad (Emacs)"  { spawn-sh "env COLORTERM=truecolor kitty --class 'niri-scratchpad' -e emacsclient -s spad -t"; }
       Mod+N        hotkey-overlay-title="Noctalia Bar Toggle" { spawn-sh "noctalia msg bar-toggle"; }
       Mod+P        hotkey-overlay-title="Song Playing Info"   { spawn-sh "emacsclient -a 'emacs --daemon --init-directory=/home/rdo/.dotfiles/common/emacs.d/' --eval '(my-emms-now-playing-popup)'"; }
       Mod+3        hotkey-overlay-title="htop"                { spawn "kitty" "-e" "htop"; }

@@ -93,7 +93,7 @@ n)
 ;; |------------------+----------|
 
 
-(<per-sol
+(<per-pro_sol
  "*Problem:*" n>
  (p "insert problem") n>
  n> "*Solution:*" n>
@@ -165,7 +165,7 @@ n)
  "Net:: zap_opyt" n
  "IPTU: buscar por cpf ([[https://trindade.centi.com.br/servicos/extratoimoveis][prefeitura]]) /[CALIFORNIA]/ +2026+" n
  "---" n
- "Net Faiçalville (gigabyte) e-mail: rmopolciv@gmail.com @ R@o536021" n
+ "Net Faiçalville ([[http://sac.gigabytetelecom.com.br/] [gigabyte]]) e-mail: rmopolciv@gmail.com @ R@o536021" n
  "IPTU: 33214504460008 ([[https://tributos.goiania.go.gov.br/sistemas/scarr/asp/scarr50000f0.asp][prefeitura]]) /[FAIÇAL]/ +2026+" n
  "Água: 2072533-7 ([[https://agencia-virtual.saneago.com.br/segundaViaSimplificada][saneago]], [[https://www.go.gov.br/servicos/servico/emitir-segunda-via-da-fatura-de-agua-eou-esgoto][prefeitura]])" n
  "CEP:: 74350-390" n
