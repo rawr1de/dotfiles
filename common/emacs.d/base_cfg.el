@@ -807,10 +807,11 @@
      ("t" "Trade Log" entry
       (file+olp+datetree "~/Docs/10.Org/trading-log.org")
       "**** %<%Y-%m-%d %A>
-*Trades*
+***** Trades (U14164043 - DAY TRADE)
 |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
 | # | Stock | Strike  | Cons | Time (In/Out) | Duration | Cost (Total)    | Sell (Total)    | P/L Final |     ROI |
 |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+
 _Summary:_
 TOTAL P/L: 
 TOTAL ROI: 
@@ -820,57 +821,19 @@ Min Duration:
 Highest Daily P/L: 
 Lowest Daily P/L:
 
-***** Review
-****** Trade #: TICKER
-*Risk & Sizing (Checklist)*
-- [ ] Contract price fits account management (Ideal <= $1.50)
-- [ ] Position sized strictly to max 2 contracts
-- [ ] Spread visually validated before entry (Ask - Bid <= $0.05 to $0.08)
+***** Trades (U27203796 - SWINGS)
+|---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+| # | Stock | Strike  | Cons | Time (In/Out) | Duration | Cost (Total)    | Sell (Total)    | P/L Final |     ROI |
+|---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
 
-*Entry & Exit Mechanics (Checklist)*
-- [ ] Entry triggered by clear technical setup on underlying chart
-- [ ] Mental Stop Loss based on the CHART (support loss or structure break)
-- [ ] Gave it enough \"breathing room\" for volatility without violating technical limits
-- [ ] /Flatten/ triggered _MANUALLY_ the exact moment chart structure failed
-- [ ] Exit executed without hesitation, hope, or praying for a reversal
-
-*Daily Routine & Limits*
-- [ ] Attempt cycle respected (Max 3/Daily)
-- [ ] Early quitting activated (profit target met)
-
-*Performance Classification*
-- [ ] System Win (Followed technical read and profited — FLAWLESS!)
-- [ ] System Loss (Stopped out manually exactly where chart dictated — TOP EXEC!)
-- [ ] Rule Break (Hesitated on stop, ignored chart failure, or blew sizing — GARBAGE )
-
-*Psychology & Execution Audit*
-1. Anxiety, rush to enter, or FOMO before order?
-   - [ ] Yes
-   - [ ] No
-2. Hesitated on Flatten when technical/chart limit was lost?
-   - [ ] Yes
-   - [ ] No
-3. Influenced by previous P/L (revenge/greed)?
-   - [ ] Yes
-   - [ ] No
-4. Session Diagnosis:
-   - [ ] Technical
-   - [ ] Emotional
-   - [ ] BOTH ABOVE
-   - [ ] Flawless Execution
-5. Entry Origin:
-   - [ ] Personal
-   - [ ] Mentor
-
-_Notes:_
-/What worked well:/
-1. 
-
-/Where discipline failed:/
-1. 
-
-/Lesson:/
-1. "
+_Summary:_
+TOTAL P/L: 
+TOTAL ROI: 
+Average Duration: 
+Max Duration: 
+Min Duration: 
+Highest Daily P/L: 
+Lowest Daily P/L: "
        :empty-lines 1)
 
      ;; System Ticketing template
