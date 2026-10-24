@@ -967,38 +967,37 @@ Affects =C-c ^ p= (org-sort) and the org-agenda sorting.
         "** BACKLOG %?\n  %i\n  Context: %a\n"
         :empty-lines 1)
 
-       ;; Day Trading Log (Datetree)
-       ("t" "Trade Log" entry
-        (file+olp+datetree "~/Docs/10.Org/trading-log.org")
-        "**** %<%Y-%m-%d %A>
-  ,***** Trades (U14164043 - DAY TRADE)
-  |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
-  | # | Stock | Strike  | Cons | Time (In/Out) | Duration | Cost (Total)    | Sell (Total)    | P/L Final |     ROI |
-  |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+  ;; Day Trading Log (Datetree)
+         ("t" "Trade Log" entry
+          (file+olp+datetree "~/Docs/10.Org/trading-log.org" "TRADING LOG (DATETREE)")
+          "***** Trades (U14164043 - DAY TRADE)
+    |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+    | # | Stock | Strike  | Cons | Time (In/Out) | Duration | Cost (Total)    | Sell (Total)    | P/L Final |     ROI |
+    |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
 
-  _Summary:_
-  TOTAL P/L: 
-  TOTAL ROI: 
-  Average Duration: 
-  Max Duration: 
-  Min Duration: 
-  Highest Daily P/L: 
-  Lowest Daily P/L:
+    _Summary:_
+    TOTAL P/L: 
+    TOTAL ROI: 
+    Average Duration: 
+    Max Duration: 
+    Min Duration: 
+    Highest Daily P/L: 
+    Lowest Daily P/L:
 
-  ,***** Trades (U27203796 - SWINGS)
-  |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
-  | # | Stock | Strike  | Cons | Time (In/Out) | Duration | Cost (Total)    | Sell (Total)    | P/L Final |     ROI |
-  |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+    ,***** Trades (U27203796 - SWINGS)
+    |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
+    | # | Stock | Strike  | Cons | Time (In/Out) | Duration | Cost (Total)    | Sell (Total)    | P/L Final |     ROI |
+    |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
 
-  _Summary:_
-  TOTAL P/L: 
-  TOTAL ROI: 
-  Average Duration: 
-  Max Duration: 
-  Min Duration: 
-  Highest Daily P/L: 
-  Lowest Daily P/L: "
-         :empty-lines 1)
+    _Summary:_
+    TOTAL P/L: 
+    TOTAL ROI: 
+    Average Duration: 
+    Max Duration: 
+    Min Duration: 
+    Highest Daily P/L: 
+    Lowest Daily P/L: "
+           :empty-lines 1)
 
        ;; System Ticketing template
        ("x" "System Ticket" entry
