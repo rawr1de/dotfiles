@@ -12,6 +12,7 @@
 	indent-for-tab-command
 	kmacro-end-or-call-macro
 	magit-stage
+	mouse-set-region
 	my-scroll-one-line-down
 	my-scroll-one-line-up
 	my-set-cycle-mark
@@ -58,6 +59,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+	delete-window
 	end-of-buffer
 	iedit-switch-to-mc-mode
 	my-force-fullscreen-toggle

@@ -1581,7 +1581,10 @@ _Notes:_
 ;; while in XFK command-mode with 'q'
 (with-eval-after-load 'xah-fly-keys
   (require 'my-xfk-smart-quit)
-  (define-key xah-fly-command-map (kbd "q") 'my-xfk-smart-quit))
+  (define-key xah-fly-command-map (kbd "q") 'my-xfk-smart-quit)
+
+;; Maps " to delete-window globally
+    (define-key xah-fly-command-map (kbd "\"") 'delete-window))
 
 ;; submap definition
 (defvar my-xah-org-prefix-map (make-sparse-keymap) "Org-mode sub-menu for XFK")

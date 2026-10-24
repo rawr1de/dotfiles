@@ -2,6 +2,19 @@
 ;;
 ;; QUICK REVIEW AT: ~/Docs/10.Org/roam/tech/20260425215736-emacs_completion_framework_stack.org
 ;;
+;; ORG-MODE -- NATIVE
+;; ORG-MODE -- DICTIONARY
+;; ORG-MODE -- PERSONAL
+;; ORG MODE -- LINUX
+;; FUNDAMENTAL MODE -- OVERVIEW
+;; FUNDAMENTAL MODE -- EMACS
+;; FUNDAMENTAL MODE -- TRADING
+;; FUNDAMENTAL MODE -- LINUX
+;; FUNDAMENTAL MODE -- BASH/ZSH
+;; FUNDAMENTAL MODE -- PYTHON
+;; FUNDAMENTAL MODE -- WM's
+;; FUNDAMENTAL MODE -- ACADEMICS
+
 org-mode
 ;;
 ;; =======================================================
@@ -84,13 +97,15 @@ n)
 ;; ORG-MODE -- PERSONAL
 ;; =======================================================
 ;;
-;; |------------------+----------|
-;; | OVERVIEW         | TRIGGER  |
-;; |------------------+----------|
-;; | Problem/Solution | <per-sol |
-;; | Troubleshoot     | <per-tro |
-;; | In-Depth         | <per-idp |
-;; |------------------+----------|
+;;|----------------------+------------------|
+;;| OVERVIEW             | TRIGGER          |
+;;|----------------------+------------------|
+;;| Problem/Solution     | per-pro_sol      |
+;;| Troubleshoot         | per-tro          |
+;;| In-Depth             | per-idp          |
+;;| Agenda monthly entry | per-agenda_month |
+;;| Comment rules        | per-com_rules    |
+;;|----------------------+------------------|
 
 
 (<per-pro_sol
@@ -290,6 +305,113 @@ n)
  "|-------------+--------+----------|" n
  "#+TBLFM: @3$2=@2-@1; f2" n
  q)
+
+
+(<per-com_rules
+"#+begin_comment RULES" n
+"/CREATE ID (NEW SPRINTS)/" n
+"- C-c C-x p :: minibuffer opens, choose property (CATEGORY) then type 'Sprint'" n
+"  (=org-set-property=)" n n n
+
+
+"/TASK STATES:/" n
+"- S-Right / S-Left :: Cycle states (BACKLOG → SPRINT →> ACTIVE → DONE)" n
+"- C-c C-t          :: Open fast-selection menu [(b)backlog, (s)sprints, (a)active, (d)done, (x)dropped]" n n n
+
+
+"/MOVING/ORDERING TASKS/" n
+"- M-Up / M-Down    :: Physically move the entire current heading up or down" n
+"                      the file without cutting and pasting. Use this to pull" n
+"                      BACKLOG items up into your CURRENT SPRINT window." n
+"- C-c ^            :: Sort entries menu for headers and its sub-contents" n
+"  (=org-sort=)" n n n
+
+
+"/TIMESTAMPS & DEADLINES/" n
+"- C-c .            :: Insert an active timestamp (e.g., [2026-04-09 Thu])." n
+"                      Type +14d in the prompt to auto-calculate two weeks out." n
+"- C-u C-c .        :: Time stamp with HOUR" n
+"- C-c C-d          :: Assign a formal DEADLINE to a specific task." n n n
+
+
+"/SEARCHING & ARCHIVING:/" n
+"- C-c / m          :: Search by Tags (or consult-ripgrep on system-tickets.org_archive)" n
+"  =(org-sparse-tree)=" n
+"- C-c C-x C-a      :: Archive *DONE* tasks" n
+"  =(org-archive-subtree-default)=" n n n
+
+
+"/IMAGES:/" n
+"- C-c C-x C-v      :: Toggle in line images" n
+"=(org-toggle-inline-images)=" n
+"- C-c C-a          :: Attach media to a file heading/body and create an ID" n
+"=(org-attach)=" n
+"#+end_comment" n)
+
+
+
+;; =======================================================
+;; ORG-MODE -- TRADING
+;; =======================================================
+;;
+;;|---------------------+-----------+----------|
+;;| VARIATION – Trading | TRIGGER   | USE CASE |
+;;|---------------------+-----------+----------|
+;;|                     | tr-review |          |
+;;|---------------------+-----------+----------|
+
+(<tr-review
+"****** Trade " (p "#" number) ": " (p "TICKER" ticker) n
+"*Risk & Sizing (Checklist)*" n
+"- [ ] Contract price fits account management Ideal <= " (p "%" price) " ($10% acct size)" n
+"- [ ] Position sized strictly to max 2 contracts" n
+"- [ ] Spread visually validated before entry (Ask - Bid <= $0.05)" n n
+
+"*Entry & Exit Mechanics (Checklist)*" n
+"- [ ] Entry triggered by clear technical setup on underlying chart" n
+"- [ ] Mental Stop Loss based on the CHART (support loss or structure break)" n
+"- [ ] Gave it enough 'breathing room' for volatility without violating technical limits" n
+"- [ ] /Flatten/ triggered _MANUALLY_ the exact moment chart structure failed" n
+"- [ ] Exit executed without hesitation, hope, or praying for a reversal" n n
+
+"*Daily Routine & Limits*" n
+"- [ ] Attempt cycle respected (Max 3-5/Daily)" n
+"- [ ] Early quitting activated (profit target met)" n n
+
+"*Performance Classification*" n
+"- [ ] System Win (Followed technical read and profited — FLAWLESS!)" n
+"- [ ] System Loss (Stopped out manually exactly where chart dictated — TOP EXEC!)" n
+"- [ ] Rule Break (Hesitated on stop, ignored chart failure, or blew sizing — GARBAGE!)" n n
+
+"*Psychology & Execution Audit*" n
+"1. Anxiety, rush to enter, or FOMO before order?" n
+"   - [ ] Yes" n
+"   - [ ] No" n
+"2. Hesitated on Flatten when technical/chart limit was lost?" n
+"   - [ ] Yes" n
+"   - [ ] No" n
+"3. Influenced by previous P/L (revenge/greed)?" n
+"   - [ ] Yes" n
+"   - [ ] No" n
+"4. Session Diagnosis:" n
+"   - [ ] Technical" n
+"   - [ ] Emotional" n
+"   - [ ] BOTH ABOVE" n
+"   - [ ] Flawless Execution" n
+"5. Entry Origin:" n
+"   - [ ] Personal" n
+"   - [ ] Mentor" n n
+
+"_Notes:_" n
+"/What worked well:/" n
+"1. " n n
+
+"/Where discipline failed:/" n
+"1. " n n
+
+"/Lesson:/" n
+"1. " n n)
+
 
 
 ;; =======================================================
@@ -515,89 +637,6 @@ n
 n
 "5. *No Hallucinations:* If you lack context or do not know exactly how to proceed" n
    "with a file, YOU WILL STOP and ask you before generating any code." n)
-
-
-;; =======================================================
-;; FUNDAMENTAL MODE -- TRADING
-;; =======================================================
-;;
-;; |------------------------+-------------+-----------------------------|
-;; | VARIATION – Trading    | TRIGGER     | USE CASE                    |
-;; |------------------------+-------------+-----------------------------|
-;; | Senior Trading Persona | <tr-persona | To teach based on materials |
-;; |------------------------+-------------+-----------------------------|
-;; | CONSTRAINTS – Trading  | <rule-tr-   |                             |
-;; |------------------------+-------------+-----------------------------|
-
-(<tr-pre-market
-"%+PRE-MARKET WATCHLIST & LEVELS+%" n
-"*** Pre-Market - Watchlist & Levels" n
-"- TSLA: /UP:/ from x to x  /DOWN/: x to x" n
-"-  AMD:  " n
-"- APPL:  " n
-"- MSFT:  " n
-"- META:  " n
-"- AMZN:  " n)
-
-(<tr-edge
- n> "Analyze the following price action context: " (p "Timeframe/Description") "."
- n> "You are a market structure purist. Identify:"
- n> "1. The most recent liquidity sweep."
- n> "2. The nearest unfilled imbalance/FVG."
- n> "3. What *confirmation* would you need to see in the next 2 candles to take action?"
- n> "Keep it under 150 words.")
-
-(<tr-review
-"****** Trade " (p "#" number) ": " (p "TICKER" ticker) n
-"*Risk & Sizing (Checklist)*" n
-"- [ ] Contract price fits account management Ideal <= " (p "%" price) " ($10% acct size)" n
-"- [ ] Position sized strictly to max 2 contracts" n
-"- [ ] Spread visually validated before entry (Ask - Bid <= $0.05)" n n
-
-"*Entry & Exit Mechanics (Checklist)*" n
-"- [ ] Entry triggered by clear technical setup on underlying chart" n
-"- [ ] Mental Stop Loss based on the CHART (support loss or structure break)" n
-"- [ ] Gave it enough 'breathing room' for volatility without violating technical limits" n
-"- [ ] /Flatten/ triggered _MANUALLY_ the exact moment chart structure failed" n
-"- [ ] Exit executed without hesitation, hope, or praying for a reversal" n n
-
-"*Daily Routine & Limits*" n
-"- [ ] Attempt cycle respected (Max 3-5/Daily)" n
-"- [ ] Early quitting activated (profit target met)" n n
-
-"*Performance Classification*" n
-"- [ ] System Win (Followed technical read and profited — FLAWLESS!)" n
-"- [ ] System Loss (Stopped out manually exactly where chart dictated — TOP EXEC!)" n
-"- [ ] Rule Break (Hesitated on stop, ignored chart failure, or blew sizing — GARBAGE!)" n n
-
-"*Psychology & Execution Audit*" n
-"1. Anxiety, rush to enter, or FOMO before order?" n
-"   - [ ] Yes" n
-"   - [ ] No" n
-"2. Hesitated on Flatten when technical/chart limit was lost?" n
-"   - [ ] Yes" n
-"   - [ ] No" n
-"3. Influenced by previous P/L (revenge/greed)?" n
-"   - [ ] Yes" n
-"   - [ ] No" n
-"4. Session Diagnosis:" n
-"   - [ ] Technical" n
-"   - [ ] Emotional" n
-"   - [ ] BOTH ABOVE" n
-"   - [ ] Flawless Execution" n
-"5. Entry Origin:" n
-"   - [ ] Personal" n
-"   - [ ] Mentor" n n
-
-"_Notes:_" n
-"/What worked well:/" n
-"1. " n n
-
-"/Where discipline failed:/" n
-"1. " n n
-
-"/Lesson:/" n
-"1. " n n)
 
 
 

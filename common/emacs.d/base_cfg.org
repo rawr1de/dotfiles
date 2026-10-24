@@ -1952,7 +1952,10 @@ Packages replacements:
   ;; while in XFK command-mode with 'q'
   (with-eval-after-load 'xah-fly-keys
     (require 'my-xfk-smart-quit)
-    (define-key xah-fly-command-map (kbd "q") 'my-xfk-smart-quit))
+    (define-key xah-fly-command-map (kbd "q") 'my-xfk-smart-quit)
+
+  ;; Maps " to delete-window globally
+      (define-key xah-fly-command-map (kbd "\"") 'delete-window))
 #+end_src
 ** ORG-MODE
 *** XFK sub-map (org-mode)
