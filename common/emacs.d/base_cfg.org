@@ -1968,25 +1968,24 @@ Packages replacements:
 
 *** re-binds (org-mode)
 
-#+end_src
 #+begin_src language:
-   (with-eval-after-load 'org
-          ;; 1. The custom function to check for snippets before Org folds trees
-          (defun my-org-try-tempel-expand ()
-            "Try expanding Tempel snippet. Return t if expanded, stopping org-cycle."
-            (require 'tempel)
-            ;; tempel-expand without arguments acts as a silent checker.
-            (let ((exact-match (tempel-expand)))
-              (when exact-match
-                (tempel-expand t) ;; Force the actual expansion!
-                t)))              ;; Return t to tell Org-mode: "I handled this, stop!"
+  (with-eval-after-load 'org
+            ;; 1. The custom function to check for snippets before Org folds trees
+            (defun my-org-try-tempel-expand ()
+              "Try expanding Tempel snippet. Return t if expanded, stopping org-cycle."
+              (require 'tempel)
+              ;; tempel-expand without arguments acts as a silent checker.
+              (let ((exact-match (tempel-expand)))
+                (when exact-match
+                  (tempel-expand t) ;; Force the actual expansion!
+                  t)))              ;; Return t to tell Org-mode: "I handled this, stop!"
 
-          ;; 2. Attach it to Org's native TAB interceptor hook
-          (add-hook 'org-tab-first-hook #'my-org-try-tempel-expand)
+            ;; 2. Attach it to Org's native TAB interceptor hook
+            (add-hook 'org-tab-first-hook #'my-org-try-tempel-expand)
 
-          ;; 3. Ensure TAB is mapped to org-cycle normally so the hook can do its job
-          (define-key org-mode-map (kbd "<tab>") #'org-cycle)
-          (define-key org-mode-map (kbd "TAB") #'org-cycle))
+            ;; 3. Ensure TAB is mapped to org-cycle normally so the hook can do its job
+            (define-key org-mode-map (kbd "<tab>") #'org-cycle)
+            (define-key org-mode-map (kbd "TAB") #'org-cycle))
 #+end_src
 
 ** SYSTEM

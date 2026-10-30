@@ -26,11 +26,39 @@ OUTPUT+="SPC T (Command Mode) | Toggle tab bar visibility\n"
 
 # ── Embrace (Surround) ────────────────────────────────────────────────────────
 OUTPUT+="\n | \n"
-OUTPUT+="► EMBRACE (SURROUND) | \n"
+OUTPUT+="► EMBRACE (SURROUND) [SPC \\] | \n"
 OUTPUT+="══════════════════════ | ══════════════════════\n"
-OUTPUT+="SPC \ a | Embrace: Add surrounding brackets/quotes\n"
-OUTPUT+="SPC \ c | Embrace: Change surrounding brackets/quotes\n"
-OUTPUT+="SPC \ d | Embrace: Delete surrounding brackets/quotes\n"
+OUTPUT+="SPC \\ a | Embrace: Add surrounding brackets/quotes\n"
+OUTPUT+="SPC \\ c | Embrace: Change surrounding brackets/quotes\n"
+OUTPUT+="SPC \\ d | Embrace: Delete surrounding brackets/quotes\n"
+
+# ── Search & Highlight ────────────────────────────────────────────────────────
+OUTPUT+="\n | \n"
+OUTPUT+="► SEARCH & HIGHLIGHT [SPC d] | \n"
+OUTPUT+="══════════════════════ | ══════════════════════\n"
+OUTPUT+="SPC d d | Isearch forward word\n"
+OUTPUT+="SPC d e | Highlight symbol at point\n"
+OUTPUT+="SPC d f | Isearch forward symbol\n"
+OUTPUT+="SPC d i | Highlight lines matching regexp\n"
+OUTPUT+="SPC d j | Highlight regexp\n"
+OUTPUT+="SPC d k | Highlight phrase\n"
+OUTPUT+="SPC d r | Isearch forward symbol at point\n"
+OUTPUT+="SPC d u | Unhighlight regexp\n"
+
+# ── Insertions ────────────────────────────────────────────────────────────────
+OUTPUT+="\n | \n"
+OUTPUT+="► INSERTIONS [SPC e] | \n"
+OUTPUT+="══════════════════════ | ══════════════════════\n"
+OUTPUT+="SPC e f | Insert Date\n"
+OUTPUT+="SPC e d | Insert Unicode/Emoji\n"
+OUTPUT+="SPC e c | Insert Char\n"
+OUTPUT+="SPC e k | Insert Parentheses ( )\n"
+OUTPUT+="SPC e l | Insert Square Bracket [ ]\n"
+OUTPUT+="SPC e j | Insert Brace { }\n"
+OUTPUT+="SPC e u | Insert Ascii Double Quote \" \"\n"
+OUTPUT+="SPC e s | Insert Ascii Single Quote ' '\n"
+OUTPUT+="SPC e v | Insert Markdown Quote \` \`\n"
+OUTPUT+="SPC e p | Insert Separator\n"
 
 # ── Pipe to Fuzzel ────────────────────────────────────────────────────────────
 echo -e "$OUTPUT" | column -t -s '|' | \
