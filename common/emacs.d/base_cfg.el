@@ -339,11 +339,7 @@
     "p" `("Share Menu"      . ,my-dired-share-map))
 
   ;; 2. bind SPC to our new map (nuking old dired-next-line automatically)
-  (keymap-set dired-mode-map "SPC" my-dired-spc-map)
-
-  ;; 3. tell which-key what this menu is called
-  (with-eval-after-load 'which-key
-    (which-key-add-major-mode-key-based-replacements 'dired-mode "SPC" "Dirvish Menu")))
+  (keymap-set dired-mode-map "SPC" my-dired-spc-map))
 
 (use-package dired-open
   :ensure t
@@ -820,7 +816,7 @@
   Highest Daily P/L: 
   Lowest Daily P/L:
 
-  ***** Trades (U27203796 - SWINGS)
+***** Trades (U27203796 - SWINGS)
   |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
   | # | Stock | Strike  | Cons | Time (In/Out) | Duration | Cost (Total)    | Sell (Total)    | P/L Final |     ROI |
   |---+-------+---------+------+---------------+----------+-----------------+-----------------+-----------+---------|
@@ -1516,23 +1512,10 @@
   ;; 2. Now safely bind Zoxide (consult-dir) to 'j'
   (define-key xah-fly-leader-key-map (kbd "j") 'consult-dir)
 
-  ;; 3. Update which-key descriptions
-  (with-eval-after-load 'which-key
-    (which-key-add-keymap-based-replacements xah-fly-leader-key-map
-      "?" "Emacs Help Menu"
-      "j" "Zoxide (consult-dir)"))
-
-
 ;; QUERY-REPLACE and iEDIT
   ;; Replace & Refactor
   (define-key xah-fly-leader-key-map (kbd "r") 'replace-string)
   (define-key xah-fly-leader-key-map (kbd "R") 'iedit-mode)
-
-  ;; Update which-key descriptions
-  (with-eval-after-load 'which-key
-    (which-key-add-keymap-based-replacements xah-fly-leader-key-map
-      "r" "Replace String"
-      "R" "Iedit Mode"))
 
 (define-key xah-fly-key-map (kbd "5") 'delete-char)
 (define-key xah-fly-key-map (kbd "6") 'xah-select-block)
@@ -1547,6 +1530,32 @@
 
 ;; Maps " to delete-window globally
     (define-key xah-fly-command-map (kbd "\"") 'delete-window))
+
+;; Centralized Which-Key Dictionary (Safe to place anywhere)
+  (add-hook 'after-init-hook
+            (lambda ()
+              (with-eval-after-load 'which-key
+
+                ;; 1. Global Leader Keys (xah-fly-leader-key-map)
+                (which-key-add-keymap-based-replacements xah-fly-leader-key-map
+                  "\\" "Embrace (Surround)"
+                  "d"  "Search & Highlight"
+                  "r"  "Replace String"
+                  "R"  "Iedit Mode"
+                  "?"  "Emacs Help Menu"
+                  "j"  "Zoxide (consult-dir)"
+                  "a"  "Avy Jump"
+                  "z"  "Musk (EMMS)")
+
+                ;; 2. Sub-map specific labels
+                (which-key-add-keymap-based-replacements z-emms-map
+                  "d"  "load last plist")
+
+                ;; 3. Major-mode specific overrides (Insert Mode SPC menus)
+                (which-key-add-major-mode-key-based-replacements 'dired-mode
+                  "SPC" "Dirvish Menu")
+                (which-key-add-major-mode-key-based-replacements 'ibuffer-mode
+                  "SPC" "Ibuffer Menu"))))
 
 ;; submap definition
 (defvar my-xah-org-prefix-map (make-sparse-keymap) "Org-mode sub-menu for XFK")
@@ -1587,12 +1596,7 @@
     ;; 3. Bind SPC to our new map
     (define-key ibuffer-mode-map (kbd "SPC") my-ibuffer-spc-map)
 
-    ;; 4. Tell which-key what this menu is called
-    (with-eval-after-load 'which-key
-      (which-key-add-major-mode-key-based-replacements 'ibuffer-mode
-        "SPC" "Ibuffer Menu"))
-
-    ;; 5. Populate the menu
+    ;; 4. Populate the menu
     (define-key my-ibuffer-spc-map (kbd "m") '("dired-jump" . dired-jump))
     (define-key my-ibuffer-spc-map (kbd "f") '("Filter by Mode" . ibuffer-filter-by-mode))
     (define-key my-ibuffer-spc-map (kbd "c") '("Clear Filters" . ibuffer-filter-disable))
@@ -1644,12 +1648,8 @@
     (emms-playlist-mode-go)))
 
 ;; --- UTILITY ---
-(define-key z-emms-map (kbd "u") '("sync metadata" . musk-sync-music-metadata))
-(define-key z-emms-map (kbd "e") '("toggle mark-mode" . my-emms-mark-mode-toggle))
-
-;; descriptions for which-key z-emms-map
-(which-key-add-keymap-based-replacements z-emms-map
-  "d"   "load last plist")
+  (define-key z-emms-map (kbd "u") '("sync metadata" . musk-sync-music-metadata))
+  (define-key z-emms-map (kbd "e") '("toggle mark-mode" . my-emms-mark-mode-toggle))
 
 (add-hook 'emms-playlist-mode-hook
       (lambda ()
@@ -1729,7 +1729,7 @@
 (global-set-key (kbd "C-c n i") 'org-roam-node-insert)
 (global-set-key (kbd "C-c n c") 'org-roam-capture)
 
-;; Bind the map to 'SPC q'
+;; Bind the map to 'SPC \'
 (define-key xah-fly-leader-key-map (kbd "\\") my-embrace-map)
 
 ;; The Core 3 Commands
@@ -1749,22 +1749,12 @@
 (define-key my-avy-map (kbd "a") 'avy-goto-char-timer)
 (define-key my-avy-map (kbd "l") 'avy-goto-line)
 
-;; 4. Tell which-key the menu name so the popup looks nice
-(with-eval-after-load 'which-key
-  (which-key-add-keymap-based-replacements xah-fly-leader-key-map
-    "a" "Avy Jump"))
-
 ;; Override traditional Emacs replace bindings with iedit
 (global-set-key (kbd "M-%") 'iedit-mode)
 (global-set-key (kbd "C-M-%") 'iedit-mode)
 
 ;; Bind to XFK leader map (e.g., replacing the old 'replace' shortcut)
 (define-key xah-fly-leader-key-map (kbd "R") 'iedit-mode)
-
-;; Add description for which-key popup
-(with-eval-after-load 'which-key
-  (which-key-add-keymap-based-replacements xah-fly-leader-key-map
-    "R" "Iedit"))
 
 (use-package multiple-cursors
   :ensure t

@@ -24,6 +24,14 @@ OUTPUT+="C-S-w | Close tab/frame\n"
 OUTPUT+="SPC t (Command Mode) | New tab\n"
 OUTPUT+="SPC T (Command Mode) | Toggle tab bar visibility\n"
 
+# ── Embrace (Surround) ────────────────────────────────────────────────────────
+OUTPUT+="\n | \n"
+OUTPUT+="► EMBRACE (SURROUND) | \n"
+OUTPUT+="══════════════════════ | ══════════════════════\n"
+OUTPUT+="SPC \ a | Embrace: Add surrounding brackets/quotes\n"
+OUTPUT+="SPC \ c | Embrace: Change surrounding brackets/quotes\n"
+OUTPUT+="SPC \ d | Embrace: Delete surrounding brackets/quotes\n"
+
 # ── Pipe to Fuzzel ────────────────────────────────────────────────────────────
 echo -e "$OUTPUT" | column -t -s '|' | \
     fuzzel --dmenu \
