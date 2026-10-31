@@ -44,6 +44,7 @@
 (require 'my-pomodoro-timer-edit)
 (require 'my-man-to-org)
 (require 'my-dired-custom-delete)
+(require 'my-window-resizer)
 
 ;; --- MUSK ---
 ;; open playing track cover art
@@ -1446,12 +1447,6 @@
 ;; custom functions skel template, auto save in:
 ;; "~/.dotfiles/common/emacs/.emacs.d/snippets/"
 (global-set-key (kbd "C-c e") #'my-function-template)
-
-(global-set-key (kbd "C-S-i") 'enlarge-window)
-(global-set-key (kbd "C-S-k") 'shrink-window)
-(global-set-key (kbd "C-S-l") 'enlarge-window-horizontally)
-(global-set-key (kbd "C-S-j") 'shrink-window-horizontally)
-(define-key xah-fly-leader-key-map (kbd "=") 'balance-windows)
 
 ;; cycle through tabs
 (global-set-key (kbd "C-S-o") 'tab-next)

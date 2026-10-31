@@ -5,7 +5,7 @@
 (("org-capture-last-stored"
   (filename . "~/Docs/10.Org/trading-log.org")
   (front-context-string . "***** Trades (U1")
-  (rear-context-string . "10-29 Thursday\n\n")
-  (position . 266582)
-  (last-modified 27363 17483 983672 225000))
+  (rear-context-string . "6-10-30 Friday\n\n")
+  (position . 267664)
+  (last-modified 27364 38985 217540 370000))
 )

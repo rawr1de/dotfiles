@@ -263,47 +263,6 @@ n)
  "ins/net (current month) = SWAB , zelle rich" n n
  "_NOTAS:_" n
  "*cSTR -- Jan/18/2027 Fim xx meses 0% APR (Purchases)!!*" n
- "** +Outras Contas (" (s month) ") +" n n
- "|------+--------|" n
- "| IN   |    545 |" n
- "| OUT  | 391.65 |" n
- "|------+--------|" n
- "| REST | 153.35 |" n
- "|------+--------|" n
- "#+TBLFM: @3$2=@1$2-@2$2" n n
- "|--------------+--------+-----------+------------|" n
- "| +cSTR [CC] + |  41.00 | SNAP mama | CITI [CHK] |" n
- "| +ksa bills + |  144.1 | SNAP mama | SWAB [CHK] |" n
- "| +car insur + | 146.55 | SNAP mama | SWAB [CHK] |" n
- "| +car gas +   |  60.00 | SNAP mama | COne [SV2] |" n
- "|--------------+--------+-----------+------------|" n
- "| TOTAL        | 391.65 |           |            |" n
- "|--------------+--------+-----------+------------|" n n
- "- [-] ready?" n
- " *tranf's:*" n n
- "  - [ ] *COne*" n
- "  - [ ] /COne [CHK]/ > /NuBk [CHK]/ -- 391.65" n n
- "  - [X] *PPal*" n
- "  - [X] /COne [CHK]/ > /PPal [CHK]/ -- 153.35" n n
- "** +mama snap scheme (" (s month) ") +" n n
- "*current (mar/apr)*" n
- "|------------+---+----------+------------|" n
- "| +comes 1 + |   | 03.27.We | SWAB [CHK] |" n
- "| +comes 2 + |   |          | SWAB [CHK] |" n
- "| +comes 3 + |   |          | SWAB [CHK] |" n
- "| +comes 4 + |   |          | SWAB [CHK] |" n
- "|------------+---+----------+------------|" n
- "| TOTAL      |   |          |            |" n
- "|------------+---+----------+------------|" n
- "#+TBLFM: @5$2=vsum(@1..@4); f2" n n
- "*TARGET (TOTAL=Target-Current)*" n
- "|-------------+--------+----------|" n
- "| +target 2 + | 391.65 | 04.25.Sa |" n
- "| +current +  |        |          |" n
- "|-------------+--------+----------|" n
- "| TOTAL       |        |          |" n
- "|-------------+--------+----------|" n
- "#+TBLFM: @3$2=@2-@1; f2" n
  q)
 
 

@@ -61,6 +61,7 @@
       '(
 	delete-window
 	end-of-buffer
+	enlarge-window
 	iedit-switch-to-mc-mode
 	my-force-fullscreen-toggle
 	my-jump-cycle-mark
