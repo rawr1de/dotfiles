@@ -459,6 +459,7 @@
       :doc "Custom SPC leader map for Dired/Dirvish in Insert Mode"
       "1" '("drag/drop"       . my-dired-ripdrag)
       "2" '("wl-copy"         . my-dired-copy-file-to-clipboard)
+      "j" '("consult-dir"     . consult-dir)
       "m" '("dired-jump"      . dired-jump)
       "u" '("consult-buffer"  . consult-buffer)
       ";" '("consult-ripgrep" . consult-ripgrep)
@@ -873,12 +874,12 @@
             org-hide-emphasis-markers t)
 
       (setq org-emphasis-alist
-            '(("*" (bold :weight black))
-              ("/" (italic :foreground "goldenrod"))
-              ("_" (:underline t :foreground "deep sky blue"))
-              ("=" (verbatim :foreground "tomato"))
-              ("~" (:background "DarkSeaGreen" :foreground "dim gray"))
-              ("+" (:strike-through t :foreground "dark orange"))))
+              '(("*" (:weight black))
+                ("/" (:slant italic :foreground "goldenrod"))
+                ("_" (:underline t :foreground "deep sky blue"))
+                ("=" (:foreground "tomato"))
+                ("~" (:background "DarkSeaGreen" :foreground "dim gray"))
+                ("+" (:strike-through t :foreground "dark orange"))))
 
       (setq org-todo-keyword-faces
             '(("BACKLOG" . "gray")
